@@ -23,15 +23,25 @@ Questa repo raccoglie tecniche, procedure e PoC utili per:
 ## Struttura della repository
 
 cybersecurity-labs/
+
 │
+
 ├── 01-recon/
+
 ├── 02-vulnerability-assessment/
+
 ├── 03-web-attacks/
+
 ├── 04-system-exploitation/
+
 ├── 05-social-engineering/
+
 ├── 06-wireless-security/
+
 ├── 07-post-exploitation/
+
 ├── 08-defense-hardenings/
+
 └── README.md
 
 ---
