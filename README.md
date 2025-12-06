@@ -22,27 +22,19 @@ Questa repo raccoglie tecniche, procedure e PoC utili per:
 
 ## Struttura della repository
 
+´´´
 cybersecurity-labs/
-
 │
-
 ├── 01-recon/
-
 ├── 02-vulnerability-assessment/
-
 ├── 03-web-attacks/
-
 ├── 04-system-exploitation/
-
 ├── 05-social-engineering/
-
 ├── 06-wireless-security/
-
 ├── 07-post-exploitation/
-
 ├── 08-defense-hardenings/
-
 └── README.md
+´´´
 
 ---
 
@@ -98,7 +90,7 @@ Obiettivo: ottenere accesso controllato a un sistema vulnerabile
 
 ## 05 - Social Engineering
 
-Sezione didattica dedicata all’ingegneria sociale:
+Sezione dedicata all’ingegneria sociale:
 
 - overview dei vettori SE
 - demo mock di pagine fake
@@ -147,6 +139,7 @@ Obiettivo: rafforzare sistemi e rilevare attività sospette
 ## Note Etiche e Legali
 
 Questo repository è destinato solo ed esclusivamente all’apprendimento.
+
 Ogni tecnica deve essere utilizzata soltanto su:
 
 - sistemi propri
