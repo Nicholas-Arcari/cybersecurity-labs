@@ -22,7 +22,7 @@ Questa repo raccoglie tecniche, procedure e PoC utili per:
 
 ## Struttura della repository
 
-´´´bash
+```bash
 cybersecurity-labs/
 │
 ├── 01-recon/
@@ -34,7 +34,7 @@ cybersecurity-labs/
 ├── 07-post-exploitation/
 ├── 08-defense-hardenings/
 └── README.md
-´´´
+```
 
 ---
 
