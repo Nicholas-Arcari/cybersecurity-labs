@@ -33,6 +33,8 @@ cybersecurity-labs/
 ├── 06-wireless-security/
 ├── 07-post-exploitation/
 ├── 08-defense-hardenings/
+├── 09-digital-forensics/
+├── 10-cloud-security/
 └── README.md
 ```
 
@@ -67,10 +69,9 @@ Obiettivo: individuare debolezze prima dello sfruttamento
 
 Riproduzione di vulnerabilità OWASP Top 10:
 
-- SQL Injection
-- XSS
-- CSRF
-- File Upload Abuse
+- SQL Injection & XSS
+- CSRF & File Upload Abuse
+- Secure Coding: esempi pratici di codice vulnerabile vs patchato
 
 Obiettivo: comprendere cause, exploit e mitigazioni applicative
 
@@ -133,6 +134,30 @@ Misure difensive:
 - honeypots
 
 Obiettivo: rafforzare sistemi e rilevare attività sospette
+
+---
+
+## 09 - Digital Forensics & Incident Response
+
+Analisi forense e risposta agli incidenti:
+
+- analisi traffico di rete (.pcap con Wireshark)
+- analisi Log di sistema
+- identificazione IOC (Indicatori di Compromissione)
+
+Obiettivo: ricostruire la timeline di un attacco e identificare l'attaccante
+
+---
+
+## 10 - Cloud Security
+
+Sicurezza in ambienti cloud moderni:
+
+- Audit automatizzato di bucket S3
+- Rilevamento Misconfigurations
+- Scripting di sicurezza con Boto3
+
+Obiettivo: comprendere i rischi delle infrastrutture cloud e come metterle in sicurezza
 
 ---
 
