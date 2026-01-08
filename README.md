@@ -70,6 +70,7 @@ Qui trovi tutto ciò che serve per scoprire "cosa esiste"
 
 - **Nota:** Diviso in *Passivo* (invisibile) e *Attivo* (rumoroso)
 
+---
 
 ### 02-vulnerability-assessment
 
@@ -79,6 +80,7 @@ Analisi automatizzata e manuale per trovare CVE e misconfigurazioni
 
 - **Contenuto:** Report di Nessus/OpenVAS, script Nmap NSE specifici per vulnerabilità, audit di protocolli (SMB, SSL)
 
+---
 
 ### 03-web-attacks (Red Team + Secure Coding)
 
@@ -88,6 +90,7 @@ Il focus è sulle vulnerabilità OWASP Top 10. Include anche una sezione di dife
 
 - **Contenuto:** Burp Suite projects, SQLMap, Fuzzing (Gobuster), e snippet di codice *Vulnerabile vs Fixato*
 
+---
 
 ### 04-system-exploitation
 
@@ -97,6 +100,7 @@ Dedicato all'attacco infrastrutturale puro: exploit del kernel, servizi e binari
 
 - **Contenuto:** Metasploit resources, Exploit-DB mirror locale, script per Privilege Escalation (LinPEAS/WinPEAS)
 
+---
 
 ### 05-social-engineering (Tooling&Python)
 
@@ -106,6 +110,7 @@ Strumenti per simulazioni di phishing e creazione di payload ingannevoli
 
 - **Contenuto:** GoPhish templates, script Python personalizzati (PyPhisher), generatori di payload Office/HTA
 
+---
 
 ### 06-wireless-security
 
@@ -115,6 +120,7 @@ Tutto ciò che viaggia "nell'aria"
 
 - **Contenuto:** WiFi (Aircrack-ng), Bluetooth/BLE (Bettercap), SDR (Radiofrequenza) e RFID/NFC
 
+---
 
 ### 07-post-exploitation
 
@@ -124,6 +130,7 @@ Cosa fare *dopo* aver ottenuto la shell
 
 - **Contenuto:** Credential Dumping (Mimikatz), Persistence (Backdoors), Pivoting (Tunneling/Chisel) ed Esfiltrazione dati
 
+---
 
 ### 08-defense-hardenings (Blue Team Prevention)
 
@@ -135,6 +142,7 @@ Strumenti di difesa attiva e configurazione sicura
 
 - **Contenuto:** Honeypots, script di Hardening (CIS Benchmarks), configurazioni Firewall
 
+---
 
 ### 09-digital-forensics (Blue Team Analysis)
 
@@ -146,6 +154,7 @@ Strumenti per capire "cosa è successo" analizzando le tracce digitali
 
 - **Contenuto:** Network Forensics (PCAP analysis), Disk Forensics (Autopsy), Memory Forensics (Volatility)
 
+---
 
 ### 10-cloud-security (Cloud&Modern)
 
