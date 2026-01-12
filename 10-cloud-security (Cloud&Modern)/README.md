@@ -1,1 +1,3 @@
 to do...
+
+Questa cartella dovrebbe fungere da contenitore per tutto ciò che riguarda AWS/Azure/GCP, ma anche per la sicurezza delle infrastrutture moderne come Docker, Kubernetes e le Pipeline CI/CD
