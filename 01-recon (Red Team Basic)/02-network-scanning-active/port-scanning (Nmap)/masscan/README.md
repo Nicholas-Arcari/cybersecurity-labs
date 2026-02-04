@@ -38,8 +38,8 @@ sudo apt install masscan
 sudo masscan -p445 10.0.2.3 --rate=100 -e eth0
 ```
 
-- `--rate=1000`: Limita l'invio a 1k pps (packets per second).
-- `-p1-65535`: Copertura totale del range di porte TCP.
+- `--rate=100`: Limita l'invio a 1k pps (packets per second).
+- `-p445`: Scansione mirata sulla porta nota aperta.
 
 ![](./img/Screenshot_2026-02-04_11_37_50.jpg)
 
