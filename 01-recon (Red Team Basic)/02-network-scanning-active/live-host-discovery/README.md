@@ -28,6 +28,7 @@ Questa attività è fondamentale per:
 È stato utilizzato `arp-scan` per una rilevazione rapida degli host nella sottorete locale. Questo metodo bypassa i firewall di livello OS.
 
 Comando:
+
 ```bash
 sudo apt install arp-scan
 sudo arp-scan -l
@@ -35,7 +36,7 @@ sudo arp-scan -l
 
 ![](./img/Screenshot_2026-02-04_09_52_01.jpg)
 
-Analisi: Sono stati rilevati [X] dispositivi, inclusa la macchina target Windows 10 (identificabile dal MAC Address o dall'IP noto).
+Analisi: Sono stati rilevati [3] dispositivi, inclusa la macchina target Windows 10 (identificabile dal MAC Address o dall'IP noto).
 
 #### B. Mappatura Attiva (Netdiscover)
 
@@ -68,4 +69,4 @@ nmap -sn 10.0.2.0/24
 
 ## 3 Conclusioni
 
-L'attività di Live Host Discovery ha permesso di identificare con successo il target Windows 10 all'indirizzo IP 10.0.2.X. La comparazione tra ARP e ICMP ha confermato che, trovandosi nella stessa sottorete fisica, la scansione ARP risulta la più veloce e affidabile per l'enumerazione iniziale.
+L'attività di Live Host Discovery ha permesso di identificare con successo il target Windows 10 all'indirizzo IP 10.0.2.3. La comparazione tra ARP e ICMP ha confermato che, trovandosi nella stessa sottorete fisica, la scansione ARP risulta la più veloce e affidabile per l'enumerazione iniziale.
