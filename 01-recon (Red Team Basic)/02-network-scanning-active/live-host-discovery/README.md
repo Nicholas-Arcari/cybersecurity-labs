@@ -36,7 +36,7 @@ sudo arp-scan -l
 
 ![](./img/Screenshot_2026-02-04_09_52_01.jpg)
 
-Analisi: Sono stati rilevati [3] dispositivi, inclusa la macchina target Windows 10 (identificabile dal MAC Address o dall'IP noto).
+Analisi: Sono stati rilevati 3 dispositivi, inclusa la macchina target Windows 10 (identificabile dal MAC Address o dall'IP noto).
 
 #### B. Mappatura Attiva (Netdiscover)
 
