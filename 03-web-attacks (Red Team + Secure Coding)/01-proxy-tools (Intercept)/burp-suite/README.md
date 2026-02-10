@@ -61,3 +61,16 @@ Estensioni chiave identificate:
 ## 4 Conclusioni
 
 La capacità di intercettare e modificare il traffico "in transito" è il prerequisito per qualsiasi attività di Web Hacking avanzato. Attraverso questo lab, è stata dimostrata la competenza nella gestione del flusso HTTP, superando la semplice navigazione passiva e interagendo direttamente con il protocollo sottostante per manipolare la risposta del server.
+
+---
+
+## 5 Extra, nota su Persistenza e Reporting (.burp files)
+
+Durante questo laboratorio è stata utilizzata la Community Edition, che opera esclusivamente in modalità "Temporary Project" (in memoria).
+In un contesto aziendale (Enterprise/Red Team) che utilizza Burp Suite Professional, il flusso di lavoro standard prevede il salvataggio continuo dei progetti in formato `.burp`.
+
+Importanza dei file .burp:
+
+- Evidence Retention: Garantiscono la conservazione forense di tutto il traffico generato, utile per rispondere a contestazioni future o per redigere il report finale.
+- Pause & Resume: Permettono di interrompere un test e riprenderlo giorni dopo mantenendo lo stato dello Scanner, del Repeater e della Sitemap.
+- Collaboration: I file possono essere condivisi tra membri del team per analizzare vulnerabilità complesse in gruppo.
