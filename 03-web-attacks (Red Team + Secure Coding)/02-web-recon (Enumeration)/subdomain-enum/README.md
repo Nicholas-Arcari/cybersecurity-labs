@@ -71,8 +71,6 @@ sudo apt install amass -y
 amass enum -d tesla.com
 ```
 
-![]()
-
 Evidenza (Network Mapping):
 
 Valore Aggiunto: Amass ha permesso di identificare non solo i nomi dei sottodomini, ma anche la loro relazione con l'infrastruttura di rete sottostante (indirizzi IP e fornitori di hosting), offrendo una visione topologica del target essenziale per pianificare attacchi laterali.
