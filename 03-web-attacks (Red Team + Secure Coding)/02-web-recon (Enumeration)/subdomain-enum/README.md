@@ -125,4 +125,6 @@ Poiché il codice è ospitato in un repository pubblico:
 
 ## 8 Conclusioni
 
-L'attività ha dimostrato come la superficie di attacco reale di un'organizzazione sia spesso molto più vasta del semplice sito web istituzionale. L'identificazione di questi asset periferici è spesso la chiave per trovare vulnerabilità critiche, poiché tendono ad essere meno monitorati e aggiornati rispetto al dominio principale.
+L'attività ha dimostrato come la superficie di attacco reale di un'organizzazione sia spesso molto più vasta del semplice sito web istituzionale.
+
+L'identificazione di questi asset periferici è spesso la chiave per trovare vulnerabilità critiche, poiché tendono ad essere meno monitorati e aggiornati rispetto al dominio principale.
