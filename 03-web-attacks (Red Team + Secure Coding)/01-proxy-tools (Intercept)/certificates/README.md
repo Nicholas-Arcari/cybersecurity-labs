@@ -42,7 +42,7 @@ Ispezionando il certificato del sito, l'emittente risulta essere PortSwigger CA,
 
 ---
 
-## . Scenari Avanzati: SSL Pinning
+## 3 Scenari Avanzati: SSL Pinning
 
 Mentre questa tecnica funziona sui browser desktop, le applicazioni mobili moderne (Android/iOS) implementano l'SSL Pinning.
 
