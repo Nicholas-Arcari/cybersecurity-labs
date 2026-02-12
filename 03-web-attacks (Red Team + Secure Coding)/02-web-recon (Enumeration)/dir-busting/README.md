@@ -4,7 +4,7 @@ Obiettivo: Identificare risorse nascoste (directory, file di backup, pannelli di
 
 Target: `http://testphp.vulnweb.com`
 
-Strumenti: `Gobuster` (v3.x), `wget`
+Strumenti: `Gobuster` (v3.x), `wget`, `Feroxbuster`
 
 ---
 
@@ -82,7 +82,7 @@ Adattamenti necessari per l'ambiente Docker/API:
 1.  Wordlist API-Specifiche:
 
     Le wordlist standard (`common.txt`) sono inefficaci contro le API, che usano percorsi strutturati (es. `/api/v1/user`).
-    
+
     È necessario utilizzare liste dedicate come `api-endpoints.txt` (dalla raccolta SecLists) per individuare endpoint critici come `/health`, `/metrics`, `/swagger.json` o `/graphql`.
 
 2.  Networking (VM vs Host):
