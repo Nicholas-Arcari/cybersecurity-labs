@@ -40,8 +40,6 @@ Dopo la configurazione, è stato visitato un sito protetto (`google.com`). Il br
 
 Ispezionando il certificato del sito, l'emittente risulta essere PortSwigger CA, confermando che il traffico sta venendo decifrato e ri-cifrato da Burp.
 
-![]()
-
 ---
 
 ## . Scenari Avanzati: SSL Pinning
