@@ -26,7 +26,7 @@ La sfida del Redirect (302):
 
 Durante i test iniziali, si è notato che il server risponde con un codice HTTP 302 Found (Redirect) sia in caso di successo che di fallimento, rendendo inefficace la ricerca classica della stringa di errore ("Login Failed"). Questo generava Falsi Positivi (tutte le password venivano segnate come valide).
 
-![](./img/Screenshot_2026-02-14_19_18_25.jpg)
+![](./img/Screenshot_2026-02-14_19_18_22.jpg)
 
 Soluzione:
 
