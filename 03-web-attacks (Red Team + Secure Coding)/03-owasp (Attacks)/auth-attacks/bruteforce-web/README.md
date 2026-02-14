@@ -93,7 +93,8 @@ Sfide Tecniche affrontate:
 ```Bash
 docker logs -f <nome_container_backend>
 ```
-    Questo ha permesso di confermare che le richieste arrivavano al server, ma venivano respinte.
+
+Questo ha permesso di confermare che le richieste arrivavano al server, ma venivano respinte.
 
 ---
 
