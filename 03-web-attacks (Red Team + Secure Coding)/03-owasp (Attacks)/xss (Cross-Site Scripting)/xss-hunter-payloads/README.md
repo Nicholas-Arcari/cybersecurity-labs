@@ -32,7 +32,7 @@ Evidence (Callback Received)
 
 Lo screenshot sottostante mostra il pannello di controllo dell'attaccante (Webhook.site) che riceve la richiesta.
 
-Il campo Referer (http://testphp.vulnweb.com/) conferma che l'attacco ha avuto successo e che la richiesta è originata dal sito vittima.
+Il campo Referer (`http://testphp.vulnweb.com/`) conferma che l'attacco ha avuto successo e che la richiesta è originata dal sito vittima.
 
 ![](./img/Screenshot_2026-02-15_23_51_00.jpg)
 
