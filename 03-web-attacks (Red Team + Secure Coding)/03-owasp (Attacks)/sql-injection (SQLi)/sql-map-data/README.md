@@ -25,7 +25,7 @@ In questa fase iniziale, il tool ha interrogato il server per identificare il ti
 Comando:
 
 ```Bash
-sqlmap -u "http://testphp.vulnweb.com/artists.php?artist=1" --batch --banner --current-user --current-db --is-dba
+sqlmap -u "http://testphp.vulnweb.com/artists.php?artist=1" --banner --current-user --current-db --is-dba
 ```
 
 ![](./img/Screenshot_2026-02-15_17_16_46.jpg)
