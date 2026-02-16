@@ -44,12 +44,6 @@ Esecuzione:
 
 Inizialmente sono stati tentati exploit automatici, bloccati dalle policy di sicurezza dell'host Windows. È stato quindi eseguito un attacco manuale inviando un payload specifico per verificare l'esecuzione di codice (`RCE verification`).
 
-Evidence:
-
-Lo screenshot mostra la risposta del server a una richiesta malevola che tenta di eseguire il comando ipconfig. L'output nel sorgente HTML ("Array markup...") conferma che il codice è stato processato.
-
-![](./img/Screenshot_2026-02-16_17_17_45.jpg)
-
 #### 3. Post-Exploitation & Persistence
 
 Una volta confermata la vulnerabilità, l'accesso è stato consolidato trasformando l'RCE in una Web Shell persistente.
