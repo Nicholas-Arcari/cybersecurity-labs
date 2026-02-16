@@ -54,9 +54,9 @@ Lo screenshot mostra la risposta del server a una richiesta malevola che tenta d
 
 Una volta confermata la vulnerabilità, l'accesso è stato consolidato trasformando l'RCE in una Web Shell persistente.
 
-- È stato effettuato l'accesso come amministratore (bypassando l'autenticazione o resettando la password tramite RCE).
-- È stato abilitato il modulo "PHP Filter" del Core di Drupal.
-- È stata creata una pagina malevola ("System Diagnostics") contenente codice PHP nativo per eseguire comandi di sistema direttamente dal browser.
+- Privilege Escalation / Accesso Amministrativo: È stato ottenuto l'accesso alla dashboard di amministrazione di Drupal (bypassando l'autenticazione o resettando la password tramite RCE).
+- Abilitazione Modulo Vulnerabile: È stato attivato il modulo core "PHP Filter", che consente l'esecuzione di codice PHP all'interno dei nodi di contenuto.
+- Deploy della Web Shell: È stata creata una pagina dissimulata denominata "system diagnostyc". All'interno del corpo della pagina è stato iniettato un payload PHP (`<?php system("ipconfig"); ?>`) configurando il formato di testo come "PHP code".
 
 Evidence:
 
