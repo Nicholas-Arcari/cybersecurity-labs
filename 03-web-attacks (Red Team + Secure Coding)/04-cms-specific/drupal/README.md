@@ -4,13 +4,15 @@
 
 ## 1 Executive Summary
 
-Durante l'attività di Penetration Testing condotta sull'ambiente di test, è stata identificata una vulnerabilità critica nell'istanza del CMS Drupal.
+Durante l'attività di Penetration Testing condotta sull'ambiente di test Windows 10, è stata identificata e sfruttata con successo una vulnerabilità critica nell'istanza del CMS Drupal (versione 7.54).
 
 La vulnerabilità, nota come Drupalgeddon 2 (CVE-2018-7600), risiede in una mancata sanitizzazione degli input nel sottosistema Form API di Drupal.
 
-Questa falla permette a un attaccante remoto e non autenticato di iniettare ed eseguire codice arbitrario sul server ospitante (Remote Code Execution).
+Questa falla ha permesso l'esecuzione di codice arbitrario remoto (RCE) senza autenticazione. Nonostante la presenza di protezioni endpoint (Windows Defender) che hanno bloccato i tentativi di reverse shell automatizzati, è stato possibile ottenere la persistenza e il controllo del sistema sfruttando le funzionalità native del CMS per iniettare una Web Shell PHP.
 
-Nel contesto analizzato, l'exploit ha permesso di ottenere il controllo totale del sistema target (Windows 10) con i privilegi dell'utente che esegue il servizio web (Apache/System), esponendo l'intera infrastruttura a rischi di esfiltrazione dati, installazione di malware e movimento laterale.
+L'exploit ha garantito il controllo del server con i privilegi dell'utente che esegue il servizio web, esponendo l'intera infrastruttura a rischi di esfiltrazione dati e compromissione totale.
+
+CVSS Score: 9.8 (Critical)
 
 ---
 
@@ -24,37 +26,43 @@ Analizzando i file pubblici accessibili (es. `CHANGELOG.txt`) o gli header HTTP,
 
 Evidence:
 
-Lo screenshot seguente mostra l'identificazione della versione (es. 7.54) tramite analisi dei file statici esposti.
+Lo screenshot seguente mostra l'identificazione della versione (es. 7.54) tramite analisi del file `CHANGELOG.txt`.
 
 ![](./img/Screenshot_2026-02-16_17_55_22.jpg)
 
 #### 2. Exploitation (CVE-2018-7600)
 
-La vulnerabilità sfrutta il modo in cui Drupal gestisce le richieste AJAX nei form (Form API).
-
-Un attaccante può inviare una richiesta POST malevola manipolando i parametri `#post_render` (in Drupal 7) o simili array di renderizzazione. Questo induce il CMS a eseguire una funzione PHP arbitraria (come `passthru`, `exec` o `system`) passata come parametro dall'attaccante.
+La vulnerabilità sfrutta la gestione delle richieste AJAX nei form (Form API). Manipolando i parametri `#post_render`, è possibile indurre il CMS a eseguire funzioni PHP arbitrarie.
 
 Vettore d'Attacco:
 
-- Tool Utilizzato: Metasploit Framework / Script Python Custom
-- Modulo: `exploit/unix/webapp/drupal_drupalgeddon2`
-- Payload: PHP Meterpreter (Reverse TCP)
+- Metodologia: Exploitation Manuale (Bypass di controlli automatici/AV).
+- Tecnica: Injection di array malevoli tramite richieste POST costruite ad-hoc.
+- Payload: Esecuzione di comandi di sistema (`passthru`, `exec`) tramite curl e successiva creazione di una backdoor.
 
 Esecuzione:
 
-Lanciando l'exploit contro l'IP del target Windows, il server ha processato la richiesta malevola istanziando una connessione inversa verso la macchina attaccante (Kali Purple).
+Inizialmente sono stati tentati exploit automatici, bloccati dalle policy di sicurezza dell'host Windows. È stato quindi eseguito un attacco manuale inviando un payload specifico per verificare l'esecuzione di codice (`RCE verification`).
 
 Evidence:
 
-Lo screenshot mostra la console di Metasploit con la conferma dell'apertura della sessione Meterpreter.
+Lo screenshot mostra la risposta del server a una richiesta malevola che tenta di eseguire il comando ipconfig. L'output nel sorgente HTML ("Array markup...") conferma che il codice è stato processato.
 
 ![](./img/Screenshot_2026-02-16_17_17_45.jpg)
 
-#### 3. Post-Exploitation & Access Verification
+#### 3. Post-Exploitation & Persistence
 
-Una volta ottenuta la shell remota, è stata verificata l'esecuzione di comandi nel contesto del sistema operativo Windows.
+Una volta confermata la vulnerabilità, l'accesso è stato consolidato trasformando l'RCE in una Web Shell persistente.
 
-Sono stati eseguiti comandi di enumerazione di base (`whoami`, `ipconfig`, `sysinfo`) per confermare il compromesso.
+- È stato effettuato l'accesso come amministratore (bypassando l'autenticazione o resettando la password tramite RCE).
+- È stato abilitato il modulo "PHP Filter" del Core di Drupal.
+- È stata creata una pagina malevola ("System Diagnostics") contenente codice PHP nativo per eseguire comandi di sistema direttamente dal browser.
+
+Evidence:
+
+Lo screenshot seguente documenta il successo dell'operazione. È visibile la pagina creata sul CMS che restituisce l'output del comando di sistema `ipconfig` direttamente dal server Windows sottostante, confermando il controllo totale dell'infrastruttura di rete e dell'utente di sistema.
+
+![](./img/Screenshot_2026-02-16_18_14_49.jpg)
 
 ---
 
@@ -85,7 +93,8 @@ Si raccomanda di applicare le seguenti azioni correttive con urgenza immediata:
     
     Implementare regole WAF per bloccare richieste contenenti parametri sospetti come `#post_render`, `#markup` o tentativi di invocazione di funzioni come `passthru` o `exec`.
 
-    Hardening del Server:
+- Hardening del Server:
 
     - Disabilitare funzioni PHP pericolose nel file `php.ini` (es. `disable_functions = exec,passthru,shell_exec,system`).
+    - Disabilitare il modulo "PHP Filter" se non strettamente necessario.
     - Rimuovere file non necessari come `CHANGELOG.txt` o `INSTALL.txt` dalla root del sito per complicare il fingerprinting.
