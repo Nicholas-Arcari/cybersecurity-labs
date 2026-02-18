@@ -2,7 +2,7 @@
 
 ---
 
-1. Executive Summary
+## 1 Executive Summary
 
 In precedenza, il modulo di login era vulnerabile a SQL Injection, permettendo a un attaccante di manipolare le query al database e ottenere l'accesso amministrativo senza credenziali valide.
 
