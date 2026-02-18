@@ -22,8 +22,14 @@ La sicurezza di HS256 dipende interamente dalla complessità della chiave segret
 Vettore d'Attacco
 
 - Raccolta: L'attaccante richiede un token legittimo come utente "guest".
+
+![](./img/Screenshot_2026-02-18_15_55_23.jpg)
+
 - Analisi: Il token viene analizzato. L'header {`"alg": "HS256"`} conferma l'uso di crittografia simmetrica.
 - Cracking: Viene lanciato uno script di brute-force (`jwt_cracker.py`) che tenta di verificare la firma del token usando un elenco di password comuni.
+
+![](./img/Screenshot_2026-02-18_15_55_35.jpg)
+
 - Forging (Falsificazione): Una volta trovata la password (`secret123`), l'attaccante modifica il payload del token cambiando il ruolo da `user` a `admin` e ricalcola la firma valida.
 
 Proof of Concept (PoC)
@@ -45,6 +51,8 @@ Signature: [Nuova firma calcolata dall'attaccante]
 ```
 
 Quando il token falsificato viene inviato all'applicazione, questa lo accetta come autentico e garantisce i privilegi amministrativi, mostrando il messaggio: FLAG: HAI VINTO! .
+
+![](./img/Screenshot_2026-02-18_15_55_44.jpg)
 
 ---
 
