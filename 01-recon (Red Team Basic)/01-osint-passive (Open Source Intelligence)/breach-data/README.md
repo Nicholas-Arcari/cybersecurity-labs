@@ -1,5 +1,12 @@
 # OSINT Passive: Breach Data Analysis
 
+> - **Fase:** Reconnaissance - Passive Information Gathering
+> - **Visibilita:** Zero - nessun pacchetto inviato al target, ricerca su database pubblici di terze parti
+> - **Prerequisiti:** Email o dominio target, account HaveIBeenPwned, Python 3 per h8mail
+> - **Output:** OSINT-001 - Identificazione credenziali compromesse associate al target in data breach pubblici
+
+---
+
 Obiettivo: Identificare credenziali compromesse (Email/Password) esposte in data breach pubblici per valutare il rischio di Credential Reuse.
 
 Strumenti: h8mail, HaveIBeenPwned (HIBP).
@@ -21,6 +28,8 @@ Concetti Chiave:
 
 ## 2 Attività di Ricerca (Esercizio Pratico)
 
+**ID Finding:** `OSINT-001` | **Severity:** `Alto`
+
 È stata effettuata una verifica su un target campione per identificare l'esposizione in incidenti di sicurezza noti.
 
 ### Scansione con h8mail
@@ -36,7 +45,7 @@ h8mail -t <TARGET_EMAIL>
 
 ![](./img/Screenshot_2026-02-03_13_03_35.jpg)
 
-```bash
+```Bash
 deactivate                  # eseguire quando si è finito
 ```
 
@@ -81,3 +90,15 @@ Durante l'attività è stata riscontrata una discrepanza significativa tra i ris
 Lezione Appresa:
 
 Gli strumenti di OSINT automatici dipendono dalla disponibilità delle fonti esterne (API). Un risultato "Not Compromised" da un tool da riga di comando non garantisce la sicurezza. È fondamentale eseguire una Cross-Validation manuale sulle fonti autoritarie (Source of Truth) come il portale web di Have I Been Pwned.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Reconnaissance | Gather Victim Identity Info: Credentials | `T1589.001` | Ricerca credenziali compromesse del target su h8mail e HaveIBeenPwned per valutare il rischio di Credential Reuse (OSINT-001) |
+
+---
+
+> **Nota:** Le attivita documentate in questa sezione sono state eseguite su un target campione a scopo di audit personale e formazione. Nessuna credenziale identificata in breach e stata utilizzata per tentare accessi non autorizzati a sistemi di terze parti.
