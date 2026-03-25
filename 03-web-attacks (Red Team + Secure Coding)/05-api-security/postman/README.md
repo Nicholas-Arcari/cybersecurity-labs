@@ -1,5 +1,14 @@
 # API Broken Object Level Authorization (BOLA/IDOR)
 
+> - **Fase:** Web Attack - API Security (REST/IDOR)
+> - **Visibilita:** Bassa - richieste HTTP legittime verso endpoint autenticato, solo l'ID risorsa cambia
+> - **Prerequisiti:** Account utente valido con accesso all'API, endpoint che accetta ID risorsa nel path URL, token di autenticazione
+> - **Output:** Accesso ai dati finanziari di tutti gli utenti (saldo, IBAN), esfiltrazione massiva, violazione GDPR, finding WEB-014
+
+---
+
+**ID Finding:** `WEB-014` | **Severity:** `Critico` | **CVSS v3.1:** 9.1
+
 ---
 
 ## 1 Executive Summary
@@ -98,3 +107,21 @@ Raccomandazioni aggiuntive:
 La vulnerabilità IDOR rilevata è critica e permette la totale compromissione della riservatezza dei dati bancari. L'assenza di controlli di autorizzazione orizzontale è un errore comune ma devastante.
 
 Si raccomanda il deploy immediato della patch proposta (Controllo di Ownership) e l'esecuzione di un nuovo ciclo di test con Postman per verificare la risoluzione.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Discovery | Account Discovery | `T1087` | Enumerazione degli ID account sull'endpoint `/api/balance/<id>` da 998 a 1005 per mappare tutti gli utenti presenti nel sistema (WEB-014) |
+| Collection | Data from Information Repositories | `T1213` | Accesso ai dati finanziari sensibili (saldo, nome) di Bob, Charlie/CEO e Dave/Admin senza alcuna autorizzazione tramite IDOR (WEB-014) |
+| Lateral Movement | Valid Accounts | `T1078` | Utilizzo del token di autenticazione di un utente ordinario per accedere ai dati di account con privilegi superiori (CEO, Admin) (WEB-014) |
+
+---
+
+> **Nota:** Il finding WEB-014 e stato documentato su un'applicazione Flask/Python di laboratorio
+> locale (`vulnerable_bank.py`) sviluppata per simulare un'API bancaria vulnerabile. L'IDOR/BOLA
+> e la vulnerabilita numero 1 nell'OWASP API Top 10:2023 per frequenza e impatto. La sua semplicita
+> di exploitation (cambiare un numero nell'URL) contrasta con la gravita dell'impatto: violazione
+> massiva GDPR e reputazionale per l'organizzazione colpita.
