@@ -1,5 +1,14 @@
 # Vulnerability Assessment: Reflected Cross-Site Scripting (XSS)
 
+> - **Fase:** Web Attack - XSS Reflected
+> - **Visibilita:** Bassa - richiesta singola con payload nel parametro URL, indistinguibile da normale navigazione
+> - **Prerequisiti:** Parametro URL che viene riflesso nella risposta HTML senza encoding, identificato tramite web recon
+> - **Output:** Esecuzione JavaScript nel browser della vittima (alert PoC), virtual defacement, vector per phishing, finding WEB-005
+
+---
+
+**ID Finding:** `WEB-005` | **Severity:** `Medio` | **CVSS v3.1:** 6.1
+
 ---
 
 ## 1 Executive Summary
@@ -93,3 +102,20 @@ Se il parametro `cat` deve essere un numero (ID categoria), forzare il tipo a `I
 Content Security Policy (CSP):
 
 Implementare header CSP per limitare le sorgenti da cui il browser può caricare ed eseguire script (es. disabilitare `unsafe-inline`).
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation del parametro `cat` vulnerabile a XSS Reflected su `listproducts.php`, con injection di `<script>alert('XSS Riuscito')</script>` (WEB-005) |
+| Credential Access | Steal Web Session Cookie | `T1539` | Il payload XSS Reflected e il vettore primario per rubare il cookie di sessione dalla vittima che clicca il link malevolo (WEB-005) |
+| Initial Access | Phishing: Spearphishing Link | `T1566.002` | Distribuzione dell'URL malevolo `listproducts.php?cat=<PAYLOAD>` tramite email o social engineering per colpire utenti specifici (WEB-005) |
+
+---
+
+> **Nota:** Il finding WEB-005 e stato documentato su `testphp.vulnweb.com`. La Reflected XSS
+> e classificata `Medio` perche richiede interazione dell'utente (click sul link malevolo) a
+> differenza della Stored XSS. In presenza di contenuto sensibile (es. token di sessione admin
+> accessibile via JavaScript), la severity effettiva puo essere elevata ad `Alto`.
