@@ -1,20 +1,33 @@
-# Crea un utente non-root
+# 02 - Crea un utente non-root
 
-Comando:
+> - **Fase:** System Setup - Identity & Access Management locale
+> - **Priorita:** Alta - abbandonare root per l'uso quotidiano e una pratica fondamentale
+> - **Prerequisiti:** Installazione completata; accesso come root o kali (default)
+> - **Tempo stimato:** 2 minuti
+
+---
+
+## Comandi
 
 ```Bash
 sudo adduser [tuo_nome]
 sudo usermod -aG sudo [tuo_nome]
 ```
 
-- Perché farlo?
+---
 
-Il principio del "minimo privilegio". Lavorare sempre come root è pericoloso perché ogni comando ha potere assoluto sul sistema senza conferme
+## Perche farlo?
 
-- Cosa accade dopo?
+Il principio del "minimo privilegio" (Least Privilege). Lavorare sempre come root e pericoloso perche ogni comando ha potere assoluto sul sistema senza richieste di conferma. Un singolo errore di digitazione puo avere conseguenze irreversibili.
 
-Avrai un utente standard per l'uso quotidiano. Quando dovrai eseguire compiti amministrativi, il sistema ti chiederà la password (sudo)
+## Cosa accade dopo?
 
-- Cosa rischi se non lo fai?
+Avrai un utente standard per l'uso quotidiano. Quando dovrai eseguire compiti amministrativi, il sistema richiedera la password (`sudo`), aggiungendo una barriera di consapevolezza contro i comandi accidentali.
 
-Un comando errato (es. cancellazione file) potrebbe distruggere l'intero sistema operativo. Inoltre, se un malware infetta il pc mentre sei root, otterrà immediatamente il controllo totale
+## Cosa rischi se non lo fai?
+
+Un comando errato (es. `rm -rf /` con autocomplete sbagliato) potrebbe distruggere l'intero sistema operativo. Inoltre, se un malware infetta il sistema mentre sei root, otterra immediatamente il controllo totale senza dover eseguire privilege escalation.
+
+---
+
+> **Nota:** Dopo la creazione, effettuare il login con il nuovo utente e verificare l'accesso sudo con `sudo whoami` (deve restituire `root`). Da questo momento, usare il nuovo account per tutte le operazioni quotidiane.
