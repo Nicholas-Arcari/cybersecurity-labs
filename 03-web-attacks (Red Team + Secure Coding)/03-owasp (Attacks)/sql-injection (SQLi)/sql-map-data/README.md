@@ -1,5 +1,14 @@
 # Automated Vulnerability Assessment: SQL Injection & Data Exfiltration
 
+> - **Fase:** Web Attack - SQL Injection (Automated)
+> - **Visibilita:** Alta - sqlmap genera molto traffico HTTP in breve tempo, facilmente rilevabile da WAF e IDS
+> - **Prerequisiti:** Endpoint vulnerabile identificato (anche tramite test manuale WEB-004), `sqlmap` installato (preinstallato su Kali)
+> - **Output:** Fingerprint DBMS, dump tabelle, esfiltrazione dati completa (credenziali, PAN carte di credito), finding WEB-011
+
+---
+
+**ID Finding:** `WEB-011` | **Severity:** `Critico` | **CVSS v3.1:** 9.8
+
 ---
 
 ## 1 Executive Summary
@@ -101,5 +110,23 @@ Per mettere in sicurezza l'infrastruttura, si raccomandano le seguenti azioni co
     - Carte di Credito: Non memorizzare mai i dati completi della carta di credito se non strettamente necessario. Se richiesto, utilizzare tokenizzazione tramite Payment Gateway o crittografia forte (AES-256) con gestione sicura delle chiavi.
 
 - Infrastruttura:
-    
+
     - Implementare un Web Application Firewall (WAF) (es. ModSecurity o servizi Cloudflare) per bloccare pattern di attacco SQLMap noti e richieste malevole.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation automatizzata con sqlmap del parametro `artist` vulnerabile a SQL Injection su `testphp.vulnweb.com` (WEB-011) |
+| Collection | Data from Information Repositories | `T1213` | Dump completo del database `acuart` tramite sqlmap, inclusa la tabella `users` con password in chiaro e numeri PAN di carte di credito (WEB-011) |
+| Exfiltration | Exfiltration Over Web Service | `T1567` | Salvataggio del dump del database in formato CSV locale nel percorso `~/.local/share/sqlmap/output/` (WEB-011) |
+
+---
+
+> **Nota:** La scansione sqlmap e stata condotta su `testphp.vulnweb.com`, ambiente di addestramento
+> pubblico Acunetix. Il dump CSV con credenziali e PAN di carte di credito e stato trattato come
+> dato sensibile e non pubblicato in questo repository. Il finding WEB-011 include una violazione
+> PCI-DSS Requirement 3.4 (memorizzazione PAN in chiaro) che in un engagement reale richiederebbe
+> notifica immediata al cliente e procedura di incident response.
