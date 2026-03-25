@@ -25,22 +25,22 @@
    ```
 
 ##### Clone this repository
-  ```bash
+  ```Bash
   git clone https://github.com/Nicholas-Arcari/cybersecurity-labs.git
 ```
 
 ##### Enter the directory
-  ```bash
+  ```Bash
   cd PyPhisher
 ```
 
 ##### Install all modules
-  ```bash
+  ```Bash
   pip3 install -r files/requirements.txt --break-system-packages
 ```
 
 ##### Run the tool
-```bash
+```Bash
 python3 pyphisher.py
 ```
 
