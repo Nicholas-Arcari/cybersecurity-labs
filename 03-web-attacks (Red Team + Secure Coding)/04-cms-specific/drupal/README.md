@@ -1,5 +1,14 @@
 # Drupal Core Remote Code Execution (Drupalgeddon 2)
 
+> - **Fase:** Web Attack - CMS Exploitation
+> - **Visibilita:** Media - richieste HTTP POST con payload verso form Drupal, rilevabile ma spesso non bloccato da WAF generici
+> - **Prerequisiti:** Istanza Drupal versione 6.x, 7.x (< 7.58) o 8.x (< 8.3.9) identificata, connessione di rete al target
+> - **Output:** Remote Code Execution non autenticata, accesso dashboard admin Drupal, deploy Web Shell PHP, controllo server, finding WEB-015
+
+---
+
+**ID Finding:** `WEB-015` | **Severity:** `Critico` | **CVSS v3.1:** 9.8
+
 ---
 
 ## 1 Executive Summary
@@ -92,3 +101,22 @@ Si raccomanda di applicare le seguenti azioni correttive con urgenza immediata:
     - Disabilitare funzioni PHP pericolose nel file `php.ini` (es. `disable_functions = exec,passthru,shell_exec,system`).
     - Disabilitare il modulo "PHP Filter" se non strettamente necessario.
     - Rimuovere file non necessari come `CHANGELOG.txt` o `INSTALL.txt` dalla root del sito per complicare il fingerprinting.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Fingerprinting della versione Drupal 7.54 tramite accesso al file `CHANGELOG.txt` pubblico e identificazione della vulnerabilita CVE-2018-7600 (WEB-015) |
+| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation manuale di CVE-2018-7600 tramite manipolazione dei parametri `#post_render` nel Form API di Drupal per ottenere RCE non autenticata (WEB-015) |
+| Persistence | Server Software Component: Web Shell | `T1505.003` | Deploy di Web Shell PHP attraverso il modulo "PHP Filter" di Drupal, creando una pagina "system diagnostyc" che esegue comandi di sistema (WEB-015) |
+| Discovery | File and Directory Discovery | `T1083` | Esecuzione del comando `ipconfig` tramite Web Shell per mappare la configurazione di rete del server Windows sottostante (WEB-015) |
+
+---
+
+> **Nota:** Il finding WEB-015 e stato documentato su un'istanza Drupal 7.54 installata in locale
+> su una macchina virtuale Windows 10, configurata come ambiente di test per scopi didattici.
+> CVE-2018-7600 e una vulnerabilita di alto profilo del 2018 (Drupalgeddon2) con patch disponibili
+> da marzo 2018. Qualsiasi istanza Drupal non aggiornata alla versione 7.58 o superiore in
+> ambienti di produzione rappresenta un rischio critico immediato.
