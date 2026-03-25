@@ -1,5 +1,14 @@
 # DVGA (GraphQL API)
 
+> - **Fase:** Web Attack - API Security (GraphQL)
+> - **Visibilita:** Media - richieste curl verso endpoint `/graphql`, distinguibili dal traffico normale per il formato delle query
+> - **Prerequisiti:** Endpoint GraphQL identificato (`/graphql`, `/api/graphql`), `curl` disponibile per bypass del blocco sull'interfaccia grafica
+> - **Output:** Schema GraphQL completo, query nascoste (`systemDebug`), RCE confermata, credenziali admin, JWT admin, finding WEB-013
+
+---
+
+**ID Finding:** `WEB-013` | **Severity:** `Critico` | **CVSS v3.1:** 9.8
+
 ---
 
 ## 1 Executive Summary
@@ -189,3 +198,23 @@ Oltre alla RCE principale, sono state riscontrate le seguenti criticità accesso
 ## 5 Conclusioni
 
 Il sistema DVGA presenta gravi lacune di sicurezza che permettono a un attaccante esterno non autenticato di prendere il completo controllo della macchina in meno di 10 minuti. Si raccomanda un'immediata revisione del codice (Code Review) seguendo le linee guida proposte nella sezione "Root Cause Analysis".
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Reconnaissance | Active Scanning: Wordlist Scanning | `T1595.003` | GraphQL Introspection via curl (`__schema`) per mappare tutte le query disponibili, incluse le non documentate `systemDebug`, `systemDiagnostics` (WEB-013) |
+| Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | Command Injection tramite il parametro `arg` della query `systemDebug`: payload `; id` ha confermato RCE come utente `dvga` (WEB-013) |
+| Collection | Data from Information Repositories | `T1213` | Esfiltrazione del file `config.py` (chiavi segrete, DB path) e del database SQLite `dvga.db` tramite RCE, ottenendo credenziali admin `admin:changeme` (WEB-013) |
+| Lateral Movement | Valid Accounts: Cloud Accounts | `T1078.003` | Utilizzo delle credenziali esfiltrate per invocare la mutation `login` e ottenere un JWT token admin valido (WEB-013) |
+
+---
+
+> **Nota:** Il finding WEB-013 e stato documentato su DVGA (Damn Vulnerable GraphQL Application),
+> applicazione di laboratorio open-source installata in Docker locale. DVGA e progettata
+> specificamente per praticare i test di sicurezza su API GraphQL in ambiente controllato.
+> La kill chain completa (Introspection -> Command Injection -> RCE -> Account Takeover)
+> e stata completata in meno di 10 minuti, dimostrando l'impatto devastante di questa
+> combinazione di vulnerabilita.
