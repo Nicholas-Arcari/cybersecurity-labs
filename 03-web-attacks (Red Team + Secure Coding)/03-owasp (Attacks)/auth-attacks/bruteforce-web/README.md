@@ -1,5 +1,16 @@
 # Auth Attacks: Brute-Force Web (Hydra)
 
+> - **Fase:** Web Attack - Authentication Brute Force
+> - **Visibilita:** Alta - Hydra genera molte richieste di login in breve tempo, facilmente rilevabile da IDS e sistemi di monitoring
+> - **Prerequisiti:** Form di login identificato e analizzato con DevTools (parametri POST, URL endpoint), wordlist disponibile
+> - **Output:** Credenziali valide per accesso all'applicazione, finding WEB-009 (assenza rate limiting e account lockout)
+
+---
+
+**ID Finding:** `WEB-009` | **Severity:** `Alto` | **CVSS v3.1:** 7.5
+
+---
+
 Obiettivo: Eseguire un attacco di dizionario (Dictionary Attack) contro un form di login web per identificare credenziali deboli.
 
 Target: `http://testphp.vulnweb.com` e applicativo in locale
@@ -40,7 +51,7 @@ Si è invertita la logica di Hydra: invece di cercare l'errore, si è configurat
 
 ![](./img/Screenshot_2026-02-14_19_24_50.jpg)
 
-```bash
+```Bash
 # S=Logout : Indica a Hydra che il login è valido SE trova la parola "Logout" nella risposta
 hydra -l test -P passlist.txt testphp.vulnweb.com http-post-form "/userinfo.php:uname=^USER^&pass=^PASS^:S=Logout" -V
 ```
@@ -181,3 +192,22 @@ Laravel (tramite il pacchetto Sanctum/Web Middleware) protegge le rotte di login
 Conclusione:
 
 Questo test ha dimostrato che i moderni framework MVC/API (come Laravel, Django, Rails), se configurati correttamente con protezioni Anti-CSRF e Stateful Authentication, sono intrinsecamente resistenti agli attacchi di brute-force "semplici" eseguiti con tool generici come Hydra. Per bypassare questa difesa, sarebbe necessario uno script avanzato in grado di gestire sessioni e cookie (es. Python con `requests.Session()`).
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Credential Access | Brute Force: Password Guessing | `T1110.001` | Attacco con Hydra su form login `testphp.vulnweb.com/userinfo.php` usando `passlist.txt`, identificando le credenziali `test:test` (WEB-009) |
+| Credential Access | Brute Force: Password Spraying | `T1110.004` | Test di password comuni (`admin`, `123456`, `password`) contro l'utente `test` come fase preliminare (WEB-009) |
+| Credential Access | Modify Authentication Process | `T1556` | Analisi e bypass della protezione Anti-CSRF di Laravel Sanctum (HTTP 419) che dimostrava l'inefficacia di Hydra su framework moderni |
+| Initial Access | Exploit Public-Facing Application | `T1190` | Sfruttamento dell'assenza di rate limiting e account lockout sul form di login per eseguire brute force non bloccato (WEB-009) |
+
+---
+
+> **Nota:** Le attivita di brute force documentate sono state condotte su `testphp.vulnweb.com`
+> (ambiente Acunetix) e su un'applicazione Laravel in Docker locale (proprieta dell'autore).
+> Il case study "The Laravel Wall" documenta le difese di un framework moderno correttamente
+> configurato, dimostrando che Hydra e inefficace contro CSRF Token + Sanctum. Eseguire
+> brute force su sistemi reali senza autorizzazione e un reato penale.
