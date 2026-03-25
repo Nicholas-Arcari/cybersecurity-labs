@@ -1,5 +1,10 @@
 # Source Code Review
 
+> - **Fase:** Secure Coding - Static Analysis (SAST)
+> - **Visibilita:** Zero - analisi locale del codice sorgente, nessuna richiesta di rete verso target esterni
+> - **Prerequisiti:** Accesso al codice sorgente dell'applicazione (black-box: N/A; white-box: repository)
+> - **Output:** Identificazione di CWE-78 (OS Command Injection) e CWE-89 (SQL Injection) con proof of concept, raccomandazioni di remediation
+
 ---
 
 ## 1 Executive Summary
@@ -114,3 +119,19 @@ $stmt->execute(['id' => $user_id]);
 ## 4 Conclusioni
 
 Il pattern di vulnerabilità riscontrato indica una mancata adozione delle pratiche di "Secure by Design". La concatenazione diretta dell'input utente con interpreti di comandi (Database o Sistema Operativo) è la causa principale (Root Cause) di entrambi i difetti. Si raccomanda un training immediato sulle pratiche di Input Validation e Parameterized Queries per il team di sviluppo.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione (SAST - Analisi Difensiva) |
+| :--- | :--- | :--- | :--- |
+| Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | CWE-78: `os.system()` con concatenazione diretta permette Command Injection (`8.8.8.8; cat /etc/passwd`) che esegue comandi arbitrari come utente dell'applicazione |
+| Initial Access | Exploit Public-Facing Application | `T1190` | CWE-89: concatenazione `$user_id` nella query SQL permette SQL Injection (`?id=1 OR 1=1`) per leggere dati di altri utenti o bypassare l'autenticazione |
+
+---
+
+> **Nota:** Gli snippet analizzati in questa sezione sono stati sviluppati o identificati durante
+> le fasi di test documentate nei moduli offensivi. Il codice vulnerabile e presentato esclusivamente
+> per illustrare la causa radice delle vulnerabilita e NON deve essere usato in ambienti di
+> produzione. I pattern di fix sono stati verificati tramite re-test con gli stessi payload.
