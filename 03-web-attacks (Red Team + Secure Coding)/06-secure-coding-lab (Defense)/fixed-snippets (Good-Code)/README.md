@@ -1,4 +1,9 @@
-# SQL Injection
+# SQL Injection - Post-Remediation Verification
+
+> - **Fase:** Secure Coding - Post-Remediation Verification (SQL Injection)
+> - **Visibilita:** Zero - test locale su applicazione PHP con database SQLite/MySQL locale
+> - **Prerequisiti:** Codice vulnerabile identificato, fix implementato con Prepared Statements (PDO), ambiente di test configurato
+> - **Output:** Conferma che il payload SQLi non bypassa piu l'autenticazione, codice sicuro documentato con spiegazione tecnica
 
 ---
 
@@ -67,3 +72,19 @@ L'attacco è stato neutralizzato.
 L'implementazione dei Prepared Statements ha eliminato completamente la superficie di attacco per SQL Injection su questo endpoint.
 
 Il codice è ora conforme agli standard di sicurezza OWASP.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione (Difensiva - Mitigazione) |
+| :--- | :--- | :--- | :--- |
+| (Mitigazione) | Exploit Public-Facing Application | `T1190` | Implementazione di PDO Prepared Statements che separa la struttura SQL dai dati utente, neutralizzando completamente il vettore di SQL Injection (CWE-89) |
+
+---
+
+> **Nota:** Il fix documentato (PDO Prepared Statements) e il pattern di remediation standard
+> raccomandato da OWASP per la SQL Injection. La prova di efficacia (Proof of Defense) dimostra
+> che il payload `admin@example.com' OR '1'='1` viene ora trattato come testo letterale,
+> fallendo l'autenticazione correttamente. Il re-test dopo ogni patch e una pratica fondamentale
+> nel ciclo DevSecOps.
