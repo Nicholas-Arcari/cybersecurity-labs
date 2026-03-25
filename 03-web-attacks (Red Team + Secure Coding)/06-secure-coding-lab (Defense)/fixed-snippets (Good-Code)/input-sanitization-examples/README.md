@@ -1,4 +1,9 @@
-# Cross-Site Scripting (XSS)
+# Cross-Site Scripting (XSS) - Post-Remediation Verification
+
+> - **Fase:** Secure Coding - XSS Mitigation (Output Encoding)
+> - **Visibilita:** Zero - analisi locale e test in ambiente PHP locale (`localhost:8000`)
+> - **Prerequisiti:** Codice vulnerabile identificato (echo diretto), fix implementato con `htmlspecialchars()`, server PHP locale per i test
+> - **Output:** Conferma che il payload XSS non viene piu eseguito ma visualizzato come testo sicuro, codice sicuro documentato
 
 ---
 
@@ -87,3 +92,19 @@ Lo screenshot mostra chiaramente la differenza: il box rosso (vulnerabile) mostr
 L'implementazione di `htmlspecialchars()` ha eliminato efficacemente la vulnerabilità XSS su questo endpoint. Il sistema ora tratta l'input utente come dati (testo) e non come codice eseguibile.
 
 Si raccomanda di estendere questa pratica di "Output Encoding" a tutte le variabili stampate nell'applicazione.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione (Difensiva - Mitigazione XSS) |
+| :--- | :--- | :--- | :--- |
+| (Mitigazione) | Exploit Public-Facing Application | `T1190` | Implementazione di `htmlspecialchars($_GET['name'], ENT_QUOTES, 'UTF-8')` che converte i caratteri speciali (`<`, `>`, `"`, `'`) in entita HTML sicure, neutralizzando il vettore XSS Reflected (CWE-79) |
+
+---
+
+> **Nota:** Il fix documentato (htmlspecialchars + ENT_QUOTES + UTF-8) e il pattern di remediation
+> raccomandato da OWASP per l'Output Encoding nei contesti HTML. La combinazione dei parametri
+> `ENT_QUOTES` e `'UTF-8'` garantisce la protezione anche contro varianti di encoding e character
+> set attacks. La verifica post-patch con `<img src=x onerror=alert('XSS')>` conferma che il
+> payload viene ora visualizzato come testo, non eseguito come codice.
