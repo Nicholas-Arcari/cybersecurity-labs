@@ -1,5 +1,16 @@
 # Proxy Tools: OWASP ZAP & Automated Scanning
 
+> - **Fase:** Web Attack - DAST Scanning
+> - **Visibilita:** Media - OWASP ZAP genera traffico HTTP strutturato verso il target durante lo spider e l'active scan
+> - **Prerequisiti:** Target web raggiungibile, OWASP ZAP installato (preinstallato su Kali)
+> - **Output:** Report degli alert classificati per severity, finding WEB-001 (assenza token CSRF)
+
+---
+
+**ID Finding:** `WEB-001` | **Severity:** `Medio` | **CVSS v3.1:** 5.4
+
+---
+
 Obiettivo: Utilizzare uno scanner automatizzato (DAST - Dynamic Application Security Testing) per identificare rapidamente vulnerabilità note e mappare la superficie di attacco.
 
 Target: `http://testphp.vulnweb.com` (Target didattico vulnerabile)
@@ -67,3 +78,19 @@ L'utilizzo di OWASP ZAP ha permesso di mappare rapidamente la postura di sicurez
 Tuttavia, l'automazione non sostituisce l'analista umano. Lo scanner ha trovato correttamente mancanze strutturali (CSRF, Headers), ma per confermare vulnerabilità logiche complesse (come IDOR o Business Logic Errors) è necessario passare all'analisi manuale con strumenti come Burp Suite.
 
 Outcome: Il target presenta vulnerabilità confermate di livello Medio (CSRF, XSS Reflected) che richiedono patching immediato del codice sorgente.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Scansione DAST con OWASP ZAP su `testphp.vulnweb.com` per identificare vulnerabilita strutturali: assenza token CSRF (WEB-001), header mancanti, XSS potenziale |
+| Initial Access | Exploit Public-Facing Application | `T1190` | Identificazione e documentazione dell'assenza di protezione Anti-CSRF sui form dell'applicazione (WEB-001), che costituisce un vettore per Cross-Site Request Forgery |
+
+---
+
+> **Nota:** La scansione DAST e stata condotta su `testphp.vulnweb.com`, ambiente di addestramento
+> pubblico di Acunetix intenzionalmente vulnerabile. I risultati sono stati validati manualmente
+> per eliminare i falsi positivi. In un contesto di produzione, la scansione DAST genera molto
+> traffico e deve essere autorizzata esplicitamente - molti WAF bloccano e alertano su scan ZAP.
