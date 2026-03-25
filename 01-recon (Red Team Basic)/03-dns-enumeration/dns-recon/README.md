@@ -1,5 +1,12 @@
 # Network Scanning: DNS Enumeration & Zone Transfers
 
+> - **Fase:** Reconnaissance - DNS Enumeration
+> - **Visibilita:** Bassa - query DNS standard verso i Name Server pubblici del target, compatibili con traffico legittimo
+> - **Prerequisiti:** Dominio target noto, tool dig/host/dnsenum installati
+> - **Output:** DNS-001 - Zone Transfer riuscito su zonetransfer.me con esfiltrazione completa della zona DNS (sottodomini critici vpn, dev, office)
+
+---
+
 Obiettivo: Mappare l'infrastruttura del dominio target identificando sottodomini, server di posta e tentare l'esfiltrazione dell'intera zona DNS (Zone Transfer).
 
 Target Didattico: `zonetransfer.me` (Servizio di DigiNinja per test autorizzati)
@@ -22,13 +29,15 @@ Cos'è un Zone Transfer (AXFR)?
 
 ## 2 Esecuzione Tecnica
 
+**ID Finding:** `DNS-001` | **Severity:** `Critico`
+
 #### A. Identificazione dei Name Server (NS)
 
 Prima di attaccare, bisogna sapere "chi" gestisce il DNS del target.
 
 Comando:
 
-```bash
+```Bash
 host -t ns zonetransfer.me
 ```
 
@@ -80,3 +89,16 @@ dnsenum zonetransfer.me
 L'attacco ha avuto successo confermando una Critical Misconfiguration. L'esposizione completa della zona DNS annulla la "Security by Obscurity", fornendo all'attaccante la topologia completa della rete.
 
 Remediation (Blue Team): Configurare il server DNS (es. BIND9 o Windows DNS) per consentire il Zone Transfer solamente agli indirizzi IP dei propri server DNS secondari (Allow-Transfer list), bloccando tutte le altre richieste.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Reconnaissance | Gather Victim Network Info: DNS | `T1590.002` | Zone Transfer AXFR su zonetransfer.me tramite dig e dnsenum, ottenendo l'elenco completo di sottodomini e IP inclusi vpn, dev e office (DNS-001) |
+| Reconnaissance | Search Open Technical Databases: DNS/Passive DNS | `T1596.001` | Interrogazione dei Name Server pubblici del target per identificare record NS, MX e subzone trasferibili (DNS-001) |
+
+---
+
+> **Nota:** Il Zone Transfer documentato in questa sezione e stato eseguito su `zonetransfer.me`, un servizio pubblico mantenuto da DigiNinja specificamente configurato per permettere zone transfer a scopo didattico e di addestramento alla sicurezza. Nessun sistema di produzione e stato coinvolto.
