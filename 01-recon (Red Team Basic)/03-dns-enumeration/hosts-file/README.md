@@ -1,5 +1,12 @@
 # DNS Enumeration: Local Hosts File Manipulation
 
+> - **Fase:** Reconnaissance - DNS Enumeration
+> - **Visibilita:** Zero - la modifica e locale alla macchina dell'analista, nessun traffico generato verso DNS esterni
+> - **Prerequisiti:** IP del server target noto, nome del Virtual Host da testare (da subdomain-finding o altre fonti), accesso root per modificare /etc/hosts
+> - **Output:** DNS-002 - Virtual Host non pubblicato nel DNS pubblico ma raggiungibile tramite manipolazione locale
+
+---
+
 Obiettivo: Forzare la risoluzione DNS locale per accedere a Virtual Hosts (VHosts) non indicizzati o ambienti di sviluppo nascosti.
 
 ---
@@ -17,12 +24,14 @@ Se un sottodominio (es. `dev.target.com`) non è registrato nel DNS pubblico ma 
 
 ## 2 Esecuzione Tecnica
 
+**ID Finding:** `DNS-002` | **Severity:** `Medio`
+
 #### A. Verifica della Risoluzione (Prima della modifica)
 
 Tentativo di connessione al dominio target prima della manipolazione locale.
 
 Comando:
-```bash
+```Bash
 ping -c 4 portale-segreto.corp
 ```
 
@@ -87,3 +96,15 @@ Per completare l'analisi del servizio SMB e simulare uno scenario di attacco pi�
     Verificare specificamente la presenza di vulnerabilità critiche storiche (es. MS17-010 EternalBlue o SMBGhost) utilizzando script NSE specifici o scanner di vulnerabilità.
 
 La teoria (e una breve guida pratica) è presente in questo path: `cybersecurity-labs/02-vulnerability-assessment/02-protocol-specific-audit/smb-net-bios/README.md`
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Defense Evasion | Modify Authentication Process | `T1556` | Manipolazione del file /etc/hosts per forzare la risoluzione di nomi non registrati nel DNS pubblico verso l'IP del target, bypassando i resolver esterni (DNS-002) |
+
+---
+
+> **Nota:** La tecnica di manipolazione del file /etc/hosts e stata applicata esclusivamente all'interno del laboratorio VirtualBox su un target autorizzato (10.0.2.3). Questa tecnica non altera il DNS pubblico e non ha effetti al di fuori della macchina locale dell'analista.
