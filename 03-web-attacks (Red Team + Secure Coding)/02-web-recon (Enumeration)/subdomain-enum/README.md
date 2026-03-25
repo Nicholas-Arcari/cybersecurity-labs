@@ -1,5 +1,12 @@
 # Web Recon: Subdomain Enumeration
 
+> - **Fase:** Web Attack - Subdomain Enumeration
+> - **Visibilita:** Bassa (enumerazione passiva da CT logs e OSINT) / Media (DNS brute force attivo)
+> - **Prerequisiti:** Dominio target identificato, `subfinder` e `amass` installati
+> - **Output:** Lista di sottodomini attivi, IP correlati, mapping ASN, potenziali target secondari meno protetti
+
+---
+
 Obiettivo: Mappare l'infrastruttura esterna di un'organizzazione identificando i sottodomini validi, al fine di espandere la superficie di attacco e trovare servizi secondari meno protetti.
 
 Target: `tesla.com` (Scansione Passiva)
@@ -35,7 +42,7 @@ In scenari più complessi, Amass viene utilizzato per la mappatura profonda, inc
 
 È stata eseguita una scansione passiva sul dominio `tesla.com`.
 
-```bash
+```Bash
 sudo apt install subfinder -y
 subfinder -d tesla.com
 ```
@@ -66,7 +73,7 @@ A differenza di Subfinder che è focalizzato sulla velocità, Amass esegue una E
 
 3.  Certificate Scraping: Analizza i certificati SSL attivi per estrarre nomi alternativi (Subject Alternative Name).
 
-```bash
+```Bash
 sudo apt install amass -y
 amass enum -d tesla.com
 ```
@@ -92,7 +99,7 @@ Molti server web (Nginx, Apache) su `localhost` sono configurati per servire app
 
 Si utilizza Gobuster in modalità `vhost` per tentare di indovinare sottodomini locali (es. `admin.localhost`, `api.localhost`) forzando l'header Host.
 
-```bash
+```Bash
 gobuster vhost -u http://localhost -w common.txt --append-domain
 ```
 
@@ -126,3 +133,21 @@ Poiché il codice è ospitato in un repository pubblico:
 L'attività ha dimostrato come la superficie di attacco reale di un'organizzazione sia spesso molto più vasta del semplice sito web istituzionale.
 
 L'identificazione di questi asset periferici è spesso la chiave per trovare vulnerabilità critiche, poiché tendono ad essere meno monitorati e aggiornati rispetto al dominio principale.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Reconnaissance | Active Scanning: Wordlist Scanning | `T1595.003` | Brute force DNS con OWASP Amass per scoprire sottodomini non listati pubblicamente tramite wordlist interne |
+| Reconnaissance | Gather Victim Network Info: Domain Properties | `T1590.001` | Enumerazione passiva dei sottodomini di `tesla.com` tramite Subfinder (CT logs, VirusTotal, Censys) senza interazione diretta con il target |
+| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | VHost fuzzing con Gobuster in modalita `vhost` per identificare virtual host nascosti su ambienti locali Docker |
+
+---
+
+> **Nota:** La subdomain enumeration passiva su `tesla.com` e stata condotta utilizzando
+> esclusivamente fonti OSINT pubbliche (Certificate Transparency Logs, VirusTotal, Censys).
+> Nessuna richiesta e stata inviata direttamente ai server di Tesla. La sezione 6 (VHost Fuzzing)
+> si riferisce a ambienti locali. La ricognizione attiva (DNS brute force) su domini di terzi
+> senza autorizzazione puo violare i termini di servizio dei DNS provider e costituire reato.
