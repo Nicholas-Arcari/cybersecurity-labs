@@ -1,5 +1,12 @@
 # Subdomain Discovery
 
+> - **Fase:** Reconnaissance - DNS Enumeration
+> - **Visibilita:** Bassa (passivo) - interrogazione di fonti di terze parti (CT logs, motori ricerca) senza contattare i server del target
+> - **Prerequisiti:** Dominio target noto, Sublist3r e Assetfinder installati, accesso a Internet
+> - **Output:** DNS-003 - 500+ sottodomini di tesla.com inclusi target ad alto valore (vpn, sso, dev-app, toolbox)
+
+---
+
 Obiettivo: Mappatura della superficie di attacco esterna di un'organizzazione Enterprise tramite tecniche di OSINT (Open Source Intelligence), senza interagire direttamente con i sistemi.
 
 Target: `tesla.com` (Public Bug Bounty Program)
@@ -22,13 +29,15 @@ Perché è importante?
 
 ## 2 Esecuzione Tecnica
 
+**ID Finding:** `DNS-003` | **Severity:** `Medio`
+
 #### A. Aggregazione OSINT (Sublist3r)
 
 È stato utilizzato `Sublist3r` per interrogare molteplici motori di ricerca (Google, Bing, Yahoo, Baidu) e aggregare i risultati storici.
 
 Comando:
 
-```bash
+```Bash
 sublist3r -d tesla.com -o tesla_sublist3r.txt
 ```
 
@@ -88,3 +97,16 @@ Nota Tecnica: A differenza di un laboratorio controllato, in un target reale com
 ## 4 Conclusioni
 
 L'utilizzo combinato di `Sublist3r` e `Assetfinder` su un target Enterprise ha dimostrato come la "Security through Obscurity" sia inefficace. Grazie ai log di Certificate Transparency, qualsiasi nuovo servizio esposto su Internet dotato di HTTPS viene immediatamente reso visibile agli attaccanti, permettendo di mappare l'infrastruttura senza inviare un singolo pacchetto verso i server di Tesla.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Reconnaissance | Search Open Technical Databases: DNS/Passive DNS | `T1596.001` | Enumerazione sottodomini di tesla.com tramite Certificate Transparency logs con Assetfinder, identificando 500+ host inclusi vpn e sso (DNS-003) |
+| Reconnaissance | Gather Victim Network Info: DNS | `T1590.002` | Aggregazione sottodomini da motori di ricerca (Sublist3r) per mappare la superficie di attacco esterna del target (DNS-003) |
+
+---
+
+> **Nota:** Le attivita di subdomain enumeration sono state eseguite su tesla.com nell'ambito del programma pubblico di bug bounty dell'azienda, che autorizza esplicitamente la ricognizione passiva dell'infrastruttura. I risultati sono stati documentati a scopo esclusivamente didattico e non sono stati utilizzati per tentativi di accesso non autorizzato.
