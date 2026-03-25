@@ -1,5 +1,14 @@
 # JWT Authentication Mechanism
 
+> - **Fase:** Web Attack - API Security (JWT)
+> - **Visibilita:** Bassa - il brute force della firma JWT e offline, nessuna richiesta verso il server durante il crack
+> - **Prerequisiti:** Token JWT valido ottenuto come utente autenticato (anche con permessi base), strumento di brute force (hashcat, jwt_tool)
+> - **Output:** Chiave segreta recuperata (`secret123`), token admin forgiato, accesso a funzionalita privilegiate, finding WEB-012
+
+---
+
+**ID Finding:** `WEB-012` | **Severity:** `Critico` | **CVSS v3.1:** 9.8
+
 ---
 
 ## 1 Executive Summary
@@ -128,3 +137,21 @@ def create_token(user):
 L'utilizzo di "secret" deboli nei JWT vanifica l'intero scopo della firma crittografica. La facilità con cui è possibile eseguire il brute-force offline (senza allertare il server con traffico di rete) rende questa vulnerabilità estremamente pericolosa.
 
 Si raccomanda l'immediata rotazione delle chiavi crittografiche e l'adozione di variabili d'ambiente per la gestione dei segreti.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Credential Access | Brute Force: Password Cracking | `T1110.002` | Brute force offline della firma HMAC-SHA256 del token JWT usando `jwt_cracker.py` con dizionario, recuperando la chiave `secret123` (WEB-012) |
+| Defense Evasion | Use Alternate Authentication Material | `T1550` | Utilizzo del token JWT falsificato con payload `{"role": "admin"}` e firma ricalcolata per accedere a funzionalita amministrative (WEB-012) |
+| Lateral Movement | Valid Accounts: Cloud Accounts | `T1078.003` | Impersonazione dell'account admin tramite token JWT forgiato, ottenendo accesso completo all'applicazione (WEB-012) |
+
+---
+
+> **Nota:** La vulnerabilita JWT e stata identificata su un'applicazione Flask/Python di laboratorio
+> locale. La chiave debole `secret123` e stata scelta deliberatamente per scopi dimostrativi.
+> Il finding WEB-012 dimostra che il brute force offline dei JWT e un attacco silenzioso: nessun
+> log lato server, nessun rate limiting applicabile, nessun IDS puo rilevarlo durante la fase
+> di cracking.
