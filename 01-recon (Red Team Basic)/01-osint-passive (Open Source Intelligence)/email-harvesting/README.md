@@ -1,5 +1,12 @@
 # OSINT Passive: Email Harvesting (Personal Audit)
 
+> - **Fase:** Reconnaissance - Passive Information Gathering
+> - **Visibilita:** Zero - nessun contatto diretto con il target, interrogazione di motori di ricerca pubblici
+> - **Prerequisiti:** Dominio target, tool theHarvester installato, accesso a Internet
+> - **Output:** OSINT-002 - Mappa delle email esposte e analisi della superficie di attacco del dominio target
+
+---
+
 Obiettivo: Verifica dell'esposizione di indirizzi email sul dominio personale e analisi della superficie di attacco del portfolio digitale.
 
 Target: `nicholas-arcari.github.io`
@@ -16,6 +23,8 @@ Tuttavia, in un contesto di Personal Security Audit, questa tecnica viene adatta
 ---
 
 ## 2 Esecuzione Tecnica
+
+**ID Finding:** `OSINT-002` | **Severity:** `Informativo`
 
 #### A. Scansione Automatizzata (TheHarvester)
 
@@ -63,3 +72,15 @@ Raccomandazioni:
 
 - Obfuscation (Offuscamento): Se è necessario pubblicare un contatto email, evitare il formato testo standard (`testo@dominio`). Utilizzare immagini o formati non machine-readable (es. `nome [at] gmail [dot] com`) per prevenire lo scraping da parte dei bot.
 - Moduli di Contatto: Preferire l'integrazione di moduli backend-less (es. Formspree) che permettono il contatto senza esporre l'indirizzo di destinazione nel codice frontend.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Reconnaissance | Gather Victim Identity Info: Email Addresses | `T1589.002` | Harvesting email associate al dominio nicholas-arcari.github.io con theHarvester e Google Dorks per mappare la superficie di attacco del portfolio (OSINT-002) |
+
+---
+
+> **Nota:** Le attivita documentate in questa sezione sono state condotte su un dominio di proprieta personale a scopo di audit. I risultati confermano una superficie di attacco minima per email harvesting.
