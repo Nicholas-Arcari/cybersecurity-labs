@@ -1,5 +1,14 @@
 # Manual SQL Injection (SQLi)
 
+> - **Fase:** Web Attack - SQL Injection (Manual)
+> - **Visibilita:** Media - richieste HTTP con payload SQL nel parametro URL o nel corpo POST
+> - **Prerequisiti:** Endpoint vulnerabile identificato, Burp Suite o browser per manipolare i parametri GET/POST
+> - **Output:** Auth bypass, dump struttura database, esfiltrazione credenziali e dati sensibili, finding WEB-004
+
+---
+
+**ID Finding:** `WEB-004` | **Severity:** `Critico` | **CVSS v3.1:** 9.8
+
 ---
 
 ## 1 Executive Summary
@@ -163,3 +172,21 @@ L'utente del database utilizzato dall'applicazione web non dovrebbe avere access
 4. WAF (Web Application Firewall):
 
 Come misura di difesa in profondità, implementare un WAF per rilevare e bloccare pattern di attacco SQL comuni (es. `UNION SELECT`, `OR 1=1`).
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation della SQL Injection sul form di login (`admin' #`) e sul parametro `artist` di `testphp.vulnweb.com` per ottenere accesso non autorizzato (WEB-004) |
+| Discovery | Account Discovery: Local Account | `T1087.001` | Enumerazione degli utenti del database tramite `information_schema.tables` e recupero della struttura della tabella `users` (WEB-004) |
+| Collection | Data from Information Repositories | `T1213` | Dump completo della tabella `users` contenente credenziali (`test:test`), email, numeri di telefono e dati di carte di credito tramite UNION-based injection (WEB-004) |
+
+---
+
+> **Nota:** Le attivita di SQL Injection manuale sono state condotte su `testphp.vulnweb.com`,
+> ambiente di addestramento pubblico Acunetix. I dati estratti (credenziali, carte di credito)
+> sono stati trattati come dati sensibili: visualizzati per documentare la vulnerabilita e poi
+> scartati. In un engagement reale, il dump del database sarebbe consegnato al cliente in forma
+> cifrata come prova di compromissione, classificato "Strictly Confidential".
