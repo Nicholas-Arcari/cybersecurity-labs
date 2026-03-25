@@ -1,34 +1,61 @@
-Automatizza il Backup dei Log
+# 16 - Automatizza il Backup dei Log
 
-Comando: Script Bash che fa `tar -czf` di `/var/log`.
+> - **Fase:** System Setup - Log Management & Forensic Readiness
+> - **Priorita:** Alta - i log sono prove forensi irripetibili
+> - **Prerequisiti:** Directory di destinazione backup creata; accesso sudo per accedere a `/var/log`
+> - **Tempo stimato:** 10 minuti
+
+---
+
+## Comandi
+
+Creazione dello script di backup log:
 
 ```Bash
-touch backup_logs.sh
-sudo nano backup_logs.sh
+touch ~/scripts/backup_logs.sh
+chmod +x ~/scripts/backup_logs.sh
 ```
 
-Aggiungere al file le seguenti linee:
+Contenuto dello script:
 
 ```Bash
 #!/bin/bash
-tar -czf /backup/logs-$(date +%F).tar.gz /var/log
-echo "Logs backed up succesfully"
+BACKUP_DIR="/backup/logs"
+DATE=$(date +%F)
+mkdir -p "$BACKUP_DIR"
+tar -czf "$BACKUP_DIR/logs-$DATE.tar.gz" /var/log
+echo "[$(date)] Logs backed up to $BACKUP_DIR/logs-$DATE.tar.gz"
 ```
 
-Dopo aver salvato il file bisogna renderlo eseguibile con il seguente comando:
+Aggiunta al crontab per esecuzione automatica notturna:
 
 ```Bash
-chmod +x backup_logs.sh
+crontab -e
+# Aggiungere la riga:
+0 1 * * * /home/[utente]/scripts/backup_logs.sh >> /var/log/backup.log 2>&1
 ```
 
-- Perché farlo?
+Esecuzione manuale per test:
 
-I log sono prove forensi. Se un attaccante entra, la prima cosa che fa è cancellarli
+```Bash
+~/scripts/backup_logs.sh
+ls -lh /backup/logs/
+```
 
-- Cosa accade dopo?
+---
 
-Hai copie storiche dei log salvate altrove, utili per indagini post-incidente
+## Perche farlo?
 
-- Cosa rischi se non lo fai?
+I log sono prove forensi. In caso di intrusione, la prima azione di un attaccante competente e cancellare o alterare i log per coprire le proprie tracce (`rm /var/log/auth.log`, `history -c`). Avere copie periodiche dei log su una directory separata - idealmente su un volume cifrato o un sistema remoto - preserva le evidenze per l'analisi post-incidente.
 
-In caso di intrusione, non avrai modo di ricostruire cosa è successo ("Incident Response" impossibile)
+## Cosa accade dopo?
+
+Avrai copie storiche dei log (auth.log, syslog, suricata, dpkg) salvate con timestamp. In caso di incidente, potrai confrontare i log attuali con le copie per identificare le modifiche operate dall'attaccante e ricostruire la timeline dell'intrusione.
+
+## Cosa rischi se non lo fai?
+
+In caso di intrusione, non avrai modo di ricostruire cosa e successo. L'Incident Response diventa impossibile: non puoi identificare il vettore di accesso, i comandi eseguiti, i dati esfiltrati o la durata della compromissione.
+
+---
+
+> **Nota:** Per massima sicurezza, inviare i backup dei log a un server remoto (es. via `rsync` o `scp`) immediatamente dopo la creazione, in modo che un attaccante con accesso locale non possa cancellarli. In alternativa, configurare un log shipper come `rsyslog` o `Filebeat` per inviare i log in tempo reale a un SIEM o un server syslog centralizzato.
