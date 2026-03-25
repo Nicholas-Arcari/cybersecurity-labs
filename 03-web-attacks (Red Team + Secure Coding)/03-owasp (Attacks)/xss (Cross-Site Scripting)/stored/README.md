@@ -1,5 +1,14 @@
 # Vulnerability Assessment: Stored Cross-Site Scripting (XSS)
 
+> - **Fase:** Web Attack - XSS Stored
+> - **Visibilita:** Bassa - il payload viene inserito una volta e poi colpisce tutti i visitatori della pagina senza ulteriori richieste dall'attaccante
+> - **Prerequisiti:** Campo di input persistente nel database (commento, profilo, guestbook) senza sanitizzazione in ingresso e in uscita
+> - **Output:** Payload JavaScript persistente nel database, esecuzione automatica su ogni visita della pagina, furto cookie sessione utenti, finding WEB-006
+
+---
+
+**ID Finding:** `WEB-006` | **Severity:** `Alto` | **CVSS v3.1:** 8.2
+
 ---
 
 ## 1 Executive Summary
@@ -63,3 +72,20 @@ La mitigazione della Stored XSS richiede interventi rigorosi sia in ingresso che
 - Sanitization Libraries:
     
     Se è necessario permettere un po' di HTML (es. grassetto o corsivo), utilizzare librerie di sanitizzazione affidabili (come DOMPurify per JS o HTML Purifier per PHP) che rimuovono solo i tag pericolosi (script, iframe, object).
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Initial Access | Exploit Public-Facing Application | `T1190` | Injection del payload XSS nel campo "Address" del form di registrazione di `testphp.vulnweb.com`, persistito nel database senza sanitizzazione (WEB-006) |
+| Persistence | Server Software Component: Web Shell | `T1505.003` | Il payload XSS Stored equivale a una componente malevola persistente lato server che si esegue automaticamente ogni volta che la pagina viene visualizzata (WEB-006) |
+| Credential Access | Steal Web Session Cookie | `T1539` | Il payload Stored XSS e il vettore per rubare il cookie di sessione dell'amministratore quando visualizza il profilo infetto, senza richiedere interazione dell'attaccante (WEB-006) |
+
+---
+
+> **Nota:** Il finding WEB-006 e stato documentato su `testphp.vulnweb.com` sfruttando il campo
+> "Address" del form di registrazione. La Stored XSS e classificata `Alto` (vs `Medio` della
+> Reflected) perche colpisce tutti i visitatori della pagina inclusi gli amministratori, senza
+> richiedere che la vittima clicchi su un link specifico.
