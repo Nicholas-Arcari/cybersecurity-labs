@@ -1,5 +1,16 @@
 # Web Recon: Directory Busting con Gobuster
 
+> - **Fase:** Web Attack - Web Application Enumeration
+> - **Visibilita:** Media - Gobuster genera molte richieste HTTP in sequenza rapida, rilevabile da WAF e IDS
+> - **Prerequisiti:** Target web identificato, wordlist disponibile (`common.txt`, `SecLists`), connessione di rete al target
+> - **Output:** Lista di directory e file nascosti con codice HTTP, finding WEB-003 (CVS directory e .idea esposti)
+
+---
+
+**ID Finding:** `WEB-003` | **Severity:** `Alto` | **CVSS v3.1:** 7.5
+
+---
+
 Obiettivo: Identificare risorse nascoste (directory, file di backup, pannelli di amministrazione) non linkate direttamente nell'applicazione web, utilizzando tecniche di Brute-force.
 
 Target: `http://testphp.vulnweb.com`
@@ -28,7 +39,7 @@ Poiché l'ambiente di test (Kali Purple) non disponeva delle wordlist standard p
 
 Fase A: Recupero Wordlist
 
-```bash
+```Bash
 wget https://raw.githubusercontent.com/v0re/dirb/master/wordlists/common.txt
 ```
 
@@ -57,7 +68,7 @@ Per approfondire l'analisi, è stato utilizzato Feroxbuster, un tool scritto in 
 
 A differenza di Gobuster, quando Feroxbuster individua una directory (es. `/admin`), avvia automaticamente una nuova scansione al suo interno senza intervento umano.
 
-```bash
+```Bash
 feroxbuster -u http://testphp.vulnweb.com -w common.txt
 ```
 
@@ -93,7 +104,7 @@ Adattamenti necessari per l'ambiente Docker/API:
 
     Molte API restituiscono `401 Unauthorized` se non si presenta un token valido. Strumenti come Gobuster e Feroxbuster permettono di iniettare header di autenticazione per testare le aree riservate:
 
-```bash
+```Bash
 # Esempio di scansione autenticata su API locale
 gobuster dir -u http://localhost:<PORTA> -w api-endpoints.txt -H "Authorization: Bearer <IL_TUO_JWT_TOKEN>"
 ```
@@ -101,3 +112,22 @@ gobuster dir -u http://localhost:<PORTA> -w api-endpoints.txt -H "Authorization:
 Valore nel Red Teaming:
 
 Scansionare container locali permette di individuare Debug Endpoints (es. Spring Boot Actuators) dimenticati attivi, che spesso espongono variabili d'ambiente e credenziali del cloud prima ancora che l'app vada in produzione.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Scansione con Gobuster e Feroxbuster su wordlist `common.txt` per identificare risorse nascoste su `testphp.vulnweb.com` |
+| Reconnaissance | Active Scanning: Wordlist Scanning | `T1595.003` | Brute force delle directory con wordlist per scoprire `/admin`, `/CVS`, `.idea` e altri percorsi non linkati (WEB-003) |
+| Discovery | File and Directory Discovery | `T1083` | Identificazione della directory `/CVS` (versionamento legacy) e della cartella `.idea` (configurazione IDE) esposte pubblicamente (WEB-003) |
+| Collection | Data from Information Repositories | `T1213` | Accesso potenziale al codice sorgente tramite la directory `/CVS` esposta, che potrebbe permettere il download dei file sorgente dell'applicazione (WEB-003) |
+
+---
+
+> **Nota:** Le attivita di directory busting documentate sono state condotte su `testphp.vulnweb.com`,
+> ambiente di addestramento pubblico e autorizzato. La sezione 5 documenta tecniche per ambienti
+> Docker/API locali nell'ambito di test di sviluppo su applicazioni proprie. Il dir-busting su
+> target in produzione non autorizzati e rilevabile dai sistemi di monitoring e costituisce un
+> reato ai sensi dell'art. 615-ter c.p.
