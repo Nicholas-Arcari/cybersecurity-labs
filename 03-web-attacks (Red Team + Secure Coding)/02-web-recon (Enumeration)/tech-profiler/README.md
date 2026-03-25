@@ -1,5 +1,16 @@
 # Web Recon: Tech Profiling & Fingerprinting
 
+> - **Fase:** Web Attack - Technology Fingerprinting
+> - **Visibilita:** Bassa - richieste HTTP standard simili a normale navigazione browser
+> - **Prerequisiti:** Target web identificato, `whatweb` preinstallato su Kali, estensione `Wappalyzer` nel browser
+> - **Output:** Stack tecnologico completo (web server, linguaggio, CMS, versioni), finding WEB-002 (PHP 5.6.40 EOL + header X-Powered-By)
+
+---
+
+**ID Finding:** `WEB-002` | **Severity:** `Alto` | **CVSS v3.1:** 7.5
+
+---
+
 Obiettivo: Identificare lo "Stack Tecnologico" (Sistema Operativo, Web Server, Framework, Linguaggi) del target per mirare la ricerca di vulnerabilità note (CVE).
 
 Target: `http://testphp.vulnweb.com`
@@ -55,7 +66,7 @@ Utilizzato solitamente come estensione del browser, identifica le tecnologie ana
 
 È stata eseguita una scansione dettagliata (`-v`) contro il target per estrarre le versioni software.
 
-```bash
+```Bash
 whatweb -v http://testphp.vulnweb.com
 ```
 
@@ -95,3 +106,20 @@ Analizzando siti statici come `https://nicholas-arcari.github.io`, il server web
 L'attenzione si sposta sulle Librerie Client-Side.
 
 WhatWeb e Wappalyzer sono fondamentali per rilevare versioni obsolete di librerie JavaScript (es. jQuery < 3.0, Bootstrap vecchi) che spesso contengono vulnerabilità note di tipo DOM-based XSS, sfruttabili direttamente nel browser della vittima senza toccare il server.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | Tech profiling con WhatWeb e Wappalyzer per identificare PHP 5.6.40, Nginx 1.19.0 e lo stack tecnologico completo di `testphp.vulnweb.com` (WEB-002) |
+| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Analisi degli header HTTP (es. `X-Powered-By: PHP/5.6.40`) per mappare le versioni software e identificare CVE applicabili (WEB-002) |
+
+---
+
+> **Nota:** Il tech profiling e stato condotto su `testphp.vulnweb.com` (Acunetix) e su
+> `nicholas-arcari.github.io` (sito personale statico). Il finding WEB-002 (PHP 5.6.40 EOL)
+> e documentato come esempio di misconfiguration tipica. In un engagement reale, questa
+> informazione sarebbe classificata come "Confidential" e utilizzata esclusivamente per
+> pianificare le fasi successive del test.
