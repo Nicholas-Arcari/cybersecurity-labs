@@ -1,5 +1,12 @@
 # Proxy Tools: Burp Suite Interception & Extensions
 
+> - **Fase:** Web Attack - Proxy Setup & Traffic Manipulation
+> - **Visibilita:** Locale - il traffico rimane tra browser e proxy, nessun pacchetto aggiuntivo verso il target
+> - **Prerequisiti:** Browser configurato per usare proxy `127.0.0.1:8080`, certificato CA Burp installato nel trust store
+> - **Output:** Intercettazione e manipolazione del traffico HTTP/HTTPS, User-Agent spoofing, log delle richieste per analisi successiva
+
+---
+
 Obiettivo: Configurazione di un proxy HTTP locale per intercettare, analizzare e manipolare il traffico tra il client (Browser) e il server target, estendendo le funzionalità base tramite BApps.
 
 Target: `tesla.com` (Analisi Client-Side)
@@ -74,3 +81,20 @@ Importanza dei file .burp:
 - Evidence Retention: Garantiscono la conservazione forense di tutto il traffico generato, utile per rispondere a contestazioni future o per redigere il report finale.
 - Pause & Resume: Permettono di interrompere un test e riprenderlo giorni dopo mantenendo lo stato dello Scanner, del Repeater e della Sitemap.
 - Collaboration: I file possono essere condivisi tra membri del team per analizzare vulnerabilità complesse in gruppo.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Collection | Man-in-the-Middle | `T1557` | Posizionamento di Burp Suite come proxy MitM tra browser e server `tesla.com` per intercettare il traffico HTTP/HTTPS |
+| Defense Evasion | Masquerading: Masquerade File Type | `T1036.008` | Modifica dell'header `User-Agent` da browser standard a `Portfolio-Red-Team-Phone` per simulare un dispositivo diverso e potenzialmente bypassare controlli di sicurezza |
+
+---
+
+> **Nota:** Le attivita documentate in questo lab si sono svolte su `tesla.com` nell'ambito di
+> un'analisi client-side del traffico HTTP dal browser locale verso il target. Il traffico non
+> ha generato richieste invasive o automatizzate verso il server. In un engagement reale, qualsiasi
+> attivita di intercettazione su sistemi non autorizzati costituisce una violazione della privacy
+> e un reato informatico.
