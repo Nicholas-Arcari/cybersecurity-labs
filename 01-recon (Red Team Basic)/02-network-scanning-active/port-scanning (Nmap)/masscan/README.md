@@ -1,5 +1,12 @@
 # Active Scanning: High-Speed Port Discovery (Masscan)
 
+> - **Fase:** Reconnaissance - Active Network Scanning
+> - **Visibilita:** Alta - SYN flood verso il target, pattern di traffico anomalo facilmente rilevabile da IDS/IPS
+> - **Prerequisiti:** Masscan installato, accesso root, interfaccia di rete fisica (limitazioni in ambienti NAT virtualizzati)
+> - **Output:** SCAN-002 - Porte TCP aperte sul target; in questo lab: falso negativo documentato in ambiente VirtualBox NAT
+
+---
+
 Obiettivo: Esecuzione di scansioni massive ad alta velocità per identificare rapidamente le porte aperte su ampi segmenti di rete, simulando uno scenario di "Large Scale Reconnaissance".
 Target: Subnet Laboratorio (`10.0.2.0/24`)
 
@@ -17,6 +24,8 @@ Use Case: Questo strumento è ideale per la fase iniziale di Broad Scope Discove
 
 ## 2 Esecuzione Tecnica
 
+**ID Finding:** `SCAN-002` | **Severity:** `Informativo`
+
 #### Fase 1: Validazione del Target (Ground Truth)
 
 È stata lanciata una scansione con Nmap per confermare la presenza di porte aperte sull'host target e stabilire una "verità di base".
@@ -33,7 +42,7 @@ Analisi: L'host 10.0.2.3 è attivo e la porta 445 è confermata APERTA.
 
 Successivamente, è stato testato Masscan sullo stesso target specifico per verificare la capacità di rilevamento asincrono.
 
-```bash
+```Bash
 sudo apt install masscan
 sudo masscan -p445 10.0.2.3 --rate=100 -e eth0
 ```
@@ -68,3 +77,15 @@ A prescindere dal risultato tecnico nel laboratorio, l'utilizzo di Masscan in un
 
 - Rumorosità: La natura aggressiva dei pacchetti generati (anche a bassi rate) crea un pattern di traffico anomalo facilmente rilevabile da IDS/IPS.
 - Saturazione: Un rate errato (es. `--rate=100000`) su hardware domestico può causare un Denial of Service (DoS) involontario sui router intermedi.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Discovery | Network Service Discovery | `T1046` | Port discovery asincrono ad alta velocita con Masscan su subnet 10.0.2.0/24, documentando il comportamento in ambiente NAT virtualizzato (SCAN-002) |
+
+---
+
+> **Nota:** Le attivita di port scanning con Masscan sono state eseguite esclusivamente all'interno di un laboratorio VirtualBox isolato. Il rate utilizzato (100 pps) e stato scelto per minimizzare l'impatto sulla rete di test. In ambienti reali, Masscan richiede autorizzazione esplicita e calibrazione del rate in base alla larghezza di banda disponibile.
