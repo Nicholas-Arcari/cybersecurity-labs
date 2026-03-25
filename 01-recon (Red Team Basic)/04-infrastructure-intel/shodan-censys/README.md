@@ -1,5 +1,12 @@
 # Infrastructure Intelligence: Passive Recon with Shodan & Censys
 
+> - **Fase:** Reconnaissance - Infrastructure Intelligence
+> - **Visibilita:** Zero - ricerca su database pubblici pre-costruiti da scanner di terze parti, nessun contatto con i target
+> - **Prerequisiti:** Account Shodan (free tier), account Censys (free tier), accesso a Internet
+> - **Output:** INTEL-001 (60+ RDP esposti), INTEL-002 (workstation con servizi multipli su IP pubblico), INTEL-003 (server aziendale VoIP+FTP+RDP su ADSL consumer)
+
+---
+
 Obiettivo: Mappatura dell'infrastruttura tecnologica esposta su Internet utilizzando motori di ricerca per dispositivi (IoT) e certificati, senza interagire direttamente con i target (Zero-Touch Recon).
 
 Target Case Study: Infrastrutture esposte a Parma (IT) Strumenti: `Shodan` (Web), `Censys` (Web), `Whois`
@@ -13,6 +20,8 @@ A differenza degli scanner attivi (come Nmap) che inviano pacchetti ai bersagli,
 ---
 
 ## 2 Esecuzione Tecnica: Shodan (IoT & Services)
+
+**ID Finding:** `INTEL-001` | **Severity:** `Alto`
 
 Scenario: Ricerca di servizi RDP esposti
 
@@ -37,6 +46,8 @@ Analisi Approfondita dei Target (Deep Dive)
 
 L'analisi dei dettagli forniti da Shodan su due host specifici ha rivelato configurazioni estremamente rischiose:
 
+**ID Finding:** `INTEL-002` | **Severity:** `Alto`
+
 #### Target A (Workstation Esposta)
 
 - IP: `2.118.xx.xx` (Business ISP)
@@ -53,6 +64,8 @@ L'analisi dei dettagli forniti da Shodan su due host specifici ha rivelato confi
     Conclusioni: Questa macchina è un "colabrodo". Ha RDP (3389), Web (3080) e servizi di gestione esposti. È il classico PC "dimenticato" sotto la scrivania che permette a un attaccante di entrare nella rete aziendale.
 
 ![](./img/Screenshot_2026-02-08_11_27_39.jpg)
+
+**ID Finding:** `INTEL-003` | **Severity:** `Critico`
 
 #### Target B (Critical Business Server)
 
@@ -154,3 +167,17 @@ In uno scenario reale, dopo aver identificato una criticità così elevata (Espo
 ## 6 Conclusioni
 
 L'Infrastructure Intelligence ha permesso di mappare una superficie di attacco critica senza inviare un singolo pacchetto verso il bersaglio. Abbiamo identificato un'azienda reale che espone il cuore della propria operatività (Telefoni e File) su una linea consumer, rendendola vulnerabile ad attacchi Ransomware o di spionaggio industriale con uno sforzo minimo da parte di un attaccante.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Reconnaissance | Search Open Technical Databases: Scan Databases | `T1596.005` | Ricerca su Shodan con query `port:3389 city:"Parma"` per identificare dispositivi con RDP esposto, rilevando 60+ target con Information Disclosure di nomi host e OS (INTEL-001) |
+| Reconnaissance | Gather Victim Network Info: Network Topology | `T1590.004` | Analisi dei banner Shodan e dei certificati TLS Censys per ricostruire la topologia dell'infrastruttura dei target critici (INTEL-002, INTEL-003) |
+| Reconnaissance | Gather Victim Network Info: IP Addresses | `T1590.005` | Correlazione IP tramite Whois per identificare ISP, tipo di connessione (consumer vs datacenter) e geolocalizzazione reale dei target (INTEL-002, INTEL-003) |
+
+---
+
+> **Nota:** Le ricerche su Shodan e Censys documentate in questa sezione sono state condotte a scopo didattico per illustrare metodologie di Infrastructure Intelligence. Le aziende identificate come target critici sono state segnalate secondo i principi di Responsible Disclosure. Nessun tentativo di accesso ai sistemi identificati e stato condotto.
