@@ -1,5 +1,16 @@
 # Auth Attacks: Session Hijacking
 
+> - **Fase:** Web Attack - Session Hijacking
+> - **Visibilita:** Media (XSS per cookie stealing) / Alta (ARP spoofing su LAN) / Nulla (cookie cloning manuale con accesso fisico)
+> - **Prerequisiti:** Sessione attiva della vittima, vettore XSS identificato (per Scenario B) o presenza sulla stessa LAN (per Scenario C)
+> - **Output:** Cookie di sessione della vittima, accesso impersonato all'account, finding WEB-010
+
+---
+
+**ID Finding:** `WEB-010` | **Severity:** `Alto` | **CVSS v3.1:** 8.0
+
+---
+
 Obiettivo: Dimostrare come un attaccante può impersonare un utente autenticato sottraendo il suo identificativo di sessione (Session ID), bypassando completamente la password e l'autenticazione a due fattori (2FA).
 
 Target: `http://testphp.vulnweb.com`
@@ -188,3 +199,23 @@ La Kill Chain:
 Mitigazione:
 
 Il server deve implementare la Session Rotation: ogni volta che un utente cambia livello di privilegio (es. fa login), il server deve distruggere il vecchio Session ID e generarne uno completamente nuovo.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Credential Access | Steal Web Session Cookie | `T1539` | Furto del cookie `login=test%2Ftest` tramite payload XSS Stored nel Guestbook (Scenario B) e tramite intercettazione di rete (Scenario C) (WEB-010) |
+| Collection | Man-in-the-Middle: AiTM HTTPS Interception | `T1557.002` | ARP spoofing con Ettercap + cattura pacchetti HTTP con Wireshark per estrarre il cookie di sessione in chiaro (Scenario C - WEB-010) |
+| Defense Evasion | Use Alternate Authentication Material: Web Session Cookie | `T1550.004` | Iniezione del cookie rubato nel browser attaccante tramite console JavaScript (`document.cookie = "..."`) per impersonare la sessione della vittima (WEB-010) |
+| Initial Access | Exploit Public-Facing Application | `T1190` | Sfruttamento dell'assenza del flag `HttpOnly` sul cookie di sessione, che permette l'accesso tramite JavaScript (WEB-010) |
+| Collection | Browser Session Hijacking | `T1185` | Impersonazione della sessione autenticata della vittima dopo l'injection del cookie, con accesso ai dati sensibili del profilo |
+
+---
+
+> **Nota:** Le attivita documentate sono state condotte in un ambiente di laboratorio controllato:
+> Kali Purple (attaccante, IP: 192.168.0.110) e Windows 10 Chrome (vittima) su rete locale
+> isolata. Target: `testphp.vulnweb.com`. L'ARP spoofing su reti aziendali o pubbliche senza
+> autorizzazione e un reato grave. Il flag `HttpOnly` e disponibile su tutti i web server moderni
+> e la sua assenza e una negligenza di configurazione evitabile.
