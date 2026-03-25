@@ -1,19 +1,38 @@
-# Cambia le password di default
+# 03 - Cambia le password di default
 
-Comando:
+> - **Fase:** System Setup - Credential Management
+> - **Priorita:** Critica - eseguire entro i primi minuti dall'installazione
+> - **Prerequisiti:** Accesso al sistema con le credenziali di default (`kali/kali`)
+> - **Tempo stimato:** 1 minuto
+
+---
+
+## Comandi
 
 ```Bash
 passwd
 ```
 
-- Perché farlo?
+Per cambiare la password di root (se necessario):
 
-La password predefinita di Kali è kali. È un'informazione di pubblico dominio
+```Bash
+sudo passwd root
+```
 
-- Cosa accade dopo?
+---
 
-L'accesso al tuo account sarà protetto da una stringa segreta nota solo a te
+## Perche farlo?
 
-- Cosa rischi se non lo fai?
+La password predefinita di Kali Linux e `kali`. E un'informazione di pubblico dominio, documentata nella wiki ufficiale e nota a chiunque abbia mai installato Kali. Qualsiasi scanner di rete o tool di brute-force la tenta come prima opzione.
 
-Chiunque si trovi sulla tua stessa rete (o se esponi il PC su internet) può accedere al tuo sistema semplicemente digitando "kali/kali", rubando dati o installando backdoor
+## Cosa accade dopo?
+
+L'accesso al sistema sara protetto da una stringa segreta nota solo a te. Tutti i servizi che usano l'autenticazione di sistema (SSH, sudo, login grafico) erediteranno automaticamente la nuova password.
+
+## Cosa rischi se non lo fai?
+
+Chiunque si trovi sulla stessa rete (o se il PC e esposto su internet) puo accedere al sistema digitando `kali/kali`, rubando dati, installando backdoor o usando la macchina come pivot per attacchi verso altri target.
+
+---
+
+> **Nota:** Scegliere una password di almeno 16 caratteri con mix di maiuscole, minuscole, numeri e simboli. Considerare l'uso di un password manager (es. KeePassXC) per generare e conservare la password in modo sicuro.
