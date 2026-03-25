@@ -1,5 +1,14 @@
 # Vulnerability Assessment: Server-Side Template Injection (SSTI)
 
+> - **Fase:** Web Attack - Server Side Template Injection
+> - **Visibilita:** Media - richieste HTTP con payload `{{ }}` nel parametro URL, simili a input utente normali
+> - **Prerequisiti:** Applicazione web con motore di template lato server (Jinja2, Twig, Freemarker), parametro di input riflesso nella risposta
+> - **Output:** Conferma SSTI (math injection), Remote Code Execution tramite Python MRO, dump di `/etc/passwd`, finding WEB-008
+
+---
+
+**ID Finding:** `WEB-008` | **Severity:** `Critico` | **CVSS v3.1:** 9.8
+
 ---
 
 ## 1 Executive Summary
@@ -113,3 +122,20 @@ Come mostrato nello screenshot, l'input malevolo viene riflesso fedelmente senza
 ## 6 Conclusioni
 
 La vulnerabilità SSTI è stata correttamente mitigata tramite l'adozione di pratiche di Secure Coding. Si raccomanda di mantenere l'approccio di separazione tra logica e dati per tutti i futuri sviluppi che coinvolgano motori di template.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation della SSTI Jinja2 tramite payload `{{ 7*7 }}` per confermare l'esecuzione di codice lato server, seguita da escalation a RCE (WEB-008) |
+| Execution | Command and Scripting Interpreter: Python | `T1059.006` | Accesso al modulo `os` di Python tramite Method Resolution Order (MRO) per eseguire comandi di sistema: `popen('cat /etc/passwd').read()` (WEB-008) |
+| Discovery | File and Directory Discovery | `T1083` | Lettura del file `/etc/passwd` tramite RCE, rivelando la lista degli utenti di sistema incluso `root` (WEB-008) |
+
+---
+
+> **Nota:** La vulnerabilita SSTI e stata identificata e sfruttata su un'applicazione Flask/Jinja2
+> di laboratorio locale, sviluppata appositamente per dimostrare il pattern insicuro di concatenazione
+> dell'input nel template. Il finding include sia il PoC di exploitation che la verifica post-
+> remediation, documentando l'intero ciclo di vita della vulnerabilita dalla scoperta alla correzione.
