@@ -1,5 +1,12 @@
 # Network Scanning Active: Live Host Discovery
 
+> - **Fase:** Reconnaissance - Active Network Scanning
+> - **Visibilita:** Bassa - pacchetti ARP/ICMP verso la subnet locale, rilevabili da IDS ma comuni nel traffico legittimo
+> - **Prerequisiti:** Accesso alla rete target (LAN o VPN), arp-scan e nmap installati, privilegi root per ARP
+> - **Output:** SCAN-001 - Mappa degli host attivi nella subnet con IP, MAC address e vendor
+
+---
+
 Obiettivo: Mappatura dei nodi attivi (Live Hosts) all'interno della rete target per identificare la superficie di attacco interna.
 Target: Rete Laboratorio (`10.0.2.0/24`)
 
@@ -24,12 +31,14 @@ Questa attività è fondamentale per:
 
 ## 2 Esecuzione Tecnica
 
+**ID Finding:** `SCAN-001` | **Severity:** `Informativo`
+
 #### A. Scansione ARP (arp-scan)
 È stato utilizzato `arp-scan` per una rilevazione rapida degli host nella sottorete locale. Questo metodo bypassa i firewall di livello OS.
 
 Comando:
 
-```bash
+```Bash
 sudo apt install arp-scan
 sudo arp-scan -l
 ```
@@ -70,3 +79,16 @@ nmap -sn 10.0.2.0/24
 ## 3 Conclusioni
 
 L'attività di Live Host Discovery ha permesso di identificare con successo il target Windows 10 all'indirizzo IP 10.0.2.3. La comparazione tra ARP e ICMP ha confermato che, trovandosi nella stessa sottorete fisica, la scansione ARP risulta la più veloce e affidabile per l'enumerazione iniziale.
+
+---
+
+## Mappatura MITRE ATT&CK
+
+| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| :--- | :--- | :--- | :--- |
+| Discovery | Remote System Discovery | `T1018` | ARP sweep con arp-scan e ICMP ping sweep con nmap -sn per identificare host attivi nella subnet 10.0.2.0/24, rilevando il target Windows 10 a 10.0.2.3 (SCAN-001) |
+| Discovery | Network Service Discovery | `T1046` | Netdiscover in modalita attiva per mappare IP attivi e vendor MAC address nella rete locale (SCAN-001) |
+
+---
+
+> **Nota:** Le attivita di Live Host Discovery sono state eseguite esclusivamente all'interno di un laboratorio VirtualBox isolato (subnet 10.0.2.0/24) con target Windows 10 autorizzato. Nessuna scansione e stata condotta su reti esterne o sistemi privi di autorizzazione.
