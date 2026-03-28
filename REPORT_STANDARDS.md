@@ -75,6 +75,10 @@
 | 04-system-exploitation | `04-binary-exploitation/README.md` | Completo | Registro finding EXPLOIT-020..021, MITRE aggregato |
 | 04-system-exploitation | `04-binary-exploitation/buffer-overflow-prep/README.md` | Completo | EXPLOIT-020, stack overflow classico, Immunity + Mona.py |
 | 04-system-exploitation | `04-binary-exploitation/pwntools-scripts/README.md` | Completo | EXPLOIT-021, ROP chain, ASLR/DEP bypass, Ret2Libc |
+| 04-system-exploitation | `05-password-cracking/README.md` | Completo | Registro finding EXPLOIT-022..025, MITRE aggregato |
+| 04-system-exploitation | `05-password-cracking/hashcat/README.md` | Completo | EXPLOIT-022, EXPLOIT-023, Mask + Rule-based Attack NTLM |
+| 04-system-exploitation | `05-password-cracking/john-the-ripper/README.md` | Completo | EXPLOIT-024, EXPLOIT-025, ZIP cracking + Linux unshadowing |
+| 04-system-exploitation | `05-password-cracking/wordlists/README.md` | Completo | Guida wordlist: RockYou, SecLists, CeWL, CUPP |
 | 05-social-engineering | tutti | Da fare | - |
 | 06-wireless-security | tutti | Da fare | - |
 | 07-post-exploitation | tutti | Da fare | - |
@@ -92,7 +96,7 @@
 | `INTEL-` | 01-recon/04-infrastructure-intel | `INTEL-005` |
 | `VULN-` | 02-vulnerability-assessment | `VULN-007` |
 | `WEB-` | 03-web-attacks | `WEB-016` |
-| `EXPLOIT-` | 04-system-exploitation | `EXPLOIT-022` |
+| `EXPLOIT-` | 04-system-exploitation | `EXPLOIT-026` |
 | `SE-` | 05-social-engineering | `SE-001` |
 | `WIFI-` | 06-wireless-security | `WIFI-001` |
 | `POST-` | 07-post-exploitation | `POST-001` |
