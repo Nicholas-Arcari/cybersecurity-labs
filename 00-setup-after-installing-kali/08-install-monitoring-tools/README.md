@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 08 - Installa strumenti di monitoraggio
 
 > - **Fase:** System Setup - System Health Monitoring
