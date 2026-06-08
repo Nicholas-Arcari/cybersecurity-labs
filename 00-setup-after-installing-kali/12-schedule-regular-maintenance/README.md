@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 12 - Pianifica manutenzione regolare (Cron)
 
 > - **Fase:** System Setup - Automazione Manutenzione
