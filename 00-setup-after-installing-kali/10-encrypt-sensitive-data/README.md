@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 10 - Crittografa i dati sensibili
 
 > - **Fase:** System Setup - Data Protection & Encryption
