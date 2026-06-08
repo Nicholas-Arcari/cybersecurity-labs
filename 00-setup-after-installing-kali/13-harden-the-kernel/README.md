@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 13 - Rafforza il kernel (sysctl Hardening)
 
 > - **Fase:** System Setup - Kernel & Network Hardening
