@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 14 - Configura un IDS (Suricata)
 
 > - **Fase:** System Setup - Network Intrusion Detection
