@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 07 - Abilita aggiornamenti automatici
 
 > - **Fase:** System Setup - Patch Management Automatico
