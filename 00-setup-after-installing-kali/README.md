@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 00 - Setup After Installing Kali Linux
 
 > - **Fase:** Pre-Operativa - System Hardening & Configuration
