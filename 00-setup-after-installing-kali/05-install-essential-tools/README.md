@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 05 - Installa strumenti essenziali
 
 > - **Fase:** System Setup - Toolset Configuration
