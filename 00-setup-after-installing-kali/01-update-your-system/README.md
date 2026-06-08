@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 01 - Aggiorna il sistema
 
 > - **Fase:** System Setup - Aggiornamento pacchetti e kernel
