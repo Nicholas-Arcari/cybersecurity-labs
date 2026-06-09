@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Subdomain Discovery
 
 > - **Fase:** Reconnaissance - DNS Enumeration
@@ -97,6 +99,84 @@ Nota Tecnica: A differenza di un laboratorio controllato, in un target reale com
 ## 4 Conclusioni
 
 L'utilizzo combinato di `Sublist3r` e `Assetfinder` su un target Enterprise ha dimostrato come la "Security through Obscurity" sia inefficace. Grazie ai log di Certificate Transparency, qualsiasi nuovo servizio esposto su Internet dotato di HTTPS viene immediatamente reso visibile agli attaccanti, permettendo di mappare l'infrastruttura senza inviare un singolo pacchetto verso i server di Tesla.
+
+---
+
+## Analisi a Basso Livello: Certificate Transparency e Fonti di Subdomain Discovery
+
+### Certificate Transparency (CT) Logs
+
+I CT logs (RFC 6962) sono registri pubblici append-only gestiti da operatori indipendenti (Google, Cloudflare, DigiCert). Ogni Certificate Authority (CA) e obbligata a registrare ogni certificato SSL/TLS emesso in almeno due CT log prima che il certificato sia considerato valido dai browser (Chrome richiede SCT - Signed Certificate Timestamp).
+
+```
+Flusso di emissione certificato:
+Azienda richiede cert per "dev-app.tesla.com"
+        |
+        v
+CA (es. Let's Encrypt) emette il certificato
+        |
+        v
+CA registra il certificato su CT log (es. Google Argon, Cloudflare Nimbus)
+        |
+        v
+CT log restituisce SCT (Signed Certificate Timestamp)
+        |
+        v
+Certificato emesso con SCT incorporato
+        |
+        v
+crt.sh / Censys indicizzano il CT log -> sottodominio PUBBLICAMENTE visibile
+```
+
+**Implicazione per la sicurezza:** ogni certificato SSL emesso per un sottodominio interno (staging, dev, vpn, admin) diventa immediatamente visibile a chiunque interroghi i CT logs. Questo rende impossibile nascondere infrastrutture HTTPS dietro la "Security through Obscurity". I tool come Assetfinder interrogano direttamente `crt.sh` (interfaccia web/API ai CT logs di Comodo) e aggregano i risultati.
+
+### Confronto delle Fonti di Discovery
+
+| Fonte | Tecnica | Copertura | Latenza |
+| :--- | :--- | :--- | :--- |
+| **CT Logs** (crt.sh) | Certificati SSL emessi | Tutti i sottodomini con HTTPS | Minuti (quasi real-time) |
+| **Motori di ricerca** (Google, Bing) | Crawling e indicizzazione | Solo pagine web linkate/crawlate | Giorni-settimane |
+| **VirusTotal** | Correlazione DNS passivo | Sottodomini visti in sample malware/URL | Variabile |
+| **DNS Brute Force** | Query DNS per wordlist | Limitata alla qualita della wordlist | Tempo di esecuzione |
+| **GitHub/Pastebin** | Scraping codice sorgente | Sottodomini hardcoded nel codice | Variabile |
+
+### Tool Moderno: Subfinder (ProjectDiscovery)
+
+Sublist3r e un tool datato (ultimo aggiornamento 2019) con fonti spesso non funzionanti. L'alternativa moderna e `subfinder` (ProjectDiscovery), che supporta 40+ fonti dati e API key configurabili:
+
+```Bash
+# Installazione
+go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+
+# Enumerazione con tutte le fonti
+subfinder -d tesla.com -all -o tesla_subfinder.txt
+
+# Pipeline operativa completa: discovery -> risoluzione -> probing HTTP
+subfinder -d tesla.com -silent | dnsx -silent | httpx -silent -title -status-code
+```
+
+---
+
+## Blue Team: Monitoraggio della Superficie di Attacco Esterna
+
+**Monitoring proattivo:**
+- Configurare alert su crt.sh per il proprio dominio: `https://crt.sh/?q=%.dominio.it` monitora tutti i certificati emessi per qualsiasi sottodominio - rileva sia certificati legittimi che certificati fraudolenti emessi da attaccanti per phishing
+- Implementare Certificate Transparency Monitoring con tool come `certstream` (real-time) o `Facebook Certificate Transparency Monitoring` per rilevare certificati sospetti emessi per il proprio dominio
+
+**Hardening:**
+- Limitare l'emissione di certificati per il proprio dominio tramite record DNS CAA (Certification Authority Authorization): `dominio.it. CAA 0 issue "letsencrypt.org"` - solo la CA specificata puo emettere certificati
+- Per sottodomini interni che non devono essere visibili nei CT logs, utilizzare certificati self-signed o CA interna (non registrata nei CT log pubblici) - con il trade-off che i browser mostreranno un warning
+- Eseguire periodicamente subdomain enumeration sul proprio dominio per identificare asset dimenticati o non autorizzati (Shadow IT)
+
+---
+
+## Esperienza di Laboratorio
+
+L'enumerazione su tesla.com ha prodotto oltre 500 sottodomini unici, un volume che in un assessment reale richiederebbe post-processing significativo. La fase critica non e stata la raccolta (automatica e veloce) ma il triage: separare i sottodomini ad alto valore (vpn, sso, dev-app, toolbox) dai sottodomini a basso interesse (cdn, static, assets).
+
+Il confronto tra Sublist3r e Assetfinder ha rivelato una sovrapposizione parziale (~60%) nei risultati: Assetfinder ha trovato sottodomini tramite CT logs che Sublist3r aveva mancato (perche le API di alcuni motori di ricerca erano rate-limited o offline), mentre Sublist3r ha identificato sottodomini storici indicizzati su Google non piu presenti nei CT logs correnti. La lezione: in un assessment reale, la combinazione di piu tool e obbligatoria per massimizzare la copertura. La pipeline moderna `subfinder | dnsx | httpx` automatizza questo workflow in un singolo comando.
+
+Un dettaglio operativo: il filtering con `grep "dev"` e `grep "admin"` e una tecnica rapida ma grezza. In un assessment professionale, si utilizza `httpx` per risolvere e probare ogni sottodominio, ottenendo status code, titolo della pagina e tecnologie - informazioni che permettono di prioritizzare i target senza visitarli manualmente uno per uno.
 
 ---
 
