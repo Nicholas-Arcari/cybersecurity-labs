@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 02 - Network Scanning Attivo
 
 > - **Fase:** Reconnaissance - Active Network Scanning
