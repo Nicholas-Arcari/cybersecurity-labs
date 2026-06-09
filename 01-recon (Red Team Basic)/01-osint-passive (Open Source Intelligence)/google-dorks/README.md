@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # OSINT Passive: Google Dorking (Google Hacking)
 
 > - **Fase:** Reconnaissance - Passive Information Gathering
@@ -80,6 +82,82 @@ Remediation: Per mitigare questo rischio, le organizzazioni dovrebbero:
 - Utilizzare il file `robots.txt` per impedire l'indicizzazione di aree sensibili.
 - Eseguire regolarmente Dorking sul proprio dominio per verificare cosa è pubblico.
 - Rimuovere i metadati dai documenti pubblici (PDF/DOCX).
+
+---
+
+## Analisi a Basso Livello: Operatori Avanzati e Combinazioni Offensive
+
+### Operatori Google di secondo livello
+
+Oltre agli operatori base (`site:`, `filetype:`, `inurl:`), esistono combinazioni avanzate che amplificano drasticamente l'efficacia della ricognizione:
+
+| Operatore | Funzione | Esempio offensivo |
+| :--- | :--- | :--- |
+| `intitle:"index of"` | Directory listing esposti | `intitle:"index of" site:target.com /backup/` |
+| `ext:sql \| ext:bak` | Backup database indicizzati | `site:target.com ext:sql "INSERT INTO"` |
+| `inurl:wp-config.php` | File di configurazione WordPress | `inurl:wp-config.php "DB_PASSWORD"` |
+| `filetype:env` | File .env con credenziali | `site:target.com filetype:env "DB_PASSWORD"` |
+| `"phpinfo()"` | Pagine phpinfo() esposte | `site:target.com "phpinfo()" "mysql"` |
+| `inurl:"/api/" "key"` | API key esposte | `site:target.com inurl:"/api/" "Authorization"` |
+| `cache:` | Versione cached di pagine rimosse | `cache:target.com/admin/config` |
+
+**Combinazioni multi-operatore per scenari reali:**
+
+```
+# Credenziali in file di configurazione esposti
+site:target.com (ext:xml | ext:conf | ext:cfg) "password"
+
+# Documenti interni con metadati (nomi dipendenti, software)
+site:target.com filetype:pdf "confidential" | "internal use only"
+
+# Pannelli di amministrazione non protetti
+site:target.com inurl:admin | inurl:login | inurl:dashboard -www
+
+# Ambienti di staging/development dimenticati
+site:*.target.com -www intitle:"index of" | inurl:staging | inurl:dev
+```
+
+### Google Hacking Database (GHDB) e Automazione
+
+Il GHDB (exploit-db.com/google-hacking-database) cataloga oltre 6.500 dork categorizzate. Per l'automazione su scala, tool come `pagodo` scaricano le dork dal GHDB e le eseguono in batch:
+
+```Bash
+# pagodo - Passive Google Dork automation
+python3 pagodo.py -d target.com -g dorks/sensitive_directories.dorks -o results.txt
+
+# GooFuzz - Fuzzing di file e directory tramite Google
+goofuzz -t target.com -e pdf,xls,doc,sql,bak -d 5
+```
+
+L'automazione richiede cautela: Google implementa rate limiting aggressivo (CAPTCHA dopo ~50-100 query automatiche). L'uso di proxy e delay randomizzati (3-10 secondi tra query) e necessario per evitare il ban temporaneo dell'IP.
+
+---
+
+## Blue Team: Attack Surface Management e Protezione dall'Indicizzazione
+
+**Monitoring proattivo:**
+- Eseguire periodicamente Google Dork sul proprio dominio: `site:dominio.it filetype:pdf | filetype:xls | filetype:env`
+- Configurare Google Search Console per monitorare le pagine indicizzate e richiedere la rimozione d'emergenza di URL sensibili
+- Utilizzare Google Alerts per `site:dominio.it "password" | "confidential" | "internal"` come early warning
+
+**Hardening:**
+- `robots.txt`: bloccare l'indicizzazione di directory sensibili (`Disallow: /admin/`, `/backup/`, `/staging/`). **Attenzione:** robots.txt e pubblico e rivela l'esistenza delle directory bloccate - usarlo in combinazione con autenticazione, non come unica protezione
+- Header `X-Robots-Tag: noindex`: applicare a livello di web server per risposte HTTP che non devono essere indicizzate (pagine admin, API endpoint)
+- Metadata stripping: implementare pipeline automatica per rimuovere metadati da documenti prima della pubblicazione (`exiftool -all= documento.pdf`)
+- Monitorare l'esposizione su Wayback Machine (`web.archive.org/web/*/dominio.it/*`) - contenuti rimossi dal sito potrebbero essere ancora accessibili nell'archivio
+
+**Detection:**
+- I Google Dork non generano traffico verso il target (le query restano su Google). L'unico indicatore indiretto e un picco di accessi a URL poco visitati (es. `/backup/`, `/admin/config`) dopo che un attaccante ha trovato il percorso tramite dorking e lo visita direttamente. Monitorare l'accesso a path sensibili nei log del web server con alert per referrer vuoto o assente.
+
+---
+
+## Esperienza di Laboratorio
+
+L'esecuzione su nasa.gov ha dimostrato la scala del problema: un dominio di grandi dimensioni espone inevitabilmente una quantita significativa di informazioni indicizzate. La dork `site:nasa.gov filetype:pdf "report"` ha restituito migliaia di risultati - la maggior parte documenti scientifici pubblici, ma tra questi si annidano documenti con metadati interni (nomi di dipendenti, versioni software, percorsi di rete interni nel campo "Author" e "Producer" del PDF).
+
+La dork `site:nasa.gov inurl:login` ha rivelato portali di accesso dedicati ai dipendenti. In un engagement reale, questi URL sarebbero il target primario per credential stuffing (combinando le email raccolte in OSINT-002 con le password dai breach in OSINT-001). La scelta di nasa.gov come target didattico e stata intenzionale: un dominio governativo con programma di divulgazione pubblica consente di documentare le tecniche senza rischi legali.
+
+Un aspetto critico emerso dall'esercizio: la dork `intitle:"index of"` non ha prodotto risultati su nasa.gov - segno di un hardening corretto del web server. Su target meno maturi, questa singola dork puo esporre backup completi, file di configurazione e talvolta database dump dimenticati in directory non protette.
 
 ---
 
