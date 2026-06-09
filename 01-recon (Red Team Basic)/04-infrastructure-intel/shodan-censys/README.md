@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Infrastructure Intelligence: Passive Recon with Shodan & Censys
 
 > - **Fase:** Reconnaissance - Infrastructure Intelligence
@@ -167,6 +169,51 @@ In uno scenario reale, dopo aver identificato una criticità così elevata (Espo
 ## 6 Conclusioni
 
 L'Infrastructure Intelligence ha permesso di mappare una superficie di attacco critica senza inviare un singolo pacchetto verso il bersaglio. Abbiamo identificato un'azienda reale che espone il cuore della propria operatività (Telefoni e File) su una linea consumer, rendendola vulnerabile ad attacchi Ransomware o di spionaggio industriale con uno sforzo minimo da parte di un attaccante.
+
+---
+
+## Analisi a Basso Livello: Come Shodan Costruisce il Suo Database
+
+Shodan esegue scansioni continue dell'intero spazio IPv4 (4.3 miliardi di indirizzi) utilizzando scanner distribuiti globalmente. Il processo di raccolta dati segue una pipeline:
+
+```
+Scanner distribuiti (data center multipli, IP diversi)
+        |
+        v
+SYN scan su porte predefinite (top ~200 porte: 21,22,23,25,80,443,3389,5060...)
+        |
+        v
+Per ogni porta aperta: invio di probe specifici per protocollo
+  - RDP: richiesta di negoziazione RDP -> banner con hostname, OS, NLA status
+  - HTTP: GET / -> header Server, titolo pagina, certificato TLS
+  - SIP: OPTIONS sip:probe@IP -> banner VoIP con user-agent e capabilities
+  - FTP: connessione e lettura banner 220
+        |
+        v
+Parsing e indicizzazione del banner -> database queryabile via web/API
+        |
+        v
+Historical data: ogni scansione viene archiviata (Shodan mantiene mesi di storico)
+```
+
+**API e rate limiting:** il free tier Shodan permette 100 risultati per query e 1 query al secondo. L'API a pagamento ($49/mese per "Small Business") rimuove questi limiti e abilita funzionalita avanzate: alerting su nuovi servizi esposti, network monitoring, vulnerability correlation (CVE automatiche basate su versione software nel banner).
+
+**Censys vs Shodan:** Censys (sviluppato dall'Universita del Michigan, stessa team di ZMap) si differenzia per l'analisi approfondita dei certificati TLS. Mentre Shodan eccelle nel banner grabbing multi-protocollo, Censys permette query avanzate sul contenuto dei certificati (Subject, Issuer, SAN, validita), rendendolo superiore per la discovery di sottodomini e la correlazione di infrastrutture tramite certificati condivisi.
+
+---
+
+## Blue Team: Protezione dalla Passive Reconnaissance
+
+**Monitoring:**
+- Utilizzare Shodan Monitor (gratuito per piccole reti) per ricevere alert quando un nuovo servizio viene rilevato sugli IP aziendali
+- Eseguire periodicamente `shodan host <IP_AZIENDALE>` per verificare cosa Shodan vede dall'esterno
+- Censys Search: `services.tls.certificates.leaf.subject.common_name: "dominio.it"` per trovare tutti i certificati associati
+
+**Hardening:**
+- Chiudere tutte le porte non necessarie sul firewall perimetrale - ogni porta aperta e un banner che Shodan indicizza
+- Per servizi che devono essere esposti: rimuovere o offuscare i banner (es. FTP: cambiare il banner 220; SSH: `Banner none` in sshd_config)
+- Implementare accesso VPN per servizi interni (RDP, VoIP, FTP) invece di esporli direttamente su Internet
+- Separare la connettivita: servizi aziendali su IP dedicato con reverse DNS aziendale, non su linea ADSL consumer dove il reverse DNS rivela l'ISP domestico
 
 ---
 
