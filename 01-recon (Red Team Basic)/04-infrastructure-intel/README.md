@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 04 - Infrastructure Intelligence
 
 > - **Fase:** Reconnaissance - Infrastructure Intelligence Gathering

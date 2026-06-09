@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 01 - Reconnaissance (Red Team Basic)
 
 > - **Fase:** Reconnaissance - Pre-engagement Information Gathering
