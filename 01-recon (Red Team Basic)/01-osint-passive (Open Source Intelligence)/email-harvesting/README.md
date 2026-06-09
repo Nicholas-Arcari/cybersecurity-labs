@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # OSINT Passive: Email Harvesting (Personal Audit)
 
 > - **Fase:** Reconnaissance - Passive Information Gathering
@@ -72,6 +74,80 @@ Raccomandazioni:
 
 - Obfuscation (Offuscamento): Se è necessario pubblicare un contatto email, evitare il formato testo standard (`testo@dominio`). Utilizzare immagini o formati non machine-readable (es. `nome [at] gmail [dot] com`) per prevenire lo scraping da parte dei bot.
 - Moduli di Contatto: Preferire l'integrazione di moduli backend-less (es. Formspree) che permettono il contatto senza esporre l'indirizzo di destinazione nel codice frontend.
+
+---
+
+## Analisi a Basso Livello: Infrastruttura Email e Record DNS Associati
+
+L'email harvesting non si limita alla raccolta di indirizzi: i record DNS associati al dominio rivelano l'intera infrastruttura di posta elettronica e le relative protezioni anti-spoofing.
+
+### Record MX (Mail Exchanger)
+
+Il record MX definisce quale server accetta la posta per un dominio. La sua analisi rivela il provider email utilizzato:
+
+```Bash
+dig MX nicholas-arcari.github.io +short
+# Risultato atteso per GitHub Pages: nessun record MX
+# Risultato tipico aziendale:
+# 10 mx1.azienda.it          <-- server primario (priorita 10)
+# 20 mx2.azienda.it          <-- server secondario (failover)
+# Per Google Workspace: ASPMX.L.GOOGLE.COM
+# Per Microsoft 365: azienda-it.mail.protection.outlook.com
+```
+
+L'assenza di record MX per `nicholas-arcari.github.io` conferma che GitHub Pages non fornisce servizi email - un esito atteso che riduce la superficie di attacco a zero per questo vettore.
+
+### SPF, DKIM e DMARC: la triade di autenticazione email
+
+Questi tre meccanismi, implementati come record TXT nel DNS, costituiscono la difesa contro l'email spoofing:
+
+| Record | Funzione | Verifica con dig |
+| :--- | :--- | :--- |
+| **SPF** (RFC 7208) | Dichiara quali IP sono autorizzati a inviare email per il dominio | `dig TXT dominio.it +short` -> `"v=spf1 include:_spf.google.com ~all"` |
+| **DKIM** (RFC 6376) | Firma crittografica (RSA/Ed25519) nel header dell'email verificabile tramite chiave pubblica nel DNS | `dig TXT selector._domainkey.dominio.it` |
+| **DMARC** (RFC 7489) | Policy che istruisce il server ricevente su come trattare email che falliscono SPF/DKIM | `dig TXT _dmarc.dominio.it` -> `"v=DMARC1; p=reject; rua=mailto:..."` |
+
+**Valore per il Red Team:** un dominio con SPF in modalita `~all` (SoftFail) o senza DMARC consente l'invio di email spoofate che superano i filtri di molti provider. L'harvesting delle email combinato con l'analisi dei record DNS permette di valutare la fattibilita di campagne di spear phishing con email che appaiono provenire dal dominio target.
+
+### theHarvester: Pipeline di Raccolta
+
+theHarvester opera interrogando in parallelo le API di motori di ricerca e servizi OSINT. Il parametro `-b all` attiva tutte le fonti disponibili, ma il throughput reale dipende dalle API key configurate:
+
+```
+theHarvester -b all
+        |
+        +-- Bing API -> scraping risultati per "email @dominio"
+        +-- Google (rate limited, CAPTCHA dopo ~100 query)
+        +-- CRTsh -> Certificate Transparency logs per sottodomini
+        +-- DNSDumpster -> record DNS passivi
+        +-- Shodan (richiede API key) -> banner con email nei servizi esposti
+        +-- Hunter.io (richiede API key) -> database aziendale email
+```
+
+Senza API key, molte fonti restituiscono risultati parziali o nulli. Il tool `Hunter.io` (gratuito fino a 25 ricerche/mese) e spesso la fonte piu produttiva per email aziendali perche indicizza firme email, pagine "Chi Siamo" e documenti PDF.
+
+---
+
+## Blue Team: Protezione contro Email Harvesting
+
+**Monitoring dell'esposizione:**
+- Eseguire periodicamente `theHarvester -d dominio.it -b all` sul proprio dominio per verificare cosa e visibile
+- Configurare Google Alerts per `"@dominio.it" -site:dominio.it` per rilevare email indicizzate su siti esterni
+- Utilizzare Hunter.io Domain Search per verificare quante email aziendali sono nel loro database
+
+**Hardening:**
+- Implementare DMARC con policy `p=reject` e reporting (`rua=`) per bloccare spoofing e monitorare tentativi
+- Configurare SPF con `-all` (HardFail) invece di `~all` (SoftFail) quando possibile
+- Rimuovere email in chiaro dal codice sorgente di siti web (utilizzare form di contatto o JavaScript encoding)
+- Applicare EXIF/metadata stripping ai documenti PDF/DOCX pubblicati (rimuovono autore, email, software)
+
+---
+
+## Esperienza di Laboratorio
+
+L'esecuzione su un dominio GitHub Pages ha prodotto un risultato apparentemente banale (zero email trovate), ma l'esercizio ha avuto valore formativo per due aspetti. Il primo: theHarvester ha restituito 4 indirizzi IP e 19 host per il dominio - tutti appartenenti all'infrastruttura GitHub (range 185.199.x.x). Senza l'analisi manuale, questi risultati avrebbero potuto essere erroneamente classificati come server del target. I 19 sottodomini (shop, ftp, www) erano falsi positivi generati dalla wildcard DNS di GitHub Pages - pattern che si ripresenta con qualsiasi servizio cloud che implementa catch-all DNS.
+
+Il secondo aspetto: la ricerca Google Dork `site:nicholas-arcari.github.io "gmail.com"` ha dimostrato un vettore spesso sottovalutato per i siti statici - il codice sorgente. Su GitHub Pages, l'intero repository e pubblico: un'email inserita in un `README.md` o in un file di configurazione diventa permanentemente indicizzata, anche se successivamente rimossa (la cache di Google e la Wayback Machine la preservano). Questa persistenza delle informazioni e un concetto chiave per l'OSINT: una volta che un dato e stato indicizzato, la rimozione dalla fonte non garantisce la rimozione dall'indice.
 
 ---
 
