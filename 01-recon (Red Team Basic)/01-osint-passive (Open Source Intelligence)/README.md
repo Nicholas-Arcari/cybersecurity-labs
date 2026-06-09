@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 01 - OSINT Passivo (Open Source Intelligence)
 
 > - **Fase:** Reconnaissance - Passive Information Gathering
