@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # DNS Enumeration: Local Hosts File Manipulation
 
 > - **Fase:** Reconnaissance - DNS Enumeration
@@ -96,6 +98,74 @@ Per completare l'analisi del servizio SMB e simulare uno scenario di attacco pi�
     Verificare specificamente la presenza di vulnerabilità critiche storiche (es. MS17-010 EternalBlue o SMBGhost) utilizzando script NSE specifici o scanner di vulnerabilità.
 
 La teoria (e una breve guida pratica) è presente in questo path: `cybersecurity-labs/02-vulnerability-assessment/02-protocol-specific-audit/smb-net-bios/README.md`
+
+---
+
+## Analisi a Basso Livello: Virtual Host Resolution e HTTP Host Header
+
+### Ordine di Risoluzione DNS nel Sistema Operativo
+
+Quando un'applicazione (browser, curl, nmap) richiede la risoluzione di un nome, il sistema operativo segue un ordine di precedenza definito in `/etc/nsswitch.conf`:
+
+```
+# /etc/nsswitch.conf (Kali/Debian default)
+hosts: files dns myhostname
+
+# Ordine di risoluzione:
+# 1. files  -> /etc/hosts (locale, priorita massima)
+# 2. dns    -> query al resolver configurato in /etc/resolv.conf
+# 3. myhostname -> hostname locale della macchina
+```
+
+La modifica del file `/etc/hosts` sfrutta questo ordine: inserendo un mapping `IP nome`, il resolver locale restituisce l'IP senza mai contattare il DNS esterno. Questo rende la tecnica completamente invisibile a qualsiasi monitoraggio di rete - nessuna query DNS viene generata.
+
+### HTTP Host Header e Virtual Host Routing
+
+Il meccanismo che rende questa tecnica operativamente utile e il Virtual Host routing nei web server. Apache e Nginx utilizzano l'header `Host:` della richiesta HTTP per selezionare quale configurazione servire:
+
+```
+# Richiesta HTTP generata dopo la modifica di /etc/hosts:
+GET / HTTP/1.1
+Host: portale-segreto.corp       <-- il web server usa questo valore
+Connection: keep-alive            per selezionare il VirtualHost
+
+# Configurazione Apache corrispondente:
+<VirtualHost *:80>
+    ServerName portale-segreto.corp
+    DocumentRoot /var/www/portale-segreto
+</VirtualHost>
+
+<VirtualHost *:80>
+    ServerName www.azienda.it     <-- VHost diverso, stesso IP
+    DocumentRoot /var/www/sito-pubblico
+</VirtualHost>
+```
+
+Senza la manipolazione dell'Host header (ottenuta tramite /etc/hosts), il browser invierebbe una richiesta con l'IP numerico, e il web server risponderebbe con il VHost di default - tipicamente il sito pubblico, non l'applicazione interna nascosta.
+
+### VHost Discovery Automatizzata
+
+La scoperta sistematica di Virtual Host nascosti si effettua tramite fuzzing dell'Host header con tool dedicati:
+
+```Bash
+# Gobuster in modalita vhost
+gobuster vhost -u http://10.0.2.3 -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt
+
+# ffuf con filtro sulle risposte diverse dal default
+ffuf -u http://10.0.2.3 -H "Host: FUZZ.target.com" \
+     -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt \
+     -fs 612    # filtra le risposte con dimensione del VHost default (Nginx 404)
+```
+
+Il principio: se la risposta HTTP per `Host: admin.target.com` differisce (dimensione, status code, contenuto) dalla risposta per un VHost inesistente, il VHost e attivo. Questa tecnica e fondamentale in CTF e in assessment dove il target espone applicazioni interne su VHost non pubblicati nel DNS.
+
+---
+
+## Esperienza di Laboratorio
+
+L'esercizio ha reso tangibile un concetto che nella teoria appare banale: la separazione tra risoluzione DNS e routing HTTP. Prima della modifica di `/etc/hosts`, il ping verso `portale-segreto.corp` falliva con "Name or service not known" - il resolver non aveva modo di tradurre il nome in IP. Dopo l'aggiunta della riga nel file hosts, lo stesso comando ha ricevuto risposta immediata. Il punto chiave: il server target non e cambiato in alcun modo - e cambiato solo il modo in cui la macchina dell'analista interpreta il nome.
+
+Questa tecnica e onnipresente in due contesti operativi: CTF (dove le sfide web richiedono quasi sempre di aggiungere entry nel file hosts per accedere ai VHost) e penetration test su applicazioni interne (dove gli ambienti di staging, development e admin sono spesso accessibili solo tramite VHost non pubblicati nel DNS pubblico). In entrambi i casi, la mancata modifica del file hosts porta a testare il VHost sbagliato - un errore che produce risultati apparentemente corretti ma completamente fuorvianti.
 
 ---
 
