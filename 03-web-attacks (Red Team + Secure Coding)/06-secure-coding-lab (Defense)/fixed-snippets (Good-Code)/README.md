@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # SQL Injection - Post-Remediation Verification
 
 > - **Fase:** Secure Coding - Post-Remediation Verification (SQL Injection)
@@ -72,6 +74,68 @@ L'attacco è stato neutralizzato.
 L'implementazione dei Prepared Statements ha eliminato completamente la superficie di attacco per SQL Injection su questo endpoint.
 
 Il codice è ora conforme agli standard di sicurezza OWASP.
+
+---
+
+## Analisi a Basso Livello: Come i Prepared Statements Bloccano l'Injection
+
+### Meccanica della Separazione Codice/Dati
+
+Il Prepared Statement invia la query e i dati al database in due fasi separate:
+
+```
+CONCATENAZIONE (vulnerabile):
+PHP: "SELECT * FROM users WHERE email = '" . $input . "'"
+    |
+    v
+Database riceve UNA stringa:
+"SELECT * FROM users WHERE email = 'admin' OR '1'='1'"
+    |
+    v
+SQL Parser interpreta TUTTO come SQL:
+-> WHERE email = 'admin'   <- condizione 1
+-> OR '1'='1'              <- condizione 2 (sempre vera)
+-> Risultato: TUTTI gli utenti restituiti
+
+PREPARED STATEMENT (sicuro):
+PHP: $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+     $stmt->execute(['email' => $input]);
+    |
+    v
+Fase 1 - Database riceve la STRUTTURA:
+"SELECT * FROM users WHERE email = ?"
+-> SQL Parser compila il piano di esecuzione
+-> Il placeholder ? e marcato come "dato, non codice"
+    |
+    v
+Fase 2 - Database riceve il DATO:
+"admin' OR '1'='1"
+-> Inserito nel placeholder come valore letterale
+-> Il database cerca un utente con email = "admin' OR '1'='1"
+-> Nessun utente trovato -> Login fallito
+```
+
+### Proof of Defense: Cosa Cambia nel Log SQL
+
+```sql
+-- Log query CON concatenazione (attacco riesce):
+SELECT * FROM users WHERE email = 'admin' OR '1'='1'
+-- -> Restituisce TUTTI i record (bypass autenticazione)
+
+-- Log query CON prepared statement (attacco fallisce):
+SELECT * FROM users WHERE email = 'admin'' OR ''1''=''1'
+-- -> Il database ha escaped gli apici
+-- -> Cerca letteralmente l'email "admin' OR '1'='1"
+-- -> 0 risultati -> Login negato
+```
+
+---
+
+## Esperienza di Laboratorio
+
+Il re-test del payload `admin@example.com' OR '1'='1` contro il codice patchato ha prodotto il risultato "Login Fallito" - la conferma piu diretta che il fix funziona. Il database ha trattato l'intero input (inclusi gli apici e la condizione OR) come una stringa letterale, cercando un utente con quell'indirizzo email esatto.
+
+La lezione chiave e che i Prepared Statements non "puliscono" l'input: non rimuovono gli apici o i caratteri speciali. Cambiano il modo in cui il database interpreta l'input, separando strutturalmente il codice SQL dai dati utente. Questo approccio e superiore al sanitization manuale (che puo avere edge case e bypass) perche opera a livello di protocollo database, non a livello di stringa.
 
 ---
 

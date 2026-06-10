@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Cross-Site Scripting (XSS) - Post-Remediation Verification
 
 > - **Fase:** Secure Coding - XSS Mitigation (Output Encoding)
@@ -92,6 +94,57 @@ Lo screenshot mostra chiaramente la differenza: il box rosso (vulnerabile) mostr
 L'implementazione di `htmlspecialchars()` ha eliminato efficacemente la vulnerabilità XSS su questo endpoint. Il sistema ora tratta l'input utente come dati (testo) e non come codice eseguibile.
 
 Si raccomanda di estendere questa pratica di "Output Encoding" a tutte le variabili stampate nell'applicazione.
+
+---
+
+## Analisi a Basso Livello: Output Encoding e Context-Aware Defense
+
+### Come htmlspecialchars() Neutralizza il Payload
+
+La funzione trasforma i caratteri pericolosi in HTML entities che il browser renderizza come testo:
+
+```
+Input attaccante: <script>alert('XSS')</script>
+    |
+    v
+htmlspecialchars($input, ENT_QUOTES, 'UTF-8'):
+    < -> &lt;
+    > -> &gt;
+    " -> &quot;
+    ' -> &#039;
+    & -> &amp;
+    |
+    v
+Output nel DOM: &lt;script&gt;alert(&#039;XSS&#039;)&lt;/script&gt;
+    |
+    v
+Browser renderizza: <script>alert('XSS')</script>  (come TESTO visibile)
+Il tag <script> NON viene interpretato come codice
+```
+
+### Framework con Auto-Escaping
+
+I framework moderni applicano l'encoding automaticamente, eliminando il rischio di dimenticanze:
+
+| Framework | Sintassi sicura (auto-escaped) | Sintassi pericolosa (raw) |
+| :--- | :--- | :--- |
+| **Twig** (PHP) | `{{ name }}` | `{{ name\|raw }}` |
+| **Blade** (Laravel) | `{{ $name }}` | `{!! $name !!}` |
+| **React** (JSX) | `<p>{name}</p>` | `dangerouslySetInnerHTML` |
+| **Jinja2** (Python) | `{{ name }}` | `{{ name\|safe }}` |
+| **Django** | `{{ name }}` | `{{ name\|safe }}` |
+
+La regola: usare sempre la sintassi di default (auto-escaped). La sintassi raw deve essere giustificata e il dato deve provenire da una fonte trusted.
+
+---
+
+## Esperienza di Laboratorio
+
+Il confronto visivo tra il box rosso (vulnerabile) e il box verde (sicuro) nello stesso screenshot e stato la dimostrazione piu efficace: lo stesso payload produce esecuzione di codice nel primo caso e testo innocuo nel secondo, con una sola riga di codice di differenza (`echo` vs `echo htmlspecialchars()`).
+
+La scelta dei parametri `ENT_QUOTES` e `'UTF-8'` e stata importante da comprendere: senza `ENT_QUOTES`, gli apici singoli non vengono encoded, lasciando aperto un vettore in contesti come `<input value='DATO'>`. Senza `'UTF-8'`, encoding multi-byte (come UTF-7) possono bypassare il filtro. La combinazione completa (`htmlspecialchars($input, ENT_QUOTES, 'UTF-8')`) e il pattern canonico OWASP.
+
+Il test con `<img src=x onerror=alert('XSS')>` ha verificato un vettore diverso da `<script>`: anche senza tag script, l'event handler `onerror` esegue JavaScript. Il fix con `htmlspecialchars()` blocca entrambi i vettori perche converte sia `<` che `>` in entities, impedendo al browser di creare qualsiasi elemento HTML dall'input utente.
 
 ---
 
