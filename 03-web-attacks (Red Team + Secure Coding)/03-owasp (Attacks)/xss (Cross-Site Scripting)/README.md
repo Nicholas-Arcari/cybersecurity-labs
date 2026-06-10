@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Cross-Site Scripting (XSS)
 
 > - **Fase:** Web Attack - Cross-Site Scripting (XSS)
