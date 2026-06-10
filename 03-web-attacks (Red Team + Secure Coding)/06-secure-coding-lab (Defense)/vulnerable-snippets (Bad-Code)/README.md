@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Source Code Review
 
 > - **Fase:** Secure Coding - Static Analysis (SAST)
@@ -119,6 +121,71 @@ $stmt->execute(['id' => $user_id]);
 ## 4 Conclusioni
 
 Il pattern di vulnerabilità riscontrato indica una mancata adozione delle pratiche di "Secure by Design". La concatenazione diretta dell'input utente con interpreti di comandi (Database o Sistema Operativo) è la causa principale (Root Cause) di entrambi i difetti. Si raccomanda un training immediato sulle pratiche di Input Validation e Parameterized Queries per il team di sviluppo.
+
+---
+
+## Analisi a Basso Livello: Root Cause e CWE Taxonomy
+
+### Perche la Concatenazione e Pericolosa
+
+Il root cause di entrambi i finding e lo stesso pattern architetturale: **mixing code and data**. Quando l'input utente viene concatenato a un interprete (shell o SQL), l'interprete non puo distinguere tra i comandi legittimi e i dati dell'utente.
+
+```
+PATTERN INSICURO (Command Injection):
+command = "ping -c 1 " + user_input
+os.system(command)
+                    ^
+                    L'interprete shell vede UNA stringa
+                    e interpreta TUTTO come comando
+                    "ping -c 1 8.8.8.8; cat /etc/passwd"
+                    diventa DUE comandi separati
+
+PATTERN SICURO (Subprocess con lista):
+subprocess.run(["ping", "-c", "1", user_input])
+                                    ^
+                    L'interprete vede QUATTRO argomenti separati
+                    user_input e SOLO il quarto argomento
+                    "; cat /etc/passwd" diventa un IP non valido
+                    il comando ping fallisce, nessuna injection
+```
+
+### Classificazione CWE
+
+| CWE | Nome | Finding | Pattern pericoloso | Pattern sicuro |
+| :--- | :--- | :--- | :--- | :--- |
+| CWE-78 | OS Command Injection | Finding 1 | `os.system("cmd " + input)` | `subprocess.run(["cmd", input])` |
+| CWE-89 | SQL Injection | Finding 2 | `"SELECT ... WHERE id=" + input` | `cursor.execute("...WHERE id=?", (input,))` |
+| CWE-79 | XSS | (modulo XSS) | `echo $_GET['name']` | `echo htmlspecialchars($name)` |
+| CWE-94 | Code Injection | (raro) | `eval(user_input)` | Non usare eval |
+
+Tutti questi CWE condividono lo stesso root cause: **CWE-20 (Improper Input Validation)**.
+
+### SAST Tools per Detection Automatica
+
+```Bash
+# Python: Bandit (analisi statica per security)
+pip install bandit
+bandit -r ./code/ -f json -o bandit_report.json
+# Output: Issue: [B605:start_process_with_a_shell] Starting a process with a shell
+#         Severity: High  Confidence: High
+#         Location: python-vuln-exec.py:5
+
+# PHP: PHPStan + security rules
+phpstan analyse --level=max src/
+
+# Multi-linguaggio: Semgrep (pattern matching AST)
+semgrep --config=p/owasp-top-ten ./code/
+```
+
+---
+
+## Esperienza di Laboratorio
+
+L'esecuzione del PoC per Command Injection (`8.8.8.8; cat /etc/passwd`) ha prodotto un risultato visivamente potente: il contenuto di `/etc/passwd` stampato a schermo dopo un ping legittimo. Questo tipo di evidenza e cruciale in un report perche dimostra in modo inequivocabile che l'attaccante ottiene esecuzione di comandi arbitrari con i privilegi dell'applicazione.
+
+La differenza tra `os.system()` e `subprocess.run()` con lista di argomenti e la lezione fondamentale: non si tratta di "usare una funzione piu nuova", ma di cambiare il modello di comunicazione con l'interprete. `os.system()` passa una stringa alla shell (che la interpreta); `subprocess.run()` con lista bypassa la shell e passa gli argomenti direttamente all'eseguibile, rendendo l'injection strutturalmente impossibile.
+
+Il confronto tra i due CWE (78 e 89) ha evidenziato il pattern comune: in entrambi i casi, la concatenazione di stringhe mescola dati e codice in un unico flusso che l'interprete (shell o database) non puo distinguere. La soluzione e sempre la stessa: separare i dati dal codice tramite parameterizzazione (prepared statements per SQL, lista di argomenti per subprocess).
 
 ---
 
