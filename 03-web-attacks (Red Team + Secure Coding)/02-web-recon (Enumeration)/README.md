@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 02 - Web Recon (Enumeration)
 
 > - **Fase:** Web Attack - Web Application Enumeration
