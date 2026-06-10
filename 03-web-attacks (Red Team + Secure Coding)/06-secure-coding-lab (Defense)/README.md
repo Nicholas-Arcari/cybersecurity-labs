@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 06 - Secure Coding Lab (Defense)
 
 > - **Fase:** Secure Coding - Static Analysis (SAST) e Post-Remediation Verification
