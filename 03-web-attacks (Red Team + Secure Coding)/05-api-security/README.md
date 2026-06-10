@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 05 - API Security
 
 > - **Fase:** Web Attack - API Security Testing (OWASP API Top 10:2023)

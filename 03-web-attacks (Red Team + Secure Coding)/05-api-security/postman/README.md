@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # API Broken Object Level Authorization (BOLA/IDOR)
 
 > - **Fase:** Web Attack - API Security (REST/IDOR)
@@ -107,6 +109,93 @@ Raccomandazioni aggiuntive:
 La vulnerabilità IDOR rilevata è critica e permette la totale compromissione della riservatezza dei dati bancari. L'assenza di controlli di autorizzazione orizzontale è un errore comune ma devastante.
 
 Si raccomanda il deploy immediato della patch proposta (Controllo di Ownership) e l'esecuzione di un nuovo ciclo di test con Postman per verificare la risoluzione.
+
+---
+
+## Analisi a Basso Livello: IDOR/BOLA e Authorization Patterns
+
+### Perche IDOR e la Vulnerabilita #1 nelle API (OWASP API Top 10:2023)
+
+```
+Architettura di una richiesta API con IDOR:
+
+Client (Alice, user_id=1000):
+GET /api/balance/1001         <- richiede dati di Bob (user_id=1001)
+Authorization: Bearer <token_alice>
+
+Server VULNERABILE:
+1. Verifica: token valido? -> Si (Alice e autenticata)
+2. Legge account_id dal path -> 1001
+3. Query: SELECT * FROM accounts WHERE id = 1001
+4. Restituisce dati di Bob -> {name: "Bob", balance: 150000}
+   ERRORE: non ha verificato se Alice == proprietario di 1001
+
+Server SICURO:
+1. Verifica: token valido? -> Si (Alice e autenticata)
+2. Estrae user_id dal token -> 1000
+3. Legge account_id dal path -> 1001
+4. Verifica: 1000 == 1001? -> NO
+5. Restituisce 403 Forbidden
+```
+
+### Pattern di ID Predicibili vs UUID
+
+```
+ID Sequenziali (vulnerabili a enumeration):
+/api/balance/1000  -> Alice
+/api/balance/1001  -> Bob
+/api/balance/1002  -> Charlie
+Pattern: +1 per ogni nuovo account -> facile da iterare
+
+UUID v4 (resistenti a enumeration):
+/api/balance/550e8400-e29b-41d4-a716-446655440000  -> Alice
+/api/balance/6ba7b810-9dad-11d1-80b4-00c04fd430c8  -> Bob
+Pattern: 2^122 combinazioni possibili -> impossibile da indovinare
+
+ATTENZIONE: UUID non risolve IDOR, solo l'enumeration.
+Se l'attaccante ottiene l'UUID di Bob (da un altro leak),
+puo comunque accedere ai dati senza authorization check.
+La vera fix e SEMPRE il controllo di ownership lato server.
+```
+
+### Automazione del Fuzzing IDOR con Collection Runner
+
+```
+Postman Collection Runner (o equivalente curl loop):
+
+1. Creare una Collection con la richiesta:
+   GET /api/balance/{{account_id}}
+   Authorization: Bearer <token>
+
+2. Creare un Data File (CSV):
+   account_id
+   998
+   999
+   1000
+   1001
+   1002
+   ...
+
+3. Runner esegue N iterazioni (una per riga CSV)
+4. Risultato: tabella con tutte le risposte
+
+Equivalente curl:
+for id in $(seq 998 1005); do
+  echo "=== Account $id ==="
+  curl -s -H "Authorization: Bearer $TOKEN" \
+    http://target/api/balance/$id | python3 -m json.tool
+done
+```
+
+---
+
+## Esperienza di Laboratorio
+
+L'automazione con il Collection Runner (simulato via script) ha dimostrato la velocita con cui un attaccante puo esfiltrare tutti i dati: 8 account in meno di un secondo. In un'applicazione reale con migliaia di utenti, lo stesso script con `seq 1 100000` esfilerebbe l'intero database in pochi minuti, generando traffico indistinguibile da richieste legittime (stesso endpoint, stesso formato, stesso token valido).
+
+La scoperta dell'account CEO (ID 1002, saldo 9.999.999 EUR) ha evidenziato l'impatto reale dell'IDOR: non si tratta solo di leggere i dati di altri utenti, ma di accedere a informazioni finanziarie di dirigenti con account privilegiati. In un contesto bancario reale, questo sarebbe sufficiente per insider trading, estorsione, o vendita di informazioni sul dark market.
+
+Il codice vulnerabile (`accounts.get(account_id)` senza ownership check) e un pattern molto comune nei backend Flask/Express/Django: il framework gestisce l'autenticazione (chi sei?) ma non l'autorizzazione (a cosa puoi accedere?). La fix richiede esattamente 3 righe di codice aggiuntive (estrai user_id dal token, confronta con account_id richiesto, ritorna 403 se diversi), ma la sua assenza espone l'intero database utenti.
 
 ---
 

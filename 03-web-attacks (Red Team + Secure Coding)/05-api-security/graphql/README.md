@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # DVGA (GraphQL API)
 
 > - **Fase:** Web Attack - API Security (GraphQL)
@@ -198,6 +200,106 @@ Oltre alla RCE principale, sono state riscontrate le seguenti criticità accesso
 ## 5 Conclusioni
 
 Il sistema DVGA presenta gravi lacune di sicurezza che permettono a un attaccante esterno non autenticato di prendere il completo controllo della macchina in meno di 10 minuti. Si raccomanda un'immediata revisione del codice (Code Review) seguendo le linee guida proposte nella sezione "Root Cause Analysis".
+
+---
+
+## Analisi a Basso Livello: GraphQL Internals e Superficie di Attacco
+
+### Differenze Architetturali: REST vs GraphQL
+
+```
+REST API:
+GET /api/users/1          -> {id: 1, name: "Alice", email: "..."}
+GET /api/users/1/posts    -> [{id: 1, title: "..."}]
+GET /api/users/1/comments -> [{id: 1, body: "..."}]
+= 3 richieste, 3 endpoint, 3 set di permessi da gestire
+
+GraphQL:
+POST /graphql
+{"query": "{ user(id:1) { name email posts { title } comments { body } } }"}
+= 1 richiesta, 1 endpoint, query definita dal CLIENT
+
+Implicazioni di sicurezza:
+- REST: il server decide cosa esporre (whitelist di endpoint)
+- GraphQL: il client decide cosa chiedere (il server deve limitare)
+- Introspection: lo schema e auto-documentante (__schema query)
+- Batching: il client puo inviare N query in una singola richiesta
+- Nested queries: possibile causare DoS con query profondamente nidificate
+```
+
+### Introspection Query: La Mappa dell'Attaccante
+
+La query di introspection e l'equivalente GraphQL di un'enumerazione completa dell'API:
+
+```graphql
+# Query introspection completa (ottenere TUTTO lo schema)
+{
+  __schema {
+    queryType { name }
+    mutationType { name }
+    types {
+      name
+      fields {
+        name
+        args { name type { name } }
+        type { name kind ofType { name } }
+      }
+    }
+  }
+}
+
+# Output rivela:
+# - Tutte le query disponibili (pastes, users, systemDebug, systemDiagnostics)
+# - Tutte le mutations (login, createPaste, importPaste)
+# - Tipi di dato e relazioni (PasteObject -> OwnerObject)
+# - Argomenti accettati (arg: String, id: Int)
+```
+
+### OWASP GraphQL Security Top 10
+
+| # | Vulnerabilita | Presente in DVGA | Impatto |
+| :--- | :--- | :--- | :--- |
+| 1 | Introspection enabled | Si | Schema disclosure completo |
+| 2 | DoS via nested queries | Da verificare | Resource exhaustion |
+| 3 | Injection (SQL, OS, SSTI) | Si (Command Injection) | RCE |
+| 4 | Broken Authorization (BOLA) | Si (accesso a dati altrui) | Data breach |
+| 5 | Information Disclosure | Si (errori verbose, debug mode) | Stack trace, path |
+| 6 | Batching attacks (brute force) | Si (nessun rate limit) | Credential stuffing |
+| 7 | Missing rate limiting | Si | DoS, brute force |
+| 8 | Alias-based batching | Da verificare | Bypass rate limit |
+| 9 | Unrestricted field access | Si (tutti i campi accessibili) | PII exposure |
+| 10 | Server-side request forgery | Da verificare | Internal network access |
+
+### Hardening GraphQL in Produzione
+
+```python
+# Disabilitare introspection in produzione (graphene-django)
+GRAPHENE = {
+    "MIDDLEWARE": ["graphql_jwt.middleware.JSONWebTokenMiddleware"],
+    "SCHEMA": "app.schema.schema",
+    # Blocca __schema e __type queries
+    "INTROSPECTION": False,  # <-- disabilita in produzione
+}
+
+# Limitare profondita query (graphene)
+from graphene import Schema
+from graphql import validate
+from graphql.validation import NoSchemaIntrospectionCustomRule
+
+schema = Schema(query=Query, mutation=Mutation)
+# Max depth: 5 livelli di nesting
+# Max complexity: 1000 punti (campi * profondita)
+```
+
+---
+
+## Esperienza di Laboratorio
+
+Il bypass del blocco GraphiQL tramite curl e stato il primo passo critico: il server bloccava l'interfaccia grafica (header `User-Agent` o `Referer` check) ma accettava le stesse query via richiesta HTTP diretta. Questo dimostra una difesa superficiale: bloccare l'IDE grafico non impedisce l'accesso all'API, che resta raggiungibile da qualsiasi client HTTP.
+
+La kill chain completa (Introspection -> Command Injection -> RCE -> Account Takeover) completata in meno di 10 minuti ha evidenziato la velocita con cui un'API GraphQL mal configurata puo essere compromessa. Il punto chiave e che l'introspection ha rivelato la query `systemDebug` che non sarebbe stata scoperta altrimenti: senza introspection, l'attaccante avrebbe dovuto indovinare i nomi delle query (fuzzing), rendendo l'attacco significativamente piu lento e rumoroso.
+
+Il bypass dell'encoding binario con `strings dvga.db` al posto di `cat dvga.db` e stato un adattamento operativo necessario: il database SQLite contiene dati binari che corrompono l'output JSON di GraphQL. Il comando `strings` estrae solo le sequenze di caratteri leggibili, producendo un output pulito che include le credenziali in chiaro. Questa tecnica e applicabile ogni volta che l'RCE non supporta output binario (web shell PHP, SSTI, Command Injection via API).
 
 ---
 

