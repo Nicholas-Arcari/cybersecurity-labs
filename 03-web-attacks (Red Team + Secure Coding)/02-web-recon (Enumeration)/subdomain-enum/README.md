@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Web Recon: Subdomain Enumeration
 
 > - **Fase:** Web Attack - Subdomain Enumeration
@@ -133,6 +135,46 @@ Poiché il codice è ospitato in un repository pubblico:
 L'attività ha dimostrato come la superficie di attacco reale di un'organizzazione sia spesso molto più vasta del semplice sito web istituzionale.
 
 L'identificazione di questi asset periferici è spesso la chiave per trovare vulnerabilità critiche, poiché tendono ad essere meno monitorati e aggiornati rispetto al dominio principale.
+
+---
+
+## Analisi a Basso Livello: Subdomain Takeover - Il Rischio Nascosto
+
+### Meccanica del Subdomain Takeover
+
+Il subdomain takeover sfrutta record DNS CNAME "dangling" (orfani):
+
+```
+Scenario di rischio:
+1. L'azienda configura: shop.tesla.com -> CNAME -> shop-tesla.s3.amazonaws.com
+2. L'azienda dismette il bucket S3 ma NON rimuove il record DNS
+3. Il CNAME punta a un bucket S3 che non esiste piu
+4. L'attaccante crea un bucket S3 con lo stesso nome: shop-tesla
+5. Ora shop.tesla.com mostra il contenuto controllato dall'attaccante
+6. L'attaccante ha il controllo di un sottodominio dell'azienda target
+
+Impatto:
+- Cookie scope: i cookie impostati per *.tesla.com sono accessibili
+- Phishing: pagina sul dominio legittimo dell'azienda
+- Reputazione: defacement sul dominio aziendale
+```
+
+Servizi frequentemente vulnerabili: AWS S3, GitHub Pages, Heroku, Azure, Shopify, Fastly, Netlify.
+
+```Bash
+# Tool per verificare subdomain takeover: subjack
+subjack -w subdomains.txt -t 100 -timeout 30 -ssl -o results.txt
+```
+
+---
+
+## Esperienza di Laboratorio
+
+Il volume di risultati (centinaia di sottodomini per tesla.com) ha evidenziato l'importanza del post-processing: la lista grezza e inutilizzabile senza triage. La pipeline operativa moderna `subfinder -d tesla.com -silent | httpx -silent -title -status-code` filtra automaticamente i sottodomini risolvibili e raggiungibili, producendo una lista prioritizzata con titolo della pagina e status code HTTP.
+
+Il confronto tra Subfinder (veloce, passivo, CT logs) e Amass (lento, completo, ASN mapping) ha rivelato che Subfinder e sufficiente per il 90% dei casi. Amass aggiunge valore quando si necessita della mappatura infrastrutturale (ASN, range IP, reverse WHOIS) - tipicamente in assessment di grandi organizzazioni con infrastrutture complesse.
+
+La sezione VHost Fuzzing (Sezione 6) ha introdotto un concetto che non esiste nella recon tradizionale: in ambienti Docker/localhost, i DNS pubblici non servono. Il virtual host fuzzing con Gobuster `vhost` permette di scoprire applicazioni nascoste dietro lo stesso IP, accessibili solo con l'header Host corretto - una tecnica fondamentale nei CTF e negli assessment su infrastrutture containerizzate.
 
 ---
 
