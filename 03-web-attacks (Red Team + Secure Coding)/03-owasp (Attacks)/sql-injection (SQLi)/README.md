@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # SQL Injection (SQLi)
 
 > - **Fase:** Web Attack - SQL Injection Testing
