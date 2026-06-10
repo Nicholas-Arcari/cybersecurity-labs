@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # CMS Exploitation: WordPress & WPScan
 
 > - **Fase:** Web Attack - CMS Exploitation (WordPress)
@@ -200,6 +202,100 @@ cat /var/www/html/wp-config.php | grep -E "DB_NAME|DB_USER|DB_PASSWORD|DB_HOST"
 | `xmlrpc-scan` | XML-RPC tester | CLI - Attiva | Test abuso dell'endpoint `xmlrpc.php` per brute force |
 
 > **Nota API Token WPScan:** senza API token, WPScan non mostra le CVE specifiche per i plugin. Registrarsi gratuitamente su `wpscan.com` e aggiungere `--api-token <TOKEN>` al comando per abilitare il vulnerability database completo.
+
+---
+
+## Analisi a Basso Livello: Architettura WordPress e Superficie di Attacco
+
+### Struttura Interna di WordPress
+
+WordPress memorizza la configurazione critica in due punti: il file `wp-config.php` (credenziali database, secret keys, prefisso tabelle) e la tabella `wp_options` nel database (URL del sito, tema attivo, plugin attivi, ruoli utente).
+
+```
+Architettura WordPress (attacker's perspective):
+
+wp-config.php               <- DB credentials, AUTH_KEY, SECURE_AUTH_KEY
+    |
+    v
+MySQL Database
+    +-- wp_users             <- user_login, user_pass (phpass hash), user_email
+    +-- wp_usermeta          <- wp_capabilities (ruolo: administrator, editor, subscriber)
+    +-- wp_options           <- siteurl, active_plugins (array serializzato), template
+    +-- wp_posts             <- post_content (web shell target per Theme Editor injection)
+
+Endpoint esposti:
+    /wp-login.php            <- Form login (brute force target)
+    /xmlrpc.php              <- XML-RPC multicall (brute force amplification)
+    /wp-json/wp/v2/users     <- REST API user enumeration (ID, slug, name)
+    /?author=1               <- Author archive redirect (rivela username)
+    /wp-content/debug.log    <- PHP error log (info disclosure se WP_DEBUG_LOG=true)
+```
+
+### Password Hashing: phpass e la Cracking Window
+
+WordPress usa `phpass` (Portable PHP Hashing Framework) con Blowfish/bcrypt. L'hash ha il formato:
+
+```
+$P$B[22 caratteri salt+hash]
+
+Esempio: $P$BYnF7FzX2JmF/4M.YVz6JqF2oiz9F.0
+         ^  ^ ^
+         |  | +-- 22 char: salt (8 char) + hash iterato
+         |  +---- cost factor: 'B' = 8192 iterazioni MD5
+         +------- prefix phpass ($P$ = portable hash)
+
+Cracking speed (GPU RTX 4090):
+- phpass MD5 ($P$):  ~25 MH/s con hashcat -m 400
+- bcrypt ($2y$10$):  ~100 KH/s con hashcat -m 3200
+- Confronto: MD5 raw: ~60 GH/s (2400x piu veloce di phpass)
+```
+
+Il cost factor 'B' (8192 iterazioni) rallenta il brute force ma non lo impedisce con password deboli. Un attaccante con accesso al database (SQLi o backup esposto) puo crackare password da dizionario in minuti.
+
+### XML-RPC Multicall: Brute Force Amplification
+
+L'endpoint `xmlrpc.php` accetta il metodo `system.multicall` che permette di testare centinaia di credenziali in una singola richiesta HTTP, bypassando rate limiting basato su richieste/minuto:
+
+```xml
+POST /xmlrpc.php
+<?xml version="1.0"?>
+<methodCall>
+  <methodName>system.multicall</methodName>
+  <params><param><value><array><data>
+    <value><struct>
+      <member><name>methodName</name><value>wp.getUsersBlogs</value></member>
+      <member><name>params</name><value><array><data>
+        <value>admin</value><value>password1</value>
+      </data></array></value></member>
+    </struct></value>
+    <!-- Ripetere per ogni password da testare - fino a 500+ per richiesta -->
+  </data></array></value></param></params>
+</methodCall>
+```
+
+Detection: cercare richieste POST a `/xmlrpc.php` con body size anomalo (>10KB) e `Content-Type: text/xml`.
+
+### WPScan Detection Techniques
+
+WPScan usa tecniche diverse per la detection dei plugin, con livelli di aggressivita configurabili:
+
+| Metodo | Affidabilita | Traffico | Come funziona |
+| :--- | :--- | :--- | :--- |
+| Passive (default) | Bassa | Minimo | Analizza HTML, JS, CSS per riferimenti a `/wp-content/plugins/` |
+| Aggressive | Alta | Alto | Richiede direttamente `/wp-content/plugins/<nome>/readme.txt` per ogni plugin nel database |
+| Mixed (default per vp) | Media | Medio | Passive prima, poi aggressive solo sui plugin trovati |
+
+---
+
+## Esperienza di Laboratorio
+
+La metodologia a quattro fasi (fingerprint -> enumerazione -> CVE mapping -> exploitation) si e dimostrata il workflow standard per ogni assessment WordPress. Il punto critico e la Fase 2: senza API token WPScan, la scansione trova i plugin ma non mostra le CVE associate, rendendo l'output significativamente meno utile. La registrazione gratuita su wpscan.com (50 richieste/giorno) e sufficiente per assessment individuali.
+
+Il brute force via `wp-login.php` ha evidenziato un aspetto operativo importante: WordPress non implementa nativamente rate limiting o account lockout. Senza plugin di protezione (Wordfence, Sucuri), non c'e limite ai tentativi di password. L'aggiunta del flag `--throttle 3000` e stata necessaria solo per evitare di sovraccaricare il server di test, non per evitare blocchi.
+
+La post-exploitation tramite Theme Editor ha dimostrato che l'accesso admin a WordPress equivale a RCE: la possibilita di editare file PHP dal pannello web trasforma un credential compromise in una server compromise completa. La remediation piu efficace e disabilitare l'editing dei file (`define('DISALLOW_FILE_EDIT', true)` in `wp-config.php`), che rimuove il Theme/Plugin Editor dall'interfaccia admin.
+
+La scoperta dell'endpoint XML-RPC (`xmlrpc.php`) ha rivelato un vettore di amplificazione spesso ignorato: `system.multicall` permette di testare centinaia di credenziali in una singola richiesta, bypassando protezioni basate su rate limiting per richiesta. La remediation corretta e disabilitare completamente XML-RPC se non necessario (molti plugin di security lo fanno automaticamente).
 
 ---
 
