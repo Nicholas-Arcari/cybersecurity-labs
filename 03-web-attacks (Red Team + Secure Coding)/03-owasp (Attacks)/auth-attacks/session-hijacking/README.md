@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Auth Attacks: Session Hijacking
 
 > - **Fase:** Web Attack - Session Hijacking
@@ -199,6 +201,76 @@ La Kill Chain:
 Mitigazione:
 
 Il server deve implementare la Session Rotation: ogni volta che un utente cambia livello di privilegio (es. fa login), il server deve distruggere il vecchio Session ID e generarne uno completamente nuovo.
+
+---
+
+## Analisi a Basso Livello: Cookie Attributes e ARP Spoofing
+
+### Attributi di Sicurezza dei Cookie (RFC 6265bis)
+
+Ogni attributo del cookie agisce come una barriera indipendente contro un vettore di attacco specifico:
+
+```
+Set-Cookie: PHPSESSID=abc123; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=3600
+
+HttpOnly     -> Blocca document.cookie (anti-XSS cookie stealing)
+                JavaScript NON puo leggere il cookie
+                Il cookie viene comunque inviato nelle richieste HTTP
+
+Secure       -> Cookie inviato SOLO su HTTPS (anti-sniffing)
+                Se la vittima visita http:// il cookie NON viene allegato
+
+SameSite=Strict -> Cookie NON inviato su richieste cross-origin
+                   Protegge da CSRF e da leak via tag <img> cross-site
+   Lax (default) -> Cookie inviato solo per navigazione top-level (link click)
+   None          -> Cookie inviato sempre (richiede Secure)
+
+Path=/app    -> Cookie valido solo per /app e sotto-path
+                Riduce l'esposizione ad altre parti del sito
+
+Max-Age=3600 -> Cookie scade dopo 1 ora (riduce finestra di attacco)
+                Session cookie (senza Max-Age) vive fino alla chiusura del browser
+```
+
+### ARP Spoofing: Meccanica a Livello di Rete
+
+```
+Rete normale:
+Vittima (192.168.0.105) ---> Router (192.168.0.1) ---> Internet
+ARP Table vittima: 192.168.0.1 = AA:BB:CC:DD:EE:FF (MAC router)
+
+Dopo ARP Spoofing (Ettercap):
+Kali invia pacchetti ARP Reply falsificati:
+  "192.168.0.1 ha MAC 11:22:33:44:55:66" (MAC di Kali)
+
+ARP Table vittima (avvelenata): 192.168.0.1 = 11:22:33:44:55:66 (MAC di KALI!)
+
+Flusso dopo il poisoning:
+Vittima ---> KALI (intercetta e legge) ---> Router ---> Internet
+                |
+                +-- Wireshark cattura il cookie HTTP in chiaro
+                    Filtro: http.cookie contains "PHPSESSID"
+```
+
+### Confronto Vettori di Session Hijacking
+
+| Vettore | Requisiti | Visibilita | Difesa principale |
+| :--- | :--- | :--- | :--- |
+| XSS cookie stealing | Vulnerabilita XSS nel sito | Media (log JS) | `HttpOnly` flag |
+| Network sniffing | Stessa LAN + HTTP (no HTTPS) | Bassa (passivo) | HTTPS + `Secure` flag |
+| Session fixation | URL con session ID accettato | Nulla | Session rotation post-login |
+| Malware/Physical | Accesso al filesystem della vittima | Dipende | Full-disk encryption |
+| Wi-Fi Evil Twin | Access point controllato dall'attaccante | Bassa | HTTPS + HSTS preload |
+
+---
+
+## Esperienza di Laboratorio
+
+Lo Scenario B (XSS to Cookie Stealing) ha dimostrato la catena completa in un ambiente reale: dal payload XSS nel Guestbook al redirect della vittima, alla ricezione del cookie nei log del server Python. L'aspetto piu significativo e stato osservare che il cookie `login=test%2Ftest` contiene username e password URL-encoded direttamente nel valore del cookie, una pratica insicura che amplifica l'impatto del furto.
+
+L'ARP spoofing con Ettercap (Scenario C) ha richiesto la configurazione di IP forwarding (`echo 1 > /proc/sys/net/ipv4/ip_forward`) per evitare di interrompere la connessione della vittima. Senza IP forwarding, i pacchetti arrivano a Kali ma non vengono inoltrati al router, causando un Denial of Service che allarma la vittima. Con il forwarding attivo, il traffico fluisce normalmente e la vittima non nota alcuna anomalia.
+
+Il confronto tra gli scenari ha evidenziato che l'assenza del flag `HttpOnly` e il single point of failure: con `HttpOnly` attivo, lo Scenario A e B falliscono completamente (JavaScript non puo accedere al cookie), ma lo Scenario C resta valido (il cookie viaggia in chiaro nell'header HTTP). Solo la combinazione `HttpOnly` + `Secure` + HTTPS protegge da tutti i vettori documentati. L'aggiunta di `SameSite=Strict` bloccherebbe anche attacchi futuri basati su redirect cross-origin.
 
 ---
 

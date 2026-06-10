@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Auth Attacks: Brute-Force Web (Hydra)
 
 > - **Fase:** Web Attack - Authentication Brute Force
@@ -192,6 +194,84 @@ Laravel (tramite il pacchetto Sanctum/Web Middleware) protegge le rotte di login
 Conclusione:
 
 Questo test ha dimostrato che i moderni framework MVC/API (come Laravel, Django, Rails), se configurati correttamente con protezioni Anti-CSRF e Stateful Authentication, sono intrinsecamente resistenti agli attacchi di brute-force "semplici" eseguiti con tool generici come Hydra. Per bypassare questa difesa, sarebbe necessario uno script avanzato in grado di gestire sessioni e cookie (es. Python con `requests.Session()`).
+
+---
+
+## Analisi a Basso Livello: Protocollo HTTP e Configurazione Hydra
+
+### Anatomia di una Richiesta Hydra http-post-form
+
+Hydra costruisce richieste HTTP POST basandosi su tre componenti separati da `:` nel modulo `http-post-form`:
+
+```
+hydra ... http-post-form "/path:params:condition"
+                          |     |       |
+                          |     |       +-- Condizione di successo/fallimento
+                          |     +---------- Parametri POST (^USER^ e ^PASS^ sostituiti)
+                          +---------------- Endpoint URL
+
+Esempio decomposto:
+"/userinfo.php:uname=^USER^&pass=^PASS^:S=Logout"
+
+Richiesta HTTP generata da Hydra:
+POST /userinfo.php HTTP/1.1
+Host: testphp.vulnweb.com
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 22
+
+uname=test&pass=password1    <- primo tentativo
+                                ^USER^ -> test, ^PASS^ -> password1
+
+Risposta analizzata:
+- Se contiene "Logout" (S=Logout) -> SUCCESSO, credenziale trovata
+- Se NON contiene "Logout" -> fallimento, prossima password
+
+Condizioni Hydra:
+F=<stringa>  -> FALLIMENTO se la stringa e presente nella risposta
+S=<stringa>  -> SUCCESSO se la stringa e presente nella risposta
+```
+
+### Protezioni Moderne Anti-Brute Force
+
+| Difesa | Meccanismo | Bypass possibile | Efficacia |
+| :--- | :--- | :--- | :--- |
+| Rate Limiting (IP) | Max N richieste/minuto per IP | Rotazione IP (proxy chain) | Media |
+| Account Lockout | Blocco account dopo N tentativi | Password spraying (molti utenti, poche password) | Alta |
+| CAPTCHA | Challenge visivo/interattivo | OCR, servizi solving (2captcha) | Media-Alta |
+| CSRF Token | Token univoco per ogni richiesta | Script con session handling (requests.Session) | Alta |
+| MFA/2FA | Secondo fattore (TOTP, SMS) | Phishing real-time (Evilginx2) | Molto Alta |
+| Progressive Delay | Ritardo esponenziale dopo ogni fallimento | Rende il brute force impraticabile su scala | Alta |
+
+### Hydra vs Script Custom: Quando Serve Lo Script
+
+```
+Hydra funziona per:
+- Form HTML standard (application/x-www-form-urlencoded)
+- Risposta distinguibile per contenuto (stringa specifica)
+- Nessuna protezione CSRF o session token
+
+Hydra NON funziona per:
+- API JSON (Content-Type: application/json)
+- CSRF token richiesto (Laravel Sanctum, Django)
+- Autenticazione multi-step (login -> OTP -> dashboard)
+- Cookie/header custom richiesti nella risposta
+
+In questi casi -> script Python con requests.Session():
+  session = requests.Session()
+  session.get(url)               # ottieni CSRF cookie
+  csrf = session.cookies['XSRF-TOKEN']
+  session.post(url, json={...}, headers={'X-CSRF-TOKEN': csrf})
+```
+
+---
+
+## Esperienza di Laboratorio
+
+Il problema del "False Positive Trap" (HTTP 302 sia per successo che fallimento) e stato l'aspetto piu formativo dell'intero lab. La maggior parte dei tutorial Hydra assume che il server risponda con una stringa di errore chiara ("Invalid credentials"), ma molti siti reali usano redirect (302) per entrambi i casi, indirizzando a pagine diverse. L'inversione della logica (`S=Logout` invece di `F=error`) e una tecnica operativa fondamentale che non e documentata nella manpage di Hydra.
+
+Il case study "The Laravel Wall" ha dimostrato che i framework moderni rendono il brute force generico inefficace per design. La sequenza di fallimenti (SPA trap -> JSON format -> CSRF 419) rappresenta tre livelli di difesa indipendenti: l'architettura frontend (SPA), il formato dati (JSON), e la protezione anti-replay (CSRF token). Bypassare tutti e tre richiede un attaccante che comprenda l'intera architettura dell'applicazione, non solo lo strumento di attacco.
+
+Il monitoraggio dei log Docker (`docker logs -f`) durante l'attacco ha fornito una prospettiva Blue Team rara: osservare le richieste Hydra dal lato del server ha mostrato pattern facilmente rilevabili (User-Agent di Hydra, timing regolare tra richieste, stesso IP con centinaia di POST in pochi secondi). Una regola SIEM che cerchi >10 POST a `/login` dallo stesso IP in 60 secondi catturerebbe il 99% degli attacchi Hydra.
 
 ---
 

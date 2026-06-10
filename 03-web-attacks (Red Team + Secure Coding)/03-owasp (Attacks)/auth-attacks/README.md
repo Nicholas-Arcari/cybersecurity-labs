@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Auth Attacks - Autenticazione e Gestione delle Sessioni
 
 > - **Fase:** Web Attack - Authentication & Session Management Testing
