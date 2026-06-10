@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Proxy Tools: Burp Suite Interception & Extensions
 
 > - **Fase:** Web Attack - Proxy Setup & Traffic Manipulation
@@ -81,6 +83,90 @@ Importanza dei file .burp:
 - Evidence Retention: Garantiscono la conservazione forense di tutto il traffico generato, utile per rispondere a contestazioni future o per redigere il report finale.
 - Pause & Resume: Permettono di interrompere un test e riprenderlo giorni dopo mantenendo lo stato dello Scanner, del Repeater e della Sitemap.
 - Collaboration: I file possono essere condivisi tra membri del team per analizzare vulnerabilità complesse in gruppo.
+
+---
+
+## Analisi a Basso Livello: Architettura del Proxy e Flusso di Intercettazione
+
+### Come Funziona Burp Suite a Livello di Rete
+
+Burp Suite opera come un forward proxy HTTP/HTTPS che si inserisce nel flusso TCP tra il browser e il server:
+
+```
+Browser (Firefox)              Burp Suite (127.0.0.1:8080)          Server (tesla.com)
+    |                                |                                    |
+    |--- TCP connect :8080 -------->|                                    |
+    |--- CONNECT tesla.com:443 ---->|  <-- metodo HTTP CONNECT per HTTPS |
+    |<-- 200 Connection established-|                                    |
+    |                               |                                    |
+    |--- TLS ClientHello ---------->|  (Burp genera cert falso per       |
+    |<-- TLS ServerHello -----------|   tesla.com firmato dalla CA Burp) |
+    |   [Cert: CN=tesla.com,       |                                    |
+    |    Issuer: PortSwigger CA]    |                                    |
+    |                               |--- TLS ClientHello -------------->|
+    |                               |<-- TLS ServerHello (cert reale) --|
+    |                               |   [Cert: CN=tesla.com,            |
+    |                               |    Issuer: DigiCert]              |
+    |                               |                                    |
+    |=== Sessione TLS #1 ===========|=== Sessione TLS #2 ===============|
+    |   (browser <-> Burp)          |   (Burp <-> server)               |
+    |                               |                                    |
+    |--- GET / HTTP/1.1 ----------->|  [Burp decifra, mostra in UI,     |
+    |   User-Agent: Mozilla/5.0     |   permette modifica]              |
+    |                               |--- GET / HTTP/1.1 --------------->|
+    |                               |   User-Agent: Portfolio-Red-Team  |
+    |                               |<-- 200 OK (risposta) -------------|
+    |<-- 200 OK (re-cifrata) ------|                                    |
+```
+
+### Moduli Burp Suite e Workflow
+
+| Modulo | Funzione | Caso d'uso operativo |
+| :--- | :--- | :--- |
+| **Proxy** | Intercetta e modifica richieste | Manipolazione parametri, header, cookie |
+| **Repeater** | Re-invia richieste singole modificate | Testing manuale di parametri vulnerabili |
+| **Intruder** | Brute force parametrizzato | Credential stuffing, parameter fuzzing |
+| **Scanner** (Pro) | Vulnerability scanning automatico | DAST su applicazioni web |
+| **Decoder** | Encoding/decoding (Base64, URL, HTML) | Analisi payload offuscati |
+| **Comparer** | Diff tra risposte HTTP | Identificare differenze in risposte autenticate vs non |
+
+### BApp Extensions per Assessment Professionali
+
+```
+Extension            Tipo              Uso
+Autorize             Auth testing      Testa IDOR: invia ogni richiesta come utente low-priv
+Turbo Intruder       Performance       Race conditions: invia N richieste simultaneamente
+Logger++             Logging           Filtra e cerca nel traffico HTTP con regex
+Active Scan++        Scanner           Aggiunge check per vulnerabilita aggiuntive
+Param Miner          Discovery         Trova parametri HTTP nascosti (cache poisoning)
+Hackvertor           Encoding          Encoding dinamico nei payload (bypass WAF)
+```
+
+---
+
+## Blue Team: Detection dei Proxy di Intercettazione
+
+### Indicatori di Manipolazione del Traffico
+
+- **JA3 fingerprint:** il TLS handshake di Burp Suite (Java) ha un JA3 hash diverso da qualsiasi browser reale - i WAF moderni confrontano il JA3 con il User-Agent dichiarato e bloccano se non corrispondono
+- **Certificate chain:** se un'organizzazione ispeziona il traffico TLS dei dipendenti (corporate proxy), la CA dell'organizzazione e nell'Issuer - anomalie nella chain indicano proxy non autorizzati
+- **Timing anomalies:** l'intercettazione manuale (Intercept On) introduce latenza variabile nelle richieste, rilevabile da analisi statistica dei tempi di risposta
+
+### Hardening Anti-Proxy
+
+- **Certificate Pinning** nelle applicazioni mobili: ignora il trust store del dispositivo, accetta solo il certificato specifico dell'app
+- **JA3 validation** lato server: rifiutare connessioni dove il JA3 hash non corrisponde a browser noti
+- **Token binding:** legare i token di sessione al canale TLS specifico, invalidandoli se il canale cambia (come nel caso di un proxy MitM)
+
+---
+
+## Esperienza di Laboratorio
+
+La manipolazione del User-Agent e stata la prima dimostrazione concreta di come il traffico HTTP sia "fidato ma non verificato": il server non ha modo di distinguere un User-Agent reale da uno spoofato, perche l'header e controllato interamente dal client. Questo e il principio fondamentale del web application testing: tutto cio che arriva dal client puo essere manipolato.
+
+La differenza tra Community e Professional Edition e stata tangibile: senza la possibilita di salvare progetti `.burp`, ogni sessione parte da zero. In un assessment che dura giorni o settimane, la perdita della sitemap, della history e dello stato dello Scanner rende la Community Edition inadeguata per uso professionale. Tuttavia, per l'apprendimento e il testing puntuale, i moduli Proxy, Repeater e Decoder della Community Edition sono sufficienti.
+
+L'esplorazione del BApp Store ha rivelato l'ecosistema di estensioni che trasforma Burp da semplice proxy a piattaforma di testing completa. Autorize in particolare e fondamentale per testare le vulnerabilita di Broken Access Control (OWASP A01:2021): naviga l'applicazione come admin, e Autorize ri-invia automaticamente ogni richiesta come utente low-privilege, evidenziando le risorse accessibili senza autorizzazione.
 
 ---
 
