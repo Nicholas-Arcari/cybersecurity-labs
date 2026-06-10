@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Proxy Tools: OWASP ZAP & Automated Scanning
 
 > - **Fase:** Web Attack - DAST Scanning
@@ -78,6 +80,62 @@ L'utilizzo di OWASP ZAP ha permesso di mappare rapidamente la postura di sicurez
 Tuttavia, l'automazione non sostituisce l'analista umano. Lo scanner ha trovato correttamente mancanze strutturali (CSRF, Headers), ma per confermare vulnerabilità logiche complesse (come IDOR o Business Logic Errors) è necessario passare all'analisi manuale con strumenti come Burp Suite.
 
 Outcome: Il target presenta vulnerabilità confermate di livello Medio (CSRF, XSS Reflected) che richiedono patching immediato del codice sorgente.
+
+---
+
+## Analisi a Basso Livello: Architettura ZAP e Fasi di Scansione
+
+### ZAP: Spider vs Active Scanner
+
+ZAP opera in due fasi distinte, ciascuna con un impatto di rete diverso:
+
+| Fase | Metodo | Cosa fa | Traffico generato |
+| :--- | :--- | :--- | :--- |
+| **Spider** (Crawl) | Segue i link HTML | Mappa pagine, form, parametri, endpoint | Basso (GET standard) |
+| **Ajax Spider** | Esegue JavaScript (Selenium) | Mappa SPA (React, Angular, Vue) | Medio (rendering JS) |
+| **Active Scan** | Injection automatica | Inietta payload SQLi/XSS/LFI in ogni parametro | Alto (migliaia di richieste) |
+| **Passive Scan** | Analisi risposte | Cerca header mancanti, cookie insicuri, info leak | Zero (nessuna richiesta extra) |
+
+### Anti-CSRF Token: Perche e un Finding Medio (WEB-001)
+
+L'assenza di token CSRF nei form permette il Cross-Site Request Forgery:
+
+```
+Attaccante crea una pagina malevola:
+<html>
+<body onload="document.forms[0].submit()">
+  <form action="http://target.com/change-password" method="POST">
+    <input type="hidden" name="new_password" value="hacked123">
+  </form>
+</body>
+</html>
+
+Se la vittima (autenticata su target.com) visita questa pagina:
+-> Il browser invia automaticamente il POST con il cookie di sessione
+-> La password viene cambiata a insaputa della vittima
+-> L'attaccante conosce la nuova password: "hacked123"
+```
+
+### Integrazione CI/CD
+
+```Bash
+# ZAP in modalita headless per pipeline DevSecOps
+docker run -t zaproxy/zap-stable zap-baseline.py -t http://app:8080 -r report.html
+
+# Con threshold di blocco (fail se finding High)
+docker run -t zaproxy/zap-stable zap-baseline.py -t http://app:8080 -c zap-rules.conf
+# zap-rules.conf: 10016 FAIL (header mancante = blocca deploy)
+```
+
+---
+
+## Esperienza di Laboratorio
+
+Il triage degli alert e stato l'aspetto piu formativo: ZAP ha generato decine di alert, ma non tutti erano vulnerabilita reali. La distinzione tra "User Controllable HTML Element Attribute (Potential XSS)" (alert ZAP) e una XSS confermata (WEB-005, verificata manualmente) richiede analisi umana. Lo scanner segnala il potenziale; l'analista conferma o esclude.
+
+La verifica manuale dell'alert CSRF ha dimostrato un workflow operativo importante: ZAP ha identificato i form privi di token, ma per confermare che il CSRF sia sfruttabile bisogna verificare che non ci siano altre protezioni (SameSite cookie, check del Referer header, autenticazione basata su header custom). Nel caso di `testphp.vulnweb.com`, nessuna di queste protezioni era presente, confermando il finding.
+
+Il confronto con Burp Suite ha evidenziato il posizionamento di ZAP: e lo strumento ideale per l'automazione (CI/CD, scansioni periodiche), mentre Burp eccelle nell'analisi manuale interattiva. In un assessment professionale si usano entrambi: ZAP per il primo triage automatizzato, Burp per l'approfondimento manuale sui finding piu critici.
 
 ---
 
