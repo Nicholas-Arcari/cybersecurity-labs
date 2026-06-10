@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Web Recon: Directory Busting con Gobuster
 
 > - **Fase:** Web Attack - Web Application Enumeration
@@ -112,6 +114,168 @@ gobuster dir -u http://localhost:<PORTA> -w api-endpoints.txt -H "Authorization:
 Valore nel Red Teaming:
 
 Scansionare container locali permette di individuare Debug Endpoints (es. Spring Boot Actuators) dimenticati attivi, che spesso espongono variabili d'ambiente e credenziali del cloud prima ancora che l'app vada in produzione.
+
+---
+
+## Analisi a Basso Livello: Meccanica del Directory Busting
+
+### Come Opera Gobuster a Livello HTTP
+
+Gobuster invia richieste HTTP GET per ogni entry nella wordlist, analizzando il codice di risposta:
+
+```
+Gobuster                                 Web Server (Nginx/Apache)
+    |                                          |
+    |--- GET /admin HTTP/1.1 ----------------->|
+    |<-- 301 Moved Permanently ----------------|  <-- directory ESISTE (redirect a /admin/)
+    |                                          |
+    |--- GET /backup HTTP/1.1 ---------------->|
+    |<-- 404 Not Found ------------------------|  <-- NON esiste
+    |                                          |
+    |--- GET /CVS HTTP/1.1 ------------------>|
+    |<-- 200 OK -------------------------------|  <-- ESISTE e accessibile
+    |                                          |
+    |--- GET /cgi-bin HTTP/1.1 --------------->|
+    |<-- 403 Forbidden ------------------------|  <-- ESISTE ma protetta
+    |                                          |
+    |--- GET /.git/HEAD HTTP/1.1 ------------->|
+    |<-- 200 OK "ref: refs/heads/main" --------|  <-- CRITICO: repo git esposto
+```
+
+### Codici HTTP e Significato Operativo
+
+| Codice | Significato | Azione Red Team |
+| :--- | :--- | :--- |
+| `200` | Risorsa accessibile | Analizzare il contenuto, cercare credenziali/dati |
+| `301/302` | Redirect (directory esiste) | Seguire il redirect, enumerare ricorsivamente |
+| `401` | Autenticazione richiesta | Tentare credenziali default, brute force |
+| `403` | Accesso negato | La risorsa esiste - tentare bypass (path traversal, encoding) |
+| `404` | Non esiste | Skip (ma attenzione: custom 404 puo mascherare risorse) |
+| `500` | Errore server | Possibile injection point (input non gestito) |
+
+### Wordlist e Copertura
+
+La scelta della wordlist determina l'efficacia del test:
+
+```
+/usr/share/wordlists/dirb/common.txt      ~4.600 entry   (rapida, copertura base)
+/usr/share/seclists/Discovery/Web-Content/
+    directory-list-2.3-medium.txt          ~220.000 entry (standard pentest)
+    directory-list-2.3-big.txt             ~1.270.000 entry (esaustiva, lenta)
+    raft-large-directories.txt             ~62.000 entry  (directory specifiche)
+    raft-large-files.txt                   ~37.000 entry  (file specifici)
+    api-endpoints.txt                      ~2.000 entry   (API REST)
+    spring-boot.txt                        ~150 entry     (Spring Boot actuators)
+```
+
+### Gobuster: Flag Avanzati per Assessment Professionali
+
+```Bash
+# Scansione con estensioni file (cerca .php, .bak, .old, .conf)
+gobuster dir -u http://target -w wordlist.txt -x php,bak,old,conf,txt,zip
+
+# Scansione con thread paralleli e timeout
+gobuster dir -u http://target -w wordlist.txt -t 50 --timeout 10s
+
+# Filtrare per status code (ignorare 404 custom)
+gobuster dir -u http://target -w wordlist.txt -b 404,403
+
+# Scansione con header custom (cookie di sessione, token)
+gobuster dir -u http://target -w wordlist.txt -c "PHPSESSID=abc123"
+
+# Feroxbuster: recursion depth + output
+feroxbuster -u http://target -w wordlist.txt -d 3 -o results.txt
+```
+
+---
+
+## Scenario Reale: Da Directory Esposta a Source Code Leak (WEB-003)
+
+Il finding `/CVS` (directory di versionamento legacy) e un esempio classico di information disclosure che porta a compromissione completa del codice sorgente.
+
+### Kill Chain: Source Code Leak via Exposed VCS
+
+```
+Fase 1: Dir-busting rivela /CVS (WEB-003)
+    |
+    v
+Fase 2: Download dei metadata CVS
+    $ wget -r http://target/CVS/Entries
+    $ wget -r http://target/CVS/Root
+    [Entries contiene la lista di tutti i file nel repository]
+    |
+    v
+Fase 3: Ricostruzione del codice sorgente
+    [Per ogni file in Entries, tentare il download diretto]
+    $ wget http://target/config.php
+    $ wget http://target/includes/db_connect.php
+    |
+    v
+Fase 4: Estrazione credenziali dal codice
+    $ grep -r "password\|db_pass\|secret" *.php
+    -> db_connect.php: $db_pass = "Pr0duction_P@ss!";
+    |
+    v
+Fase 5: Accesso al database
+    $ mysql -h db.target.com -u webapp -p'Pr0duction_P@ss!'
+    -> Dump tabella utenti, dati clienti, credenziali admin
+```
+
+**Lo stesso scenario si applica a `.git/`:** se `/.git/HEAD` restituisce `200 OK`, l'intero repository puo essere ricostruito con tool come `git-dumper` o `GitTools`:
+
+```Bash
+# Ricostruzione completa di un repository git esposto
+python3 git-dumper.py http://target/.git/ ./output
+cd output && git log --oneline  # cronologia completa dei commit
+git diff HEAD~5                  # codice sorgente + credenziali commesse per errore
+```
+
+**Impatto:** secondo HackerOne (2024), il 12% dei report di bug bounty con payout >$5.000 ha origine da directory sensibili scoperte tramite dir-busting (`.git/`, `.env`, `/backup/`, `/wp-config.php.bak`).
+
+---
+
+## Blue Team: Detection e Hardening
+
+### Detection del Directory Busting
+
+Il pattern di traffico del dir-busting e caratteristico:
+- Centinaia/migliaia di richieste GET dallo stesso IP in pochi secondi
+- Elevata percentuale di risposte 404 (>90% delle richieste)
+- User-Agent di tool noti: `gobuster/3.x`, `feroxbuster/2.x`, `dirbuster`
+- Richieste a path che non esistono nella sitemap dell'applicazione
+
+**Regola WAF (ModSecurity):**
+```
+# Rate limiting: max 100 richieste 404 in 60 secondi dallo stesso IP
+SecRule IP:404_COUNT "@gt 100" "phase:5,deny,status:429,id:100001,msg:'Dir busting detected'"
+```
+
+### Hardening
+
+- **Rimuovere directory VCS:** `rm -rf .git/ .svn/ CVS/` dal webroot prima del deploy (o escluderle nel Dockerfile)
+- **Bloccare l'accesso a file sensibili** nel web server:
+  ```nginx
+  # Nginx: bloccare accesso a directory e file sensibili
+  location ~ /\.(git|svn|env|htaccess|htpasswd) {
+      deny all;
+      return 404;
+  }
+  location ~ \.(bak|old|orig|save|swp|conf)$ {
+      deny all;
+  }
+  ```
+- **Custom 404 consistente:** una pagina 404 custom che restituisce lo stesso contenuto per ogni path inesistente rende il dir-busting meno efficace (ma non impossibile - l'attaccante puo filtrare per dimensione della risposta)
+- **Disabilitare directory listing:** `autoindex off;` (Nginx) / `Options -Indexes` (Apache)
+
+---
+
+## Esperienza di Laboratorio
+
+Il confronto tra Gobuster e Feroxbuster ha rivelato un trade-off operativo fondamentale: Gobuster e piu veloce in modalita single-depth (una directory alla volta), ma richiede intervento manuale per esplorare le sotto-directory scoperte. Feroxbuster con ricorsione automatica (`-d 3`) ha scoperto `/admin/login.php` e `/admin/index.php` in un singolo passaggio, ma ha generato un volume di traffico significativamente maggiore - in un engagement reale con WAF attivo, la ricorsione aggressiva causerebbe un ban dell'IP sorgente.
+
+La scelta della wordlist e stata determinante: `common.txt` (~4.600 entry) ha trovato `/admin`, `/CVS` e `/cgi-bin` in meno di 30 secondi. Una wordlist piu grande (`directory-list-2.3-medium.txt` con 220.000 entry) avrebbe impiegato minuti ma avrebbe potenzialmente scoperto file di backup (`.bak`, `.old`) e directory meno comuni. In un assessment reale, si parte dalla wordlist piccola per un triage rapido, poi si scala alla media/grande sui target piu interessanti.
+
+La sezione Docker/API (Scenario 5) ha introdotto un aspetto critico per lo sviluppo moderno: i framework come Spring Boot espongono di default endpoint diagnostici (`/actuator/env`, `/actuator/health`, `/actuator/configprops`) che contengono credenziali e variabili d'ambiente. Cercarli con `gobuster dir -u http://localhost:8080 -w spring-boot.txt` durante lo sviluppo e una pratica di sicurezza preventiva che pochi team adottano.
 
 ---
 
