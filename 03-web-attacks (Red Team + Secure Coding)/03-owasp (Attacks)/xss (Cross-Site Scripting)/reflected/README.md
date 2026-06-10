@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Vulnerability Assessment: Reflected Cross-Site Scripting (XSS)
 
 > - **Fase:** Web Attack - XSS Reflected
@@ -102,6 +104,79 @@ Se il parametro `cat` deve essere un numero (ID categoria), forzare il tipo a `I
 Content Security Policy (CSP):
 
 Implementare header CSP per limitare le sorgenti da cui il browser può caricare ed eseguire script (es. disabilitare `unsafe-inline`).
+
+---
+
+## Analisi a Basso Livello: Reflected XSS - Dal Parametro URL al DOM
+
+### Meccanica dell'Iniezione
+
+La Reflected XSS si verifica quando l'input utente viene riflesso nella risposta HTTP senza encoding:
+
+```
+Attaccante crea URL malevolo:
+http://target/list.php?cat=<script>alert(1)</script>
+    |
+    v
+Server PHP processa la richiesta:
+$cat = $_GET['cat'];  // <script>alert(1)</script>
+echo "<h1>Categoria: " . $cat . "</h1>";
+    |
+    v
+Response HTTP inviata al browser della vittima:
+<h1>Categoria: <script>alert(1)</script></h1>
+    |
+    v
+Browser HTML parser incontra il tag <script>:
+-> Crea nodo Script nel DOM
+-> Esegue alert(1) nel contesto della pagina
+-> Cookie, localStorage, DOM accessibili allo script
+```
+
+### Virtual Defacement e Phishing: Impatto Reale
+
+Il payload HTML Injection (Scenario B) e particolarmente insidioso perche:
+- L'URL e sul dominio legittimo del target (`testphp.vulnweb.com`)
+- Il certificato SSL e valido (lucchetto verde nel browser)
+- La vittima non ha modo di distinguere il contenuto legittimo da quello iniettato
+- Un form di login iniettato inviera le credenziali al server dell'attaccante
+
+---
+
+## Blue Team: Detection e Difese Anti-XSS
+
+### Content Security Policy (CSP)
+
+CSP e la difesa piu efficace contro XSS Reflected:
+
+```
+Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-abc123'; style-src 'self'
+```
+
+Con questa policy:
+- `script-src 'self'` blocca tutti gli script inline (incluso `<script>alert(1)</script>`)
+- Il nonce cambia ad ogni richiesta, rendendo impossibile per l'attaccante indovinarlo
+- Anche se il payload viene riflesso nel DOM, il browser rifiuta di eseguirlo
+
+### Difese Multi-Layer
+
+| Layer | Difesa | Cosa blocca |
+| :--- | :--- | :--- |
+| Input | Type validation (`cat` deve essere intero) | Rifiuta input non numerico |
+| Output | `htmlspecialchars()` | Converte `<>` in entities |
+| Browser | CSP header | Blocca script inline/external non autorizzati |
+| Cookie | `HttpOnly` flag | Impedisce accesso JS ai cookie anche se XSS riesce |
+| Session | `SameSite=Strict` | Impedisce invio cookie in richieste cross-site |
+
+---
+
+## Esperienza di Laboratorio
+
+La differenza tra i due scenari (alert PoC vs virtual defacement) ha dimostrato la distanza tra il "proof of concept didattico" e l'impatto reale. Il popup `alert()` dimostra l'esecuzione di codice ma non convince un cliente; il form di login falso iniettato nel dominio legittimo dimostra un rischio di phishing concreto che anche un non-tecnico comprende immediatamente.
+
+L'errore SQL visibile nello screenshot del defacement ha rivelato un secondo finding: il parametro `cat` atteso come intero genera un errore SQL quando riceve una stringa HTML. Questo indica che lo stesso parametro e vulnerabile sia a XSS (lato client) che potenzialmente a SQL Injection (lato server) - una doppia vulnerabilita sullo stesso endpoint.
+
+La classificazione a `Medio` (vs `Alto` per la Stored) riflette il requisito di interazione utente: la vittima deve cliccare un link malevolo. In un assessment reale, la severity viene elevata a `Alto` se il target e un'applicazione con dati sensibili (banking, healthcare) o se l'attaccante puo distribuire il link tramite canali fidati (email aziendale, Slack interno).
 
 ---
 
