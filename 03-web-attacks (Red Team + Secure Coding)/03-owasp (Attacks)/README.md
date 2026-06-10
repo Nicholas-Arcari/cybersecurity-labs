@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # 03 - OWASP Attacks
 
 > - **Fase:** Web Attack - OWASP Top 10:2021 Exploitation
