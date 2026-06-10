@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Proxy Tools: SSL/TLS Certificates & HTTPS Interception
 
 > - **Fase:** Web Attack - HTTPS Interception Setup
@@ -60,6 +62,88 @@ L'app non si fida ciecamente del Trust Store del dispositivo, ma accetta solo un
 ## 4 Conclusioni
 
 La corretta gestione dei certificati è il prerequisito per analizzare il traffico moderno. Senza questa configurazione, l'attività di Red Teaming sarebbe limitata al solo traffico HTTP (in chiaro), rendendo impossibile testare form di login, transazioni bancarie o API protette.
+
+---
+
+## Analisi a Basso Livello: Chain of Trust e TLS Interception
+
+### Come il Browser Valida i Certificati
+
+Il browser esegue una catena di verifiche per ogni connessione HTTPS:
+
+```
+Browser riceve certificato dal server (o dal proxy)
+    |
+    v
+1. Verifica firma: il certificato e firmato da una CA nel trust store?
+   - Se SI: prosegue
+   - Se NO: errore SEC_ERROR_UNKNOWN_ISSUER
+    |
+    v
+2. Verifica validita temporale: Not Before <= now <= Not After?
+   - Se scaduto: errore SSL_ERROR_EXPIRED_CERT_ALERT
+    |
+    v
+3. Verifica hostname: CN o SAN contiene il dominio richiesto?
+   - Se non corrisponde: errore SSL_ERROR_BAD_CERT_DOMAIN
+    |
+    v
+4. Verifica revoca: OCSP/CRL indica che il certificato e revocato?
+   - Se revocato: errore SEC_ERROR_REVOKED_CERTIFICATE
+    |
+    v
+5. Verifica HSTS: il dominio ha HSTS preloaded?
+   - Se SI e il cert non e valido: nessun override possibile
+    |
+    v
+Connessione HTTPS stabilita (lucchetto verde)
+```
+
+### Perche il Certificato Burp Viene Accettato
+
+Dopo l'installazione della CA Burp nel trust store di Firefox:
+
+```
+Senza CA Burp:
+Browser -> tesla.com -> Cert: CN=tesla.com, Issuer=PortSwigger CA
+                        PortSwigger CA NON nel trust store -> ERRORE
+
+Con CA Burp installata:
+Browser -> tesla.com -> Cert: CN=tesla.com, Issuer=PortSwigger CA
+                        PortSwigger CA nel trust store -> OK (fidata)
+```
+
+Burp genera un certificato nuovo "al volo" per ogni dominio visitato, firmandolo con la sua CA privata. Il browser si fida perche abbiamo aggiunto quella CA come "trusted root".
+
+### SSL Pinning: La Contromisura
+
+Le applicazioni mobili implementano il certificate pinning per prevenire esattamente questo tipo di intercettazione:
+
+| Tipo di pinning | Meccanismo | Bypass |
+| :--- | :--- | :--- |
+| **Certificate pinning** | L'app contiene il certificato esatto del server | Frida: hook `X509TrustManager.checkServerTrusted()` |
+| **Public key pinning** | L'app contiene solo la chiave pubblica | Objection: `android sslpinning disable` |
+| **HPKP (deprecato)** | Header HTTP con hash della chiave pubblica | Rimosso dai browser per rischio di DoS |
+| **Network Security Config** (Android) | XML config che definisce trust anchors | Modifica del file XML + repack APK |
+
+---
+
+## Blue Team: Protezione contro Intercettazione TLS
+
+- **Certificate Transparency monitoring:** monitorare i CT logs per certificati emessi per il proprio dominio da CA non autorizzate
+- **HSTS preload:** inserire il dominio nella preload list dei browser impedisce l'override dei certificati non validi anche per utenti che cliccano "Accetto il rischio"
+- **Corporate proxy awareness:** in ambienti aziendali, documentare quale CA viene usata per l'ispezione TLS e comunicarlo ai dipendenti (trasparenza)
+- **Rimuovere la CA al termine del test:** la CA Burp installata nel trust store rende la macchina vulnerabile se un attaccante ottiene la chiave privata corrispondente
+
+---
+
+## Esperienza di Laboratorio
+
+L'errore `SEC_ERROR_UNKNOWN_ISSUER` prima dell'installazione della CA e stato istruttivo: il browser ha funzionato esattamente come previsto, rifiutando un certificato firmato da una CA sconosciuta. Questo ha reso tangibile il concetto di "chain of trust" che nei corsi teorici rimane astratto.
+
+La verifica post-installazione (ispezionare il certificato di google.com e vedere "Issuer: PortSwigger CA" invece di "Google Trust Services") ha dimostrato visivamente il MitM in azione: il browser mostrava il lucchetto verde nonostante il traffico fosse decifrato e leggibile in Burp. Questo e esattamente quello che accade quando un corporate proxy ispeziona il traffico HTTPS dei dipendenti.
+
+La menzione dell'SSL Pinning e stata necessaria per contestualizzare i limiti della tecnica: sulle app mobili moderne, l'installazione della CA nel trust store del dispositivo non e sufficiente. Il bypass richiede runtime instrumentation (Frida/Objection) che opera a un livello completamente diverso, hooking le funzioni di validazione del certificato direttamente nel codice dell'app.
 
 ---
 
