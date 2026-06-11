@@ -1,4 +1,4 @@
-> [English](README.en.md) | **Italiano**
+> **English** | [Italiano](README.md)
 
 ### Description :
 
@@ -218,4 +218,3 @@ Some base codes and templates are from [htr-tech](https://github.com/htr-tech/zp
 - [![Messenger](https://img.shields.io/badge/Messenger-KasRoudra-orange?style=for-the-badge&logo=messenger)](https://m.me/KasRoudra)
 
 - [![Telegram](https://img.shields.io/badge/Telegram-KasRoudra-indigo?style=for-the-badge&logo=telegram)](https://t.me/KasRoudra)
-
