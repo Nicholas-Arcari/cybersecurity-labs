@@ -1,3 +1,0 @@
-to do...
-
-SpoofCheck, SPF-DMARC-Analyzer

@@ -1,3 +1,0 @@
-to do...
-
-Configurazioni per SendGrid/Mailgun
