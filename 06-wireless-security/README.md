@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 to do...
 
 da testare/ricollegarsi con/a flipper zero
