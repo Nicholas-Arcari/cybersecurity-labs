@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 to do...
 
 Splunk è complesso. Non metterci solo l'installer. Dividi il contenuto così:
