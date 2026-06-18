@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Wazuh SIEM & Suricata IDS - Home Lab Setup
 
 Questa repository documenta il processo di installazione, configurazione e troubleshooting di un ambiente di sicurezza monitorato (SIEM) utilizzando **Wazuh** su Kali Linux e **Suricata** come IDS, con agenti distribuiti su macchine Windows.
