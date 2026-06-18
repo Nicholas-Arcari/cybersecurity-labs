@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Suricata
 
 L'unione tra Wazuh (che guarda cosa succede dentro il sistema) e Suricata (che guarda cosa passa nella rete) è una combinazione potentissima. Trasforma Kali in un sistema di difesa completo (SIEM + IDS).
