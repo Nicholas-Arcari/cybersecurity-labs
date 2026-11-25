@@ -1,0 +1,18 @@
+SCREENSHOT PoC - Source Code Review
+
+Questa cartella raccoglie gli screenshot proof-of-concept (PoC) di questo lab.
+Le immagini vanno catturate eseguendo davvero il lab: sono evidenza di
+esecuzione reale e non vanno mai fabbricate.
+
+COSA CATTURARE
+- (reference) opzionale: lo snippet vulnerabile e il punto debole.
+- Evidenzia (riquadro o freccia) la riga o il valore che dimostra il risultato.
+- Formato .jpg o .png. Nome file suggerito: vulnerable-snippets-poc.jpg
+
+COME COLLEGARE L'IMMAGINE NEL README (dopo averla salvata in questa cartella)
+Aggiungi questa riga nel README.md e nel README.en.md, nel punto della
+dimostrazione pratica:
+
+    ![Source Code Review - PoC](img/vulnerable-snippets-poc.jpg)
+
+Puoi eliminare questo file una volta inserito lo screenshot.

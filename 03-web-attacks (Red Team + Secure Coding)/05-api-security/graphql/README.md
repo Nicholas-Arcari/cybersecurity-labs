@@ -67,13 +67,13 @@ Risultato: Output vuoto. Il server esegue il comando ma non restituisce l'output
 
 - Test 2: Time-Based Injection (Verifica)
 
-Payload: `arg: "sleep 5"` -> Risposta immediata (0.03s). FALLITO.
+Payload: `arg: "sleep 5"` - risposta immediata (0.03s). FALLITO.
 
 Ipotesi: L'input viene inserito come argomento di un altro comando (es. `ps <input>`).
 
 ![](./img/Screenshot_2026-02-18_15_19_45_2.jpg)
 
-Payload Corretto: `arg: "; sleep 5"` -> Il server ha risposto dopo 5.04 secondi. SUCCESSO.
+Payload Corretto: `arg: "; sleep 5"` - il server ha risposto dopo 5.04 secondi. SUCCESSO.
 
 Analisi: Il carattere `;` ha terminato il comando originale del server, permettendo l'esecuzione del comando `sleep`.
 
@@ -111,7 +111,7 @@ Dati esfiltrati: Chiavi segrete (`SECRET_KEY`), configurazione database (`sqlite
 
 - Dump del Database (Bypass Encoding):
 
-Tentativo fallito: `; cat dvga.db` -> Errore di codifica binaria/UTF-8.
+Tentativo fallito: `; cat dvga.db` - errore di codifica binaria/UTF-8.
 
 ![](./img/Screenshot_2026-02-18_15_30_13.jpg)
 
@@ -297,7 +297,7 @@ schema = Schema(query=Query, mutation=Mutation)
 
 Il bypass del blocco GraphiQL tramite curl e stato il primo passo critico: il server bloccava l'interfaccia grafica (header `User-Agent` o `Referer` check) ma accettava le stesse query via richiesta HTTP diretta. Questo dimostra una difesa superficiale: bloccare l'IDE grafico non impedisce l'accesso all'API, che resta raggiungibile da qualsiasi client HTTP.
 
-La kill chain completa (Introspection -> Command Injection -> RCE -> Account Takeover) completata in meno di 10 minuti ha evidenziato la velocita con cui un'API GraphQL mal configurata puo essere compromessa. Il punto chiave e che l'introspection ha rivelato la query `systemDebug` che non sarebbe stata scoperta altrimenti: senza introspection, l'attaccante avrebbe dovuto indovinare i nomi delle query (fuzzing), rendendo l'attacco significativamente piu lento e rumoroso.
+La kill chain completa (Introspection, Command Injection, RCE, Account Takeover) completata in meno di 10 minuti ha evidenziato la velocita con cui un'API GraphQL mal configurata puo essere compromessa. Il punto chiave e che l'introspection ha rivelato la query `systemDebug` che non sarebbe stata scoperta altrimenti: senza introspection, l'attaccante avrebbe dovuto indovinare i nomi delle query (fuzzing), rendendo l'attacco significativamente piu lento e rumoroso.
 
 Il bypass dell'encoding binario con `strings dvga.db` al posto di `cat dvga.db` e stato un adattamento operativo necessario: il database SQLite contiene dati binari che corrompono l'output JSON di GraphQL. Il comando `strings` estrae solo le sequenze di caratteri leggibili, producendo un output pulito che include le credenziali in chiaro. Questa tecnica e applicabile ogni volta che l'RCE non supporta output binario (web shell PHP, SSTI, Command Injection via API).
 
@@ -317,6 +317,6 @@ Il bypass dell'encoding binario con `strings dvga.db` al posto di `cat dvga.db` 
 > **Nota:** Il finding WEB-013 e stato documentato su DVGA (Damn Vulnerable GraphQL Application),
 > applicazione di laboratorio open-source installata in Docker locale. DVGA e progettata
 > specificamente per praticare i test di sicurezza su API GraphQL in ambiente controllato.
-> La kill chain completa (Introspection -> Command Injection -> RCE -> Account Takeover)
+> La kill chain completa (Introspection, Command Injection, RCE, Account Takeover)
 > e stata completata in meno di 10 minuti, dimostrando l'impatto devastante di questa
 > combinazione di vulnerabilita.

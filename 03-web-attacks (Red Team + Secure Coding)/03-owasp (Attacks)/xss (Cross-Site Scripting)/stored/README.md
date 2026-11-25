@@ -153,7 +153,7 @@ Il contesto in cui il dato viene inserito determina il tipo di encoding necessar
 
 In un assessment reale, la Stored XSS e il vettore per compromettere l'account dell'amministratore senza interazione diretta.
 
-### Kill Chain: Stored XSS -> Cookie Theft -> Admin Takeover
+### Kill Chain: Stored XSS, Cookie Theft, Admin Takeover
 
 ```
 Fase 1: Injection del payload nel profilo utente

@@ -17,7 +17,7 @@ La sezione Secure Coding Lab e la componente che distingue un penetration tester
 - Collaborare con i team di sviluppo in una logica DevSecOps.
 - Verificare che le patch implementate siano effettivamente efficaci (re-testing post-remediation).
 
-Il ciclo operativo di questa sezione e: **Vulnerabilita identificata** (nei moduli precedenti) -> **Analisi causa radice** (codice sorgente vulnerabile) -> **Pattern di fix** (codice sicuro) -> **Verifica** (re-test con lo stesso payload).
+Il ciclo operativo di questa sezione e: **Vulnerabilita identificata** (nei moduli precedenti), **Analisi causa radice** (codice sorgente vulnerabile), **Pattern di fix** (codice sicuro), **Verifica** (re-test con lo stesso payload).
 
 Per ogni vulnerabilita documentata nei moduli offensivi, questa sezione conserva i due artefatti:
 - Il codice **vulnerabile** con annotazione CWE e spiegazione del meccanismo di sfruttamento.

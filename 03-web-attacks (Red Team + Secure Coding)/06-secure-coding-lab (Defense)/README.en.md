@@ -17,7 +17,7 @@ The Secure Coding Lab section is the component that distinguishes an expert pene
 - Collaborating with development teams in a DevSecOps approach.
 - Verifying that implemented patches are actually effective (post-remediation re-testing).
 
-The operational cycle of this section is: **Vulnerability identified** (in previous modules) -> **Root Cause Analysis** (vulnerable source code) -> **Fix pattern** (secure code) -> **Verification** (re-test with the same payload).
+The operational cycle of this section is: **Vulnerability identified** (in previous modules), **Root Cause Analysis** (vulnerable source code), **Fix pattern** (secure code), **Verification** (re-test with the same payload).
 
 For each vulnerability documented in the offensive modules, this section preserves two artifacts:
 - The **vulnerable** code with CWE annotation and explanation of the exploitation mechanism.

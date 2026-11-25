@@ -67,13 +67,13 @@ Result: Empty output. The server executes the command but does not return the ou
 
 - Test 2: Time-Based Injection (Verification)
 
-Payload: `arg: "sleep 5"` -> Immediate response (0.03s). FAILED.
+Payload: `arg: "sleep 5"` - immediate response (0.03s). FAILED.
 
 Hypothesis: The input is inserted as an argument of another command (e.g., `ps <input>`).
 
 ![](./img/Screenshot_2026-02-18_15_19_45_2.jpg)
 
-Correct Payload: `arg: "; sleep 5"` -> The server responded after 5.04 seconds. SUCCESS.
+Correct Payload: `arg: "; sleep 5"` - the server responded after 5.04 seconds. SUCCESS.
 
 Analysis: The `;` character terminated the server's original command, allowing the execution of the `sleep` command.
 
@@ -111,7 +111,7 @@ Exfiltrated data: Secret keys (`SECRET_KEY`), database configuration (`sqlite://
 
 - Database Dump (Encoding Bypass):
 
-Failed attempt: `; cat dvga.db` -> Binary/UTF-8 encoding error.
+Failed attempt: `; cat dvga.db` - binary/UTF-8 encoding error.
 
 ![](./img/Screenshot_2026-02-18_15_30_13.jpg)
 
@@ -217,6 +217,6 @@ The DVGA system presents severe security gaps that allow an unauthenticated exte
 > **Note:** Finding WEB-013 was documented on DVGA (Damn Vulnerable GraphQL Application),
 > an open-source lab application installed in a local Docker container. DVGA is designed
 > specifically for practicing security testing on GraphQL APIs in a controlled environment.
-> The complete kill chain (Introspection -> Command Injection -> RCE -> Account Takeover)
+> The complete kill chain (Introspection, Command Injection, RCE, Account Takeover)
 > was completed in less than 10 minutes, demonstrating the devastating impact of this
 > combination of vulnerabilities.

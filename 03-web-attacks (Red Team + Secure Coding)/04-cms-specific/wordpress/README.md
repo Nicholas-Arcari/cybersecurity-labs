@@ -289,7 +289,7 @@ WPScan usa tecniche diverse per la detection dei plugin, con livelli di aggressi
 
 ## Esperienza di Laboratorio
 
-La metodologia a quattro fasi (fingerprint -> enumerazione -> CVE mapping -> exploitation) si e dimostrata il workflow standard per ogni assessment WordPress. Il punto critico e la Fase 2: senza API token WPScan, la scansione trova i plugin ma non mostra le CVE associate, rendendo l'output significativamente meno utile. La registrazione gratuita su wpscan.com (50 richieste/giorno) e sufficiente per assessment individuali.
+La metodologia a quattro fasi (fingerprint, enumerazione, CVE mapping, exploitation) si e dimostrata il workflow standard per ogni assessment WordPress. Il punto critico e la Fase 2: senza API token WPScan, la scansione trova i plugin ma non mostra le CVE associate, rendendo l'output significativamente meno utile. La registrazione gratuita su wpscan.com (50 richieste/giorno) e sufficiente per assessment individuali.
 
 Il brute force via `wp-login.php` ha evidenziato un aspetto operativo importante: WordPress non implementa nativamente rate limiting o account lockout. Senza plugin di protezione (Wordfence, Sucuri), non c'e limite ai tentativi di password. L'aggiunta del flag `--throttle 3000` e stata necessaria solo per evitare di sovraccaricare il server di test, non per evitare blocchi.
 

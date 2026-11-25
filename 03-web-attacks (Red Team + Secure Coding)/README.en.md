@@ -18,7 +18,7 @@ This section has a **dual nature**, which distinguishes it from a simple exploit
 - **Red Team:** offensive techniques to identify and exploit vulnerabilities in web applications, following the OWASP Testing Guide and the kill chain methodology (from recon to RCE).
 - **Secure Coding:** for each documented vulnerability, the vulnerable source code and the correction pattern (Prepared Statements, Output Encoding, Input Validation) are presented. This defensive perspective demonstrates root cause understanding - essential for writing professional technical reports.
 
-The operational flow is as follows: target technology identification (`02-web-recon`) -> traffic interception (`01-proxy-tools`) -> resource enumeration (`dir-busting`, `subdomain-enum`) -> OWASP exploitation (`03-owasp`) -> CMS-specific attacks (`04-cms-specific`) -> API testing (`05-api-security`) -> remediation verification (`06-secure-coding-lab`).
+The operational flow is as follows: target technology identification (`02-web-recon`), traffic interception (`01-proxy-tools`), resource enumeration (`dir-busting`, `subdomain-enum`), OWASP exploitation (`03-owasp`), CMS-specific attacks (`04-cms-specific`), API testing (`05-api-security`), remediation verification (`06-secure-coding-lab`).
 
 ---
 
@@ -40,6 +40,12 @@ The operational flow is as follows: target technology identification (`02-web-re
 |   +-- sql-injection (SQLi)/        # Manual SQLi (WEB-004), sqlmap (WEB-011)
 |   +-- ssti/                        # SSTI Jinja2 RCE (WEB-008)
 |   +-- xss (Cross-Site Scripting)/  # Reflected (WEB-005), Stored (WEB-006), Blind (WEB-007)
+|   +-- xxe (XML External Entity)/   # XXE: local file read + cloud metadata SSRF - methodology
+|   +-- deserialization (Insecure Deserialization)/  # RCE via gadget chain (ysoserial) - methodology
+|   +-- ldap-injection (LDAP Injection)/     # AD auth bypass, directory enum - methodology
+|   +-- xpath-injection (XPath Injection)/   # Auth bypass, XML extraction - methodology
+|   +-- crlf-injection (CRLF Injection)/     # HTTP response splitting, log injection - methodology
+|   +-- command-injection (OS Command Injection)/  # RCE via shell - methodology
 +-- 04-cms-specific/                 # CMS fingerprinting and targeted exploitation
 |   +-- drupal/                      # CVE-2018-7600 Drupalgeddon2 (WEB-015)
 |   +-- wordpress/                   # WPScan: enumeration and brute force

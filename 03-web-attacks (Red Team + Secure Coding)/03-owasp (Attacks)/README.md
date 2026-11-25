@@ -22,8 +22,16 @@ Questa sezione documenta l'exploitation pratica delle categorie OWASP piu rileva
 | A03:2021 - Injection | WEB-004, WEB-008, WEB-011 | `sql-injection/`, `ssti/` |
 | A07:2021 - Identification & Auth Failures | WEB-009 (Brute Force), WEB-010 | `auth-attacks/` |
 | A03:2021 - Injection (XSS) | WEB-005, WEB-006, WEB-007 | `xss/` |
+| A03:2021 - Injection (famiglia estesa) | metodologia (no lab) | `ldap-injection/`, `xpath-injection/`, `crlf-injection/`, `command-injection/` |
+| A05:2021 - Security Misconfiguration (XXE) | metodologia (no lab) | `xxe (XML External Entity)/` |
+| A08:2021 - Software & Data Integrity (Deserialization) | metodologia (no lab) | `deserialization (Insecure Deserialization)/` |
 
 La filosofia di questa sezione e la **doppia prospettiva**: ogni tecnica offensiva e accompagnata dalla root cause analysis e dal pattern di fix sicuro, perche comprendere il perche di una vulnerabilita e altrettanto importante per un analista quanto saperla sfruttare.
+
+> **Pagine in metodologia.** Oltre ai finding di laboratorio (WEB-004..011), la sezione include pagine
+> metodologiche che completano la famiglia injection e le categorie OWASP correlate (XXE, deserializzazione,
+> LDAP/XPath/CRLF/Command Injection). Hanno output illustrativi e **nessun Finding ID fabbricato**: il prossimo
+> ID disponibile e `WEB-016`, da assegnare quando le tecniche saranno eseguite in laboratorio.
 
 ---
 
@@ -39,9 +47,17 @@ La filosofia di questa sezione e la **doppia prospettiva**: ogni tecnica offensi
 |   +-- sql-map-data/         # sqlmap automatizzato + violazione PCI-DSS - WEB-011
 +-- ssti/                     # Server-Side Template Injection Jinja2 - WEB-008
 +-- xss (Cross-Site Scripting)/  # Cross-Site Scripting
-    +-- reflected/            # Reflected XSS su parametro URL - WEB-005
-    +-- stored/               # Stored XSS su campo profilo - WEB-006
-    +-- xss-hunter-payloads/  # Blind XSS con OOB callback - WEB-007
+|   +-- reflected/            # Reflected XSS su parametro URL - WEB-005
+|   +-- stored/               # Stored XSS su campo profilo - WEB-006
+|   +-- xss-hunter-payloads/  # Blind XSS con OOB callback - WEB-007
+|
+|   # --- Pagine in metodologia (no lab, nessun Finding ID fabbricato) ---
++-- xxe (XML External Entity)/           # XXE: lettura file / SSRF (A05) - metodologia
++-- deserialization (Insecure Deserialization)/  # Deserializzazione insicura (A08) - metodologia
++-- ldap-injection (LDAP Injection)/     # LDAP Injection: bypass auth AD, enum directory - metodologia
++-- xpath-injection (XPath Injection)/   # XPath Injection: bypass auth, estrazione XML - metodologia
++-- crlf-injection (CRLF Injection)/     # CRLF / HTTP response splitting, log injection - metodologia
++-- command-injection (OS Command Injection)/  # OS Command Injection: RCE - metodologia
 ```
 
 ---
@@ -177,6 +193,14 @@ La XSS Stored (WEB-006) e la piu critica in termini di impatto perche colpisce t
 | Initial Access | Phishing: Spearphishing Link | `T1566.002` | WEB-005 |
 | Reconnaissance | Gather Victim Identity Information | `T1589` | WEB-007 |
 | Credential Access | Modify Authentication Process | `T1556` | WEB-009 |
+| Discovery | Account Discovery: Domain Account | `T1087.002` | LDAP Injection (metodologia) |
+| Credential Access | Unsecured Credentials: Credentials in Files | `T1552.001` | XXE (metodologia) |
+| Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | Command Injection / deserializzazione (metodologia) |
+| Execution | Command and Scripting Interpreter: Windows Command Shell | `T1059.003` | Command Injection (metodologia) |
+| Impact | Data Manipulation: Stored Data Manipulation | `T1565.001` | CRLF Injection (metodologia) |
+
+> Le righe marcate "(metodologia)" si riferiscono alle pagine senza Finding ID (XXE, deserializzazione, LDAP /
+> XPath / CRLF / Command Injection); `T1190` e `T1213`, gia presenti, coprono anche queste pagine.
 
 ---
 

@@ -167,7 +167,7 @@ Nel lab, il livello default (1) e stato sufficiente perche il target non aveva W
 
 Il finding WEB-002 (PHP 5.6.40 + header X-Powered-By) e il punto di partenza per una kill chain che porta a Remote Code Execution.
 
-### Kill Chain: Version Disclosure -> CVE -> RCE
+### Kill Chain: Version Disclosure, CVE, RCE
 
 ```
 Fase 1: Fingerprinting (WEB-002)
