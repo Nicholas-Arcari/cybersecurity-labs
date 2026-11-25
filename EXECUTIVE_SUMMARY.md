@@ -1,3 +1,5 @@
+> [English](EXECUTIVE_SUMMARY.en.md) | **Italiano**
+
 # Penetration Test - Executive Summary
 
 ---
@@ -82,14 +84,14 @@ che ha permesso l'escalation dei privilegi.
 
 | Severity | Conteggio | % sul totale | Impatto Potenziale |
 | :--- | :---: | :---: | :--- |
-| **Critico** | 13 | 24% | Compromissione totale, perdita dati, RCE |
-| **Alto** | 20 | 37% | Accesso non autorizzato, escalation privilegi |
-| **Medio** | 10 | 18% | Information disclosure, configurazioni deboli |
-| **Basso** | 3 | 6% | Rischi a bassa probabilita di sfruttamento |
-| **Informativo** | 8 | 15% | Osservazioni senza impatto diretto immediato |
-| **Totale** | **54** | 100% | |
+| **Critico** | 15 | 25% | Compromissione totale, perdita dati, RCE |
+| **Alto** | 23 | 38% | Accesso non autorizzato, escalation privilegi |
+| **Medio** | 11 | 18% | Information disclosure, configurazioni deboli |
+| **Basso** | 3 | 5% | Rischi a bassa probabilita di sfruttamento |
+| **Informativo** | 8 | 14% | Osservazioni senza impatto diretto immediato |
+| **Totale** | **60** | 100% | |
 
-> **Lettura sintetica per il management:** Il 61% dei finding rilevati (33 su 54) e
+> **Lettura sintetica per il management:** Il 63% dei finding rilevati (38 su 60) e
 > classificato come Critico o Alto. Questo significa che oltre meta delle vulnerabilita
 > identificate e direttamente sfruttabile da un attaccante con competenze medie per
 > ottenere accesso non autorizzato, esfiltrare dati o compromettere l'infrastruttura.
@@ -108,7 +110,7 @@ che ha permesso l'escalation dei privilegi.
 
 ## 4. Top 5 Finding Critici
 
-I cinque finding seguenti sono stati selezionati tra i 13 critici rilevati in base alla
+I cinque finding seguenti sono stati selezionati tra i 15 critici rilevati in base alla
 combinazione di facilita di sfruttamento, impatto sull'organizzazione e copertura
 della superficie di attacco. Ogni sezione e scritta in linguaggio accessibile al management.
 
@@ -283,7 +285,7 @@ al rapporto tra urgenza del rischio e sforzo di implementazione.
 
 ### Postura attuale
 
-L'engagement ha rilevato **54 vulnerabilita in 18 giorni di test**, di cui il 61%
+L'engagement ha rilevato **60 vulnerabilita in 18 giorni di test**, di cui il 63%
 di severita Critica o Alta. La compromissione totale del server Windows e stata
 ottenuta in meno di **3 minuti dall'inizio della fase di exploitation**, senza
 credenziali preassegnate e sfruttando una vulnerabilita pubblica da 9 anni.
@@ -308,8 +310,8 @@ scanning, penetration test periodici).
 
 | Indicatore | Valore attuale | Target a 6 mesi |
 | :--- | :--- | :--- |
-| Finding Critici aperti | 13 | 0 |
-| Finding Alti aperti | 20 | < 5 |
+| Finding Critici aperti | 15 | 0 |
+| Finding Alti aperti | 23 | < 5 |
 | Tempo a compromissione totale | < 3 minuti | > 30 giorni (obiettivo realistico) |
 | Sistemi con patch arretrate | Tutti i sistemi testati | 0 sistemi critici non patchati |
 | Sistemi con MFA abilitato | 0% | 100% su accessi privilegiati |

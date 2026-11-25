@@ -176,7 +176,7 @@ Compromissione totale dell'infrastruttura
 
 **Vettori di monetizzazione tipici:**
 - Business Email Compromise (BEC): accesso alla mailbox per frodi finanziarie (bonifici deviati verso conti controllati)
-- Ransomware: VPN -> rete interna -> Domain Admin -> cifratura sistemi (100.000-5.000.000 USD di riscatto)
+- Ransomware: VPN, rete interna, Domain Admin, cifratura sistemi (100.000-5.000.000 USD di riscatto)
 - Spear phishing interno: email legittime dall'account compromesso verso colleghi con allegati weaponized
 
 ### Prospettiva Difensore (Blue Team)

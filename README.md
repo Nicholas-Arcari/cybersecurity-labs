@@ -1,3 +1,5 @@
+> [English](README.en.md) | **Italiano**
+
 # Cybersecurity Labs
 
 ![Security Status](https://img.shields.io/badge/Security-Red%20%26%26%20Blue-blueviolet?style=for-the-badge&logo=kali-linux)
@@ -26,17 +28,85 @@ I README di ogni modulo non sono semplici guide di comandi: documentano l'**espe
 
 | Fase / Dominio | Cartella | Stato | Finding |
 | :--- | :--- | :---: | :--- |
-| **I. Intelligence** | [01-recon](#01-recon-red-team-basic) | Completo | OSINT-001..004, SCAN-001..003, DNS-001..003, INTEL-001..004 |
-| **II. Assessment** | [02-vulnerability-assessment](#02-vulnerability-assessment) | Completo | VULN-001..006 |
+| **I. Intelligence** | [01-recon](#01-recon-red-team-basic) | Completo | OSINT-001..006, SCAN-001..003, DNS-001..003, INTEL-001..006 |
+| **II. Assessment** | [02-vulnerability-assessment](#02-vulnerability-assessment) | Completo | VULN-001..009 |
 | **III. Web Ops** | [03-web-attacks](#03-web-attacks-red-team--secure-coding) | Completo | WEB-001..015 |
 | **00. Setup** | [00-setup-after-installing-kali](#00-setup-after-installing-kali) | Completo | - (hardening guide) |
-| **IV. System Ops** | [04-system-exploitation](#04-system-exploitation) | Completo | EXPLOIT-001..019 |
-| **V. Human Ops** | [05-social-engineering](#05-social-engineering-toolingpython) | Da fare | SE-001..? |
-| **VI. Wireless** | [06-wireless-security](#06-wireless-security) | Da fare | WIFI-001..? |
-| **VII. Post-Exploit** | [07-post-exploitation](#07-post-exploitation) | Da fare | POST-001..? |
-| **VIII. Defense** | [08-defense-hardenings](#08-defense-hardenings-blue-team-prevention) | Da fare | DEF-001..? |
-| **IX. Analysis** | [09-digital-forensics](#09-digital-forensics-blue-team-analysis) | Da fare | FOR-001..? |
-| **X. Modern Infra** | [10-cloud-security](#10-cloud-security-cloudmodern) | Da fare | CLOUD-001..? |
+| **IV. System Ops** | [04-system-exploitation](#04-system-exploitation) | Completo | EXPLOIT-001..025 |
+| **V. Human Ops** | [05-social-engineering](#05-social-engineering-toolingpython) | Completo | SE-001..015 |
+| **VI. Wireless** | [06-wireless-security](#06-wireless-security) | Completo | WIFI-001..012 |
+| **VII. Post-Exploit** | [07-post-exploitation](#07-post-exploitation) | Completo | POST-001..014 |
+| **VIII. Defense** | [08-defense-hardenings](#08-defense-hardenings-blue-team-prevention) | Completo | DEF-001..008 |
+| **IX. Analysis** | [09-digital-forensics](#09-digital-forensics-blue-team-analysis) | Completo | FOR-001..002 |
+| **X. Modern Infra** | [10-cloud-security](#10-cloud-security-cloudmodern) | Completo | CLOUD-001..010 |
+| **XI. Active Directory** | [11-active-directory](#11-active-directory-windows-domain) | In corso (metodologia) | AD- (da lab) |
+
+---
+
+## Apparato Teorico e Accademico
+
+Oltre ai README operativi, ogni modulo include un documento **`THEORETICAL-FOUNDATIONS.md`**: un
+complemento di livello accademico (struttura da capitolo di tesi) che formalizza il modello
+dell'avversario, le proprieta di sicurezza, i fondamenti teorici, l'analisi quantitativa, i limiti e
+i problemi aperti, con impegno diretto sulla **letteratura primaria** peer-reviewed. La bibliografia
+annotata master e in **[`REFERENCES.md`](REFERENCES.md)** (fonti reali: IEEE S&P, USENIX Security, CCS,
+POPL, NIST, RFC).
+
+> **Teoria di livello magistrale:** **[`THEORY-ADVANCED.md`](THEORY-ADVANCED.md)** e il capitolo di teoria
+> rigoroso (definizioni, teoremi, dimostrazioni) che porta l'apparato al registro di un testo di crittografia
+> e metodi formali: provable security game-based e riduzioni (Parte I); un **teorema di concrete security
+> dimostrato** sull'attacco offline, il cui bound coincide con la misura eseguita in `EVALUATION/exp02`
+> (Parte II); la gerarchia di autenticazione di Lowe che nomina formalmente la freshness e collega KRACK
+> alla verifica in `FORMAL-MODELS/` (Parte III); reticoli BLP/Biba e non-interferenza [Goguen-Meseguer]
+> (Parte IV). E la controparte rigorosa dei foundations concettuali di modulo.
+
+| Modulo | Fondamento teorico centrale | Documento |
+| :--- | :--- | :--- |
+| 01 Recon | Superficie d'attacco [Manadhata & Wing] + entropia [Shannon] | [Foundations](01-recon%20%28Red%20Team%20Basic%29/THEORETICAL-FOUNDATIONS.md) |
+| 02 Vuln Assessment | Indecidibilita del rilevamento (Rice) + metrologia CVSS | [Foundations](02-vulnerability-assessment/THEORETICAL-FOUNDATIONS.md) |
+| 03 Web | Injection come confusione dato/codice [Su & Wassermann] | [Foundations](03-web-attacks%20%28Red%20Team%20%2B%20Secure%20Coding%29/THEORETICAL-FOUNDATIONS.md) |
+| 04 System | Weird machines [Bratus] + ROP Turing-completo [Shacham] | [Foundations](04-system-exploitation/THEORETICAL-FOUNDATIONS.md) |
+| 05 Social Eng. | Doppio processo [Kahneman] + divario di autenticazione | [Foundations](05-social-engineering/THEORETICAL-FOUNDATIONS.md) |
+| 06 Wireless | Caduta di Crypto-1 [Nohl, Garcia] + freshness | [Foundations](06-wireless-security/THEORETICAL-FOUNDATIONS.md) |
+| 07 Post-Exploit | Grafi di attacco [Sheyner] + confinamento [Lampson] | [Foundations](07-post-exploitation/THEORETICAL-FOUNDATIONS.md) |
+| 08 Defense | Base-rate fallacy bayesiano [Axelsson] | [Foundations](08-defense-hardenings%20%28Blue%20Team%20Prevention%29/THEORETICAL-FOUNDATIONS.md) |
+| 09 Forensics | Ordine di volatilita + inferenza abduttiva | [Foundations](09-digital-forensics%20%28Blue%20Team%20Analysis%29/THEORETICAL-FOUNDATIONS.md) |
+| 10 Cloud | Co-residenza [Ristenpart] + identita come perimetro | [Foundations](10-cloud-security%20%28Cloud%26Modern%29/THEORETICAL-FOUNDATIONS.md) |
+
+### Valutazione Empirica (misure riproducibili)
+
+Oltre alla teoria, la cartella **[`EVALUATION/`](EVALUATION/README.md)** contiene esperimenti
+**eseguibili e deterministici** (Python stdlib, seed fissi) che *misurano* i fenomeni teorici invece
+di derivarli soltanto - il passo che porta l'analisi quantitativa dal "citato dalla letteratura" al
+"misurato e verificabile in modo indipendente". Nessun numero e inventato: ogni valore proviene
+dall'esecuzione reale del codice incluso.
+
+- **Exp A** (modulo 08): un rilevatore brute-force su 1.000.000 di eventi etichettati conferma
+  empiricamente il **base-rate fallacy** [Axelsson 2000] - a base rate `1e-5` il 99.8% degli allarmi
+  e falso, con la formula bayesiana verificata per resampling.
+- **Exp B** (moduli 04, 06): su una distribuzione Zipf di password, Shannon (13.4 bit) sovrastima la
+  resistenza pratica; **749 tentativi craccano il 50%** degli account - misura del divario
+  entropia-nominale / guessing-entropy.
+
+### Verifica Formale (metodi formali su protocollo)
+
+La cartella **[`FORMAL-MODELS/`](FORMAL-MODELS/README.md)** aggiunge il terzo metodo del rigore
+accademico: la verifica formale di un protocollo. Un **model checker a stati espliciti** (eseguito,
+esaustivo) del 4-way handshake WPA2 sotto avversario Dolev-Yao **trova meccanicamente l'attacco KRACK**
+[Vanhoef & Piessens 2017] nel modello vulnerabile (controesempio a 4 passi) e **verifica** l'assenza
+del difetto nel modello corretto. Dimostra formalmente che KRACK e un difetto della macchina a stati
+(reinstallazione della chiave / perdita di freshness del nonce), non delle primitive crittografiche -
+la tesi del modulo 06, sez. 3.5. Una seconda verifica, **per invariante induttivo (senza bound)**,
+*dimostra* l'assenza del difetto nel modello corretto per esecuzioni di lunghezza arbitraria. Incluso
+anche un modello **Tamarin** di riferimento (non eseguito qui, etichettato come tale).
+
+### Autovalutazione e Limiti
+
+Coerentemente con l'onesta scientifica, **[`SELF-ASSESSMENT.md`](SELF-ASSESSMENT.md)** e una revisione
+critica avversariale interna: elenca le minacce alla validita di ogni strato (dati sintetici,
+astrazioni, autore unico, assistenza LLM) e dichiara cio che resta fuori portata - in primis la peer
+review esterna, che nessun repository puo autogenerare. Non e peer review: ne affronta la funzione
+(trovare i difetti), non ne rivendica il credenziale.
 
 ---
 
@@ -61,11 +131,11 @@ flowchart TD
     end
 
     subgraph EXPLOIT["04 - System Exploitation (Initial Access)"]
-        E1["EXPLOIT-001\nEternalBlue\nMetasploit ms17_010\n→ SYSTEM shell"]:::exploit
+        E1["EXPLOIT-001\nEternalBlue\nMetasploit ms17_010\n-> SYSTEM shell"]:::exploit
     end
 
     subgraph PRIVESC["04 - PrivEsc (Persistence)"]
-        E2["EXPLOIT-013\nSeImpersonatePrivilege\nPrintSpoofer → SYSTEM"]:::privesc
+        E2["EXPLOIT-013\nSeImpersonatePrivilege\nPrintSpoofer -> SYSTEM"]:::privesc
         E3["EXPLOIT-016\nUnattend.xml\nPassword Administrator in chiaro"]:::privesc
         E4["EXPLOIT-018\nPass-the-Hash\nLateral movement (no SMB Signing)"]:::privesc
         E2 --> E3
@@ -86,14 +156,51 @@ flowchart TD
 
 ---
 
+## Risk Heat Map
+
+Distribuzione visuale dei 60 finding per severity e categoria.
+
+```mermaid
+pie title Distribuzione Finding per Severity
+    "Critico (15)" : 15
+    "Alto (23)" : 23
+    "Medio (11)" : 11
+    "Basso (3)" : 3
+    "Informativo (8)" : 8
+```
+
+```mermaid
+xychart-beta
+    title "Finding per Modulo"
+    x-axis ["01-Recon", "02-VA", "03-Web", "04-System"]
+    y-axis "Numero Finding" 0 --> 30
+    bar [14, 6, 15, 25]
+```
+
+| Categoria | Critico | Alto | Medio | Basso | Informativo | Totale |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| 01-Recon | 1 | 3 | 4 | 2 | 4 | 14 |
+| 02-Vulnerability Assessment | 0 | 2 | 3 | 1 | 0 | 6 |
+| 03-Web Attacks | 7 | 6 | 2 | 0 | 0 | 15 |
+| 04-System Exploitation | 7 | 12 | 2 | 0 | 4 | 25 |
+| **Totale** | **15** | **23** | **11** | **3** | **8** | **60** |
+
+---
+
 ## Architettura della Repository
 
 ```
 cybersecurity-labs/
 +-- REPORT_STANDARDS.md          <- Standard di redazione (leggere prima di lavorare)
 +-- README.md                    <- Questo file
-+-- EXECUTIVE_SUMMARY.md         <- Executive Summary per il management (54 finding, Top 5 critici)
-+-- LAB_SETUP.md                 <- Topologia VirtualBox, IP NAT/Bridge, configurazione VM
++-- EXECUTIVE_SUMMARY.md         <- Executive Summary per il management (60 finding, Top 5 critici)
++-- LAB_SETUP.md                 <- Topologia VirtualBox, IP NAT/Bridge, Docker Compose, configurazione VM
++-- CERT_MAPPING.md              <- Mappatura lab vs certificazioni (OSCP, eJPT, CEH, Security+, PenTest+)
++-- TOOLS_REFERENCE.md           <- Indice completo tool (70 tool, 76 file linkati)
++-- docker-compose.yml           <- Target web containerizzati (DVWA, DVGA, Juice Shop)
++-- mkdocs.yml                   <- Configurazione MkDocs Material per GitHub Pages
++-- scripts/                     <- Automazione: lab-setup.sh, check-finding-ids.sh
++-- tests/                       <- Test suite pytest per gli script Python
 +-- 00-setup-after-installing-kali/  <- Hardening guide: 20 step post-installazione
 +-- 01-recon (Red Team Basic)/
 +-- 02-vulnerability-assessment/
@@ -105,6 +212,7 @@ cybersecurity-labs/
 +-- 08-defense-hardenings/
 +-- 09-digital-forensics/
 +-- 10-cloud-security/
++-- 11-active-directory (Windows Domain)/
 ```
 
 ---
@@ -118,8 +226,8 @@ cybersecurity-labs/
 La ricognizione e la fase piu critica e piu trascurata: piu informazioni si raccolgono prima di attaccare, minore e il rischio di essere rilevati durante le fasi successive. Questa sezione e divisa in due nature operative complementari: la **OSINT passiva** (invisibile, zero contatto col target) e la **scansione attiva** (rumorosa, rilevabile).
 
 - **Completato:** OSINT personale su `nicholas-arcari.github.io`, Google Dorking su `nasa.gov`, network scanning su lab VirtualBox (Windows 10 `10.0.2.3`), DNS enumeration, Shodan/Censys recon
-- **Finding:** 12 finding documentati (OSINT-001..004, SCAN-001..003, DNS-001..003, INTEL-001..004)
-- **Contenuto:** TheHarvester, Sherlock, Nmap, Masscan, dnsrecon, Subfinder, Shodan CLI
+- **Finding:** 12 finding con evidenza (OSINT-001..004, SCAN-001..003, DNS-001..003, INTEL-001..004) + 4 lab metodologici (OSINT-005..006 automazione OSINT e code leakage, INTEL-005..006 perimeter mapping e cloud asset discovery)
+- **Contenuto:** TheHarvester, Sherlock, Nmap, Masscan, dnsrecon, Subfinder, Shodan CLI, SpiderFoot, recon-ng, gitleaks, TruffleHog, amass, crt.sh, cloud_enum
 
 ---
 
@@ -130,7 +238,7 @@ La ricognizione e la fase piu critica e piu trascurata: piu informazioni si racc
 Mentre la recon risponde a "cosa esiste?", il Vulnerability Assessment risponde a "cosa e vulnerabile e quanto?". Questa sezione e il ponte tra la ricognizione e l'exploitation: senza un VA strutturato, gli attacchi successivi sarebbero tentativi alla cieca. Documenta sia la metodologia automatizzata (Nessus, OpenVAS) che quella manuale (audit specifico per protocollo).
 
 - **Completato:** Nessus credentialed scan su Windows 10, audit SMB/NetBIOS, SMTP, SNMP, SSL/TLS, analisi CVE con searchsploit e CVSS calculator, template di reporting professionale
-- **Finding:** 6 finding documentati (VULN-001..006): SMB Signing, Windows EoL, NetBIOS disclosure, accesso C$ con credenziali standard, audit SMTP, SNMP
+- **Finding:** 6 finding documentati (VULN-001..006): SMB Signing, Windows EoL, NetBIOS disclosure, accesso C$ con credenziali standard, audit SMTP, SNMP; + 3 lab di protocol audit (VULN-007..009: LDAP, NFS/RPC, RDP)
 - **Contenuto:** Nessus, OpenVAS/GVM, nmap NSE, enum4linux, nbtscan, testssl.sh, searchsploit
 
 ---
@@ -165,7 +273,7 @@ Questa e la sezione piu ampia della repository, con doppia anima: **Red Team** (
 Dedicato all'attacco infrastrutturale puro: sfruttamento di servizi esposti, exploit di vulnerabilita note, privilege escalation locale. Il focus non e solo "eseguire Metasploit" ma comprendere la catena di compromissione: dalla shell non privilegiata al controllo totale del sistema.
 
 - **Completato:** C2 frameworks (Empire + Metasploit), custom payload cross-compilation, exploit research (searchsploit), Linux PrivEsc (GTFOBins, LinPEAS, cronjob hijacking), Windows PrivEsc (PrintSpoofer, WinPEAS, Unattend.xml, XAMPP weak ACL), kernel audit (Sherlock, PwnKit)
-- **Finding:** 19 finding documentati (EXPLOIT-001..019): da Initial Access fileless a shell SYSTEM
+- **Finding:** 25 finding documentati (EXPLOIT-001..025): da Initial Access fileless a cracking NTLM e hash Linux
 - **Contenuto:** PowerShell Empire 5, Metasploit, msfvenom, PrintSpoofer, WinPEAS, LinPEAS, GTFOBins, Sherlock.ps1, MinGW-w64
 
 ---
@@ -236,6 +344,17 @@ Le infrastrutture moderne (Docker, Kubernetes, AWS/Azure/GCP) introducono una su
 
 ---
 
+### 11-active-directory (Windows Domain)
+
+**Obiettivo:** Attaccare e difendere il dominio Windows, dall'accesso autenticato al Domain Admin.
+
+Colma il vettore piu comune dei penetration test interni: l'abuso di funzionalita legittime di Active Directory (Kerberos, repliche, deleghe, AD CS, ACL). Modulo in metodologia: tecniche, comandi, detection e MITRE, con output illustrativi e Finding ID (`AD-`) da assegnare in laboratorio reale.
+
+- **Stato:** In corso (metodologia, solo IT; EN in arrivo)
+- **Contenuto:** enumerazione (BloodHound/LDAP/kerbrute), Kerberos (Kerberoasting, AS-REP, Golden/Silver Ticket), AD CS (ESC1/ESC8), deleghe e ACL (RBCD, delegation, ACL abuse), credential dumping (DCSync, Shadow Credentials, NTDS.dit)
+
+---
+
 ## Finding Registry Globale
 
 | ID | Titolo | Severity | Modulo |
@@ -244,6 +363,8 @@ Le infrastrutture moderne (Docker, Kubernetes, AWS/Azure/GCP) introducono una su
 | [OSINT-002](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/email-harvesting/README.md>) | Email harvesting su dominio personale | Informativo | osint-passive/email-harvesting |
 | [OSINT-003](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/google-dorks/README.md>) | Google Dorking - documenti e login esposti | Variabile | osint-passive/google-dorks |
 | [OSINT-004](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/user-enumeration/README.md>) | User enumeration su social network | Basso | osint-passive/user-enumeration |
+| [OSINT-005](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/osint-frameworks/README.md>) | Correlazione OSINT automatica via framework multi-fonte (SpiderFoot, recon-ng, Maltego) | Variabile | osint-passive/osint-frameworks |
+| [OSINT-006](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/code-secret-leakage/README.md>) | Segreti esposti in repository pubblici (git history) | Alto/Critico | osint-passive/code-secret-leakage |
 | [SCAN-001](<01-recon (Red Team Basic)/02-network-scanning-active/live-host-discovery/README.md>) | Live host discovery - subnet mapping | Informativo | network-scanning/live-host-discovery |
 | [SCAN-002](<01-recon (Red Team Basic)/02-network-scanning-active/port-scanning (Nmap)/masscan/README.md>) | Port scan massivo - superficie esposta | Informativo | port-scanning/masscan |
 | [SCAN-003](<01-recon (Red Team Basic)/02-network-scanning-active/port-scanning (Nmap)/nmap-scripts/README.md>) | SMB Signing not required (via nmap NSE) | Alto | port-scanning/nmap-scripts |
@@ -254,6 +375,8 @@ Le infrastrutture moderne (Docker, Kubernetes, AWS/Azure/GCP) introducono una su
 | [INTEL-002](<01-recon (Red Team Basic)/04-infrastructure-intel/shodan-censys/README.md>) | Versioni software esposte via Shodan | Medio | infrastructure-intel/shodan-censys |
 | [INTEL-003](<01-recon (Red Team Basic)/04-infrastructure-intel/shodan-censys/README.md>) | Banner grabbing infrastruttura | Basso | infrastructure-intel/shodan-censys |
 | [INTEL-004](<01-recon (Red Team Basic)/04-infrastructure-intel/tech-stack/README.md>) | Tech stack fingerprinting | Informativo | infrastructure-intel/tech-stack |
+| [INTEL-005](<01-recon (Red Team Basic)/04-infrastructure-intel/asn-whois-ct/README.md>) | Perimetro mappato via ASN/WHOIS e Certificate Transparency | Variabile | infrastructure-intel/asn-whois-ct |
+| [INTEL-006](<01-recon (Red Team Basic)/04-infrastructure-intel/cloud-asset-discovery/README.md>) | Storage cloud esposto (bucket S3/Blob) con lettura anonima | Medio/Critico | infrastructure-intel/cloud-asset-discovery |
 | [VULN-001](<02-vulnerability-assessment/01-general-scanners (Infrastructure)/nessus/README.md>) | SMB Signing not required (Nessus credentialed) | Alto | general-scanners/nessus |
 | [VULN-002](<02-vulnerability-assessment/01-general-scanners (Infrastructure)/nessus/README.md>) | Windows 10 22H2 End of Life | Medio | general-scanners/nessus |
 | [VULN-003](<02-vulnerability-assessment/02-protocol-specific-audit/smb-net-bios/README.md>) | NetBIOS Name/Service Disclosure | Basso | protocol-audit/smb-net-bios |
@@ -285,17 +408,25 @@ Le infrastrutture moderne (Docker, Kubernetes, AWS/Azure/GCP) introducono una su
 | [EXPLOIT-008](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/gtfo-bins-notes/README.md>) | sudo NOPASSWD su `find` - escalation root immediata | Alto | linux-priv-esc/gtfo-bins |
 | [EXPLOIT-009](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/gtfo-bins-notes/README.md>) | SUID bit su `awk` - esecuzione arbitraria come root | Alto | linux-priv-esc/gtfo-bins |
 | [EXPLOIT-010](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/linpeas/README.md>) | Credential disclosure in file di log/config (LinPEAS) | Alto | linux-priv-esc/linpeas |
-| [EXPLOIT-011](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/linpeas/README.md>) | Cronjob hijacking: script root scrivibile -> reverse shell | Alto | linux-priv-esc/linpeas |
+| [EXPLOIT-011](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/linpeas/README.md>) | Cronjob hijacking: script root scrivibile - reverse shell | Alto | linux-priv-esc/linpeas |
 | [EXPLOIT-012](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/linpeas/README.md>) | CVE-2021-4034 PwnKit audit - sistema aggiornato | Informativo | linux-priv-esc/linpeas |
-| [EXPLOIT-013](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/juicypotato-printnightmare/README.md>) | SeImpersonatePrivilege abuse via PrintSpoofer -> NT AUTHORITY\SYSTEM | Critico | windows-priv-esc/juicypotato |
+| [EXPLOIT-013](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/juicypotato-printnightmare/README.md>) | SeImpersonatePrivilege abuse via PrintSpoofer - NT AUTHORITY\SYSTEM | Critico | windows-priv-esc/juicypotato |
 | [EXPLOIT-014](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/juicypotato-printnightmare/README.md>) | CVE-2021-34527 PrintNightmare audit - sistema patchato | Informativo | windows-priv-esc/juicypotato |
 | [EXPLOIT-015](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/sherlock/README.md>) | Kernel patch audit (Sherlock) - MS10-015..MS16-032 non presenti | Informativo | windows-priv-esc/sherlock |
 | [EXPLOIT-016](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/winpeas/README.md>) | Credential disclosure in Unattend.xml - password Administrator | Critico | windows-priv-esc/winpeas |
 | [EXPLOIT-017](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/winpeas/README.md>) | XAMPP weak ACL: Authenticated Users WriteData su binari servizio | Critico | windows-priv-esc/winpeas |
 | [EXPLOIT-018](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/winpeas/README.md>) | LocalAccountTokenFilterPolicy=1 - lateral movement via PtH | Medio | windows-priv-esc/winpeas |
 | [EXPLOIT-019](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/winpeas/README.md>) | PowerShell history PSReadLine con credenziali in chiaro | Alto | windows-priv-esc/winpeas |
+| [EXPLOIT-020](<04-system-exploitation/04-binary-exploitation/buffer-overflow-prep/README.md>) | Stack Buffer Overflow - EIP overwrite e shellcode injection | Critico | binary-exploitation/buffer-overflow |
+| [EXPLOIT-021](<04-system-exploitation/04-binary-exploitation/pwntools-scripts/README.md>) | Remote ASLR/DEP bypass via GOT leak + Ret2Libc ROP chain | Critico | binary-exploitation/pwntools |
+| [EXPLOIT-022](<04-system-exploitation/05-password-cracking/hashcat/README.md>) | NTLM cracking via Mask Attack (keyspace reduction) | Alto | password-cracking/hashcat |
+| [EXPLOIT-023](<04-system-exploitation/05-password-cracking/hashcat/README.md>) | NTLM cracking via Rule-based Attack (regola custom) | Alto | password-cracking/hashcat |
+| [EXPLOIT-024](<04-system-exploitation/05-password-cracking/john-the-ripper/README.md>) | Cracking password archivio ZIP cifrato (zip2john) | Medio | password-cracking/john |
+| [EXPLOIT-025](<04-system-exploitation/05-password-cracking/john-the-ripper/README.md>) | Cracking hash Linux via unshadowing + dizionario RockYou | Alto | password-cracking/john |
 
-**Totale finding documentati: 54 | Critici: 13 | Alti: 20 | Medi: 10 | Bassi: 3 | Informativi: 8**
+**Totale finding documentati con evidenza: 60 | Critici: 15 | Alti: 23 | Medi: 11 | Bassi: 3 | Informativi: 8**
+
+> **Nota:** i finding `OSINT-005`, `OSINT-006`, `INTEL-005`, `INTEL-006` (e i successivi contrassegnati come tali nei moduli in espansione) documentano **metodologie riproducibili** con comandi, output di esempio e remediation, ma sono in attesa di esecuzione nel laboratorio: i risultati reali e gli screenshot vanno inseriti nei segnaposto predisposti. Non sono conteggiati nel totale dei 60 finding con evidenza sopra riportato.
 
 ---
 
@@ -318,7 +449,7 @@ Le infrastrutture moderne (Docker, Kubernetes, AWS/Azure/GCP) introducono una su
 | Discovery | Account Discovery | `T1087` | 03-web | WEB-014 |
 | Initial Access | Exploit Public-Facing Application | `T1190` | 02-vuln, 03-web | WEB-004, WEB-008, WEB-011, WEB-013, WEB-015 |
 | Credential Access | Brute Force: Password Guessing | `T1110.001` | 03-web | WEB-009 |
-| Credential Access | Brute Force: Password Cracking | `T1110.002` | 03-web | WEB-012 |
+| Credential Access | Brute Force: Password Cracking | `T1110.002` | 03-web, 04-exploit | WEB-012, EXPLOIT-022..025 |
 | Credential Access | Steal Web Session Cookie | `T1539` | 03-web | WEB-005, WEB-006, WEB-010 |
 | Credential Access | Valid Accounts | `T1078` | 02-vuln, 03-web | VULN-004, WEB-012 |
 | Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | 03-web | WEB-008, WEB-013 |
@@ -327,6 +458,8 @@ Le infrastrutture moderne (Docker, Kubernetes, AWS/Azure/GCP) introducono una su
 | Collection | Data from Network Shared Drive | `T1039` | 02-vuln | VULN-004 |
 | Collection | Man in the Middle | `T1557` | 03-web | WEB-010 |
 | Lateral Movement | Use Alternate Authentication Material: Web Session Cookie | `T1550.004` | 03-web | WEB-010, WEB-012 |
+| Execution | Exploitation of Remote Services | `T1210` | 04-exploit | EXPLOIT-020, EXPLOIT-021 |
+| Execution | Native API | `T1106` | 04-exploit | EXPLOIT-006, EXPLOIT-020, EXPLOIT-021 |
 | Exfiltration | Exfiltration Over Web Service | `T1567` | 03-web | WEB-011 |
 
 ---
@@ -338,7 +471,10 @@ Per utilizzare al meglio gli script contenuti in questa repo, si consiglia:
 - **OS:** Kali Linux 2024+ / Parrot OS (o VM dedicata con snapshot pre-lab)
 - **Python:** 3.10+ (con `requirements.txt` installati nelle singole cartelle dove applicabile)
 - **Docker:** Necessario per avviare container vulnerabili (DVWA, DVGA, Metasploitable)
+- **Docker:** Necessario per i target web containerizzati (`docker compose up -d` - vedi [LAB_SETUP.md](LAB_SETUP.md))
 - **Rete:** Ambiente virtualizzato isolato (VirtualBox/VMware NAT o Host-Only) per i lab attivi
+- **Certificazioni:** Mappatura lab-certificazioni disponibile in [CERT_MAPPING.md](CERT_MAPPING.md)
+- **Tool:** Indice completo dei 70 tool utilizzati in [TOOLS_REFERENCE.md](TOOLS_REFERENCE.md)
 
 ---
 

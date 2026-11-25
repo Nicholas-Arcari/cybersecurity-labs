@@ -140,7 +140,7 @@ Pass-the-Hash laterale -> Domain Controller -> compromissione AD completa
 **Impatto potenziale:** SMB Relay e uno degli attacchi piu devastanti in ambiente Active Directory. Non richiede la conoscenza di alcuna password - sfrutta autenticazioni legittime gia in corso sulla rete. In un engagement CrowdStrike del 2023, il 68% delle reti AD testate presentava almeno un host con SMB Signing non obbligatorio. L'attacco e particolarmente efficace in combinazione con LLMNR/NBT-NS poisoning (Responder.py), che forza i client a inviare hash NTLM all'attaccante.
 
 **Vettori di monetizzazione tipici:**
-- Ransomware: SMB Relay -> admin locale -> Mimikatz -> Domain Admin -> cifratura di massa via GPO
+- Ransomware: SMB Relay, admin locale, Mimikatz, Domain Admin, cifratura di massa via GPO
 - Data exfiltration: accesso a file share con credenziali relay per esfiltrazione documenti riservati
 - Persistenza: creazione account backdoor o Golden Ticket post-relay
 

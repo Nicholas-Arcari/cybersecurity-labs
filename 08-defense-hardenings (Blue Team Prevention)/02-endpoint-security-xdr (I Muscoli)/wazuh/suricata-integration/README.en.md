@@ -115,7 +115,7 @@ You should see red text or a log entry related to `GPL ATTACK_RESPONSE`. (Press 
 
 Go to your Wazuh Dashboard (`https://localhost`)
 
-Go to Wazuh -> Security events
+Go to Wazuh, Security events
 
 In the search bar at the top, type: `rule.groups:suricata`
 

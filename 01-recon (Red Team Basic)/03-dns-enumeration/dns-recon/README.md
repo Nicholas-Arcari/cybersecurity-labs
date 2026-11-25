@@ -205,7 +205,7 @@ Compromissione AD completa
 **Hardening strutturale:**
 - Configurare `allow-transfer` con lista esplicita di IP dei secondary DNS (BIND9: `allow-transfer { 10.0.0.2; };`)
 - Implementare TSIG (RFC 2845) per autenticazione crittografica dei trasferimenti - protegge anche da IP spoofing
-- Windows DNS: configurare "Zone Transfers" -> "Only to the following servers" nella console DNS Manager
+- Windows DNS: configurare "Zone Transfers" su "Only to the following servers" nella console DNS Manager
 - Abilitare DNS query logging e integrare con SIEM per alert su query AXFR da IP non autorizzati
 - Rimuovere record interni (dev, staging, vpn) dalla zona DNS pubblica - utilizzare split-horizon DNS con zona interna separata
 - Audit periodico: `dig axfr @ns1.azienda.it azienda.it` dal proprio IP pubblico per verificare che il transfer sia bloccato

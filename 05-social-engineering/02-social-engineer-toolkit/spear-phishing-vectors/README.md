@@ -186,7 +186,7 @@ Lo spear-phishing si distingue dal phishing massivo per tre caratteristiche fond
 
 Dal punto di vista tecnico, il file .hta sfrutta il motore `mshta.exe` (Microsoft HTML Application Host), un binario legittimo di Windows classificato come LOLBIN (Living Off the Land Binary). L'esecuzione di codice tramite LOLBIN e una tecnica di defense evasion perche utilizza eseguibili firmati Microsoft, rendendo piu difficile il rilevamento basato su firma.
 
-La catena di esecuzione completa e: `mshta.exe` -> VBScript embedded -> `powershell.exe -ExecutionPolicy Bypass -EncodedCommand [Base64]` -> download stage 2 in memoria -> Meterpreter. Ogni passaggio rappresenta un'opportunita di detection per il difensore (process creation events, command line logging, network connections).
+La catena di esecuzione completa e: `mshta.exe`, VBScript embedded, `powershell.exe -ExecutionPolicy Bypass -EncodedCommand [Base64]`, download stage 2 in memoria, Meterpreter. Ogni passaggio rappresenta un'opportunita di detection per il difensore (process creation events, command line logging, network connections).
 
 Nella kill chain, lo spear-phishing copre tre fasi consecutive: Weaponization (creazione del payload .hta), Delivery (invio dell'email), e Exploitation (esecuzione del payload alla vittima). La fase successiva - Installation/Persistence - richiede azioni post-exploitation aggiuntive documentate nel modulo 07.
 
@@ -229,7 +229,7 @@ Lateral Movement -> Privilege Escalation -> Domain Compromise
 
 **Indicatori di Compromissione (IOC):**
 - Email con allegato .hta, .vbs, .js da mittenti esterni o domini look-alike
-- Process tree: `outlook.exe` -> `mshta.exe` -> `powershell.exe` (Sysmon Event ID 1)
+- Process tree: `outlook.exe`, `mshta.exe`, `powershell.exe` (Sysmon Event ID 1)
 - PowerShell con flag `-EncodedCommand` e/o `-ExecutionPolicy Bypass` (Event ID 4104)
 - Connessione TCP outbound dalla workstation verso IP non categorizzato su porta non-standard
 

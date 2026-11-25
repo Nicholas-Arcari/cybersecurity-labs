@@ -1,3 +1,5 @@
+> [English](LAB_SETUP.en.md) | **Italiano**
+
 # LAB_SETUP.md - Topologia e Configurazione del Laboratorio
 
 > Documento tecnico di riferimento per la riproduzione dell'ambiente di laboratorio
@@ -17,6 +19,8 @@
 - [Moduli per topologia](#moduli-per-topologia)
 - [Snapshot e gestione VM](#snapshot-e-gestione-vm)
 - [Riprodurre il lab](#riprodurre-il-lab)
+- [Target Web Containerizzati (Docker Compose)](#target-web-containerizzati-docker-compose)
+- [Registrazione Demo con Asciinema](#registrazione-demo-con-asciinema)
 
 ---
 
@@ -316,6 +320,94 @@ net user user1 Password123! /add
 net user svc_backup ServicePass1! /add
 net localgroup "Remote Desktop Users" user1 /add
 ```
+
+---
+
+## Target Web Containerizzati (Docker Compose)
+
+Per i lab del modulo 03 (Web Attacks) e in parte del modulo 02, e disponibile un `docker-compose.yml` nella root della repository che fornisce target web containerizzati. Questo e **complementare** alla topologia VirtualBox - non la sostituisce.
+
+### Cosa copre Docker Compose
+
+| Servizio | Porta | Modulo | Target per |
+| :--- | :--- | :--- | :--- |
+| DVWA | `localhost:8080` | 03-web-attacks | SQLi, XSS, Command Injection, CSRF |
+| DVGA | `localhost:5013` | 03-web-attacks | GraphQL Introspection, IDOR, Batching |
+| Juice Shop | `localhost:3000` | 03-web-attacks | OWASP Top 10 completa (100+ challenge) |
+
+### Cosa richiede ancora VirtualBox
+
+I lab di System Exploitation (modulo 04), Post-Exploitation (modulo 07), Wireless (modulo 06) e tutti gli scenari Windows-based richiedono le VM documentate nelle sezioni precedenti.
+
+### Avvio rapido
+
+```Bash
+# Avviare tutti i target web
+cd cybersecurity-labs/
+docker compose up -d
+
+# Avviare solo DVWA
+docker compose up dvwa dvwa-db -d
+
+# Verificare lo stato
+docker compose ps
+
+# Fermare tutto
+docker compose down
+
+# Fermare e rimuovere volumi (reset completo)
+docker compose down -v
+```
+
+---
+
+## Registrazione Demo con Asciinema
+
+Per registrare sessioni terminale dimostrative dei lab, si utilizza [asciinema](https://asciinema.org/). Le registrazioni sono complementari agli screenshot (PoC statici) e mostrano il flusso operativo completo.
+
+### Installazione
+
+```Bash
+sudo apt install asciinema
+```
+
+### Registrazione
+
+```Bash
+# Registrare una sessione (salva in locale come .cast)
+asciinema rec demo_nmap_scan.cast
+
+# Registrare con titolo e idle-time limitato (consigliato)
+asciinema rec -t "Nmap 3-Phase Scan Pipeline" --idle-time-limit 3 nmap_pipeline.cast
+
+# Terminare la registrazione
+exit   # oppure Ctrl+D
+```
+
+### Embedding nei README (MkDocs)
+
+Per includere una registrazione in un README visibile su MkDocs/GitHub Pages, usare il player JavaScript:
+
+```html
+<div id="demo-player"></div>
+<script src="https://asciinema.org/a/XXXXX.js" id="asciicast-XXXXX" async></script>
+```
+
+Oppure in formato Markdown (compatibile GitHub):
+
+```markdown
+[![asciicast](https://asciinema.org/a/XXXXX.svg)](https://asciinema.org/a/XXXXX)
+```
+
+### Lab consigliati da registrare
+
+| Lab | File | Durata target |
+| :--- | :--- | :--- |
+| Nmap 3-phase scan | `01-recon/.../nmap/` | 2-3 min |
+| SQLi manuale su DVWA | `03-web-attacks/.../sql-injection/` | 3-5 min |
+| WinPEAS enumeration | `04-system-exploitation/.../winpeas/` | 2-3 min |
+| Hashcat mask attack | `04-system-exploitation/.../hashcat/` | 1-2 min |
+| Mimikatz credential dump | `07-post-exploitation/.../mimikatz/` | 2-3 min |
 
 ---
 

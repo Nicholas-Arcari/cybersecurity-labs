@@ -40,7 +40,15 @@ L'OSINT passivo alimenta direttamente le fasi successive:
 |   +-- README.md             <- OSINT-003: file e login indicizzati (GHDB, operatori avanzati)
 |
 +-- user-enumeration/
-    +-- README.md             <- OSINT-004: identity correlation (Sherlock)
+|   +-- README.md             <- OSINT-004: identity correlation (Sherlock)
+|   +-- img/                  <- screenshot del lab
+|
++-- osint-frameworks/
+|   +-- README.md             <- OSINT-005: automazione e correlazione (SpiderFoot, recon-ng, Maltego)
+|   +-- img/                  <- screenshot del lab
+|
++-- code-secret-leakage/
+    +-- README.md             <- OSINT-006: segreti nei repository pubblici (GitHub dorking, gitleaks, TruffleHog)
     +-- img/                  <- screenshot del lab
 ```
 
@@ -88,6 +96,26 @@ Attenzione critica: i falsi positivi sono frequenti. Ogni hit va verificato manu
 
 ---
 
+## `osint-frameworks/` - Automazione e Correlazione OSINT
+
+**ID Finding:** `OSINT-005` | **Severity:** `Variabile (Informativo / Alto)`
+
+Le tecniche manuali precedenti non scalano su target reali. I framework OSINT (`SpiderFoot`, `recon-ng`, `Maltego`) automatizzano la raccolta da centinaia di fonti e, soprattutto, la **correlazione** tra dati eterogenei, costruendo il grafo completo del target. Il valore non e il singolo dato ma la rete di relazioni: un'email che porta a un breach, a un username, a un repository con un segreto.
+
+Documentazione completa dei tre framework, del workflow combinato e della gestione della visibilita (moduli passivi vs attivi) nel README dedicato.
+
+---
+
+## `code-secret-leakage/` - Segreti nei Repository Pubblici
+
+**ID Finding:** `OSINT-006` | **Severity:** `Variabile (Alto / Critico)`
+
+Il leakage di segreti nei repository di codice pubblici e uno dei vettori di accesso iniziale piu frequenti: credenziali, API key e chiavi private committate per errore e rimaste permanentemente nella **storia git**, recuperabili anche dopo la rimozione. A differenza di altre tecniche OSINT, produce spesso credenziali direttamente utilizzabili.
+
+Il README dedicato copre il GitHub/GitLab dorking manuale, la scansione automatica della history con `gitleaks` e la verifica di validita con `TruffleHog`. La lista di username dei dipendenti da `user-enumeration/` (OSINT-004) e prerequisito diretto per la ricerca sui repository personali.
+
+---
+
 ## Flusso operativo consigliato
 
 ```
@@ -118,7 +146,19 @@ Attenzione critica: i falsi positivi sono frequenti. Ogni hit va verificato manu
      -> Profilo social del target (verifica manuale obbligatoria)
           |
           v
-[OUTPUT] Intelligence report -> input per 03-web-attacks/ e 05-social-engineering/
+[5] OSINT Framework Automation (correlazione)
+     +-- spiderfoot -s <TARGET> -u passive
+     +-- recon-ng (workflow ripetibile) / maltego (grafo visuale)
+     -> Grafo OSINT correlato da fonti multiple (OSINT-005)
+          |
+          v
+[6] Code & Secret Leakage
+     +-- github dorking (org:<TARGET> filename:.env)
+     +-- gitleaks detect / trufflehog --only-verified
+     -> Credenziali e chiavi esposte nei repository pubblici (OSINT-006)
+          |
+          v
+[OUTPUT] Intelligence report -> input per 03-web-attacks/, 05-social-engineering/, 07-post-exploitation/, 10-cloud-security/
 ```
 
 ---
@@ -134,6 +174,9 @@ Attenzione critica: i falsi positivi sono frequenti. Ogni hit va verificato manu
 | Google GHDB | Sensitive data exposure | Web | Google Hacking Database - query pre-costruite |
 | `Maltego` | OSINT aggregator | GUI | Visualizzazione grafo OSINT (community edition gratuita) |
 | `SpiderFoot` | OSINT aggregator | CLI/Web | Automazione OSINT multi-fonte (open source) |
+| `recon-ng` | OSINT framework | CLI (modulare) | Workflow OSINT ripetibile con database e reportistica |
+| `gitleaks` | Secret scanning | CLI | Scansione della history git alla ricerca di segreti |
+| `TruffleHog` | Secret scanning | CLI | Scansione repository con verifica di validita dei segreti |
 
 > **Tool moderno consigliato:** `SpiderFoot HX` - rispetto al workflow manuale, automatizza la correlazione tra email, domini, breach e social media in un unico grafo navigabile. Per ambienti enterprise sostituisce ore di ricerca manuale.
 
@@ -147,6 +190,8 @@ Attenzione critica: i falsi positivi sono frequenti. Ogni hit va verificato manu
 | `OSINT-002` | Esposizione email su dominio personale - superficie minima | `Informativo` | `email-harvesting/README.md` |
 | `OSINT-003` | Documenti e pannelli login indicizzati su nasa.gov | `Variabile (Basso / Alto)` | `google-dorks/README.md` |
 | `OSINT-004` | Identity correlation tramite username riutilizzato | `Basso` | `user-enumeration/README.md` |
+| `OSINT-005` | Correlazione OSINT automatica del target via framework multi-fonte | `Variabile (Informativo / Alto)` | `osint-frameworks/README.md` |
+| `OSINT-006` | Segreti (credenziali, API key, chiavi) esposti in repository pubblici | `Variabile (Alto / Critico)` | `code-secret-leakage/README.md` |
 
 ---
 
@@ -155,10 +200,12 @@ Attenzione critica: i falsi positivi sono frequenti. Ogni hit va verificato manu
 | Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
 | :--- | :--- | :--- | :--- |
 | Reconnaissance | Gather Victim Identity Info: Credentials | `T1589.001` | Ricerca credenziali compromesse su HIBP e h8mail (OSINT-001) |
-| Reconnaissance | Gather Victim Identity Info: Email Addresses | `T1589.002` | Harvesting email con theHarvester e Google Dorks sul dominio target (OSINT-002) |
-| Reconnaissance | Search Open Websites/Domains: Search Engines | `T1593.002` | Google Dorking per individuare file PDF, pannelli login e directory listing esposti (OSINT-003) |
+| Reconnaissance | Gather Victim Identity Info: Email Addresses | `T1589.002` | Harvesting email con theHarvester e Google Dorks sul dominio target (OSINT-002, OSINT-005) |
+| Reconnaissance | Search Open Websites/Domains: Search Engines | `T1593.002` | Google Dorking e GitHub dorking per file, pannelli login, segreti esposti (OSINT-003, OSINT-006) |
 | Reconnaissance | Gather Victim Identity Info: Employee Names | `T1589.003` | Correlazione identita tramite username con Sherlock su 300+ piattaforme (OSINT-004) |
-| Reconnaissance | Search Open Websites/Domains: Social Media | `T1593.001` | Enumerazione presenza social del target per profilazione e Social Engineering (OSINT-004) |
+| Reconnaissance | Search Open Websites/Domains: Social Media | `T1593.001` | Enumerazione presenza social del target per profilazione e Social Engineering (OSINT-004, OSINT-005) |
+| Reconnaissance | Search Open Technical Databases | `T1596` | Correlazione automatica multi-fonte e ricerca di segreti nei repository di codice pubblici (OSINT-005, OSINT-006) |
+| Credential Access | Unsecured Credentials: Credentials In Files | `T1552.001` | Estrazione di credenziali e chiavi cloud dai file esposti nella history git dei repository (OSINT-006) |
 
 ---
 

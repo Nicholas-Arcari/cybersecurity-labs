@@ -155,7 +155,7 @@ Executing a payload via spear-phishing email provides the attacker with an inter
 1. **Email Gateway with Sandboxing:** solutions like Proofpoint, Mimecast, or Microsoft Defender for Office 365 execute attachments in a sandbox before delivery, detecting malicious behavior (outbound connections, file writing, process injection).
 2. **Block Dangerous Formats:** block .hta, .vbs, .js, .wsf, .scr attachments and unsigned Office macros at the gateway level. These extensions are rarely needed for legitimate business communications.
 3. **Application Whitelisting:** AppLocker or Windows Defender Application Control (WDAC) to block mshta.exe execution by unauthorized users.
-4. **Endpoint Detection and Response (EDR):** modern EDRs (CrowdStrike Falcon, SentinelOne, Microsoft Defender for Endpoint) detect the mshta.exe -> powershell.exe chain with outbound connection.
+4. **Endpoint Detection and Response (EDR):** modern EDRs (CrowdStrike Falcon, SentinelOne, Microsoft Defender for Endpoint) detect the mshta.exe, powershell.exe chain with outbound connection.
 5. **Security Awareness:** specific spear-phishing training with quarterly practical exercises; teach not to open unexpected attachments, even from internal senders.
 
 ---
@@ -186,7 +186,7 @@ Spear-phishing is distinguished from mass phishing by three fundamental characte
 
 From a technical perspective, the .hta file leverages the `mshta.exe` engine (Microsoft HTML Application Host), a legitimate Windows binary classified as a LOLBIN (Living Off the Land Binary). Code execution via LOLBIN is a defense evasion technique because it uses Microsoft-signed executables, making signature-based detection more difficult.
 
-The complete execution chain is: `mshta.exe` -> embedded VBScript -> `powershell.exe -ExecutionPolicy Bypass -EncodedCommand [Base64]` -> in-memory stage 2 download -> Meterpreter. Each step represents a detection opportunity for the defender (process creation events, command line logging, network connections).
+The complete execution chain is: `mshta.exe`, embedded VBScript, `powershell.exe -ExecutionPolicy Bypass -EncodedCommand [Base64]`, in-memory stage 2 download, Meterpreter. Each step represents a detection opportunity for the defender (process creation events, command line logging, network connections).
 
 In the kill chain, spear-phishing covers three consecutive phases: Weaponization (creating the .hta payload), Delivery (sending the email), and Exploitation (payload execution on the victim). The next phase - Installation/Persistence - requires additional post-exploitation actions documented in module 07.
 
@@ -229,7 +229,7 @@ Lateral Movement -> Privilege Escalation -> Domain Compromise
 
 **Indicators of Compromise (IOC):**
 - Emails with .hta, .vbs, .js attachments from external senders or look-alike domains
-- Process tree: `outlook.exe` -> `mshta.exe` -> `powershell.exe` (Sysmon Event ID 1)
+- Process tree: `outlook.exe`, `mshta.exe`, `powershell.exe` (Sysmon Event ID 1)
 - PowerShell with `-EncodedCommand` and/or `-ExecutionPolicy Bypass` flags (Event ID 4104)
 - Outbound TCP connection from workstation to uncategorized IP on non-standard port
 

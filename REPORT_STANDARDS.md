@@ -1,3 +1,5 @@
+> [English](REPORT_STANDARDS.en.md) | **Italiano**
+
 # Standard di Redazione dei Report - Cybersecurity Labs
 
 > Documento di riferimento per la scrittura professionale dei README tecnici in questa repository.
@@ -57,7 +59,7 @@
 | 02-vulnerability-assessment | `04-reporting-templates/README.md` | Completo | Panoramica reporting templates |
 | 02-vulnerability-assessment | `04-reporting-templates/executive-summary-template/README.md` | Completo | Template + esempio compilato |
 | 02-vulnerability-assessment | `04-reporting-templates/technical-findings-template/README.md` | Completo | Template + 3 esempi compilati |
-| 03-web-attacks | tutti | Completo | WEB-001..015, 34 README scritti |
+| 03-web-attacks | tutti | Completo | WEB-001..015, 34 README scritti. Pagine OWASP in metodologia (no finding): XXE, deserializzazione, LDAP/XPath/CRLF/Command Injection (IT+EN). Prossimo WEB-016. |
 | 04-system-exploitation | `01-frameworks/README.md` | Completo | Registro finding EXPLOIT-001..004, MITRE aggregato |
 | 04-system-exploitation | `01-frameworks/empire/README.md` | Completo | EXPLOIT-001, EXPLOIT-002, Scenario Reale |
 | 04-system-exploitation | `01-frameworks/metasploit/README.md` | Completo | EXPLOIT-003, EXPLOIT-004, pivoting SOCKS |
@@ -79,30 +81,101 @@
 | 04-system-exploitation | `05-password-cracking/hashcat/README.md` | Completo | EXPLOIT-022, EXPLOIT-023, Mask + Rule-based Attack NTLM |
 | 04-system-exploitation | `05-password-cracking/john-the-ripper/README.md` | Completo | EXPLOIT-024, EXPLOIT-025, ZIP cracking + Linux unshadowing |
 | 04-system-exploitation | `05-password-cracking/wordlists/README.md` | Completo | Guida wordlist: RockYou, SecLists, CeWL, CUPP |
-| 05-social-engineering | tutti | Da fare | - |
-| 06-wireless-security | tutti | Da fare | - |
-| 07-post-exploitation | tutti | Da fare | - |
-| 08-defense-hardenings | tutti | Da fare | - |
-| 09-digital-forensics | tutti | Da fare | - |
-| 10-cloud-security | tutti | Da fare | - |
+| 05-social-engineering | tutti (26 file) | Completo | SE-001..015, kill chain phishing/SET/payload/pretexting |
+| 06-wireless-security | tutti (17 file) | Completo | WIFI-001..012, WiFi 802.11 / BLE / SDR / RFID-NFC |
+| 07-post-exploitation | tutti (20 file) | Completo | POST-001..014, SitRep/dumping/persistence/pivoting/exfil (IT+EN) |
+| 08-defense-hardenings | tutti (IT+EN) | Completo | DEF-001..008, SIEM/XDR/deception/hardening |
+| 09-digital-forensics | tutti (IT+EN) | Completo | FOR-001..002, disk + network forensics |
+| 10-cloud-security | tutti (IT+EN) | Completo | CLOUD-001..010, provider/container/K8s/IaC |
+| 11-active-directory | 18 tecniche + scaffold (IT+EN) | In corso (metodologia) | Metodologia (no lab): enum (BloodHound/LDAP/kerbrute), Kerberos (roast/as-rep/golden/silver + varianti stealth Diamond/Sapphire), AD CS (enum/ESC1/ESC8), deleghe/ACL (RBCD/unconstr-constr/acl-abuse), credential dumping (DCSync/shadow-cred/NTDS), privesc-CVE (noPac). Prefisso `AD-`. Bilingue, REFERENCES sez.O, root README agganciati. Output illustrativi; finding ID da assegnare in lab (GOAD/HTB). |
+
+> **Nota di coerenza (audit inter-modulo).** Il percorso principale (moduli 01-10) e completo e coerente.
+> Esiste un'espansione reale e completa dei moduli 01-02 (contenuto pieno, non stub) **solo in italiano**,
+> tuttora priva di controparte EN: `01-osint-passive/osint-frameworks` (OSINT-005), `.../code-secret-leakage`
+> (OSINT-006), `04-infrastructure-intel/asn-whois-ct` (INTEL-005), `.../cloud-asset-discovery` (INTEL-006),
+> `02-.../ldap` (VULN-007), `.../nfs-rpc` (VULN-008), `.../rdp` (VULN-009). Questi 7 file sono gli UNICI
+> `README.md` del repo senza `.en.md` (il resto e integralmente bilingue). Chiusura del gap = tradurre i
+> 7 file in EN (come il backfill del modulo 06). Le sequenze OSINT/INTEL/VULN qui sotto tengono conto di
+> questi ID gia assegnati.
 
 ### Finding ID sequenza globale
 
 | Prefisso | Modulo | Prossimo ID disponibile |
 | :--- | :--- | :--- |
-| `OSINT-` | 01-recon/01-osint-passive | `OSINT-005` |
+| `OSINT-` | 01-recon/01-osint-passive | `OSINT-007` |
 | `SCAN-` | 01-recon/02-network-scanning | `SCAN-004` |
 | `DNS-` | 01-recon/03-dns-enumeration | `DNS-004` |
-| `INTEL-` | 01-recon/04-infrastructure-intel | `INTEL-005` |
-| `VULN-` | 02-vulnerability-assessment | `VULN-007` |
+| `INTEL-` | 01-recon/04-infrastructure-intel | `INTEL-007` |
+| `VULN-` | 02-vulnerability-assessment | `VULN-010` |
 | `WEB-` | 03-web-attacks | `WEB-016` |
 | `EXPLOIT-` | 04-system-exploitation | `EXPLOIT-026` |
-| `SE-` | 05-social-engineering | `SE-001` |
-| `WIFI-` | 06-wireless-security | `WIFI-001` |
-| `POST-` | 07-post-exploitation | `POST-001` |
-| `DEF-` | 08-defense-hardenings | `DEF-001` |
-| `FOR-` | 09-digital-forensics | `FOR-001` |
-| `CLOUD-` | 10-cloud-security | `CLOUD-001` |
+| `SE-` | 05-social-engineering | `SE-016` |
+| `WIFI-` | 06-wireless-security | `WIFI-013` |
+| `POST-` | 07-post-exploitation | `POST-015` |
+| `DEF-` | 08-defense-hardenings | `DEF-009` |
+| `FOR-` | 09-digital-forensics | `FOR-003` |
+| `CLOUD-` | 10-cloud-security | `CLOUD-011` |
+| `AD-` | 11-active-directory | `AD-001` (riservato; modulo in metodologia, da assegnare in lab) |
+
+---
+
+### Apparato teorico-accademico (tipo di documento aggiuntivo)
+
+Oltre ai README operativi, ogni modulo (01-10) ha un documento `THEORETICAL-FOUNDATIONS.md` (+ `.en.md`)
+di livello accademico, con struttura fissa da capitolo di tesi:
+Abstract; 1. Modello dell'Avversario; 2. Proprieta di Sicurezza; 3. Fondamenti Teorici;
+4. Analisi Quantitativa; 5. Rassegna della Letteratura; 6. Limiti e Problemi Aperti;
+7. Sintesi e Collegamento alla Pratica; Riferimenti.
+
+Regole specifiche di questo tipo di documento:
+- **Disciplina di citazione (critica):** citare SOLO fonti reali e verificate (autore, titolo, venue, anno).
+  MAI fabbricare citazioni. La bibliografia annotata master e in `REFERENCES.md` (+ `.en.md`); ogni doc
+  di modulo referenzia un sottoinsieme. Aggiungere nuove voci al master prima di citarle.
+- Notazione in-text `[Autore Anno]`. Matematica in testo semplice o code block (no LaTeX): es. `2^128`,
+  `H(X) = - sum p log2 p`. Valgono le regole generali (no em-dash, no frecce unicode fuori dai code block).
+- E un complemento teorico, non sostituisce i README operativi (finding, comandi, MITRE): li fonda e vi rimanda.
+- Collegati dai README radice (sezione "Apparato Teorico e Accademico") e non hanno finding ID propri.
+
+### Teoria avanzata di livello magistrale (`THEORY-ADVANCED.md`)
+
+Documento di teoria rigoroso (registro da libro di testo: Definizione / Teorema / Dimostrazione), che
+porta l'apparato al livello magistrale colmando cio che i foundations di modulo trattano concettualmente.
+Quattro parti: I provable security (definizioni game-based, riduzioni, argomento ibrido, ROM, concrete
+security); II Teorema di guessing dimostrato (bound stretto nel ROM, coincide con EVALUATION/exp02);
+III gerarchia di autenticazione di Lowe (injective agreement = freshness; KRACK come sua violazione,
+collega FORMAL-MODELS); IV reticoli BLP/Biba e non-interferenza [Goguen-Meseguer] (canali covert mod.07,
+isolamento tenant mod.10).
+- REGOLE: ogni Teorema/Def con enunciato preciso e dimostrazione o schema chiaramente etichettato; math in
+  testo/code block (no LaTeX, no em-dash, no frecce unicode fuori dai code block); citazioni solo verificate.
+- Riferimenti aggiunti a REFERENCES (sezione N): Goldwasser-Micali 1984, Bellare-Rogaway 1993, Bellare 1997,
+  Shoup 2004, Canetti 1998, Lowe 1997, Abadi-Rogaway 2002, Denning 1976, Goguen-Meseguer 1982, Katz-Lindell
+  2020, Goldreich 2001. Collegato dai README radice e dai foundations 04 (Parte II) e 06 (Parti II-III).
+
+### Valutazione empirica (cartella `EVALUATION/`)
+
+Chiude il divario verso il livello di ricerca fornendo misure *ottenute eseguendo codice*, non derivate
+dalla sola letteratura. Contiene esperimenti Python deterministici (stdlib, seed fissi) con `results.md`
+(+ `.en.md`) che riportano l'**output verbatim reale**.
+- **REGOLA DI INTEGRITA (critica):** nessun numero "misurato" va MAI inventato. Ogni valore nei
+  `results.md` deve provenire dall'esecuzione reale del codice incluso. Se non si puo eseguire, fornire
+  codice + template e far eseguire all'utente; mai riportare risultati fabbricati.
+- Dataset sintetici/modellati: dichiararlo SEMPRE esplicitamente (sezione "Nota di validita").
+- Buona scienza: se un esperimento rivela un difetto di design o una sottigliezza (es. exp01 con FPR=0
+  al max-F1; exp02 con guessing entropy media > Shannon), correggere/discutere onestamente, non nascondere.
+- Esperimenti attuali: exp01 (base-rate fallacy, modulo 08), exp02 (guessing entropy, moduli 04/06).
+  Collegati dai foundations 08 e 04 (box "Validazione empirica" in sez. 4) e dai README radice.
+
+### Verifica formale (cartella `FORMAL-MODELS/`)
+
+Terzo metodo di rigore: verifica formale di un protocollo. Attualmente wpa2-4way-handshake:
+- `handshake_model_checker.py` = model checker a stati espliciti in Python stdlib (ESEGUITO): trova il
+  controesempio KRACK nel modello vulnerabile e verifica l'invariante nel modello patchato. `results.md`
+  (+ `.en.md`) riporta l'output verbatim reale. Deterministico, esaustivo, riproducibile.
+- `wpa2_handshake.spthy` = modello Tamarin di riferimento, NON eseguito qui (Tamarin non installato):
+  etichettato come tale sia nel file sia nei README. REGOLA: non spacciare come verificato un artefatto
+  di uno strumento non eseguito; l'artefatto verificato-per-esecuzione e il model checker Python.
+- Astrazione dichiarata (Dolev-Yao, solo stato KRACK-rilevante, contatore nonce limitato): sempre esplicitare.
+- Collegato dal foundations modulo 06 (box in sez. 3.5) e dai README radice.
 
 ---
 
