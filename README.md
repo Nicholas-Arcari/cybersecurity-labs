@@ -100,6 +100,10 @@ la tesi del modulo 06, sez. 3.5. Una seconda verifica, **per invariante induttiv
 *dimostra* l'assenza del difetto nel modello corretto per esecuzioni di lunghezza arbitraria. Incluso
 anche un modello **Tamarin** di riferimento (non eseguito qui, etichettato come tale).
 
+Infine, la cartella **[`concepts/`](concepts/README.md)** raccoglie pagine di **conoscenza di base** (tassonomia
+del malware, DoS/DDoS) con taglio concettuale e difensivo: il contesto teorico che i moduli operativi (00-11)
+danno per acquisito.
+
 ### Autovalutazione e Limiti
 
 Coerentemente con l'onesta scientifica, **[`SELF-ASSESSMENT.md`](SELF-ASSESSMENT.md)** e una revisione

@@ -100,6 +100,10 @@ module 06, section 3.5. A second verification, **by inductive invariant (unbound
 absence of the defect in the patched model for executions of arbitrary length. Also included is a
 reference **Tamarin** model (not executed here, labeled as such).
 
+Finally, the **[`concepts/`](concepts/README.en.md)** folder collects **background-knowledge** pages (malware
+taxonomy, DoS/DDoS) with a conceptual and defensive angle: the theoretical context that the operational modules
+(00-11) take for granted.
+
 ### Self-Assessment and Limitations
 
 Consistent with scientific honesty, **[`SELF-ASSESSMENT.en.md`](SELF-ASSESSMENT.en.md)** is an internal
