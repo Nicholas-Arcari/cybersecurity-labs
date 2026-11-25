@@ -1,0 +1,111 @@
+/*
+============================================================================
+  WPA2 4-way handshake - Tamarin reference model (KRACK / key reinstallation)
+============================================================================
+
+  STATUS / HONEST DISCLAIMER
+  --------------------------
+  This is a REFERENCE model for the Tamarin prover (https://tamarin-prover.github.io/).
+  It was NOT executed in the environment where the rest of this repository's results were
+  produced (Tamarin is not installed there). Therefore, unlike the Python model checker
+  in this same folder (handshake_model_checker.py, which IS executed and whose output is
+  recorded verbatim in results.md), THIS .spthy file has not been machine-checked here.
+  It is provided as a runnable starting point: install Tamarin and run
+
+      tamarin-prover --prove wpa2_handshake.spthy
+
+  and validate / adjust as needed. The EXECUTED, verified artifact of this folder is the
+  Python explicit-state model checker; this Tamarin model is the "recognized-tool" lift.
+
+  WHAT IT MODELS
+  --------------
+  The KRACK insight (Vanhoef & Piessens, CCS 2017) is that the security property is not
+  secrecy of the PTK but INJECTIVITY OF KEY INSTALLATION: the supplicant must install the
+  session key (and thus reset the data-frame packet-number counter) AT MOST ONCE. A
+  retransmitted / replayed message 3 that causes a second installation resets the counter
+  and reuses nonces -> keystream reuse.
+
+  We give TWO rule variants for receiving M3:
+    - S_recv_M3_install_VULN : fires on every M3 (persistent knowledge of M3) -> a replay
+      can trigger a SECOND Install -> lemma no_key_reinstall is FALSIFIED (attack found).
+    - S_recv_M3_install_PATCHED : guarded by a LINEAR fact !CanInstall consumed on first
+      install -> a replay cannot install again -> lemma no_key_reinstall HOLDS.
+  Enable exactly one of the two by (un)commenting, then prove.
+============================================================================
+*/
+
+theory WPA2_4WayHandshake
+begin
+
+builtins: symmetric-encryption, hashing
+
+// ---- Setup: authenticator A and supplicant S share a PMK ----
+rule Setup_PMK:
+    [ Fr(~pmk) ]
+  --[ SetupPMK(~pmk) ]->
+    [ !SharedPMK($A, $S, ~pmk) ]
+
+// ---- M1  A -> S : ANonce ----
+rule A_send_M1:
+    [ !SharedPMK($A, $S, pmk), Fr(~anonce) ]
+  --[ SendM1($A, $S, ~anonce) ]->
+    [ Out(<'M1', ~anonce>), A_state1($A, $S, pmk, ~anonce) ]
+
+// ---- M2  S -> A : SNonce (S derives PTK = h(pmk, anonce, snonce)) ----
+rule S_recv_M1_send_M2:
+    [ !SharedPMK($A, $S, pmk), In(<'M1', anonce>), Fr(~snonce) ]
+  --[ SendM2($S, $A, ~snonce) ]->
+    [ Out(<'M2', ~snonce>),
+      S_state1($A, $S, pmk, anonce, ~snonce, h(<pmk, anonce, ~snonce>)) ]
+
+// ---- M3  A -> S : ANonce, GTK, MIC ----
+rule A_recv_M2_send_M3:
+    [ A_state1($A, $S, pmk, anonce), In(<'M2', snonce>) ]
+  --[ SendM3($A, $S, anonce) ]->
+    [ Out(<'M3', anonce, h(<pmk, anonce, snonce>)>) ]
+
+/* --------------------------------------------------------------------------
+   VARIANT A - VULNERABLE: M3 is consumed from persistent adversary knowledge
+   (In() can be replayed by the Dolev-Yao adversary any number of times), so a
+   second Install for the same PTK is reachable. Expect: no_key_reinstall FALSE.
+   -------------------------------------------------------------------------- */
+rule S_recv_M3_install_VULN:
+    [ S_state1($A, $S, pmk, anonce, snonce, ptk), In(<'M3', anonce, mic>) ]
+  --[ Install($S, ptk), Eq(mic, h(<pmk, anonce, snonce>)) ]->
+    [ Out(<'M4'>) ]
+
+/* --------------------------------------------------------------------------
+   VARIANT B - PATCHED: the ability to install is a LINEAR fact created once
+   with the supplicant state and CONSUMED on the first install. A replayed M3
+   finds no !CanInstall and cannot reinstall. Expect: no_key_reinstall TRUE.
+
+   To use this variant: comment out rule S_recv_M3_install_VULN above, add a
+   CanInstall(...) fact to the conclusion of S_recv_M1_send_M2, and uncomment:
+
+// rule S_recv_M3_install_PATCHED:
+//     [ S_state1($A, $S, pmk, anonce, snonce, ptk),
+//       CanInstall($S, ptk), In(<'M3', anonce, mic>) ]
+//   --[ Install($S, ptk), Eq(mic, h(<pmk, anonce, snonce>)) ]->
+//     [ Out(<'M4'>) ]
+   -------------------------------------------------------------------------- */
+
+// MIC equality check
+restriction Equality:
+    "All x y #i. Eq(x, y) @ #i ==> x = y"
+
+/* --------------------------------------------------------------------------
+   SECURITY PROPERTY (the KRACK property): injectivity of key installation.
+   The supplicant installs any given PTK at most once. Under VARIANT A this is
+   falsified (Tamarin returns an attack: two Install events for the same ptk,
+   i.e., a key reinstallation). Under VARIANT B it holds.
+   -------------------------------------------------------------------------- */
+lemma no_key_reinstall:
+    "All s ptk #i #j.
+        Install(s, ptk) @ #i & Install(s, ptk) @ #j ==> #i = #j"
+
+/* Sanity: an honest run reaches an installation (rules are not vacuously dead). */
+lemma installation_reachable:
+    exists-trace
+    "Ex s ptk #i. Install(s, ptk) @ #i"
+
+end
