@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# CRLF Injection (HTTP Response Splitting / Header Injection)
+# CRLF injection (HTTP response splitting / header injection)
 
 > - **Fase:** Web Exploitation - OWASP A03:2021 Injection (iniezione di caratteri CR/LF in header o log)
 > - **Visibilita:** Bassa/Media - richieste con sequenze CRLF codificate nei parametri; header di risposta anomali o voci di log malformate
@@ -11,7 +11,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Il protocollo HTTP separa header e corpo con sequenze CRLF (`\r\n`). Se un'applicazione inserisce input
 dell'utente dentro un header di risposta senza rimuovere CR/LF, un attaccante puo iniettare `%0d%0a` e
@@ -32,9 +32,9 @@ operativa e capire dove l'input viene riflesso (header vs log) e se la risposta 
 un impatto limitato al singolo utente e uno che colpisce tutti i visitatori (cache poisoning). Il test e minimo
 e non distruttivo: si inietta una sequenza CRLF con un header innocuo e si verifica se compare nella risposta.
 
-## Esecuzione / Comandi
+## Esecuzione / comandi
 
-### Fase 1 - Conferma della vulnerabilita
+### Fase 1 - conferma della vulnerabilita
 
 Si inietta una sequenza CRLF codificata seguita da un header di test innocuo in un parametro riflesso in un
 header (es. il target di un redirect):
@@ -52,7 +52,7 @@ Location: /home
 X-Injected-Test: crlf-ok        <-- l'header iniettato compare: CRLF injection confermata
 ```
 
-### Fase 2 - Impatti (payload)
+### Fase 2 - impatti (payload)
 
 Valore iniettato nel parametro riflesso in un header (es. il target di un redirect). `%0d%0a` = CRLF:
 
@@ -85,7 +85,7 @@ injection; `Alto` quando la risposta e cacheable (cache poisoning verso tutti gl
 splitting consente XSS riflessa. Se il framework rifiuta i CR/LF negli header (comportamento di default di molti
 stack moderni) il vettore e chiuso.
 
-### Analisi Teorica
+### Analisi teorica
 
 La CRLF Injection e il problema dati/istruzioni [Su & Wassermann 2006] applicato alla struttura del protocollo
 HTTP: i CR/LF sono i delimitatori sintattici tra header e tra header e corpo. Se l'input dell'utente (dato) puo
@@ -94,7 +94,7 @@ rimuovere o codificare CR/LF nell'input destinato a header e log, oppure - megli
 gli header in modo strutturato e rifiutano i newline (gran parte dei framework moderni lo fa di default). Vale
 anche per i log: trattare l'input come dato, non come riga di log.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Rilevamento (WAF/SIEM).**
 - Parametri contenenti `%0d`, `%0a`, `\r`, `\n` o varianti codificate (doppia URL-encoding).
@@ -110,11 +110,11 @@ anche per i log: trattare l'input come dato, non come riga di log.
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Vale per gli esiti con escalation (cache poisoning / XSS via response splitting, severity Alto).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** parametro riflesso in un header di risposta, senza filtro CR/LF (confermato in Fase 1).
 
@@ -142,7 +142,7 @@ coinvolta; il collegamento naturale e con la [XSS](<../xss (Cross-Site Scripting
 **Vettori di monetizzazione tipici:** furto di sessioni di massa; defacement via cache; depistaggio tramite log
 falsificati.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** CRLF codificati nei parametri; header di risposta anomali; log con newline iniettati.
 
@@ -165,11 +165,11 @@ come parte della struttura.
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Burp Suite` | Proxy/scanner | Web - Attivo | Intercetta e modifica i parametri; test di iniezione CRLF negli header |
-| `curl` | HTTP client | CLI - Attivo | Invio manuale di richieste con sequenze CRLF codificate |
-| `crlfuzz` | Scanner CRLF | CLI - Attivo | Scansione automatizzata di endpoint per CRLF injection |
+| `Burp Suite` | proxy/scanner | web - attivo | intercetta e modifica i parametri; test di iniezione crlf negli header |
+| `curl` | http client | cli - attivo | invio manuale di richieste con sequenze crlf codificate |
+| `crlfuzz` | scanner crlf | cli - attivo | scansione automatizzata di endpoint per crlf injection |
 
 ## Note di metodologia
 
@@ -179,20 +179,20 @@ payload mostrati sono header di test innocui; le forme operative complete non so
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Iniezione di CR/LF in un header di risposta di un'applicazione esposta. |
-| Impact | Data Manipulation: Stored Data Manipulation | `T1565.001` | Avvelenamento della cache e falsificazione di voci di log tramite response splitting / log injection. |
+| initial access | exploit public-facing application | `T1190` | iniezione di cr/lf in un header di risposta di un'applicazione esposta. |
+| impact | data manipulation: stored data manipulation | `T1565.001` | avvelenamento della cache e falsificazione di voci di log tramite response splitting / log injection. |
 
 ---
 
 ## Correlazioni con altri finding
 
-| Provenienza | Questa tecnica | Effetto |
+| provenienza | questa tecnica | effetto |
 | :--- | :--- | :--- |
-| [02-web-recon](<../../02-web-recon (Enumeration)/README.md>) | CRLF Injection | l'enumerazione individua redirect e endpoint che riflettono input negli header |
-| CRLF Injection (response splitting) | [XSS](<../xss (Cross-Site Scripting)/README.md>) | la splitting puo introdurre un corpo controllato da cui parte una XSS riflessa |
-| CRLF Injection | [secure-coding-lab](<../../06-secure-coding-lab (Defense)/README.md>) | la remediation (filtro CR/LF, API strutturate) si collega al laboratorio di secure coding |
+| [02-web-recon](<../../02-web-recon (Enumeration)/README.md>) | crlf injection | l'enumerazione individua redirect e endpoint che riflettono input negli header |
+| crlf injection (response splitting) | [xss](<../xss (Cross-Site Scripting)/README.md>) | la splitting puo introdurre un corpo controllato da cui parte una xss riflessa |
+| crlf injection | [secure-coding-lab](<../../06-secure-coding-lab (Defense)/README.md>) | la remediation (filtro cr/lf, api strutturate) si collega al laboratorio di secure coding |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 04 - Hardening Scripts (The Shield)
+# 04 - Hardening scripts (the shield)
 
 > - **Phase:** Defense & Hardening - System Hardening (Prevention)
 > - **Category:** Prevention - attack surface reduction
@@ -27,7 +27,7 @@ Every offensive finding of the path has here its preventive countermeasure: hard
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 04-hardening-scripts (Lo Scudo)/
@@ -39,7 +39,7 @@ Every offensive finding of the path has here its preventive countermeasure: hard
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [INPUT] System to harden (Linux/Windows)
@@ -68,42 +68,42 @@ Every offensive finding of the path has here its preventive countermeasure: hard
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Platform | Role | Main use case |
+| tool | platform | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `Lynis` | Linux | Auditor | Hardening audit with index and recommendations |
-| `CIS Benchmarks` | Multi | Baseline | Recognized security configurations |
-| `Microsoft Security Baseline` | Windows | Baseline | Pre-configured hardening GPOs |
-| `Credential Guard` / `LAPS` | Windows | Countermeasure | Credential protection (anti Mimikatz/PtH) |
-| `OpenSCAP` / `CIS-CAT` | Multi | Compliance | Verification of conformity to security profiles |
-| `Ansible` (hardening role) | Multi | Automation | Idempotent hardening on machine fleets |
+| `Lynis` | linux | auditor | hardening audit with index and recommendations |
+| `CIS Benchmarks` | multi | baseline | recognized security configurations |
+| `Microsoft Security Baseline` | windows | baseline | pre-configured hardening gpos |
+| `Credential Guard` / `LAPS` | windows | countermeasure | credential protection (anti mimikatz/pth) |
+| `OpenSCAP` / `CIS-CAT` | multi | compliance | verification of conformity to security profiles |
+| `Ansible` (hardening role) | multi | automation | idempotent hardening on machine fleets |
 
 > **Recommended modern tool:** `Lynis` (Linux) and `CIS-CAT` (Windows) for audit and measurement; the `CIS`/`Microsoft` baselines as reference; `Ansible` (DevSec Hardening Framework) for idempotent application at scale. On Windows, `Credential Guard` and `LAPS` are the highest-impact countermeasures.
 
 ---
 
-## Finding Registry - Hardening Scripts Section
+## Finding registry - hardening scripts section
 
-| ID | Description | Severity | Subfolder |
+| id | description | severity | subfolder |
 | :--- | :--- | :---: | :--- |
-| `DEF-007` | Linux hardening: Lynis audit + CIS baseline, surface reduction (anti privesc) | `High` | `linux-hardening/` |
-| `DEF-008` | Windows hardening: GPO, Credential Guard, LAPS (anti credential dumping / PtH) | `High` | `windows-hardening/` |
+| `DEF-007` | linux hardening: lynis audit + cis baseline, surface reduction (anti privesc) | `High` | `linux-hardening/` |
+| `DEF-008` | windows hardening: gpo, credential guard, laps (anti credential dumping / pth) | `High` | `windows-hardening/` |
 
 ---
 
-## MITRE ATT&CK Mapping - Aggregated
+## MITRE ATT&CK mapping - aggregated
 
 > Attack techniques **prevented** by the hardening of the section.
 
-| Tactic (prevented) | Technique | MITRE ID | Related Finding |
+| tactic (prevented) | technique | mitre id | related finding |
 | :--- | :--- | :--- | :--- |
-| Privilege Escalation | Abuse Elevation Control: Sudo | `T1548.003` | DEF-007 |
-| Privilege Escalation | Setuid and Setgid | `T1548.001` | DEF-007 |
-| Credential Access | OS Credential Dumping: LSASS Memory | `T1003.001` | DEF-008 |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Hash | `T1550.002` | DEF-008 |
-| Persistence | Boot or Logon Autostart: Registry Run Keys | `T1547.001` | DEF-008 |
-| Credential Access | Unsecured Credentials: Credentials In Files | `T1552.001` | DEF-007 |
+| privilege escalation | abuse elevation control: sudo | `T1548.003` | DEF-007 |
+| privilege escalation | setuid and setgid | `T1548.001` | DEF-007 |
+| credential access | os credential dumping: lsass memory | `T1003.001` | DEF-008 |
+| lateral movement | use alternate authentication material: pass the hash | `T1550.002` | DEF-008 |
+| persistence | boot or logon autostart: registry run keys | `T1547.001` | DEF-008 |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | DEF-007 |
 
 ---
 

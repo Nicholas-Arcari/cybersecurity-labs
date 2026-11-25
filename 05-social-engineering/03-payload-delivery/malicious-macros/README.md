@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Malicious Macros - VBA Reverse Shell via Documento Office
+# Malicious macros - VBA reverse shell via documento office
 
 > - **Fase:** Social Engineering - Payload Delivery via Macro VBA
 > - **Visibilita:** Alta - le macro VBA sono monitorate da AV/EDR, AMSI ispeziona il codice PowerShell a runtime, i documenti con macro attivano alert nei SIEM; file con MotW triggerano il blocco macro di default su Office 2022+
@@ -14,7 +14,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Le macro VBA (Visual Basic for Applications) in documenti Microsoft Office rappresentano il vettore di delivery piu utilizzato nella storia del cybercrime, dominando il panorama delle minacce dal 2015 al 2022. Il principio e semplice: un documento Word/Excel contiene codice VBA che, quando l'utente clicca "Abilita contenuto", esegue comandi arbitrari sul sistema. Nel laboratorio, la macro genera uno stager PowerShell encoded che stabilisce una reverse shell Meterpreter verso l'attaccante.
 
@@ -22,7 +22,7 @@ Microsoft ha introdotto il blocco delle macro di default per file con Mark-of-th
 
 ---
 
-## Macro VBA: Stager PowerShell per Reverse Shell
+## Macro VBA: stager PowerShell per reverse shell
 
 **ID Finding:** `SE-007` | **Severity:** `Alto`
 
@@ -30,7 +30,7 @@ Microsoft ha introdotto il blocco delle macro di default per file con Mark-of-th
 
 Lo scenario simula un attacco tipico: un documento Word mascherato da fattura aziendale ("Fattura_Q1_2026.docm") viene inviato al target via email. All'apertura, Office mostra il banner "Abilita contenuto". Se l'utente clicca, la macro VBA si esegue, lancia uno stager PowerShell in background e stabilisce una connessione reverse TCP verso l'attaccante.
 
-### PoC - Fase 1: Generazione Payload VBA
+### PoC - fase 1: generazione payload VBA
 
 ```Bash
 # Generazione macro VBA con stager PowerShell
@@ -46,7 +46,7 @@ Final size of vba-psh file: 7812 bytes                      <-- codice VBA gener
 Saved as: macro_payload.vba
 ```
 
-### PoC - Fase 2: Embedding in Documento Word
+### PoC - fase 2: embedding in documento word
 
 ```Bash
 # Il contenuto di macro_payload.vba va copiato nell'editor VBA di Word:
@@ -66,7 +66,7 @@ Sub Auto_Open()
 End Sub
 ```
 
-### PoC - Fase 3: Setup Handler e Callback
+### PoC - fase 3: setup handler e callback
 
 ```Bash
 # Handler Metasploit (Kali)
@@ -99,7 +99,7 @@ Meterpreter : x64/windows
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'ambiente e stato configurato con Office 2019 su Windows 10 VM e macro abilitate via GPO locale per simulare un ambiente corporate legacy. Il primo tentativo ha utilizzato il payload `vba-psh` grezzo di msfvenom, che e stato immediatamente rilevato da Windows Defender con il signature `Trojan:Script/Wacatac.B!ml`. La soluzione e stata disabilitare Defender per completare il PoC (in un engagement reale si userebbe offuscamento con `macro_pack` o encoding custom).
 
@@ -109,7 +109,7 @@ La decisione di utilizzare `Auto_Open()` anziche `Document_Open()` e stata detta
 
 ---
 
-## Analisi Teorica: Ascesa e Declino delle Macro VBA
+## Analisi teorica: ascesa e declino delle macro VBA
 
 Le macro VBA hanno dominato il panorama delle minacce per un motivo strutturale: Microsoft Office e installato su oltre il 90% dei computer aziendali, e il linguaggio VBA ha accesso completo alle API Windows tramite `Shell()`, `CreateObject("WScript.Shell")` e le dichiarazioni `Declare`. Questo significa che un documento Office e, di fatto, un container per codice eseguibile arbitrario.
 
@@ -122,11 +122,11 @@ Questa decisione ha avuto un impatto immediato e misurabile: secondo i dati Proo
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Questa sezione descrive come questo finding si inserirebbe in un engagement reale.
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** reverse shell Meterpreter come utente standard `mario.rossi` (SE-007).
 
@@ -148,7 +148,7 @@ Credential Dumping -> Mimikatz/SAM dump -> hash NTLM
 Lateral Movement -> Pass-the-Hash / PsExec verso altri host
 ```
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **IOC da monitorare:**
 - Processo `powershell.exe` figlio di `WINWORD.EXE` (correlazione parent-child anomala)
@@ -165,15 +165,15 @@ Lateral Movement -> Pass-the-Hash / PsExec verso altri host
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Develop Capabilities: Malware | `T1587.001` | Generazione macro VBA con stager PowerShell via msfvenom |
-| Initial Access | Phishing: Spearphishing Attachment | `T1566.001` | Documento Word malevolo inviato come "Fattura_Q1_2026.docm" |
-| Execution | User Execution: Malicious File | `T1204.002` | L'utente apre il documento e clicca "Abilita contenuto" (SE-007) |
-| Execution | Command and Scripting Interpreter: Visual Basic | `T1059.005` | Macro VBA Auto_Open() esegue il payload |
-| Execution | Command and Scripting Interpreter: PowerShell | `T1059.001` | Stager PowerShell encoded stabilisce reverse shell |
-| Defense Evasion | Obfuscated Files or Information | `T1027` | Payload PowerShell encoded in Base64 per evasione firma statica |
-| Command and Control | Non-Standard Port | `T1571` | Reverse TCP Meterpreter su porta 4444 |
+| resource development | develop capabilities: malware | `T1587.001` | generazione macro vba con stager powershell via msfvenom |
+| initial access | phishing: spearphishing attachment | `T1566.001` | documento word malevolo inviato come "fattura_q1_2026.docm" |
+| execution | user execution: malicious file | `T1204.002` | l'utente apre il documento e clicca "abilita contenuto" (SE-007) |
+| execution | command and scripting interpreter: visual basic | `T1059.005` | macro vba auto_open() esegue il payload |
+| execution | command and scripting interpreter: powershell | `T1059.001` | stager powershell encoded stabilisce reverse shell |
+| defense evasion | obfuscated files or information | `T1027` | payload powershell encoded in base64 per evasione firma statica |
+| command and control | non-standard port | `T1571` | reverse tcp meterpreter su porta 4444 |
 
 ---
 

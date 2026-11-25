@@ -17,7 +17,7 @@ sudo apt install suricata
 
 ---
 
-## Configure Suricata to Listen on the Hotspot
+## Configure Suricata to listen on the hotspot
 
 You need to tell Suricata to listen on the correct interface (probably `wlan0`), otherwise it will listen on `eth0` (the cable) and won't see anything
 
@@ -89,7 +89,7 @@ sudo systemctl restart wazuh-manager
 
 ---
 
-## Let's Test if it Works
+## Let's test if it works
 
 There is no point in configuring everything if we don't try to "trigger the alarm". Let's use a safe command that simulates an attack detected by Suricata
 
@@ -111,7 +111,7 @@ You should see red text or a log entry related to `GPL ATTACK_RESPONSE`. (Press 
 
 ---
 
-## Check the Dashboard
+## Check the dashboard
 
 Go to your Wazuh Dashboard (`https://localhost`)
 

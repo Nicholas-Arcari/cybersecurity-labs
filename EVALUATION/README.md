@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Valutazione Empirica - Misure Quantitative Riproducibili
+# Valutazione empirica - misure quantitative riproducibili
 
 > - **Livello:** Valutazione sperimentale (complemento ai `THEORETICAL-FOUNDATIONS.md`)
 > - **Scopo:** Colmare l'ultimo divario verso il livello accademico di ricerca: passare da un'analisi quantitativa *derivata dalla letteratura* a misure *ottenute eseguendo esperimenti riproducibili*.
@@ -54,7 +54,7 @@ EVALUATION/
 
 ## Esperimenti e risultati misurati (headline)
 
-### Esperimento A - Detection engineering e base-rate fallacy (modulo 08)
+### Esperimento a - detection engineering e base-rate fallacy (modulo 08)
 
 Un rilevatore di brute-force SSH (regola a soglia) valutato su un dataset etichettato di 1.000.000
 di finestre di osservazione. **Risultati misurati:**
@@ -71,7 +71,7 @@ Tesi testata: la difficolta del rilevamento e determinata dal tasso base, non da
 detector (foundations modulo 08, sez. 3.1). Giustifica quantitativamente correlazione (sez. 4.1) e
 deception (sez. 3.2). Dettaglio: [exp01-detection-base-rate/results.md](exp01-detection-base-rate/results.md).
 
-### Esperimento B - Entropia di Shannon vs metriche di guessing (moduli 04, 06)
+### Esperimento b - entropia di shannon vs metriche di guessing (moduli 04, 06)
 
 Confronto tra entropia nominale e metriche rilevanti per l'attaccante su una distribuzione di
 password Zipf. **Risultati misurati:**

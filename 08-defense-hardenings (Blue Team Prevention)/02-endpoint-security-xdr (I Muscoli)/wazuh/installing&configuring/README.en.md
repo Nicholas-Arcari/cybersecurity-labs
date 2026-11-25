@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Wazuh SIEM & Suricata IDS - Home Lab Setup
+# Wazuh SIEM & Suricata IDS - home lab setup
 
 This repository documents the installation, configuration and troubleshooting process of a security-monitored environment (SIEM) using **Wazuh** on Kali Linux and **Suricata** as IDS, with agents deployed on Windows machines.
 
@@ -23,16 +23,16 @@ Installation on Kali Linux, often performed in virtualized environments or on no
 The most common error leading to service failure (particularly the Indexer) is insufficient RAM, which triggers the Linux kernel's OOM (Out Of Memory) Killer process.
 
 ----------------------------------------------------------------------------------------
-| Component | Minimum Requirement | Recommended Requirement | Technical Notes |
+| component | minimum requirement | recommended requirement | technical notes |
 ----------------------------------------------------------------------------------------
-| CPU | 2 vCPU | 4-8 vCPU | The Indexer requires parallelism for shard management. Fewer than 4 cores can cause startup timeouts |
-| RAM | 4 GB | 8-16 GB | The Indexer allocates by default 50% of RAM (up to 32GB) to the JVM Heap. With less than 4GB total, the system becomes unstable |
-| Storage | 20 GB | 100 GB+ (SSD) | I/O speed is critical for indexing. Rotational disks can cause bottlenecks |
-| OS | Kali Linux (Rolling) | Debian 11/12 Stable | Kali is based on Debian Testing. This means frequent library updates (libc, openssl) that may require pinning Wazuh packages |
+| cpu | 2 vcpu | 4-8 vcpu | the indexer requires parallelism for shard management. fewer than 4 cores can cause startup timeouts |
+| ram | 4 gb | 8-16 gb | the indexer allocates by default 50% of ram (up to 32gb) to the jvm heap. with less than 4gb total, the system becomes unstable |
+| storage | 20 gb | 100 gb+ (ssd) | i/o speed is critical for indexing. rotational disks can cause bottlenecks |
+| os | kali linux (rolling) | debian 11/12 stable | kali is based on debian testing. this means frequent library updates (libc, openssl) that may require pinning wazuh packages |
 
 ---
 
-### Central Components (Server Side - Kali Linux)
+### Central components (server side - Kali Linux)
 
 The "Wazuh Server" is not a monolith, but an orchestration of three distinct services that must communicate synchronously:
 
@@ -42,13 +42,13 @@ The "Wazuh Server" is not a monolith, but an orchestration of three distinct ser
 
 ---
 
-### Central Node Installation on Kali Linux
+### Central node installation on Kali Linux
 
 The following procedure assumes the user has root privileges on the Kali machine. Unlike Ubuntu or CentOS, Kali Linux does not always automatically start services after installation due to default security policies.
 
 ---
 
-### System and Repository Preparation
+### System and repository preparation
 The first step is to install the packages needed to manage secure HTTPS repositories and import the Wazuh GPG key. Using gnupg is mandatory to verify package integrity and prevent supply-chain attacks.
 
 ```Bash
@@ -68,7 +68,7 @@ Analysis: Using signed-by in the `.list` file is a modern security best practice
 
 ---
 
-### Wazuh Indexer Installation and Configuration
+### Wazuh indexer installation and configuration
 
 The Indexer must be installed first.
 
@@ -101,7 +101,7 @@ Note: This step may take several minutes. If it fails, consult the TROUBLESHOOTI
 
 ---
 
-### Wazuh Manager Installation
+### Wazuh manager installation
 
 ```Bash
 apt-get install wazuh-manager
@@ -116,7 +116,7 @@ After startup, verify that the manager is correctly listening on critical ports:
 
 ---
 
-### Wazuh Dashboard Installation
+### Wazuh dashboard installation
 
 ```Bash
 apt-get install wazuh-dashboard
@@ -132,11 +132,11 @@ opensearch.ssl.verificationMode: certificate
 
 ---
 
-### Agent Deployment: Windows and Raspberry Pi
+### Agent deployment: Windows and raspberry pi
 
 SIEM effectiveness depends on correct agent configuration. The fundamental rule for stability is that the Agent version must be less than or equal to the Manager version.
 
-### Windows Installation (Workstation/Server)
+### Windows installation (Workstation/Server)
 
 The user encountered difficulties with PowerShell installation. Let's analyze the correct command and its implications.
 
@@ -160,7 +160,7 @@ NET START WazuhSvc
 
 If the command returns "The requested service has already been started" but the agent does not appear in the Manager, the problem almost certainly lies in network connectivity (Windows Firewall or iptables on Kali blocking port 1514).
 
-### Raspberry Pi Installation (Linux ARM)
+### Raspberry pi installation (Linux ARM)
 Raspberry Pi devices use ARM architectures (armhf for 32-bit systems, aarch64 for 64-bit systems). The apt package manager handles architecture automatically, but pay attention to versions.
 
 Architecture Verification:
@@ -186,7 +186,7 @@ echo "wazuh-agent hold" | dpkg --set-selections
 
 ---
 
-### The "Agent 000" Concept (Manager Monitoring)
+### The "agent 000" concept (manager monitoring)
 
 A recurring question concerns installing an agent on the Manager machine itself.
 
@@ -202,11 +202,11 @@ Agent 000 configuration is done by directly modifying `/var/ossec/etc/ossec.conf
 
 ---
 
-### TROUBLESHOOTING.md: In-Depth Analysis and Error Resolution
+### TROUBLESHOOTING.md: In-Depth analysis and error resolution
 
 This section addresses the specific issues encountered during configuration, providing a theoretical explanation of the cause and the technical resolution procedure.
 
-### Critical Dashboard Error: "Wazuh dashboard server is not ready yet"
+### Critical dashboard error: "Wazuh dashboard server is not ready yet"
 
 Symptom: When trying to access the web interface, the user sees an infinite loading message or the "server not ready" error. In the logs (`journalctl -u wazuh-dashboard` or `/usr/share/wazuh-dashboard/data/wazuh/logs/wazuhapp.log`), errors such as `ConnectionError`, `ECONNREFUSED 127.0.0.1:9200` or `Internal Server Error 500` appear.
 
@@ -243,7 +243,7 @@ opensearch.ssl.verificationMode: certificate
 
 After every change, restart the service: `systemctl restart wazuh-dashboard`.
 
-### Authentication Error: "Resource 'admin' is reserved"
+### Authentication error: "resource 'admin' is reserved"
 
 Symptom: The user tries to change the admin user password through the Dashboard GUI (or API) and receives the JSON error: `{"status":"FORBIDDEN","message":"Resource 'admin' is reserved."}`.
 
@@ -265,7 +265,7 @@ bash wazuh-passwords-tool.sh -u admin -p NuovaPasswordSicura!
 
 Crucial Note for Distributed Environments: Although the script attempts to update configurations, in some cases it is necessary to manually update the password in the `/etc/filebeat/filebeat.yml` file (`output.elasticsearch` section) and `/etc/wazuh-dashboard/opensearch_dashboards.yml` (`opensearch.password` section) as well, otherwise these components will lose access to the Indexer.
 
-### Service Startup Error: "Start operation timed out" (Systemd)
+### Service startup error: "start operation timed out" (systemd)
 
 Symptom: The wazuh-indexer service fails to start. systemctl status reports: `wazuh-indexer.service: start operation timed out. Terminating..`
 
@@ -294,7 +294,7 @@ systemctl restart wazuh-indexer
 
 This approach is often effective in lab environments or VMs with shared resources.
 
-### Version Conflict: Agent Downgrade on Linux
+### Version conflict: agent downgrade on Linux
 
 Symptom: Agents on Raspberry Pi or other Linux systems disconnect after a system upgrade. Logs show negotiation errors.
 
@@ -316,7 +316,7 @@ apt-get install wazuh-agent=4.7.5-1
 
 Verify that the configuration (`ossec.conf`) and the key (`client.keys`) have been preserved (Wazuh usually does not delete configuration files upon package removal, but making a preventive backup is wise).
 
-### Windows Agent Connectivity Issues (Firewall and Ports)
+### Windows agent connectivity issues (firewall and ports)
 
 Symptom: The PowerShell installation on Windows completes successfully, the WazuhSvc service is running, but the agent does not appear in the Dashboard.
 
@@ -346,7 +346,7 @@ Note: Kali Linux often has restrictive default policies. Ensure that rules are p
 
 ---
 
-### Log Analysis and Diagnostic Tools
+### Log analysis and diagnostic tools
 
 For effective troubleshooting, it is essential to know where to look. The following table maps components to their respective log files and control commands
 
@@ -367,7 +367,7 @@ On the Manager, the `/var/ossec/bin/agent_control` command is the definitive too
 
 ---
 
-### Conclusions and Operational Recommendations
+### Conclusions and operational recommendations
 
 Implementing Wazuh on a hybrid architecture with Kali Linux as the central node provides a powerful security monitoring platform, but requires rigorous configuration management. The major criticalities lie in resource management (RAM for the Indexer), version synchronization between Manager and Agents, and correct SSL/TLS trust chain configuration.
 

@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Secret & Code Leakage: GitHub/GitLab Dorking e Segreti nei Repository Pubblici
+# Secret & code leakage: GitHub/GitLab dorking e segreti nei repository pubblici
 
 > - **Fase:** Reconnaissance - Passive Information Gathering (source code intelligence)
 > - **Visibilita:** Zero - ricerca su repository pubblici e indici di terze parti (GitHub search, GitLab, motori di ricerca); nessun contatto con l'infrastruttura del target
@@ -33,7 +33,7 @@ code-secret-leakage/
 
 ---
 
-## Ricerca Manuale: GitHub/GitLab Dorking
+## Ricerca manuale: GitHub/GitLab dorking
 
 **ID Finding:** `OSINT-006` | **Severity:** `Variabile (Alto / Critico)`
 
@@ -90,7 +90,7 @@ TargetCorp/deploy-scripts  -  .env.backup
 
 ---
 
-## Ricerca Automatizzata: gitleaks e TruffleHog
+## Ricerca automatizzata: gitleaks e TruffleHog
 
 ### Contesto operativo
 
@@ -149,7 +149,7 @@ Line: 12
 
 > [Segnaposto screenshot: catturare l'output di gitleaks (report JSON) e di TruffleHog con i risultati verificati, con i segreti redatti.]
 
-### Analisi dei risultati / Finding documentato
+### Analisi dei risultati / finding documentato
 
 La distinzione operativa fondamentale e tra **segreto presente** e **segreto valido**. gitleaks trova pattern che assomigliano a segreti (alto recall, molti falsi positivi); TruffleHog con `--only-verified` conferma quali sono ancora attivi presso il provider. In un report professionale:
 
@@ -158,13 +158,13 @@ La distinzione operativa fondamentale e tra **segreto presente** e **segreto val
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 La scansione e stata condotta su repository di nostra proprieta e su target didattici autorizzati, mai su codice di terzi. Il confronto tra i due strumenti e stato istruttivo: gitleaks, basato su pattern ed entropia, produce un numero maggiore di finding grezzi, molti dei quali falsi positivi (stringhe ad alta entropia che non sono segreti reali, come hash o identificativi), mentre TruffleHog, con la sua verifica di validita, ha ridotto sensibilmente il rumore confermando solo un sottoinsieme di credenziali. La scoperta metodologicamente piu significativa e che i segreti piu pericolosi vivono spesso nella history di git e non nel codice attuale: un file rimosso in un commit successivo resta recuperabile, per cui la scansione dell'intera history e non del solo checkout e essenziale. Sul piano etico si e deciso di non testare mai la validita reale dei segreti individuati e di redarli nel report (mostrando solo tipo, posizione e commit), trattando il finding come esposizione da rimediare e non come credenziale da usare.
 
 Approccio consigliato per il lab in ambiente controllato: creare un repository di test contenente segreti fittizi (formato realistico ma non funzionante) e verificare che gitleaks e TruffleHog li rilevino nella history anche dopo la loro rimozione con un commit successivo. Questo dimostra il concetto chiave - "il segreto rimosso resta nella history" - senza esporre credenziali reali.
 
-### Analisi Teorica
+### Analisi teorica
 
 git e un sistema di versionamento a snapshot immutabili: ogni commit e un oggetto identificato dal suo hash SHA-1/SHA-256, e la rimozione di un file in un commit successivo crea solo un nuovo snapshot che non contiene il file, ma **non altera** gli snapshot precedenti. Il file eliminato resta raggiungibile con `git show <commit>:<path>` o `git log -p`. Per rimuovere davvero un segreto occorre riscrivere la history (`git filter-repo`, BFG Repo-Cleaner) e forzare il push, operazione che la maggior parte degli sviluppatori non esegue. Questa proprieta strutturale di git e la causa radice per cui un segreto committato deve essere considerato **compromesso in modo permanente** e ruotato, non semplicemente rimosso.
 
@@ -202,11 +202,11 @@ La verifica attiva di TruffleHog sfrutta il fatto che quasi ogni provider offre 
 
 ---
 
-## Scenario Reale: Proiezione Post-Reconnaissance
+## Scenario reale: proiezione Post-Reconnaissance
 
 > Questa sezione descrive come OSINT-006 si inserirebbe in un engagement reale.
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** una AWS access key valida trovata nella history di un repository pubblico di deploy dell'organizzazione.
 
@@ -237,7 +237,7 @@ Esfiltrazione dati / deploy ransomware su infrastruttura cloud
 - Cryptomining su istanze EC2 avviate con la chiave rubata (costo a carico della vittima)
 - Access Broker: rivendita dell'accesso cloud confermato
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** l'uso della chiave rubata genera eventi in CloudTrail (AWS) da un IP e una geolocalizzazione anomali. GitHub stesso offre "Secret Scanning" che notifica automaticamente il push di segreti riconosciuti e, per alcuni provider, ne innesca la revoca automatica.
 
@@ -260,14 +260,14 @@ Esfiltrazione dati / deploy ransomware su infrastruttura cloud
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| GitHub Code Search | Source code intel | Web (autenticato) | Dorking manuale su org e repository dei dipendenti |
-| `gitleaks` | Secret scanning | CLI | Scansione della history git con regex, alto recall |
-| `TruffleHog` | Secret scanning | CLI | Scansione + verifica attiva della validita dei segreti |
-| `GitGraber` | Secret monitoring | CLI (Python) | Monitoraggio in tempo reale di GitHub per keyword |
-| `GitHub Secret Scanning` | Secret detection | Web (nativo) | Rilevamento e revoca automatica lato provider (difensivo) |
-| `noseyparker` | Secret scanning | CLI | Scanner ad alte prestazioni per grandi volumi di dati |
+| github code search | source code intel | web (autenticato) | dorking manuale su org e repository dei dipendenti |
+| `gitleaks` | secret scanning | cli | scansione della history git con regex, alto recall |
+| `TruffleHog` | secret scanning | cli | scansione + verifica attiva della validita dei segreti |
+| `GitGraber` | secret monitoring | cli (python) | monitoraggio in tempo reale di github per keyword |
+| `GitHub Secret Scanning` | secret detection | web (nativo) | rilevamento e revoca automatica lato provider (difensivo) |
+| `noseyparker` | secret scanning | cli | scanner ad alte prestazioni per grandi volumi di dati |
 
 > **Tool moderno consigliato:** `TruffleHog v3` con l'opzione `--only-verified` e il singolo tool piu efficace per un engagement, perche elimina il rumore dei falsi positivi confermando quali segreti sono realmente attivi presso il provider. Sul lato difensivo, `gitleaks protect --staged` come pre-commit hook blocca i segreti prima che entrino nella history.
 
@@ -275,12 +275,12 @@ Esfiltrazione dati / deploy ransomware su infrastruttura cloud
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Search Open Technical Databases | `T1596` | Ricerca di segreti e configurazioni nei repository di codice pubblici del target (OSINT-006) |
-| Reconnaissance | Search Open Websites/Domains: Search Engines | `T1593.002` | Uso degli operatori di ricerca GitHub/GitLab per individuare file di configurazione e credenziali (OSINT-006) |
-| Credential Access | Unsecured Credentials: Credentials In Files | `T1552.001` | Estrazione di credenziali, API key e chiavi private dai file esposti nella history git (OSINT-006) |
-| Credential Access | Unsecured Credentials: Cloud Instance Metadata / Keys | `T1552.005` | Recupero di chiavi di accesso cloud (AWS/Azure/GCP) esposte nel codice pubblico (OSINT-006) |
+| reconnaissance | search open technical databases | `T1596` | ricerca di segreti e configurazioni nei repository di codice pubblici del target (OSINT-006) |
+| reconnaissance | search open websites/domains: search engines | `T1593.002` | uso degli operatori di ricerca github/gitlab per individuare file di configurazione e credenziali (OSINT-006) |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | estrazione di credenziali, api key e chiavi private dai file esposti nella history git (OSINT-006) |
+| credential access | unsecured credentials: cloud instance metadata / keys | `T1552.005` | recupero di chiavi di accesso cloud (aws/azure/gcp) esposte nel codice pubblico (OSINT-006) |
 
 ---
 

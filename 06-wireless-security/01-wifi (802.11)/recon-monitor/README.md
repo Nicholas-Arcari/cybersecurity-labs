@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Recon & Monitor Mode - Mappatura dello Spettro 802.11
+# Recon & monitor mode - mappatura dello spettro 802.11
 
 > - **Fase:** Wireless Security - Reconnaissance & Passive Discovery (802.11)
 > - **Visibilita:** Bassa - la scheda in monitor mode ascolta senza trasmettere (nessun pacchetto verso le reti target); la de-anonimizzazione degli SSID nascosti richiede l'invio di frame di deautenticazione (Attiva - genera traffico rilevabile da un WIDS)
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 La ricognizione wireless e il primo atto di ogni attacco al layer fisico 802.11: prima di poter attaccare una rete bisogna vederla. A differenza della recon di rete tradizionale (modulo 01-recon) che opera su IP e porte, qui il mezzo trasmissivo e l'etere e l'unita di osservazione e il frame di gestione 802.11, che le stazioni trasmettono in chiaro anche su reti cifrate WPA2.
 
@@ -33,7 +33,7 @@ recon-monitor/
 
 ---
 
-## Attivazione della Monitor Mode
+## Attivazione della monitor mode
 
 **ID Finding:** `WIFI-001` | **Severity:** `Basso` (information disclosure: SSID nascosto de-anonimizzato + client de-anonimizzati via Probe Request)
 
@@ -65,7 +65,7 @@ phy0    wlan0           88XXau          Realtek RTL8812AU
 
 ---
 
-## Discovery delle Reti con airodump-ng
+## Discovery delle reti con airodump-ng
 
 ### Contesto operativo
 
@@ -100,7 +100,7 @@ Le righe piu significative: l'AP `11:22:33:44:55:66` espone `<length: 10>` come 
 
 ---
 
-## De-anonimizzazione dell'SSID Nascosto
+## De-anonimizzazione dell'SSID nascosto
 
 ### Contesto operativo
 
@@ -132,7 +132,7 @@ sudo aireplay-ng --deauth 5 -a 11:22:33:44:55:66 -c 60:70:80:90:A0:B0 wlan0mon
 
 ---
 
-## Kismet - Monitoraggio Continuo e WIDS
+## Kismet - monitoraggio continuo e WIDS
 
 ### Contesto operativo
 
@@ -184,20 +184,20 @@ Kismet cattura anche i device che airodump-ng ignora: dispositivi Bluetooth (con
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `airmon-ng` | Monitor mode manager | CLI | Attivazione monitor mode e gestione processi interferenti |
-| `airodump-ng` | Wireless sniffer | CLI | Discovery reti/client, cattura handshake, channel hopping |
-| `aireplay-ng` | Frame injector | CLI | Deautenticazione, forzatura riassociazione per de-anon SSID |
-| `Kismet` | WIDS / passive sniffer | CLI + Web UI | Monitoraggio continuo, correlazione temporale, rogue detection |
-| `iw` | Wireless config | CLI | Configurazione interfaccia, verifica capacita chipset |
-| `hcxdumptool` | Modern capture | CLI | Cattura PMKID e handshake (alternativa moderna ad airodump) |
+| `airmon-ng` | monitor mode manager | cli | attivazione monitor mode e gestione processi interferenti |
+| `airodump-ng` | wireless sniffer | cli | discovery reti/client, cattura handshake, channel hopping |
+| `aireplay-ng` | frame injector | cli | deautenticazione, forzatura riassociazione per de-anon ssid |
+| `Kismet` | wids / passive sniffer | cli + web ui | monitoraggio continuo, correlazione temporale, rogue detection |
+| `iw` | wireless config | cli | configurazione interfaccia, verifica capacita chipset |
+| `hcxdumptool` | modern capture | cli | cattura pmkid e handshake (alternativa moderna ad airodump) |
 
 > **Tool moderno consigliato:** `hcxdumptool` (ZerBea) sostituisce airodump-ng per la cattura clientless: acquisisce direttamente il PMKID dagli AP vulnerabili senza attendere un handshake completo, riducendo drasticamente i tempi di raccolta. Si integra con `hcxtools` per la conversione al formato hashcat. Vedere `../cracking/` per l'attacco PMKID (WIFI-003).
 
 ---
 
-## Analisi Teorica: Perche i Frame di Gestione sono in Chiaro
+## Analisi teorica: perche i frame di gestione sono in chiaro
 
 Lo standard 802.11 cifra esclusivamente il payload dei frame di dati (Data frames) tramite WPA2/WPA3. I frame di gestione (Management frames: Beacon, Probe Request/Response, Association, Deauthentication) e i frame di controllo viaggiano in chiaro per necessita progettuale: un client deve poter scoprire e negoziare l'associazione a una rete prima di stabilire le chiavi di sessione. Questo e il tallone d'Achille intrinseco del protocollo.
 
@@ -213,12 +213,12 @@ L'introduzione dei Protected Management Frames (802.11w) mitiga solo la falsific
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning | `T1595` | Channel hopping e scansione dello spettro 802.11 per mappare AP e client (WIFI-001) |
-| Reconnaissance | Gather Victim Network Information | `T1590` | Raccolta di BSSID, ESSID, cifratura e topologia client dai frame di gestione 802.11 |
-| Credential Access | Network Sniffing | `T1040` | Cattura passiva dei frame radio in monitor mode per estrazione metadati e Probe Request |
-| Collection | Adversary-in-the-Middle | `T1557` | Deautenticazione di un client per forzare la riassociazione e rivelare l'SSID nascosto (WIFI-001) |
+| reconnaissance | active scanning | `T1595` | channel hopping e scansione dello spettro 802.11 per mappare ap e client (WIFI-001) |
+| reconnaissance | gather victim network information | `T1590` | raccolta di bssid, essid, cifratura e topologia client dai frame di gestione 802.11 |
+| credential access | network sniffing | `T1040` | cattura passiva dei frame radio in monitor mode per estrazione metadati e probe request |
+| collection | adversary-in-the-middle | `T1557` | deautenticazione di un client per forzare la riassociazione e rivelare l'ssid nascosto (WIFI-001) |
 
 ---
 

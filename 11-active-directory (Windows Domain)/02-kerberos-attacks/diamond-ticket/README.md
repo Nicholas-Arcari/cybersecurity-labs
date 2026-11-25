@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Diamond Ticket: variante stealth del Golden Ticket
+# Diamond ticket: variante stealth del golden ticket
 
 > - **Fase:** Persistence / Privilege Escalation (dominio Active Directory)
 > - **Visibilita:** Molto bassa - a differenza del Golden, esiste un AS-REQ/AS-REP reale a registro (Event ID 4768), quindi mancano gli indicatori tipici del ticket forgiato da zero
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Il Diamond Ticket e l'evoluzione "stealth" del [Golden Ticket](<../golden-ticket/README.md>). Entrambi
 richiedono la chiave di `krbtgt`, ma il meccanismo e opposto. Il Golden forgia un TGT **da zero**, offline,
@@ -37,7 +37,7 @@ coerenza del PAC falsificato: strumenti moderni (Rubeus con `/ldap` e `/opsec`) 
 attributi reali letti via LDAP e allineano le opzioni del ticket al comportamento nativo di Windows, riducendo
 ulteriormente gli indicatori. Come per tutti i ticket, si preferisce AES al RC4, che e di per se un segnale.
 
-## Esecuzione / Comandi
+## Esecuzione / comandi
 
 ```bash
 # (Windows) Rubeus: ottiene un TGT reale, ne modifica il PAC e lo re-inietta
@@ -69,7 +69,7 @@ presenta un flusso Kerberos apparentemente normale. In un assessment, trovare un
 funziona indisturbato significa che la sola detection "4624 senza 4768" non basta e che manca una PAC validation
 o una correlazione piu fine.
 
-### Analisi Teorica
+### Analisi teorica
 
 Nel flusso Kerberos (vedi [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.md>), sez. 3.1-3.2) il PAC
 all'interno del TGT e firmato con la chiave del KDC (`krbtgt`): e questa firma a garantirne l'integrita. Chi
@@ -79,7 +79,7 @@ genuino anziche a uno forgiato: si preserva tutto cio che rende il ticket "norma
 coerenti) e si falsifica solo l'autorizzazione (il PAC). La lezione teorica e che, una volta compromessa la
 chiave di `krbtgt`, nessuna firma protegge piu nulla: l'unico rimedio e la rotazione (doppio reset).
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Rilevamento.** Difficile con le regole classiche (l'AS-REQ e reale). Spostare la detection sulla **coerenza
 del PAC** (PAC validation lato servizio e correlazione tra PAC emesso e PAC presentato) e su indicatori fini:
@@ -92,11 +92,11 @@ compromissione del DC e il DCSync; Tiering Model; monitoraggio dell'accesso alle
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Vale per il controllo dominio-wide stealth (severity Critico).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** possesso della chiave di `krbtgt` (da DCSync) e di una sessione/credenziali utente.
 
@@ -124,7 +124,7 @@ di AS-REQ. La persistenza sopravvive finche `krbtgt` non viene ruotato due volte
 **Vettori di monetizzazione tipici:** persistenza prolungata in ambienti monitorati; accesso a dati e sistemi
 critici senza allertare l'MDI.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** analitiche comportamentali su Kerberos (MDI); PAC validation; correlazione tra PAC emesso dal
 KDC e PAC presentato; uso inatteso di RC4.
@@ -145,11 +145,11 @@ compromissione indistinguibile dall'attivita legittima.
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Rubeus` | .NET Kerberos tool | CLI - Attivo | Comando `diamond` con `/ldap` e `/opsec` da Windows |
-| `ticketer.py` (Impacket) | Kerberos tool | CLI - Attivo | Manipolazione del PAC di un TGT reale da Linux |
-| `Mimikatz` | Credential/ticket tool | CLI - Attivo | Estrazione della chiave `krbtgt` e manipolazione ticket |
+| `Rubeus` | .net kerberos tool | cli - attivo | comando `diamond` con `/ldap` e `/opsec` da windows |
+| `ticketer.py` (impacket) | kerberos tool | cli - attivo | manipolazione del pac di un tgt reale da linux |
+| `Mimikatz` | credential/ticket tool | cli - attivo | estrazione della chiave `krbtgt` e manipolazione ticket |
 
 ## Note di metodologia
 
@@ -160,19 +160,19 @@ redatti nel report.
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Steal or Forge Kerberos Tickets: Golden Ticket | `T1558.001` | Manipolazione di un TGT reale con la chiave di krbtgt (variante stealth del Golden). |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Ticket | `T1550.003` | Uso del TGT modificato per accedere ai servizi del dominio. |
-| Persistence | Account Manipulation | `T1098` | Persistenza dominio-wide tramite ticket con PAC alterato. |
+| credential access | steal or forge kerberos tickets: golden ticket | `T1558.001` | manipolazione di un tgt reale con la chiave di krbtgt (variante stealth del golden). |
+| lateral movement | use alternate authentication material: pass the ticket | `T1550.003` | uso del tgt modificato per accedere ai servizi del dominio. |
+| persistence | account manipulation | `T1098` | persistenza dominio-wide tramite ticket con pac alterato. |
 
 ## Correlazioni con altri moduli
 
-| Provenienza | Questa tecnica | Effetto |
+| provenienza | questa tecnica | effetto |
 | :--- | :--- | :--- |
-| [DCSync](<../../05-credential-dumping/dcsync/README.md>) | Diamond Ticket | fornisce la chiave di krbtgt, prerequisito comune a Golden e Diamond |
-| [Golden Ticket](<../golden-ticket/README.md>) | Diamond Ticket | stessa radice di fiducia, ma Diamond parte da un TGT reale (piu stealth) |
-| Diamond Ticket | [Sapphire Ticket](<../sapphire-ticket/README.md>) | evoluzione ulteriore: PAC autentico via S4U2self anziche modificato |
+| [dcsync](<../../05-credential-dumping/dcsync/README.md>) | diamond ticket | fornisce la chiave di krbtgt, prerequisito comune a golden e diamond |
+| [golden ticket](<../golden-ticket/README.md>) | diamond ticket | stessa radice di fiducia, ma diamond parte da un tgt reale (piu stealth) |
+| diamond ticket | [sapphire ticket](<../sapphire-ticket/README.md>) | evoluzione ulteriore: pac autentico via s4u2self anziche modificato |
 
 ---
 

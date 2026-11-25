@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# AS-REP Roasting: furto offline per account senza pre-autenticazione
+# AS-REP roasting: furto offline per account senza pre-autenticazione
 
 > - **Fase:** Credential Access (dominio Active Directory)
 > - **Visibilita:** Bassa-Media - genera AS-REQ/AS-REP (Event ID 4768) per gli account bersaglio; piu discreto del Kerberoasting se mirato
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 AS-REP Roasting e il gemello del Kerberoasting applicato alla fase iniziale del flusso Kerberos. Quando un
 account ha disabilitato la pre-autenticazione (flag `DONT_REQ_PREAUTH`), il KDC risponde a un AS-REQ con un
@@ -31,7 +31,7 @@ offline. Puo funzionare anche senza credenziali, se si dispone di una lista di u
 enumeration via kerbrute), provando quali rispondono con un AS-REP crackabile. La decisione operativa e
 mirare gli account trovati invece di spazzolare l'intero dominio, riducendo gli Event ID 4768 generati.
 
-## Esecuzione / Comandi
+## Esecuzione / comandi
 
 ### Da Linux (Impacket GetNPUsers)
 
@@ -66,7 +66,7 @@ pre-auth disabilitata ma password robusta produce un hash non craccabile in temp
 `Alto` se la password viene recuperata, altrimenti il finding e la sola misconfigurazione (`Medio`:
 pre-auth disabilitata e un indebolimento, anche se la password resiste).
 
-### Analisi Teorica
+### Analisi teorica
 
 Il flusso Kerberos (vedi [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.md>), sez. 3.1) prevede la
 pre-autenticazione proprio per impedire questo attacco: normalmente il client deve inviare un timestamp
@@ -75,7 +75,7 @@ l'AS-REP. Disabilitare la pre-auth rimuove questa prova e trasforma l'AS-REP in 
 password (violazione della proprieta P2). E l'esempio piu pulito di come una "comodita" di configurazione
 annulli una contromisura progettata appositamente.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Rilevamento.** Event ID 4768 per account con pre-auth disabilitata, specie in volume o con etype RC4;
 richieste AS-REP da sorgenti inattese; account honeypot con il flag impostato come esca.
@@ -86,11 +86,11 @@ disabilitare RC4 a favore di AES.
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Vale per l'esito "password recuperata" (severity Alto).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** lista di account con pre-auth disabilitata (da LDAP o tentativo su lista username).
 
@@ -117,7 +117,7 @@ misconfigurazione combinata con una password debole.
 **Vettori di monetizzazione tipici:** come per le altre catene AD (ransomware, esfiltrazione, access
 brokering) a valle dell'escalation.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** 4768 anomali per account con pre-auth disabilitata; etype RC4 inatteso.
 
@@ -136,12 +136,12 @@ funzionare un'app" reintroduce una debolezza che il protocollo aveva gia chiuso.
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `GetNPUsers.py` (Impacket) | Python toolkit | CLI - Attivo | Scoperta e roasting degli account senza pre-auth da Linux |
-| `Rubeus` | .NET tool | CLI - Attivo | AS-REP Roasting da host Windows |
-| `hashcat` | GPU cracker | CLI - Offline | Cracking degli hash AS-REP (modo 18200) |
-| `ldapsearch` / `nxc` | Enum | CLI - Attivo | Individuazione degli account con `DONT_REQ_PREAUTH` |
+| `GetNPUsers.py` (impacket) | python toolkit | cli - attivo | scoperta e roasting degli account senza pre-auth da linux |
+| `Rubeus` | .net tool | cli - attivo | as-rep roasting da host windows |
+| `hashcat` | gpu cracker | cli - offline | cracking degli hash as-rep (modo 18200) |
+| `ldapsearch` / `nxc` | enum | cli - attivo | individuazione degli account con `DONT_REQ_PREAUTH` |
 
 ## Note di metodologia
 
@@ -151,19 +151,19 @@ non presuppone un foothold).
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Steal or Forge Kerberos Tickets: AS-REP Roasting | `T1558.004` | Richiesta di AS-REP per account senza pre-auth e cracking offline. |
-| Discovery | Account Discovery: Domain Account | `T1087.002` | Individuazione degli account con pre-auth disabilitata. |
-| Credential Access | Brute Force: Password Cracking | `T1110.002` | Cracking offline dell'hash AS-REP. |
+| credential access | steal or forge kerberos tickets: as-rep roasting | `T1558.004` | richiesta di as-rep per account senza pre-auth e cracking offline. |
+| discovery | account discovery: domain account | `T1087.002` | individuazione degli account con pre-auth disabilitata. |
+| credential access | brute force: password cracking | `T1110.002` | cracking offline dell'hash as-rep. |
 
 ## Correlazioni con altri moduli
 
-| Provenienza | Questa tecnica | Effetto |
+| provenienza | questa tecnica | effetto |
 | :--- | :--- | :--- |
-| [domain-enumeration](<../../01-enumeration/domain-enumeration/README.md>) / [kerbrute](<../../01-enumeration/kerbrute-userenum/README.md>) | AS-REP Roasting | forniscono gli account bersaglio o la lista username |
-| AS-REP Roasting | [hashcat](<../../../04-system-exploitation/05-password-cracking/hashcat/README.md>) | cracking offline con i tool gia nel repo |
-| AS-REP Roasting | [Kerberoasting](<../kerberoasting/README.md>) | tecnica gemella: insieme coprono entrambe le estremita del flusso Kerberos |
+| [domain-enumeration](<../../01-enumeration/domain-enumeration/README.md>) / [kerbrute](<../../01-enumeration/kerbrute-userenum/README.md>) | as-rep roasting | forniscono gli account bersaglio o la lista username |
+| as-rep roasting | [hashcat](<../../../04-system-exploitation/05-password-cracking/hashcat/README.md>) | cracking offline con i tool gia nel repo |
+| as-rep roasting | [kerberoasting](<../kerberoasting/README.md>) | tecnica gemella: insieme coprono entrambe le estremita del flusso kerberos |
 
 ---
 

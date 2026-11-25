@@ -1,6 +1,6 @@
 > [English](REFERENCES.en.md) | **Italiano**
 
-# Riferimenti Bibliografici - Letteratura Primaria e Standard
+# Riferimenti bibliografici - letteratura primaria e standard
 
 > Bibliografia annotata a supporto dei documenti `THEORETICAL-FOUNDATIONS.md` di ciascun modulo.
 > Raccoglie la letteratura scientifica peer-reviewed, gli standard tecnici e i testi di riferimento
@@ -20,7 +20,7 @@ Convenzione di riferimento nel testo: `[Autore Anno]` (es. `[Saltzer & Schroeder
 
 ---
 
-## A. Principi fondazionali e modelli formali
+## A. principi fondazionali e modelli formali
 
 - **[Saltzer & Schroeder 1975]** Saltzer, J. H., & Schroeder, M. D. (1975). "The Protection of Information in Computer Systems." *Proceedings of the IEEE*, 63(9), 1278-1308.
   - Fonte degli otto principi di progettazione sicura (economy of mechanism, fail-safe defaults, least privilege, complete mediation, open design, separation of privilege, least common mechanism, psychological acceptability). Fondamento trasversale, centrale per hardening (modulo 08) e cloud IAM (modulo 10).
@@ -48,7 +48,7 @@ Convenzione di riferimento nel testo: `[Autore Anno]` (es. `[Saltzer & Schroeder
 
 ---
 
-## B. Crittografia, autenticazione e password
+## B. crittografia, autenticazione e password
 
 - **[Diffie & Hellman 1976]** Diffie, W., & Hellman, M. (1976). "New Directions in Cryptography." *IEEE Transactions on Information Theory*, 22(6), 644-654.
   - Crittografia a chiave pubblica e scambio di chiavi. Base teorica per TLS, SSH, WPA3-SAE (moduli 02, 06).
@@ -79,7 +79,7 @@ Convenzione di riferimento nel testo: `[Autore Anno]` (es. `[Saltzer & Schroeder
 
 ---
 
-## C. Sicurezza web e teoria dei linguaggi
+## C. sicurezza web e teoria dei linguaggi
 
 - **[Su & Wassermann 2006]** Su, Z., & Wassermann, G. (2006). "The Essence of Command Injection Attacks in Web Applications." *ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages (POPL)*, 372-382.
   - Trattazione formale dell'injection come confusione tra dati e codice a livello di grammatica/parser. Fondamento teorico del modulo 03.
@@ -95,7 +95,7 @@ Convenzione di riferimento nel testo: `[Autore Anno]` (es. `[Saltzer & Schroeder
 
 ---
 
-## D. Reti, intrusion detection e teoria del rilevamento
+## D. reti, intrusion detection e teoria del rilevamento
 
 - **[Denning 1987]** Denning, D. E. (1987). "An Intrusion-Detection Model." *IEEE Transactions on Software Engineering*, SE-13(2), 222-232.
   - Modello fondativo dell'intrusion detection. Base storica del modulo 08.
@@ -114,7 +114,7 @@ Convenzione di riferimento nel testo: `[Autore Anno]` (es. `[Saltzer & Schroeder
 
 ---
 
-## E. Grafi di attacco, kill chain e modellazione dell'avversario
+## E. grafi di attacco, kill chain e modellazione dell'avversario
 
 - **[Phillips & Swiler 1998]** Phillips, C., & Swiler, L. P. (1998). "A Graph-Based System for Network-Vulnerability Analysis." *New Security Paradigms Workshop (NSPW)*, 71-79.
   - Introduzione dei grafi di attacco. Fondamento teorico del lateral movement e pivoting (modulo 07).
@@ -133,7 +133,7 @@ Convenzione di riferimento nel testo: `[Autore Anno]` (es. `[Saltzer & Schroeder
 
 ---
 
-## F. Sicurezza wireless e RFID
+## F. sicurezza wireless e RFID
 
 - **[Fluhrer et al. 2001]** Fluhrer, S., Mantin, I., & Shamir, A. (2001). "Weaknesses in the Key Scheduling Algorithm of RC4." *Selected Areas in Cryptography (SAC)*, LNCS 2259, 1-24.
   - Rottura di WEP tramite debolezze di RC4. Riferimento storico per l'evoluzione della sicurezza WiFi (modulo 06).
@@ -152,7 +152,7 @@ Convenzione di riferimento nel testo: `[Autore Anno]` (es. `[Saltzer & Schroeder
 
 ---
 
-## M. Sfruttamento, memory safety e teoria della computazione
+## M. sfruttamento, memory safety e teoria della computazione
 
 - **[Aleph One 1996]** Aleph One (Levy, E.). (1996). "Smashing the Stack for Fun and Profit." *Phrack Magazine*, 7(49), file 14.
   - Esposizione seminale dello stack buffer overflow. Riferimento storico del modulo 04 (binary exploitation).
@@ -171,7 +171,7 @@ Convenzione di riferimento nel testo: `[Autore Anno]` (es. `[Saltzer & Schroeder
 
 ---
 
-## G. Forense digitale
+## G. forense digitale
 
 - **[Brezinski & Killalea 2002]** Brezinski, D., & Killalea, T. (2002). "Guidelines for Evidence Collection and Archiving." RFC 3227 (BCP 55).
   - Definisce l'ordine di volatilita e le best practice di raccolta delle prove. Fondamento del modulo 09.
@@ -187,7 +187,7 @@ Convenzione di riferimento nel testo: `[Autore Anno]` (es. `[Saltzer & Schroeder
 
 ---
 
-## H. Sicurezza cloud, virtualizzazione e container
+## H. sicurezza cloud, virtualizzazione e container
 
 - **[Ristenpart et al. 2009]** Ristenpart, T., Tromer, E., Shacham, H., & Savage, S. (2009). "Hey, You, Get Off of My Cloud: Exploring Information Leakage in Third-Party Compute Clouds." *ACM CCS*, 199-212.
   - Co-residenza e side-channel tra VM nel cloud pubblico. Fondamento teorico del modulo 10.
@@ -200,7 +200,7 @@ Convenzione di riferimento nel testo: `[Autore Anno]` (es. `[Saltzer & Schroeder
 
 ---
 
-## I. Ricognizione e superficie d'attacco
+## I. ricognizione e superficie d'attacco
 
 - **[Manadhata & Wing 2011]** Manadhata, P. K., & Wing, J. M. (2011). "An Attack Surface Metric." *IEEE Transactions on Software Engineering*, 37(3), 371-386.
   - Formalizzazione quantitativa della superficie d'attacco. Fondamento teorico del modulo 01 (ricognizione) e dell'hardening (modulo 08).
@@ -213,7 +213,7 @@ Convenzione di riferimento nel testo: `[Autore Anno]` (es. `[Saltzer & Schroeder
 
 ---
 
-## J. Ingegneria sociale (fondamenti psicologici)
+## J. ingegneria sociale (fondamenti psicologici)
 
 - **[Cialdini 1984]** Cialdini, R. B. (1984). *Influence: The Psychology of Persuasion*. Harper Business.
   - I sei principi dell'influenza (reciprocita, impegno/coerenza, riprova sociale, autorita, simpatia, scarsita). Fondamento psicologico del modulo 05.
@@ -226,7 +226,7 @@ Convenzione di riferimento nel testo: `[Autore Anno]` (es. `[Saltzer & Schroeder
 
 ---
 
-## N. Provable security, modelli formali e semantica (livello magistrale)
+## N. provable security, modelli formali e semantica (livello magistrale)
 
 - **[Goldwasser & Micali 1984]** Goldwasser, S., & Micali, S. (1984). "Probabilistic Encryption." *Journal of Computer and System Sciences*, 28(2), 270-299.
   - Nozione di sicurezza semantica e indistinguibilita computazionale. Fondamento della provable security (THEORY-ADVANCED, Parte I).
@@ -265,7 +265,7 @@ Convenzione di riferimento nel testo: `[Autore Anno]` (es. `[Saltzer & Schroeder
 
 ---
 
-## K. Testi di riferimento (monografie)
+## K. testi di riferimento (monografie)
 
 - **[Anderson 2020]** Anderson, R. (2020). *Security Engineering: A Guide to Building Dependable Distributed Systems* (3rd ed.). Wiley.
 - **[Bishop 2018]** Bishop, M. (2018). *Computer Security: Art and Science* (2nd ed.). Addison-Wesley.
@@ -273,7 +273,7 @@ Convenzione di riferimento nel testo: `[Autore Anno]` (es. `[Saltzer & Schroeder
 
 ---
 
-## L. Standard e letteratura grigia normativa
+## L. standard e letteratura grigia normativa
 
 - **NIST SP 800-61 Rev. 2** - Computer Security Incident Handling Guide (moduli 08, 09).
 - **NIST SP 800-63B** - Digital Identity Guidelines: Authentication and Lifecycle Management (moduli 04, 07, 10).

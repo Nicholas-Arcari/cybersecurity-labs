@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 17 - Join the Kali Linux Community
+# 17 - Join the Kali Linux community
 
 > - **Phase:** System Setup - Professional Development & Knowledge Sharing
 > - **Priority:** Low - long-term value, no immediate impact on system security
@@ -9,25 +9,25 @@
 
 ---
 
-## Official Resources
+## Official resources
 
-| Resource | URL | Type |
+| resource | url | type |
 | :--- | :--- | :--- |
-| Kali official forum | `forums.kali.org` | Q&A forum, bug reports, guides |
-| Kali Linux Discord | Invite at `kali.org/discord` | Real-time chat, topic-based channels |
-| Official blog | `kali.org/blog` | New version announcements, tools, tutorials |
-| Official docs | `kali.org/docs` | Installation, tools, configuration documentation |
-| Bug tracker | `bugs.kali.org` | Kali package bug reporting |
+| kali official forum | `forums.kali.org` | q&a forum, bug reports, guides |
+| kali linux discord | invite at `kali.org/discord` | real-time chat, topic-based channels |
+| official blog | `kali.org/blog` | new version announcements, tools, tutorials |
+| official docs | `kali.org/docs` | installation, tools, configuration documentation |
+| bug tracker | `bugs.kali.org` | kali package bug reporting |
 
-## Broader Cybersecurity Community
+## Broader cybersecurity community
 
-| Resource | URL | Type |
+| resource | url | type |
 | :--- | :--- | :--- |
-| r/netsec | `reddit.com/r/netsec` | Security news and research |
-| r/hacking | `reddit.com/r/hacking` | Tutorials, technical discussions |
-| Hack The Box Discord | `discord.gg/hackthebox` | CTF and hands-on lab community |
-| TryHackMe Discord | `discord.gg/tryhackme` | Learning platform community |
-| OWASP | `owasp.org` | Standards, tools, open source guides |
+| r/netsec | `reddit.com/r/netsec` | security news and research |
+| r/hacking | `reddit.com/r/hacking` | tutorials, technical discussions |
+| hack the box discord | `discord.gg/hackthebox` | ctf and hands-on lab community |
+| tryhackme discord | `discord.gg/tryhackme` | learning platform community |
+| owasp | `owasp.org` | standards, tools, open source guides |
 
 ---
 

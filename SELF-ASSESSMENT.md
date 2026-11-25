@@ -1,6 +1,6 @@
 > [English](SELF-ASSESSMENT.en.md) | **Italiano**
 
-# Autovalutazione Critica e Minacce alla Validita
+# Autovalutazione critica e minacce alla validita
 
 > - **Cos'e:** una revisione critica *avversariale interna* del lavoro contenuto in questa repository,
 >   scritta nella voce di un revisore scettico che cerca di demolirlo.

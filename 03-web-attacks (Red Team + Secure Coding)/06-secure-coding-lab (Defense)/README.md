@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 06 - Secure Coding Lab (Defense)
+# 06 - Secure coding lab (defense)
 
 > - **Fase:** Secure Coding - Static Analysis (SAST) e Post-Remediation Verification
 > - **Visibilita:** Zero - analisi locale del codice sorgente, nessun traffico verso target esterni
@@ -38,7 +38,7 @@ Questa prospettiva difensiva e valorizzata dai recruiter nel settore perche dimo
 
 ---
 
-## `vulnerable-snippets/` - Codice Vulnerabile (SAST)
+## `vulnerable-snippets/` - Codice vulnerabile (SAST)
 
 ### Contesto operativo
 
@@ -59,7 +59,7 @@ Il documento `vulnerable-snippets/README.md` documenta due finding di analisi st
 
 ---
 
-## `fixed-snippets/` - Codice Sicuro (Post-Remediation)
+## `fixed-snippets/` - Codice sicuro (Post-Remediation)
 
 ### Contesto operativo
 
@@ -73,7 +73,7 @@ Il documento `fixed-snippets/README.md` documenta la correzione della SQL Inject
 
 ---
 
-## `fixed-snippets/input-sanitization-examples/` - XSS Defense
+## `fixed-snippets/input-sanitization-examples/` - XSS defense
 
 ### Contesto operativo
 
@@ -86,9 +86,9 @@ Il documento `input-sanitization-examples/README.md` dimostra:
 
 ---
 
-## Principi di Secure Coding Applicati
+## Principi di secure coding applicati
 
-### 1. Input Validation (Allow-list)
+### 1. Input validation (allow-list)
 
 Non fidarsi mai dell'input utente. Validare che l'input sia nel formato atteso prima di elaborarlo:
 
@@ -106,7 +106,7 @@ except ValueError:
     print("Errore: input non valido")
 ```
 
-### 2. Parameterized Queries (Prepared Statements)
+### 2. Parameterized queries (prepared statements)
 
 Separare sempre il comando SQL dai dati:
 
@@ -119,7 +119,7 @@ $stmt = $pdo->prepare("SELECT * FROM users WHERE id = :id");
 $stmt->execute(['id' => $_GET['id']]);
 ```
 
-### 3. Output Encoding
+### 3. Output encoding
 
 Codificare l'output nel contesto corretto prima di renderizzarlo:
 
@@ -131,7 +131,7 @@ echo $_GET['name'];
 echo htmlspecialchars($_GET['name'], ENT_QUOTES, 'UTF-8');
 ```
 
-### 4. Subprocess senza Shell
+### 4. Subprocess senza shell
 
 Evitare l'esecuzione di comandi tramite shell string:
 
@@ -162,14 +162,14 @@ if not SECRET_KEY or len(SECRET_KEY) < 32:
 
 ## Tool SAST di riferimento
 
-| Tool | Linguaggio | Tipo | Caso d'uso |
+| tool | linguaggio | tipo | caso d'uso |
 | :--- | :--- | :--- | :--- |
-| `bandit` | Python | SAST CLI | Analisi statica per vulnerabilita comuni in Python (os.system, eval, pickle) |
-| `semgrep` | Multi-language | SAST CLI | Analisi statica con regole custom, integrabile in CI/CD |
-| `SonarQube` | Multi-language | SAST Web | Piattaforma enterprise per code review continuo |
-| `snyk` | Multi-language | SAST Web/CLI | Analisi dipendenze e vulnerabilita nel codice |
-| `phpcs-security-audit` | PHP | SAST CLI | Regole specifiche per vulnerabilita PHP (SQLi, XSS, RCE) |
-| `eslint-plugin-security` | JavaScript | SAST CLI | Analisi statica per applicazioni Node.js |
+| `bandit` | python | sast cli | analisi statica per vulnerabilita comuni in python (os.system, eval, pickle) |
+| `semgrep` | multi-language | sast cli | analisi statica con regole custom, integrabile in ci/cd |
+| `SonarQube` | multi-language | sast web | piattaforma enterprise per code review continuo |
+| `snyk` | multi-language | sast web/cli | analisi dipendenze e vulnerabilita nel codice |
+| `phpcs-security-audit` | php | sast cli | regole specifiche per vulnerabilita php (sqli, xss, rce) |
+| `eslint-plugin-security` | javascript | sast cli | analisi statica per applicazioni node.js |
 
 ---
 
@@ -208,12 +208,12 @@ if not SECRET_KEY or len(SECRET_KEY) < 32:
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione (difensiva) |
+| tattica | tecnica | id mitre | descrizione dell'azione (difensiva) |
 | :--- | :--- | :--- | :--- |
-| (Mitigazione) | Exploit Public-Facing Application | `T1190` | Implementazione di Prepared Statements (PDO) per neutralizzare SQLi (CWE-89) |
-| (Mitigazione) | Command and Scripting Interpreter: Unix Shell | `T1059.004` | Sostituzione di `os.system()` con `subprocess.run(list)` per neutralizzare OS Command Injection (CWE-78) |
-| (Mitigazione) | Exploit Public-Facing Application | `T1190` | Implementazione di `htmlspecialchars()` per neutralizzare XSS Reflected e Stored |
-| (Mitigazione) | Brute Force: Password Cracking | `T1110.002` | Sostituzione di JWT weak secret con chiave random 64+ char da variabili d'ambiente (WEB-012) |
+| (mitigazione) | exploit public-facing application | `T1190` | implementazione di prepared statements (pdo) per neutralizzare sqli (cwe-89) |
+| (mitigazione) | command and scripting interpreter: unix shell | `T1059.004` | sostituzione di `os.system()` con `subprocess.run(list)` per neutralizzare os command injection (cwe-78) |
+| (mitigazione) | exploit public-facing application | `T1190` | implementazione di `htmlspecialchars()` per neutralizzare xss reflected e stored |
+| (mitigazione) | brute force: password cracking | `T1110.002` | sostituzione di jwt weak secret con chiave random 64+ char da variabili d'ambiente (WEB-012) |
 
 ---
 

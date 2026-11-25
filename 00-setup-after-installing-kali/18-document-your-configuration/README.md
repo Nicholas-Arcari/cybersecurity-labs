@@ -11,7 +11,7 @@
 
 ## Approccio consigliato
 
-### Opzione 1: Repository git con dotfiles
+### Opzione 1: repository git con dotfiles
 
 ```Bash
 mkdir ~/dotfiles && cd ~/dotfiles
@@ -27,7 +27,7 @@ git add . && git commit -m "initial dotfiles configuration"
 # Push su GitHub privato per accesso da qualsiasi macchina
 ```
 
-### Opzione 2: Note Markdown (Obsidian)
+### Opzione 2: note markdown (obsidian)
 
 ```Bash
 sudo apt install obsidian   # o flatpak install md.obsidian.Obsidian

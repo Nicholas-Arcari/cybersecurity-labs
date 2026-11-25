@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 05 - API Security
+# 05 - API security
 
 > - **Fase:** Web Attack - API Security Testing (OWASP API Top 10:2023)
 > - **Visibilita:** Variabile - Bassa (JWT crack offline) / Media (GraphQL, REST con curl) / Bassa (IDOR - richieste legittime)
@@ -22,12 +22,12 @@ Le vulnerabilita delle API differiscono da quelle delle applicazioni web tradizi
 
 L'OWASP API Security Top 10:2023 documenta le vulnerabilita piu critiche nelle API moderne:
 
-| Categoria | Finding | Sottocartella |
+| categoria | finding | sottocartella |
 | :--- | :--- | :--- |
-| API2:2023 - Broken Authentication | WEB-012 (JWT weak secret) | `jwt-tokens/` |
-| API8:2023 - Security Misconfiguration | WEB-013 (GraphQL Introspection) | `graphql/` |
-| API3:2023 - Broken Object Property Level Authorization | WEB-013 (Command Injection via GraphQL) | `graphql/` |
-| API1:2023 - Broken Object Level Authorization (BOLA) | WEB-014 (IDOR) | `postman/` |
+| api2:2023 - broken authentication | WEB-012 (jwt weak secret) | `jwt-tokens/` |
+| api8:2023 - security misconfiguration | WEB-013 (graphql introspection) | `graphql/` |
+| api3:2023 - broken object property level authorization | WEB-013 (command injection via graphql) | `graphql/` |
+| api1:2023 - broken object level authorization (bola) | WEB-014 (idor) | `postman/` |
 
 ---
 
@@ -42,7 +42,7 @@ L'OWASP API Security Top 10:2023 documenta le vulnerabilita piu critiche nelle A
 
 ---
 
-## `jwt-tokens/` - JWT Authentication Exploitation
+## `jwt-tokens/` - JWT authentication exploitation
 
 **ID Finding:** `WEB-012` | **Severity:** `Critico` | **CVSS v3.1:** 9.8
 
@@ -56,7 +56,7 @@ La pericolosita e amplificata dalla natura offline del brute force: nessun IDS, 
 
 ---
 
-## `graphql/` - GraphQL Introspection & Command Injection
+## `graphql/` - GraphQL introspection & command injection
 
 **ID Finding:** `WEB-013` | **Severity:** `Critico` | **CVSS v3.1:** 9.8
 
@@ -73,7 +73,7 @@ In produzione, l'Introspection dovrebbe essere disabilitata perche fornisce all'
 
 ---
 
-## `postman/` - IDOR/BOLA Testing
+## `postman/` - IDOR/BOLA testing
 
 **ID Finding:** `WEB-014` | **Severity:** `Critico` | **CVSS v3.1:** 9.1
 
@@ -119,28 +119,28 @@ Il documento `postman/README.md` documenta:
 
 ---
 
-## Registro Finding - API Security
+## Registro finding - API security
 
-| ID | Descrizione | Severity | CVSS | Sottocartella |
+| id | descrizione | severity | cvss | sottocartella |
 | :--- | :--- | :---: | :---: | :--- |
-| `WEB-012` | JWT weak secret (`secret123`) - forging token admin via brute force offline | `Critico` | 9.8 | `jwt-tokens/` |
-| `WEB-013` | GraphQL Introspection abilitata + Command Injection RCE via `systemDebug` | `Critico` | 9.8 | `graphql/` |
-| `WEB-014` | IDOR/BOLA - accesso dati finanziari di tutti gli utenti senza autorizzazione | `Critico` | 9.1 | `postman/` |
+| `WEB-012` | jwt weak secret (`secret123`) - forging token admin via brute force offline | `Critico` | 9.8 | `jwt-tokens/` |
+| `WEB-013` | graphql introspection abilitata + command injection rce via `systemDebug` | `Critico` | 9.8 | `graphql/` |
+| `WEB-014` | idor/bola - accesso dati finanziari di tutti gli utenti senza autorizzazione | `Critico` | 9.1 | `postman/` |
 
 ---
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `jwt_tool` | JWT analyzer | CLI - Offline | Analisi, brute force e forging di JWT |
-| `hashcat` | Password cracker | CLI - Offline | Brute force hash JWT con GPU acceleration |
-| `Burp Suite` | Web proxy | GUI - Manuale | Intercettazione e modifica di richieste API con JWT |
-| `curl` | HTTP client | CLI | Test manuale endpoint GraphQL e REST |
-| `Postman` | API client | GUI | Test interattivo API REST, Collections, scripting |
-| `graphql-voyager` | GraphQL visualizer | Web UI | Visualizzazione grafica dello schema GraphQL |
-| `clairvoyance` | GraphQL enum | CLI - Attiva | Enumerazione schema GraphQL anche senza Introspection |
-| `nuclei` | Template-based | CLI - Attiva | Template OWASP API Top 10 e JWT vulnerabilities |
+| `jwt_tool` | jwt analyzer | cli - offline | analisi, brute force e forging di jwt |
+| `hashcat` | password cracker | cli - offline | brute force hash jwt con gpu acceleration |
+| `Burp Suite` | web proxy | gui - manuale | intercettazione e modifica di richieste api con jwt |
+| `curl` | http client | cli | test manuale endpoint graphql e rest |
+| `Postman` | api client | gui | test interattivo api rest, collections, scripting |
+| `graphql-voyager` | graphql visualizer | web ui | visualizzazione grafica dello schema graphql |
+| `clairvoyance` | graphql enum | cli - attiva | enumerazione schema graphql anche senza introspection |
+| `nuclei` | template-based | cli - attiva | template owasp api top 10 e jwt vulnerabilities |
 
 > **Tool moderno consigliato:** `jwt_tool` (ticarpi/jwt_tool) - strumento dedicato ai JWT, con supporto per brute force, modifica del payload, test di vulnerabilita (alg:none, RS256 to HS256). Installazione: `pip3 install jwt_tool`.
 
@@ -148,17 +148,17 @@ Il documento `postman/README.md` documenta:
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Brute Force: Password Cracking | `T1110.002` | Brute force offline della firma JWT HS256 con dizionario per recuperare la chiave `secret123` (WEB-012) |
-| Defense Evasion | Use Alternate Authentication Material | `T1550` | Utilizzo del token JWT falsificato con ruolo admin per accedere a funzionalita privilegiate (WEB-012) |
-| Lateral Movement | Valid Accounts: Cloud Accounts | `T1078.003` | Impersonazione dell'account admin tramite token JWT forgiato (WEB-012) |
-| Reconnaissance | Active Scanning: Wordlist Scanning | `T1595.003` | GraphQL Introspection per mappare tutte le query disponibili, incluse quelle non documentate (WEB-013) |
-| Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | Command Injection tramite parametro `arg` della query `systemDebug` -> RCE con `; id` (WEB-013) |
-| Collection | Data from Information Repositories | `T1213` | Esfiltrazione di credenziali admin da `config.py` e dump del database SQLite tramite RCE (WEB-013) |
-| Discovery | Account Discovery | `T1087` | Enumerazione degli ID account sull'endpoint `/api/balance/<id>` per mappare tutti gli utenti (WEB-014) |
-| Collection | Data from Information Repositories | `T1213` | Accesso ai dati finanziari di utenti non autorizzati tramite IDOR/BOLA (WEB-014) |
-| Lateral Movement | Valid Accounts | `T1078` | Utilizzo dell'account legittimo per effettuare richieste IDOR su account altrui (WEB-014) |
+| credential access | brute force: password cracking | `T1110.002` | brute force offline della firma jwt hs256 con dizionario per recuperare la chiave `secret123` (WEB-012) |
+| defense evasion | use alternate authentication material | `T1550` | utilizzo del token jwt falsificato con ruolo admin per accedere a funzionalita privilegiate (WEB-012) |
+| lateral movement | valid accounts: cloud accounts | `T1078.003` | impersonazione dell'account admin tramite token jwt forgiato (WEB-012) |
+| reconnaissance | active scanning: wordlist scanning | `T1595.003` | graphql introspection per mappare tutte le query disponibili, incluse quelle non documentate (WEB-013) |
+| execution | command and scripting interpreter: unix shell | `T1059.004` | command injection tramite parametro `arg` della query `systemDebug` -> rce con `; id` (WEB-013) |
+| collection | data from information repositories | `T1213` | esfiltrazione di credenziali admin da `config.py` e dump del database sqlite tramite rce (WEB-013) |
+| discovery | account discovery | `T1087` | enumerazione degli id account sull'endpoint `/api/balance/<id>` per mappare tutti gli utenti (WEB-014) |
+| collection | data from information repositories | `T1213` | accesso ai dati finanziari di utenti non autorizzati tramite idor/bola (WEB-014) |
+| lateral movement | valid accounts | `T1078` | utilizzo dell'account legittimo per effettuare richieste idor su account altrui (WEB-014) |
 
 ---
 

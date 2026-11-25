@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Shadow Credentials: certificate-based authentication by abusing msDS-KeyCredentialLink
+# Shadow credentials: certificate-based authentication by abusing msDS-KeyCredentialLink
 
 > - **Phase:** Credential Access / Persistence (Active Directory domain)
 > - **Visibility:** Low-Medium - writing the attribute is a directory modification (Event ID 5136); subsequent use is a PKINIT
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Shadow Credentials abuses the `msDS-KeyCredentialLink` attribute, used by Windows Hello for Business and by
 key trust to bind a public key to an account for Kerberos authentication via PKINIT. If an attacker can write
@@ -29,7 +29,7 @@ suspicion and disruption) and leaves the attacker an additional means of authent
 a form of persistence. The operational decision is to choose the target (a privileged computer or a
 high-value user identified with BloodHound) and to remember to clean up the attribute at the end of the test.
 
-## Execution / Commands
+## Execution / commands
 
 ```bash
 # Adds a controlled key credential to the target object (produces a certificate/key to use)
@@ -52,7 +52,7 @@ password. If the target is a privileged computer or a high-value user, the sever
 continues toward the domain. The advantage over a password reset is discretion and persistence: as long as
 the attribute remains written, the attacker keeps access.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 `msDS-KeyCredentialLink` implements "key trust": AD trusts a public key associated with the account for
 PKINIT authentication. Whoever controls writing the attribute effectively controls the list of trusted keys
@@ -62,7 +62,7 @@ the object. Unlike a password reset, there is no shared secret to change: the co
 write right and monitor the attribute. See
 [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.en.md>), sec. 3.4.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection.** Event ID 5136 on modifications of `msDS-KeyCredentialLink`; appearance of key credentials on
 accounts that do not use Windows Hello for Business; PKINIT followed by privileged activity from an unexpected
@@ -74,11 +74,11 @@ Model.
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > Shadow Credentials as discreet escalation and persistence (severity High).
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** GenericWrite/GenericAll on a target object (from BloodHound).
 
@@ -107,7 +107,7 @@ reset.
 
 **Typical monetization vectors:** persistence and prolonged access; downstream, ransomware/exfiltration.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** modifications to `msDS-KeyCredentialLink` (Event ID 5136); anomalous PKINIT.
 
@@ -127,12 +127,12 @@ management alone.
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `Certipy` | AD CS toolkit | CLI - Active | `shadow auto`: key-credential addition, PKINIT and cleanup |
-| `pywhisker` | AD tool | CLI - Active | Manipulation of `msDS-KeyCredentialLink` from Linux |
-| `Whisker` | .NET tool | CLI - Active | Shadow Credentials from a Windows host |
-| `BloodHound` | Graph enum | GUI | Identification of the write right (AddKeyCredentialLink/GenericWrite) |
+| `Certipy` | ad cs toolkit | cli - active | `shadow auto`: key-credential addition, pkinit and cleanup |
+| `pywhisker` | ad tool | cli - active | manipulation of `msDS-KeyCredentialLink` from linux |
+| `Whisker` | .net tool | cli - active | shadow credentials from a windows host |
+| `BloodHound` | graph enum | gui | identification of the write right (addkeycredentiallink/genericwrite) |
 
 ## Methodology notes
 
@@ -141,18 +141,18 @@ In a real lab document: the right exploited (from BloodHound), the attribute wri
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Persistence | Account Manipulation | `T1098` | Writing a controlled key credential on the target object. |
-| Credential Access | Steal or Forge Authentication Certificates | `T1649` | Use of key trust (PKINIT) to authenticate as the target. |
+| persistence | account manipulation | `T1098` | writing a controlled key credential on the target object. |
+| credential access | steal or forge authentication certificates | `T1649` | use of key trust (pkinit) to authenticate as the target. |
 
 ## Links to other modules
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
-| [ACL abuse](<../../04-delegation-acl/acl-abuse/README.en.md>) | Shadow Credentials | the write right (AddKeyCredentialLink/GenericWrite) enables the technique |
-| Shadow Credentials | [DCSync](<../dcsync/README.en.md>) | if the target is privileged, it opens the way to abused replication |
-| [ESC1/ESC8](<../../03-adcs/README.en.md>) | Shadow Credentials | variants of the same idea: authentication via certificate/key instead of password |
+| [acl abuse](<../../04-delegation-acl/acl-abuse/README.en.md>) | shadow credentials | the write right (addkeycredentiallink/genericwrite) enables the technique |
+| shadow credentials | [dcsync](<../dcsync/README.en.md>) | if the target is privileged, it opens the way to abused replication |
+| [esc1/esc8](<../../03-adcs/README.en.md>) | shadow credentials | variants of the same idea: authentication via certificate/key instead of password |
 
 ---
 

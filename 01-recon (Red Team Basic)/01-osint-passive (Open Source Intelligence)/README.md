@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 01 - OSINT Passivo (Open Source Intelligence)
+# 01 - OSINT passivo (open source intelligence)
 
 > - **Fase:** Reconnaissance - Passive Information Gathering
 > - **Visibilita:** Zero - nessun pacchetto inviato al target, nessun log generato sui sistemi del bersaglio
@@ -54,7 +54,7 @@ L'OSINT passivo alimenta direttamente le fasi successive:
 
 ---
 
-## `breach-data/` - Analisi Credenziali Compromesse
+## `breach-data/` - Analisi credenziali compromesse
 
 **ID Finding:** `OSINT-001` | **Severity:** `Alto`
 
@@ -66,7 +66,7 @@ Tool principali: `h8mail` (CLI), `HaveIBeenPwned` (Web).
 
 ---
 
-## `email-harvesting/` - Mappatura Email Esposte
+## `email-harvesting/` - Mappatura email esposte
 
 **ID Finding:** `OSINT-002` | **Severity:** `Informativo`
 
@@ -76,7 +76,7 @@ In questo lab: audit del dominio personale `nicholas-arcari.github.io`. Risultat
 
 ---
 
-## `google-dorks/` - Sensitive Data Exposure tramite Motori di Ricerca
+## `google-dorks/` - Sensitive data exposure tramite motori di ricerca
 
 **ID Finding:** `OSINT-003` | **Severity:** `Variabile (Basso / Alto)`
 
@@ -86,7 +86,7 @@ Target: `nasa.gov` (programma pubblico di divulgazione, solo scopo didattico).
 
 ---
 
-## `user-enumeration/` - Identity Correlation e User Tracking
+## `user-enumeration/` - Identity correlation e user tracking
 
 **ID Finding:** `OSINT-004` | **Severity:** `Basso`
 
@@ -96,7 +96,7 @@ Attenzione critica: i falsi positivi sono frequenti. Ogni hit va verificato manu
 
 ---
 
-## `osint-frameworks/` - Automazione e Correlazione OSINT
+## `osint-frameworks/` - Automazione e correlazione OSINT
 
 **ID Finding:** `OSINT-005` | **Severity:** `Variabile (Informativo / Alto)`
 
@@ -106,7 +106,7 @@ Documentazione completa dei tre framework, del workflow combinato e della gestio
 
 ---
 
-## `code-secret-leakage/` - Segreti nei Repository Pubblici
+## `code-secret-leakage/` - Segreti nei repository pubblici
 
 **ID Finding:** `OSINT-006` | **Severity:** `Variabile (Alto / Critico)`
 
@@ -165,47 +165,47 @@ Il README dedicato copre il GitHub/GitLab dorking manuale, la scansione automati
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `h8mail` | Breach data | CLI (Python) | Ricerca automatizzata credenziali in breach |
-| `HaveIBeenPwned` | Breach data | Web | Validazione manuale su fonte autorevole |
-| `theHarvester` | Email/Subdomain harvesting | CLI | Aggregazione email e sottodomini da motori di ricerca |
-| `Sherlock` | Username enumeration | CLI (Python) | Identity correlation su 300+ piattaforme |
-| Google GHDB | Sensitive data exposure | Web | Google Hacking Database - query pre-costruite |
-| `Maltego` | OSINT aggregator | GUI | Visualizzazione grafo OSINT (community edition gratuita) |
-| `SpiderFoot` | OSINT aggregator | CLI/Web | Automazione OSINT multi-fonte (open source) |
-| `recon-ng` | OSINT framework | CLI (modulare) | Workflow OSINT ripetibile con database e reportistica |
-| `gitleaks` | Secret scanning | CLI | Scansione della history git alla ricerca di segreti |
-| `TruffleHog` | Secret scanning | CLI | Scansione repository con verifica di validita dei segreti |
+| `h8mail` | breach data | cli (python) | ricerca automatizzata credenziali in breach |
+| `HaveIBeenPwned` | breach data | web | validazione manuale su fonte autorevole |
+| `theHarvester` | email/subdomain harvesting | cli | aggregazione email e sottodomini da motori di ricerca |
+| `Sherlock` | username enumeration | cli (python) | identity correlation su 300+ piattaforme |
+| google ghdb | sensitive data exposure | web | google hacking database - query pre-costruite |
+| `Maltego` | osint aggregator | gui | visualizzazione grafo osint (community edition gratuita) |
+| `SpiderFoot` | osint aggregator | cli/web | automazione osint multi-fonte (open source) |
+| `recon-ng` | osint framework | cli (modulare) | workflow osint ripetibile con database e reportistica |
+| `gitleaks` | secret scanning | cli | scansione della history git alla ricerca di segreti |
+| `TruffleHog` | secret scanning | cli | scansione repository con verifica di validita dei segreti |
 
 > **Tool moderno consigliato:** `SpiderFoot HX` - rispetto al workflow manuale, automatizza la correlazione tra email, domini, breach e social media in un unico grafo navigabile. Per ambienti enterprise sostituisce ore di ricerca manuale.
 
 ---
 
-## Registro Finding
+## Registro finding
 
-| ID | Descrizione | Severity | File |
+| id | descrizione | severity | file |
 | :--- | :--- | :---: | :--- |
-| `OSINT-001` | Credenziali target identificate in data breach pubblici | `Alto` | `breach-data/README.md` |
-| `OSINT-002` | Esposizione email su dominio personale - superficie minima | `Informativo` | `email-harvesting/README.md` |
-| `OSINT-003` | Documenti e pannelli login indicizzati su nasa.gov | `Variabile (Basso / Alto)` | `google-dorks/README.md` |
-| `OSINT-004` | Identity correlation tramite username riutilizzato | `Basso` | `user-enumeration/README.md` |
-| `OSINT-005` | Correlazione OSINT automatica del target via framework multi-fonte | `Variabile (Informativo / Alto)` | `osint-frameworks/README.md` |
-| `OSINT-006` | Segreti (credenziali, API key, chiavi) esposti in repository pubblici | `Variabile (Alto / Critico)` | `code-secret-leakage/README.md` |
+| `OSINT-001` | credenziali target identificate in data breach pubblici | `Alto` | `breach-data/README.md` |
+| `OSINT-002` | esposizione email su dominio personale - superficie minima | `Informativo` | `email-harvesting/README.md` |
+| `OSINT-003` | documenti e pannelli login indicizzati su nasa.gov | `Variabile (Basso / Alto)` | `google-dorks/README.md` |
+| `OSINT-004` | identity correlation tramite username riutilizzato | `Basso` | `user-enumeration/README.md` |
+| `OSINT-005` | correlazione osint automatica del target via framework multi-fonte | `Variabile (Informativo / Alto)` | `osint-frameworks/README.md` |
+| `OSINT-006` | segreti (credenziali, api key, chiavi) esposti in repository pubblici | `Variabile (Alto / Critico)` | `code-secret-leakage/README.md` |
 
 ---
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Info: Credentials | `T1589.001` | Ricerca credenziali compromesse su HIBP e h8mail (OSINT-001) |
-| Reconnaissance | Gather Victim Identity Info: Email Addresses | `T1589.002` | Harvesting email con theHarvester e Google Dorks sul dominio target (OSINT-002, OSINT-005) |
-| Reconnaissance | Search Open Websites/Domains: Search Engines | `T1593.002` | Google Dorking e GitHub dorking per file, pannelli login, segreti esposti (OSINT-003, OSINT-006) |
-| Reconnaissance | Gather Victim Identity Info: Employee Names | `T1589.003` | Correlazione identita tramite username con Sherlock su 300+ piattaforme (OSINT-004) |
-| Reconnaissance | Search Open Websites/Domains: Social Media | `T1593.001` | Enumerazione presenza social del target per profilazione e Social Engineering (OSINT-004, OSINT-005) |
-| Reconnaissance | Search Open Technical Databases | `T1596` | Correlazione automatica multi-fonte e ricerca di segreti nei repository di codice pubblici (OSINT-005, OSINT-006) |
-| Credential Access | Unsecured Credentials: Credentials In Files | `T1552.001` | Estrazione di credenziali e chiavi cloud dai file esposti nella history git dei repository (OSINT-006) |
+| reconnaissance | gather victim identity info: credentials | `T1589.001` | ricerca credenziali compromesse su hibp e h8mail (OSINT-001) |
+| reconnaissance | gather victim identity info: email addresses | `T1589.002` | harvesting email con theharvester e google dorks sul dominio target (OSINT-002, OSINT-005) |
+| reconnaissance | search open websites/domains: search engines | `T1593.002` | google dorking e github dorking per file, pannelli login, segreti esposti (OSINT-003, OSINT-006) |
+| reconnaissance | gather victim identity info: employee names | `T1589.003` | correlazione identita tramite username con sherlock su 300+ piattaforme (OSINT-004) |
+| reconnaissance | search open websites/domains: social media | `T1593.001` | enumerazione presenza social del target per profilazione e social engineering (OSINT-004, OSINT-005) |
+| reconnaissance | search open technical databases | `T1596` | correlazione automatica multi-fonte e ricerca di segreti nei repository di codice pubblici (OSINT-005, OSINT-006) |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | estrazione di credenziali e chiavi cloud dai file esposti nella history git dei repository (OSINT-006) |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 02 - Endpoint Security & XDR (The Muscles)
+# 02 - Endpoint security & XDR (the muscles)
 
 > - **Phase:** Defense & Hardening - Detection & Automated Response (Endpoint)
 > - **Category:** Detection + Prevention - sensors and response on the endpoint
@@ -27,7 +27,7 @@ The positioning in the path: the endpoint agents are the sensors that generate t
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 02-endpoint-security-xdr (I Muscoli)/
@@ -42,7 +42,7 @@ The positioning in the path: the endpoint agents are the sensors that generate t
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [INPUT] Endpoint to protect (Linux/Windows/RPi)
@@ -69,41 +69,41 @@ The positioning in the path: the endpoint agents are the sensors that generate t
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `Wazuh` | Open source XDR | Platform | Endpoint detection, FIM, active response |
-| `Wazuh Agent` | Endpoint sensor | Agent | Telemetry and response on Linux/Windows/RPi |
-| `Suricata` | IDS | Integration | Correlated network detection in Wazuh |
-| `Sysmon` | Endpoint sensor | Agent (Win) | Detailed process telemetry |
-| `OSSEC` | HIDS | Alternative | The project Wazuh derives from (legacy) |
+| `Wazuh` | open source xdr | platform | endpoint detection, fim, active response |
+| `Wazuh Agent` | endpoint sensor | agent | telemetry and response on linux/windows/rpi |
+| `Suricata` | ids | integration | correlated network detection in wazuh |
+| `Sysmon` | endpoint sensor | agent (win) | detailed process telemetry |
+| `OSSEC` | hids | alternative | the project wazuh derives from (legacy) |
 
 > **Recommended modern tool:** `Wazuh` is the open source standard for EDR/XDR, with FIM, vulnerability detection, active response and MITRE integration. Pairing with `Sysmon` on the Windows endpoints brings the telemetry to commercial EDR level. Commercial alternatives: CrowdStrike Falcon, Microsoft Defender for Endpoint, SentinelOne.
 
 ---
 
-## Finding Registry - Endpoint Security & XDR Section
+## Finding registry - endpoint security & XDR section
 
-| ID | Description | Severity | Subfolder |
+| id | description | severity | subfolder |
 | :--- | :--- | :---: | :--- |
-| `DEF-003` | Wazuh FIM: detection of persistence, tampering of critical files and rootkits | `High` | `wazuh/threat-detection&active-response/` |
-| `DEF-004` | Wazuh Active Response: automatic containment (IP block) on alert | `High` | `wazuh/threat-detection&active-response/` |
+| `DEF-003` | wazuh fim: detection of persistence, tampering of critical files and rootkits | `High` | `wazuh/threat-detection&active-response/` |
+| `DEF-004` | wazuh active response: automatic containment (ip block) on alert | `High` | `wazuh/threat-detection&active-response/` |
 
 > The `installing&configuring/` and `suricata-integration/` files are setup/configuration guides (no finding ID, consistent with the convention for installation files).
 
 ---
 
-## MITRE ATT&CK Mapping - Aggregated
+## MITRE ATT&CK mapping - aggregated
 
 > Attack techniques **detected and contained** by the controls of the section.
 
-| Tactic (countered) | Technique | MITRE ID | Related Finding |
+| tactic (countered) | technique | mitre id | related finding |
 | :--- | :--- | :--- | :--- |
-| Persistence | Account Manipulation: SSH Authorized Keys | `T1098.004` | DEF-003 |
-| Persistence | Boot or Logon Autostart: Registry Run Keys | `T1547.001` | DEF-003 |
-| Defense Evasion | Rootkit | `T1014` | DEF-003 |
-| Credential Access | Brute Force | `T1110` | DEF-004 |
+| persistence | account manipulation: ssh authorized keys | `T1098.004` | DEF-003 |
+| persistence | boot or logon autostart: registry run keys | `T1547.001` | DEF-003 |
+| defense evasion | rootkit | `T1014` | DEF-003 |
+| credential access | brute force | `T1110` | DEF-004 |
 
 ---
 

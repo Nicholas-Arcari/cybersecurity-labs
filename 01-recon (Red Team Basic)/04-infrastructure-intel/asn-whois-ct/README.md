@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Perimeter Mapping: ASN, WHOIS e Certificate Transparency
+# Perimeter mapping: ASN, WHOIS e certificate transparency
 
 > - **Fase:** Reconnaissance - Infrastructure Intelligence (mappatura del perimetro)
 > - **Visibilita:** Zero - interrogazione di registri pubblici (RIR, WHOIS) e log di Certificate Transparency; nessun pacchetto inviato all'infrastruttura del target
@@ -29,7 +29,7 @@ asn-whois-ct/
 
 ---
 
-## ASN e WHOIS - Identificazione dei Range IP di Proprieta
+## ASN e WHOIS - identificazione dei range IP di proprieta
 
 **ID Finding:** `INTEL-005` | **Severity:** `Variabile (Informativo / Medio)`
 
@@ -86,7 +86,7 @@ I blocchi CIDR identificati diventano lo **scope IP** per la fase di network sca
 
 ---
 
-## Certificate Transparency - Sottodomini Nascosti dai Certificati
+## Certificate transparency - sottodomini nascosti dai certificati
 
 ### Contesto operativo
 
@@ -119,7 +119,7 @@ staging-admin.target.com                       <-- pannello admin interno
 
 > [Segnaposto screenshot: catturare la vista web di crt.sh per il dominio target con la lista dei certificati emessi e i relativi SAN.]
 
-### Analisi dei risultati / Finding documentato
+### Analisi dei risultati / finding documentato
 
 I sottodomini con nomi come `jenkins`, `dev`, `staging`, `admin`, `vpn`, `gitlab` sono i piu preziosi: rappresentano infrastruttura di supporto (CI/CD, ambienti non-produzione, pannelli di gestione) tipicamente meno protetta della produzione e non progettata per l'esposizione. Un certificato wildcard interno (`*.internal.target.com`) che compare nei log CT rivela addirittura la convenzione di naming della rete interna.
 
@@ -130,7 +130,7 @@ La lista prodotta e input diretto per:
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'enumerazione e stata eseguita su domini autorizzati a scopo didattico o inclusi in programmi bug bounty pubblici, senza inviare alcun pacchetto all'infrastruttura del target. Il confronto tra l'enumerazione via Certificate Transparency e la classica enumerazione DNS ha mostrato il valore dei log CT: emergono sottodomini di supporto (ambienti di sviluppo, pannelli, servizi interni) che la sola risoluzione DNS non rivela, perche la loro esistenza e tradita dai certificati emessi. La contropartita, verificata durante il lab, e che i log CT contengono anche certificati vecchi o revocati: una parte dei nomi trovati non e piu risolvibile o non punta piu a un host vivo, per cui e stato necessario un passo di validazione (risoluzione DNS e probing) prima di considerarli parte reale della superficie. La decisione principale e stata proprio nel filtraggio: distinguere i sottodomini attivi da quelli storici e dare priorita agli ambienti non-produzione e agli accessi remoti, che sono gli obiettivi a piu alto valore per le fasi successive.
 
@@ -140,7 +140,7 @@ Punti di attenzione tipici, da verificare durante l'esecuzione:
 - I certificati wildcard (`*.target.com`) nascondono i sottodomini specifici: in quel caso CT rivela l'esistenza del wildcard ma non i singoli host, che vanno cercati con altre tecniche.
 - crt.sh puo essere lento o rate-limitato su domini con migliaia di certificati: in quel caso preferire l'API di Censys o `subfinder` (che aggrega anche fonti CT).
 
-### Analisi Teorica
+### Analisi teorica
 
 Certificate Transparency nasce come contromisura difensiva: dopo casi di CA compromesse che emettevano certificati fraudolenti (es. DigiNotar 2011), Google ha imposto che ogni certificato affidabile sia registrato in log pubblici verificabili, cosi che un dominio possa accorgersi di certificati emessi a sua insaputa. Il side effect per la ricognizione e che questi stessi log rivelano l'intera struttura di sottodomini di un'organizzazione. E un esempio perfetto del principio per cui una misura di sicurezza (trasparenza dei certificati) crea una nuova superficie informativa sfruttabile in fase di recon.
 
@@ -182,15 +182,15 @@ Sul piano del routing, l'associazione ASN-prefissi si basa su BGP: gli annunci B
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `whois` | OSINT | CLI | Risoluzione IP/dominio a netname, ASN, contatti, CIDR |
-| `amass intel` | OSINT/ASN | CLI | Da nome org a ASN e range IP, aggregazione CT |
-| `crt.sh` | Certificate Transparency | Web / API | Enumerazione sottodomini dai log CT |
-| `ctfr` | Certificate Transparency | CLI (Python) | Enumerazione sottodomini via CT logs |
-| `subfinder` | Subdomain enum | CLI | Aggregazione multi-fonte (inclusa CT) di sottodomini |
-| `bgp.he.net` | ASN/BGP | Web | BGP Toolkit: prefissi, peer, grafo dell'AS |
-| `dnsx` / `httpx` | Validation | CLI | Validazione host vivi dai sottodomini trovati |
+| `whois` | osint | cli | risoluzione ip/dominio a netname, asn, contatti, cidr |
+| `amass intel` | osint/asn | cli | da nome org a asn e range ip, aggregazione ct |
+| `crt.sh` | certificate transparency | web / api | enumerazione sottodomini dai log ct |
+| `ctfr` | certificate transparency | cli (python) | enumerazione sottodomini via ct logs |
+| `subfinder` | subdomain enum | cli | aggregazione multi-fonte (inclusa ct) di sottodomini |
+| `bgp.he.net` | asn/bgp | web | bgp toolkit: prefissi, peer, grafo dell'as |
+| `dnsx` / `httpx` | validation | cli | validazione host vivi dai sottodomini trovati |
 
 > **Tool moderno consigliato:** `amass` (OWASP) integra in un unico tool l'intelligence ASN (`amass intel`), l'enumerazione da Certificate Transparency e la correlazione passiva DNS, sostituendo la combinazione di whois + crt.sh + tool separati. Per la sola CT, `subfinder -d target.com -all` e piu veloce e aggrega decine di fonti passive.
 
@@ -198,13 +198,13 @@ Sul piano del routing, l'associazione ASN-prefissi si basa su BGP: gli annunci B
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Network Info: IP Addresses | `T1590.005` | Identificazione dei blocchi CIDR di proprieta del target tramite WHOIS e amass intel (INTEL-005) |
-| Reconnaissance | Gather Victim Network Info: Network Topology | `T1590.004` | Ricostruzione del perimetro di rete tramite ASN e prefissi BGP annunciati (INTEL-005) |
-| Reconnaissance | Search Open Technical Databases: WHOIS | `T1596.002` | Interrogazione dei registri WHOIS dei RIR per associare IP, organizzazione e ASN (INTEL-005) |
-| Reconnaissance | Search Open Technical Databases: Digital Certificates | `T1596.003` | Enumerazione di sottodomini nascosti tramite i log di Certificate Transparency (INTEL-005) |
-| Reconnaissance | Gather Victim Network Info: DNS | `T1590.002` | Scoperta di sottodomini interni (vpn, dev, jenkins) dai Subject Alternative Name dei certificati (INTEL-005) |
+| reconnaissance | gather victim network info: ip addresses | `T1590.005` | identificazione dei blocchi cidr di proprieta del target tramite whois e amass intel (INTEL-005) |
+| reconnaissance | gather victim network info: network topology | `T1590.004` | ricostruzione del perimetro di rete tramite asn e prefissi bgp annunciati (INTEL-005) |
+| reconnaissance | search open technical databases: whois | `T1596.002` | interrogazione dei registri whois dei rir per associare ip, organizzazione e asn (INTEL-005) |
+| reconnaissance | search open technical databases: digital certificates | `T1596.003` | enumerazione di sottodomini nascosti tramite i log di certificate transparency (INTEL-005) |
+| reconnaissance | gather victim network info: dns | `T1590.002` | scoperta di sottodomini interni (vpn, dev, jenkins) dai subject alternative name dei certificati (INTEL-005) |
 
 ---
 

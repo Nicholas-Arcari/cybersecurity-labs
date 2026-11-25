@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Before exploiting AD CS you must know what is exposed. Enumeration collects the forest's CAs, the published
 certificate templates and their key properties: who can enroll (enrollment rights), whether the requester
@@ -28,7 +28,7 @@ would proceed blindly; with it, you know exactly which template is exploitable a
 if a template allows an arbitrary SAN to domain users, ESC8 if there is an HTTP Web Enrollment, and so on).
 It is a low-risk, high-value step, to perform as soon as a CA is detected.
 
-## Execution / Commands
+## Execution / commands
 
 ```bash
 # Certipy: full enumeration of CAs and templates, flagging ESC vulnerabilities
@@ -56,7 +56,7 @@ obtain a certificate to authenticate as Domain Admin. The real finding lives in 
 [ESC1](<../esc1-template-abuse/README.en.md>)), but enumeration is what makes it possible and must be
 documented as the starting point.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 AD CS publishes its configuration (CA, templates) in the AD configuration context, readable by domain users.
 This is consistent with the AD model (the structure is not secret), but it exposes all the information needed
@@ -65,7 +65,7 @@ to identify the misconfigurations. The ESC taxonomy (Schroeder & Christensen 202
 properties make a template or an endpoint abusable: enumeration is the practical application of that taxonomy
 to the real PKI data.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection.** LDAP queries targeted at the PKI container from unexpected accounts; execution of AD CS
 enumeration tools (characteristic request pattern).
@@ -76,11 +76,11 @@ vulnerable templates before an attacker; remove unused templates; restrict enrol
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `Certipy` | AD CS toolkit | CLI - Active | Enumeration and ESC classification (`find -vulnerable`) |
-| `Certify` | .NET AD CS tool | CLI - Active | AD CS enumeration from a Windows host |
-| `PSPKIAudit` | PowerShell audit | CLI - Active | PKI audit on the blue-team side |
+| `Certipy` | ad cs toolkit | cli - active | enumeration and esc classification (`find -vulnerable`) |
+| `Certify` | .net ad cs tool | cli - active | ad cs enumeration from a windows host |
+| `PSPKIAudit` | powershell audit | cli - active | pki audit on the blue-team side |
 
 ## Methodology notes
 
@@ -89,17 +89,17 @@ resulting ESC classification guides the choice of the abuse technique.
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Discovery | Account Discovery: Domain Account | `T1087.002` | Reading of the PKI configuration and enrollment rights via LDAP. |
-| Credential Access | Steal or Forge Authentication Certificates | `T1649` | Identification of abusable templates/endpoints to obtain certificates. |
+| discovery | account discovery: domain account | `T1087.002` | reading of the pki configuration and enrollment rights via ldap. |
+| credential access | steal or forge authentication certificates | `T1649` | identification of abusable templates/endpoints to obtain certificates. |
 
 ## Links to other modules
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
-| Domain account | AD CS enumeration | identifies the applicable ESC vectors |
-| AD CS enumeration | [ESC1](<../esc1-template-abuse/README.en.md>) / [ESC8](<../esc8-relay-adcs/README.en.md>) | indicates which abuse scenario to pursue |
+| domain account | ad cs enumeration | identifies the applicable esc vectors |
+| ad cs enumeration | [esc1](<../esc1-template-abuse/README.en.md>) / [esc8](<../esc8-relay-adcs/README.en.md>) | indicates which abuse scenario to pursue |
 
 ---
 

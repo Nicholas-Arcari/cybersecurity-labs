@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Kerbrute exploits a feature of Kerberos pre-authentication: when you send an AS-REQ for a user, the KDC
 responds differently depending on whether the user exists or not, even before verifying the password. This
@@ -33,7 +33,7 @@ attempts over a 30-minute window, try at most 3-4 passwords per window, spaced o
 to favor a few high-probability passwords (e.g., `CompanyName<Year>!`, `Season<Year>!`) across the whole
 list, rather than many passwords against a few accounts.
 
-## Execution / Commands
+## Execution / commands
 
 ### User enumeration
 
@@ -70,7 +70,7 @@ enumeration, Kerberoasting, and the escalation chain). The real finding is class
 credential found leaves the finding at `Low` (enumeration only); a valid credential, especially of a
 privileged account, raises the severity.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 User enumeration exploits an information leak in Kerberos pre-auth: the KDC distinguishes "nonexistent user"
 (KDC_ERR_C_PRINCIPAL_UNKNOWN) from "existing user, pre-auth required" (KDC_ERR_PREAUTH_REQUIRED) before any
@@ -80,7 +80,7 @@ common password is high, while the cost per account (one attempt) stays below th
 defense combines sensible lockout policies, unpredictable passwords (against spraying) and monitoring of
 pre-auth patterns (against enumeration).
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection.** Many AS-REQs for different usernames from the same source in a short time (enumeration);
 Event ID 4768/4771 on many accounts within the same time window (spraying); a single failed pre-auth attempt
@@ -92,11 +92,11 @@ patterns; disabling unused accounts that widen the surface.
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > Applies to the "spraying successful" outcome (severity High).
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** no credentials; a list of valid usernames obtained via enumeration.
 
@@ -127,7 +127,7 @@ the whole AD chain starts.
 **Typical monetization vectors:** ransomware and exfiltration downstream of domain control; resale of the
 initial access.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** spraying patterns (one attempt across many accounts); mass AS-REQ enumeration.
 
@@ -146,11 +146,11 @@ effective defense is making passwords unguessable (filters and MFA), not just lo
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `kerbrute` | Kerberos pre-auth | CLI - Active | User enumeration and password spraying via Kerberos |
-| `NetExec` (`nxc`) | AD/SMB toolkit | CLI - Active | Password spraying over SMB/LDAP/WinRM, with lockout control |
-| `kerbrute` + user wordlist | - | - | Lists such as SecLists for common usernames and corporate patterns |
+| `kerbrute` | kerberos pre-auth | cli - active | user enumeration and password spraying via kerberos |
+| `NetExec` (`nxc`) | ad/smb toolkit | cli - active | password spraying over smb/ldap/winrm, with lockout control |
+| `kerbrute` + user wordlist | - | - | lists such as seclists for common usernames and corporate patterns |
 
 ## Methodology notes
 
@@ -160,18 +160,18 @@ can lock accounts and must be avoided even in a lab, to build the correct habit.
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Discovery | Account Discovery: Domain Account | `T1087.002` | Enumeration of valid usernames via Kerberos pre-auth. |
-| Credential Access | Brute Force: Password Spraying | `T1110.003` | Attempt of one common password against many accounts. |
+| discovery | account discovery: domain account | `T1087.002` | enumeration of valid usernames via kerberos pre-auth. |
+| credential access | brute force: password spraying | `T1110.003` | attempt of one common password against many accounts. |
 
 ## Links to other modules
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
 | [domain-enumeration](<../domain-enumeration/README.en.md>) | kerbrute spraying | the lockout policy read there determines the safe dosing |
-| kerbrute (obtained credential) | [BloodHound](<../bloodhound/README.en.md>) / whole module | provides the initial domain foothold |
-| Password spraying | [05-social-engineering](<../../../05-social-engineering/README.en.md>) | alternative/complement to phishing for initial access |
+| kerbrute (obtained credential) | [bloodhound](<../bloodhound/README.en.md>) / whole module | provides the initial domain foothold |
+| password spraying | [05-social-engineering](<../../../05-social-engineering/README.en.md>) | alternative/complement to phishing for initial access |
 
 ---
 

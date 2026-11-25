@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Kubernetes Attacks - Exposed and Misconfigured Clusters
+# Kubernetes attacks - exposed and misconfigured clusters
 
 > - **Phase:** Cloud Security - Kubernetes Attack (Orchestration)
 > - **Visibility:** Medium - the API server calls are in the cluster's audit log (if enabled); kube-hunter generates detectable scanning traffic
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Kubernetes (K8s) is the operating system of the modern cloud: it orchestrates thousands of containers on clusters of nodes, managing deployments, networking, storage and secrets. This centrality makes it a very high-value target: compromising the cluster means controlling all the workloads running on it. It is also a vast and complex attack surface, with many exposed components and many configurations to get wrong.
 
@@ -22,7 +22,7 @@ A second vector starts from the inside: a compromised pod (via an app RCE) conta
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 K8s-attacks/
@@ -32,15 +32,15 @@ K8s-attacks/
 
 ---
 
-## Exploitation of an Exposed Cluster
+## Exploitation of an exposed cluster
 
 **Finding ID:** `CLOUD-007` | **Severity:** `Critical` (unauthorized access to the control plane; exposed etcd/API = secret theft and control of the cluster)
 
-### Operational Context
+### Operational context
 
 A K8s cluster exposes several network services. If unprotected (authentication, authorization, network policy), they become access paths: the API server with anonymous access, the etcd without authentication, the open kubelet. kube-hunter automates the discovery of these exposures; kubectl and etcdctl exploit them.
 
-### PoC - Phase 1: Reconnaissance with kube-hunter
+### PoC - phase 1: reconnaissance with kube-hunter
 
 ```Bash
 # kube-hunter looks for exposed K8s components and known vulnerabilities
@@ -54,7 +54,7 @@ kube-hunter --remote <cluster-ip>
 [+] Kubelet API                   open at <node>:10250
 ```
 
-### PoC - Phase 2: Anonymous access to the API server
+### PoC - phase 2: anonymous access to the API server
 
 ```Bash
 # If anonymous access is enabled: cluster enumeration without credentials
@@ -67,7 +67,7 @@ kube-system  etcd-master          Running
 production   web-app-7d9f...      Running                  <-- workloads enumerated (CLOUD-007)
 ```
 
-### PoC - Phase 3: Secret theft from exposed etcd
+### PoC - phase 3: secret theft from exposed etcd
 
 ```Bash
 # etcd contains all the cluster state, including the Secrets in cleartext
@@ -81,7 +81,7 @@ data: { "password": "UGFzc3cwcmQh" }   <-- DB credentials in cleartext (CLOUD-00
 # exposed etcd = all the cluster's secrets compromised
 ```
 
-### PoC - Phase 4: Escalation from a compromised pod
+### PoC - phase 4: escalation from a compromised pod
 
 ```Bash
 # From a compromised pod: the service account token is mounted by default
@@ -106,7 +106,7 @@ secrets      get,list         <-- can read all the secrets (CLOUD-007)
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The etcd exposure was the most impressive discovery for its totality. Kubernetes Secrets are often perceived as "secure" because they are managed by the cluster, but in etcd - without encryption at rest, which is not active by default - they are only base64, that is, in cleartext. An etcd reachable without authentication delivers every secret of the cluster in one command. This made concrete that "Secret" in Kubernetes does not mean "encrypted": it means "object of type Secret", a distinction that changes everything on the defensive plane.
 
@@ -116,7 +116,7 @@ The service account token vector linked the attack to the rest of the path. A po
 
 ---
 
-## Theoretical Analysis: Complexity as an Attack Surface
+## Theoretical analysis: complexity as an attack surface
 
 Kubernetes exemplifies a recurring principle in the cloud: complexity is itself a vulnerability. A cluster has dozens of components, hundreds of configuration objects, an authorization system (RBAC) that is granular but intricate, and multiple network layers. Each element is configurable securely, but the space of configurations is so vast that error becomes probable. Security does not depend on a single control but on the simultaneous correctness of many, and one exposed component is enough to compromise the whole.
 
@@ -126,11 +126,11 @@ The service account vector, finally, shows the transmission of trust in complex 
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > Attacker and defender perspectives in a real engagement.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** access to the control plane of a K8s cluster (via anonymous API, exposed etcd or over-privileged token) (CLOUD-007).
 
@@ -154,7 +154,7 @@ Control of the cluster + cloud pivot (the Secrets contain cloud credentials)
 
 **Potential impact:** control of a K8s cluster is equivalent to control of all the workloads it orchestrates - their apps, their data, their secrets. The stolen Secrets frequently contain credentials toward other systems (databases, cloud providers, registries), making the cluster a springboard toward the entire infrastructure. The ability to deploy arbitrary pods gives code execution on every node, and the abuse of the resources (cryptomining on clusters) is a common monetization vector.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** the API server's audit log (if enabled) records the anomalous calls; Falco detects suspicious behaviors in the pods; kube-hunter traffic and calls to etcd/kubelet from unexpected sources are indicators.
 
@@ -174,32 +174,32 @@ Control of the cluster + cloud pivot (the Secrets contain cloud credentials)
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `kubectl` | K8s CLI | Official | Interaction with the cluster's API |
-| `kube-hunter` | Recon/scanner | Offensive | Discovery of exposed components and vulnerabilities |
-| `etcdctl` | etcd CLI | Offensive/Admin | Direct access to etcd (Secret theft if exposed) |
-| `kube-bench` | CIS auditing | Defensive | CIS verification of the cluster (`../K8s-auditing/`) |
-| `Falco` | Runtime security | Defensive | Runtime detection of anomalous behaviors |
-| `Peirates` | Exploitation | Offensive | Post-exploitation framework for K8s |
+| `kubectl` | k8s cli | official | interaction with the cluster's api |
+| `kube-hunter` | recon/scanner | offensive | discovery of exposed components and vulnerabilities |
+| `etcdctl` | etcd cli | offensive/admin | direct access to etcd (secret theft if exposed) |
+| `kube-bench` | cis auditing | defensive | cis verification of the cluster (`../K8s-auditing/`) |
+| `Falco` | runtime security | defensive | runtime detection of anomalous behaviors |
+| `Peirates` | exploitation | offensive | post-exploitation framework for k8s |
 
 > **Recommended modern tool:** `kube-hunter` for the offensive reconnaissance, `Peirates` for the post-exploitation. Defensively, `kube-bench` for the CIS audit and `Falco` for the runtime detection. The offensive/defensive symmetry is strong: kube-hunter finds what kube-bench helps to correct.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
 > Reference: MITRE ATT&CK for Containers.
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Access to the cluster via exposed API/etcd/kubelet (CLOUD-007) |
-| Credential Access | Unsecured Credentials: Container API | `T1552.007` | Theft of the tokens/Secrets from the API or etcd (CLOUD-007) |
-| Discovery | Container and Resource Discovery | `T1613` | Enumeration of pods, namespaces, Secrets of the cluster |
-| Execution | Deploy Container | `T1610` | Deploy of malicious pods to execute code on the nodes |
-| Privilege Escalation | Valid Accounts / RBAC abuse | `T1078` | Escalation via over-privileged service account |
+| initial access | exploit public-facing application | `T1190` | access to the cluster via exposed api/etcd/kubelet (CLOUD-007) |
+| credential access | unsecured credentials: container api | `T1552.007` | theft of the tokens/secrets from the api or etcd (CLOUD-007) |
+| discovery | container and resource discovery | `T1613` | enumeration of pods, namespaces, secrets of the cluster |
+| execution | deploy container | `T1610` | deploy of malicious pods to execute code on the nodes |
+| privilege escalation | valid accounts / rbac abuse | `T1078` | escalation via over-privileged service account |
 
 ---
 

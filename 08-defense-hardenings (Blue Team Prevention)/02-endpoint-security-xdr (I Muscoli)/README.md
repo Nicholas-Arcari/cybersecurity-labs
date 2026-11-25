@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 02 - Endpoint Security & XDR (I Muscoli)
+# 02 - Endpoint security & XDR (i muscoli)
 
 > - **Fase:** Defense & Hardening - Detection & Automated Response (Endpoint)
 > - **Categoria:** Detection + Prevention - sensori e risposta sull'endpoint
@@ -71,39 +71,39 @@ Il posizionamento nel percorso: gli agenti endpoint sono i sensori che generano 
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Wazuh` | XDR open source | Piattaforma | Detection endpoint, FIM, active response |
-| `Wazuh Agent` | Endpoint sensor | Agent | Telemetria e risposta su Linux/Windows/RPi |
-| `Suricata` | IDS | Integrazione | Detection di rete correlata in Wazuh |
-| `Sysmon` | Endpoint sensor | Agent (Win) | Telemetria di processo dettagliata |
-| `OSSEC` | HIDS | Alternativa | Il progetto da cui Wazuh deriva (legacy) |
+| `Wazuh` | xdr open source | piattaforma | detection endpoint, fim, active response |
+| `Wazuh Agent` | endpoint sensor | agent | telemetria e risposta su linux/windows/rpi |
+| `Suricata` | ids | integrazione | detection di rete correlata in wazuh |
+| `Sysmon` | endpoint sensor | agent (win) | telemetria di processo dettagliata |
+| `OSSEC` | hids | alternativa | il progetto da cui wazuh deriva (legacy) |
 
 > **Tool moderno consigliato:** `Wazuh` e lo standard open source per EDR/XDR, con FIM, rilevamento vulnerabilita, active response e integrazione MITRE. L'abbinamento con `Sysmon` sugli endpoint Windows porta la telemetria a livello EDR commerciale. Alternative commerciali: CrowdStrike Falcon, Microsoft Defender for Endpoint, SentinelOne.
 
 ---
 
-## Registro Finding - Sezione Endpoint Security & XDR
+## Registro finding - sezione endpoint security & XDR
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `DEF-003` | Wazuh FIM: rilevamento di persistenza, tampering di file critici e rootkit | `Alto` | `wazuh/threat-detection&active-response/` |
-| `DEF-004` | Wazuh Active Response: contenimento automatico (blocco IP) su alert | `Alto` | `wazuh/threat-detection&active-response/` |
+| `DEF-003` | wazuh fim: rilevamento di persistenza, tampering di file critici e rootkit | `Alto` | `wazuh/threat-detection&active-response/` |
+| `DEF-004` | wazuh active response: contenimento automatico (blocco ip) su alert | `Alto` | `wazuh/threat-detection&active-response/` |
 
 > I file `installing&configuring/` e `suricata-integration/` sono guide di setup/configurazione (nessun finding ID, coerentemente con la convenzione dei file di installazione).
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
 > Tecniche d'attacco **rilevate e contenute** dai controlli della sezione.
 
-| Tattica (contrastata) | Tecnica | ID MITRE | Finding Correlato |
+| tattica (contrastata) | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Persistence | Account Manipulation: SSH Authorized Keys | `T1098.004` | DEF-003 |
-| Persistence | Boot or Logon Autostart: Registry Run Keys | `T1547.001` | DEF-003 |
-| Defense Evasion | Rootkit | `T1014` | DEF-003 |
-| Credential Access | Brute Force | `T1110` | DEF-004 |
+| persistence | account manipulation: ssh authorized keys | `T1098.004` | DEF-003 |
+| persistence | boot or logon autostart: registry run keys | `T1547.001` | DEF-003 |
+| defense evasion | rootkit | `T1014` | DEF-003 |
+| credential access | brute force | `T1110` | DEF-004 |
 
 ---
 

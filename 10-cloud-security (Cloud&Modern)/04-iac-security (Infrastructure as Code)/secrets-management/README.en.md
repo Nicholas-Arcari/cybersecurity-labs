@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Secrets Management - Hardcoded Secrets and HashiCorp Vault
+# Secrets management - hardcoded secrets and HashiCorp vault
 
 > - **Phase:** Cloud Security - Secrets Management (IaC & Supply Chain)
 > - **Category:** Offensive (discovery) + Defensive (management with Vault)
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Hardcoded secrets are one of the most widespread and persistent vulnerabilities in modern infrastructure: API keys, database passwords, cloud tokens written directly in the code, in the configuration files or in the Infrastructure as Code (Terraform). The problem is aggravated by versioning: a secret committed in git remains in the repository's history even if removed in a subsequent commit, and anyone with access to the repo (or a fork/clone of it) can recover it. It is the same vector seen in `01-recon` (code secret leakage) and in `07-post-exploitation` (credentials in files), here addressed from the management point of view.
 
@@ -22,7 +22,7 @@ The principle is that secrets must never live in the code. Code describes logic;
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 secrets-management/
@@ -32,15 +32,15 @@ secrets-management/
 
 ---
 
-## Secret Discovery and Management with Vault
+## Secret discovery and management with vault
 
 **Finding ID:** `CLOUD-009` | **Severity:** `High` (hardcoded secrets exposed in the code/git history; credentials directly usable by anyone with access to the repository)
 
-### Operational Context
+### Operational context
 
 The first step, both for the attacker and the defender, is to discover the secrets. gitleaks and trufflehog scan the code and - crucially - the entire git history, where "removed" secrets survive. The defensive solution is not just to remove them but to change architecture: move the secrets to Vault and reference them at runtime.
 
-### PoC - Secret discovery (gitleaks)
+### PoC - secret discovery (gitleaks)
 
 ```Bash
 # Scan of the repository and its entire git history
@@ -55,7 +55,7 @@ Commit:      a3f9c1  (3 months ago, "removed" in the next commit)   <-- still in
 Rule:        aws-access-token
 ```
 
-### PoC - The problem: hardcoded secret in IaC
+### PoC - the problem: hardcoded secret in IaC
 
 ```HCL
 # terraform/main.tf - ANTIPATTERN: cleartext secret in the code
@@ -65,7 +65,7 @@ resource "aws_db_instance" "prod" {
 }
 ```
 
-### PoC - The solution: dynamic secrets with Vault
+### PoC - the solution: dynamic secrets with vault
 
 ```Bash
 # Vault generates dynamic, short-lived database credentials, on demand
@@ -95,7 +95,7 @@ data "vault_database_secret" "db" {
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The most instructive discovery was the persistence of the secrets in the git history. I had "removed" a key from a file and committed the removal, believing the problem solved; gitleaks found it anyway, in the previous commit. This made concrete a principle I had encountered in the recon module: git does not forget. A committed secret is compromised forever, regardless of the subsequent commits, and the only correct response is to rotate it - not to remove it and hope.
 
@@ -105,7 +105,7 @@ The reflection was on the inevitability of human error. No one hardcodes a secre
 
 ---
 
-## Theoretical Analysis: The Secret as Data, not as Code
+## Theoretical analysis: the secret as data, not as code
 
 The conceptual error at the root of hardcoded secrets is treating sensitive data as if it were code. Code describes logic and is made to be versioned, shared, inspected; a secret is confidential data that requires the opposite - access control, rotation, audit, confidentiality. Putting them in the same file means applying to the secret the properties of code (versioned, shared, permanent in git), which are exactly the wrong ones for a secret. The separation between code and secrets is not a convention but a necessity deriving from their opposite nature.
 
@@ -115,11 +115,11 @@ The link with the rest of the path is direct and recurring. Hardcoded secrets ar
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > Attacker and defender perspectives.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Projected kill chain:**
 
@@ -138,7 +138,7 @@ Compromise of the cloud account
 
 **Potential impact:** a single hardcoded secret in a repository (especially if public or exposed) is often the entry point to a complete cloud compromise. The pattern "AWS key on GitHub, account compromised in minutes" is documented extensively: automated bots scan the public repositories in real time looking for exactly these secrets. The link with CLOUD-001 (IAM) is direct: the leaked key is the starting point of the escalation.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** continuous scanning of the repositories (gitleaks/trufflehog in CI/CD and on the existing repos); monitoring of the credential use (CloudTrail) for secrets that appear used from anomalous contexts.
 
@@ -154,34 +154,34 @@ Compromise of the cloud account
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `gitleaks` | Secret scanner | Defensive/Offensive | Scanning of code and git history for secrets |
-| `trufflehog` | Secret scanner | Defensive/Offensive | Discovery of secrets with validity verification |
-| `HashiCorp Vault` | Secrets manager | Defensive | Centralized store and dynamic secrets |
-| `AWS Secrets Manager` | Secrets manager | Defensive | Native AWS secrets management with rotation |
-| `Azure Key Vault` | Secrets manager | Defensive | Native Azure secrets management |
-| `git-secrets` | Pre-commit hook | Defensive | Blocking of secrets before the commit |
+| `gitleaks` | secret scanner | defensive/offensive | scanning of code and git history for secrets |
+| `trufflehog` | secret scanner | defensive/offensive | discovery of secrets with validity verification |
+| `HashiCorp Vault` | secrets manager | defensive | centralized store and dynamic secrets |
+| `AWS Secrets Manager` | secrets manager | defensive | native aws secrets management with rotation |
+| `Azure Key Vault` | secrets manager | defensive | native azure secrets management |
+| `git-secrets` | pre-commit hook | defensive | blocking of secrets before the commit |
 
 > **Recommended modern tool:** `gitleaks`/`trufflehog` for the scanning (in CI/CD and pre-commit), `HashiCorp Vault` for the centralized management with dynamic secrets. The native secrets managers (AWS/Azure/GCP) are excellent alternatives integrated with the provider. The common principle: secrets out of the code, short-lived, with audit.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Unsecured Credentials: Credentials In Files | `T1552.001` | Hardcoded secrets in code/IaC (CLOUD-009) |
-| Credential Access | Unsecured Credentials: Credentials in Repositories | `T1552.008` | Secrets in the git history of the repositories (CLOUD-009) |
-| Reconnaissance | Search Open Technical Databases / Repos | `T1596` | Scanning of the repositories for exposed secrets |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | Use of the leaked secret to access the cloud |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | hardcoded secrets in code/iac (CLOUD-009) |
+| credential access | unsecured credentials: credentials in repositories | `T1552.008` | secrets in the git history of the repositories (CLOUD-009) |
+| reconnaissance | search open technical databases / repos | `T1596` | scanning of the repositories for exposed secrets |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | use of the leaked secret to access the cloud |
 
-| Defensive countermeasure (D3FEND) | D3FEND ID | Application |
+| defensive countermeasure (d3fend) | d3fend id | application |
 | :--- | :--- | :--- |
-| Credential Rotation | `D3-CR` | Rotation of the compromised secrets / short-lived dynamic |
-| File Analysis | `D3-FA` | Scanning of the code and the git history for secrets |
+| credential rotation | `D3-CR` | rotation of the compromised secrets / short-lived dynamic |
+| file analysis | `D3-FA` | scanning of the code and the git history for secrets |
 
 ---
 

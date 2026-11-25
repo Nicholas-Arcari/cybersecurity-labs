@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Pacu - AWS Exploitation Framework
+# Pacu - AWS exploitation framework
 
 > - **Fase:** Cloud Security - AWS Exploitation
 > - **Categoria:** Offensivo - il framework di post-exploitation per AWS
@@ -52,12 +52,12 @@ pacu
 
 ## Tool correlati
 
-| Tool | Ruolo | Relazione |
+| tool | ruolo | relazione |
 | :--- | :--- | :--- |
-| `Pacu` | Exploitation AWS | Questo strumento (offensivo) |
-| `enumerate-iam` | Permission enum | Recon rapido dei permessi |
-| `Prowler` / `ScoutSuite` | Audit difensivo | Trovano le stesse debolezze dal lato difesa |
-| `PMapper` | IAM graph | Analisi a grafo delle vie di escalation |
+| `Pacu` | exploitation aws | questo strumento (offensivo) |
+| `enumerate-iam` | permission enum | recon rapido dei permessi |
+| `Prowler` / `ScoutSuite` | audit difensivo | trovano le stesse debolezze dal lato difesa |
+| `PMapper` | iam graph | analisi a grafo delle vie di escalation |
 
 > **Tool moderno consigliato:** `Pacu` e lo standard per l'exploitation AWS. La sua simmetria difensiva sono `Prowler`, `ScoutSuite` e `PMapper`: gli stessi percorsi di privesc che Pacu sfrutta, questi tool li individuano per chiuderli. Usarli insieme copre attacco e difesa.
 
@@ -65,12 +65,12 @@ pacu
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione |
+| tattica | tecnica | id mitre | descrizione |
 | :--- | :--- | :--- | :--- |
-| Discovery | Cloud Infrastructure Discovery | `T1580` | Enumerazione automatizzata di permessi e risorse |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | Ricerca e sfruttamento delle vie di privesc IAM |
-| Persistence | Account Manipulation: Additional Cloud Credentials | `T1098.001` | Creazione di credenziali di persistenza |
-| Collection | Data from Cloud Storage | `T1530` | Esfiltrazione di bucket accessibili |
+| discovery | cloud infrastructure discovery | `T1580` | enumerazione automatizzata di permessi e risorse |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | ricerca e sfruttamento delle vie di privesc iam |
+| persistence | account manipulation: additional cloud credentials | `T1098.001` | creazione di credenziali di persistenza |
+| collection | data from cloud storage | `T1530` | esfiltrazione di bucket accessibili |
 
 ---
 

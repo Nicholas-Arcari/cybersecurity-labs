@@ -216,7 +216,7 @@ If not found, php and python modoules will be installed on first run
 ## Credits
 Some base codes and templates are from [htr-tech](https://github.com/htr-tech/zphisher), otp templates are from [ignitech](https://github.com/ignitech/AdvPhishing) and url masking is inspired from [jaykali](https://github.com/jaykali/maskphish)
 
-## All Credits goes to KasRoudra you can find his profiles from below links
+## All credits goes to KasRoudra you can find his profiles from below links
 
 - [![Github](https://img.shields.io/badge/Github-KasRoudra-purple?style=for-the-badge&logo=github)](https://github.com/KasRoudra)
 

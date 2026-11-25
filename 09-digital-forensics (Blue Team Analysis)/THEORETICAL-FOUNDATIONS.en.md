@@ -1,6 +1,6 @@
 > **English** | [Italiano](THEORETICAL-FOUNDATIONS.md)
 
-# Theoretical Foundations - Module 09: Digital Forensics
+# Theoretical foundations - module 09: digital forensics
 
 > - **Level:** Academic analysis (theoretical complement to the operational READMEs of the module)
 > - **Purpose:** Ground forensics in the order of volatility, the cryptographic integrity of evidence, the exchange principle and inverse inference from the present state to the past.
@@ -14,13 +14,13 @@ Digital forensics is the inferential reconstruction of a past event from its mat
 
 ---
 
-## 1. The Analyst and Anti-Analyst Model
+## 1. The analyst and Anti-Analyst model
 
 Module 09 has two opposing agents. The **forensic analyst** `F` aims to reconstruct the sequence of events `sigma = (e_1, ..., e_n)` that led the system from the initial state to the observed state, starting from the present traces alone. The **anti-analyst** (the attacker of module 07 in anti-forensics mode) aims to prevent, degrade or falsify such reconstruction. The tension between the two is played out on the integrity and the persistence of the traces: `F` wins if the traces are complete, intact and correctly interpreted; the anti-analyst wins if it can delete or alter them before they are preserved. Section 3.4 shows that immutability structurally shifts the balance in favor of `F`.
 
 ---
 
-## 2. Security and Evidence Properties at Stake
+## 2. Security and evidence properties at stake
 
 - **Integrity of the evidence:** the evidence must be demonstrably non-altered from acquisition to analysis. It is the property [Biba 1977] that cryptographic hashing guarantees (section 3.3).
 - **Authenticity and chain of custody:** it must be traceable who handled the evidence, when and how; an undocumented custody makes it inadmissible.
@@ -29,7 +29,7 @@ Module 09 has two opposing agents. The **forensic analyst** `F` aims to reconstr
 
 ---
 
-## 3. Theoretical Foundations
+## 3. Theoretical foundations
 
 ### 3.1 The exchange principle as an axiom of reconstructibility
 
@@ -53,7 +53,7 @@ Reconstructing `sigma` from the observed state is a problem of **inverse inferen
 
 ---
 
-## 4. Quantitative Analysis
+## 4. Quantitative analysis
 
 ### 4.1 Robustness of integrity and the birthday paradox
 
@@ -65,13 +65,13 @@ If `k` independent traces each support the same reconstruction hypothesis with a
 
 ---
 
-## 5. Literature Review
+## 5. Literature review
 
 The order of volatility and the acquisition best practices are codified by [Brezinski & Killalea 2002] (RFC 3227) and [Farmer & Venema 2005]. The physical limits of memory volatility are demonstrated by [Halderman et al. 2008]. The integrity property appealed to is by [Biba 1977]. The programmatic challenges and the maturation of the discipline are discussed by [Garfinkel 2010]. The analytical frame for the interpretation of the reconstructed intrusion is the Diamond Model [Caltagirone et al. 2013]. Locard's exchange principle (classic criminalistics) and the standard of scientific admissibility (in US law, the Daubert criterion) are cross-cutting foundational references appealed to as established principles.
 
 ---
 
-## 6. Limitations and Open Problems
+## 6. Limitations and open problems
 
 1. **Non-injectivity of reconstruction.** Since multiple sequences of events produce the same observed state (section 3.5), forensic reconstruction is intrinsically abductive and not deductive: there is always residual uncertainty, reducible but not zeroable by the convergence of sources. It is an epistemic limit, not a technological one.
 
@@ -81,7 +81,7 @@ The order of volatility and the acquisition best practices are codified by [Brez
 
 ---
 
-## 7. Synthesis and Connection to Practice
+## 7. Synthesis and connection to practice
 
 The `FOR-` findings of the module instantiate this framework: disk & memory forensics (FOR-001) applies the order of volatility of section 3.2, the cryptographic integrity of section 3.3 and the recovery of deleted artifacts as an example of the exchange principle of section 3.1; network forensics (FOR-002) is the independent source immune to a posteriori tampering (section 3.4) that strengthens the convergence of section 4.2. The chain of custody and the hash verification documented in the READMEs are the operational realizations of sections 3.3 and 2. The document provides the forensic practice with the theoretical justification of why the order of volatility, integrity and the multiplicity of sources are not formalities but conditions of validity of the result, and closes the conflict with module 07: what anti-forensics tries to destroy, the immutability of preservation retains, shifting the balance in favor of the analyst.
 

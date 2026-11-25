@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 02 - Social-Engineer Toolkit (SET)
+# 02 - Social-Engineer toolkit (SET)
 
 > - **Fase:** Social Engineering - Multi-Vector Attack Framework
 > - **Visibilita:** Variabile - da Media (website cloning genera traffico HTTP anomalo) ad Alta (email con payload triggera email gateway, PowerShell execution triggera EDR)
@@ -39,7 +39,7 @@ Nella kill chain, SET copre simultaneamente le fasi di Weaponization, Delivery e
 
 ---
 
-## `website-attack-vectors/` - Credential Harvester via Site Clone
+## `website-attack-vectors/` - Credential harvester via site clone
 
 **ID Finding:** `SE-003` | **Severity:** `Alto` (credenziali catturate in chiaro tramite pagina login clonata)
 
@@ -61,7 +61,7 @@ sudo setoolkit
 
 ---
 
-## `spear-phishing-vectors/` - Email con Payload Allegato
+## `spear-phishing-vectors/` - Email con payload allegato
 
 **ID Finding:** `SE-004` | **Severity:** `Alto` (payload .hta eseguito tramite email spear-phishing)
 
@@ -84,7 +84,7 @@ sudo setoolkit
 
 ---
 
-## `infectious-media-generator/` - Autorun USB Payload
+## `infectious-media-generator/` - Autorun USB payload
 
 **ID Finding:** `SE-005` | **Severity:** `Medio` (payload eseguito via autorun su supporto rimovibile)
 
@@ -105,7 +105,7 @@ sudo setoolkit
 
 ---
 
-## `powershell-attack-vectors/` - Reverse Shell Encoded
+## `powershell-attack-vectors/` - Reverse shell encoded
 
 **ID Finding:** `SE-006` | **Severity:** `Alto` (reverse shell PowerShell encoded bypassa execution policy)
 
@@ -157,42 +157,42 @@ sudo setoolkit
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `SET (setoolkit)` | SE framework | CLI - Menu interattivo | Framework multi-vettore: clone, spear-phishing, media, PowerShell |
-| `msfvenom` | Payload generator | CLI | Generazione payload custom per allegati SET |
-| `Metasploit` | Exploitation framework | CLI | Handler per reverse shell generate da SET |
-| `BeEF` | Browser exploitation | Web UI | Alternativa per attacchi client-side via hook JavaScript |
-| `HiddenEye` | Phishing tool | CLI - Python | Alternativa moderna a SET per website cloning |
+| `SET (setoolkit)` | se framework | cli - menu interattivo | framework multi-vettore: clone, spear-phishing, media, powershell |
+| `msfvenom` | payload generator | cli | generazione payload custom per allegati set |
+| `Metasploit` | exploitation framework | cli | handler per reverse shell generate da set |
+| `BeEF` | browser exploitation | web ui | alternativa per attacchi client-side via hook javascript |
+| `HiddenEye` | phishing tool | cli - python | alternativa moderna a set per website cloning |
 
 > **Tool moderno consigliato:** SET resta rilevante per la sua integrazione multi-vettore, ma per il solo credential harvesting `GoPhish` offre metriche superiori. Per payload delivery moderni, considerare le tecniche in `03-payload-delivery/` (HTML Smuggling, ISO+LNK) che bypassano i filtri attuali.
 
 ---
 
-## Registro Finding
+## Registro finding
 
-| ID | Descrizione | Severity | CVSS | Sottocartella |
+| id | descrizione | severity | cvss | sottocartella |
 | :--- | :--- | :---: | :---: | :--- |
-| `SE-003` | SET Website Attack: credential harvester via pagina login clonata, credenziali catturate in chiaro | `Alto` | 7.5 | `website-attack-vectors/` |
-| `SE-004` | SET Spear-Phishing: email con allegato .hta, stager PowerShell eseguito sulla vittima | `Alto` | 8.1 | `spear-phishing-vectors/` |
-| `SE-005` | SET Infectious Media: payload autorun.inf su USB, esecuzione al mount (ambienti legacy) | `Medio` | 5.3 | `infectious-media-generator/` |
-| `SE-006` | SET PowerShell Attack: reverse shell encoded Base64, bypass execution policy, esecuzione in-memory | `Alto` | 8.1 | `powershell-attack-vectors/` |
+| `SE-003` | set website attack: credential harvester via pagina login clonata, credenziali catturate in chiaro | `Alto` | 7.5 | `website-attack-vectors/` |
+| `SE-004` | set spear-phishing: email con allegato .hta, stager powershell eseguito sulla vittima | `Alto` | 8.1 | `spear-phishing-vectors/` |
+| `SE-005` | set infectious media: payload autorun.inf su usb, esecuzione al mount (ambienti legacy) | `Medio` | 5.3 | `infectious-media-generator/` |
+| `SE-006` | set powershell attack: reverse shell encoded base64, bypass execution policy, esecuzione in-memory | `Alto` | 8.1 | `powershell-attack-vectors/` |
 
 ---
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Obtain Capabilities: Tool | `T1588.002` | SE-003, SE-004, SE-005, SE-006 |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | SE-003 |
-| Initial Access | Phishing: Spearphishing Attachment | `T1566.001` | SE-004 |
-| Initial Access | Replication Through Removable Media | `T1091` | SE-005 |
-| Execution | User Execution: Malicious Link | `T1204.001` | SE-003 |
-| Execution | User Execution: Malicious File | `T1204.002` | SE-004, SE-005 |
-| Execution | Command and Scripting Interpreter: PowerShell | `T1059.001` | SE-006 |
-| Defense Evasion | Obfuscated Files or Information | `T1027` | SE-006 |
-| Credential Access | Input Capture: Web Portal Capture | `T1056.003` | SE-003 |
+| resource development | obtain capabilities: tool | `T1588.002` | SE-003, SE-004, SE-005, SE-006 |
+| initial access | phishing: spearphishing link | `T1566.002` | SE-003 |
+| initial access | phishing: spearphishing attachment | `T1566.001` | SE-004 |
+| initial access | replication through removable media | `T1091` | SE-005 |
+| execution | user execution: malicious link | `T1204.001` | SE-003 |
+| execution | user execution: malicious file | `T1204.002` | SE-004, SE-005 |
+| execution | command and scripting interpreter: powershell | `T1059.001` | SE-006 |
+| defense evasion | obfuscated files or information | `T1027` | SE-006 |
+| credential access | input capture: web portal capture | `T1056.003` | SE-003 |
 
 ---
 

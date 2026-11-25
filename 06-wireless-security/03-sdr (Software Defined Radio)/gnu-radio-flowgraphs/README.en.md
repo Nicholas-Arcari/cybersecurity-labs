@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# GNU Radio Flowgraphs - Custom Signal Processing
+# GNU radio flowgraphs - custom signal processing
 
 > - **Phase:** Wireless Security - Custom DSP & Signal Processing (Software Defined Radio)
 > - **Visibility:** Zero in reception; Medium in transmission (depends on the flowgraph)
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 GNU Radio is the reference signal processing (DSP) framework for Software Defined Radio. While GQRX visualizes, rtl_433 decodes known protocols and URH handles the common cases of reverse engineering (see `../signal-analysis/`), GNU Radio steps in when one needs to build a custom processing chain: non-standard modulations, complex protocols, real-time decoding, or the integration of multiple stages (filters, demodulators, decoders) in a tailored flow.
 
@@ -21,7 +21,7 @@ This subfolder does not document a specific finding: it is a methodological tool
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 gnu-radio-flowgraphs/
@@ -31,9 +31,9 @@ gnu-radio-flowgraphs/
 
 ---
 
-## Anatomy of a Reception Flowgraph
+## Anatomy of a reception flowgraph
 
-### Operational Context
+### Operational context
 
 A typical reception flowgraph for the analysis of a sub-GHz signal connects four stages: acquisition from the SDR, channel filtering, demodulation and output. Each block has configurable parameters (frequency, sample rate, filter bandwidth) that are adjusted based on the target signal.
 
@@ -72,9 +72,9 @@ The flowgraph, once built and validated, is reusable and parameterizable: the sa
 
 ---
 
-## When to Use GNU Radio instead of URH or rtl_433
+## When to use GNU radio instead of URH or rtl_433
 
-### Comparative Analysis
+### Comparative analysis
 
 The choice of tool depends on the nature of the signal and the objective:
 
@@ -86,7 +86,7 @@ The natural progression in an RF assessment is therefore: try rtl_433, then URH,
 
 ---
 
-## Lab Experience
+## Lab experience
 
 In the lab path, GNU Radio was the least used but the most formative tool. For the test devices (weather sensor, remotes), rtl_433 and URH were sufficient and GNU Radio would have been overkill. Its usefulness emerged in understanding what those tools do "under the hood": manually building an ASK demodulation flowgraph clarified concepts (decimation, channel filtering, bit slicing) that URH executes automatically but hides.
 
@@ -94,26 +94,26 @@ The learning curve is steep and tied to the fundamentals of signal processing, n
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `GNU Radio Companion` | DSP framework | GUI - Flowgraph | Visual construction of signal processing chains |
-| `gr-osmosdr` | SDR source block | Library | GNU Radio interface toward RTL-SDR, HackRF, other SDRs |
-| `Universal Radio Hacker` | Signal analyzer | GUI | Simpler alternative for most cases (see `../signal-analysis/`) |
-| `Python + NumPy/SciPy` | DSP scripting | Code | Programmatic signal processing for custom cases |
-| `inspectrum` | Signal visualizer | GUI | Preliminary visual analysis before building the flowgraph |
+| `GNU Radio Companion` | dsp framework | gui - flowgraph | visual construction of signal processing chains |
+| `gr-osmosdr` | sdr source block | library | gnu radio interface toward rtl-sdr, hackrf, other sdrs |
+| `Universal Radio Hacker` | signal analyzer | gui | simpler alternative for most cases (see `../signal-analysis/`) |
+| `Python + NumPy/SciPy` | dsp scripting | code | programmatic signal processing for custom cases |
+| `inspectrum` | signal visualizer | gui | preliminary visual analysis before building the flowgraph |
 
 > **Recommended modern tool:** for most assessments, `Universal Radio Hacker` covers the use cases with a fraction of the complexity of GNU Radio. Reserve GNU Radio for signals with non-standard modulations or the need for real-time processing. GNU Radio remains the academic and professional standard for DSP when flexibility is a priority.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Host Information | `T1592` | Construction of custom DSP chains to demodulate and analyze non-standard RF signals |
-| Credential Access | Network Sniffing | `T1040` | Signal processing to extract data from RF transmissions with custom protocols |
+| reconnaissance | gather victim host information | `T1592` | construction of custom dsp chains to demodulate and analyze non-standard rf signals |
+| credential access | network sniffing | `T1040` | signal processing to extract data from rf transmissions with custom protocols |
 
 ---
 

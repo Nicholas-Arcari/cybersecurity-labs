@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 10 - Encrypt Sensitive Data
+# 10 - Encrypt sensitive data
 
 > - **Phase:** System Setup - Data Protection & Encryption
 > - **Priority:** High - mandatory if the system contains engagement data or client reports
@@ -44,13 +44,13 @@ If you lose the laptop or it gets stolen, anyone can mount the disk and read all
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Pros | Cons |
+| tool | type | pros | cons |
 | :--- | :--- | :--- | :--- |
-| `LUKS` + `cryptsetup` | Partition encryption | Integrated in the Linux kernel, maximum performance | Requires dedicated partition, Linux-only format |
-| `VeraCrypt` | Encrypted volume (file or partition) | Cross-platform (Linux/Win/Mac), hidden volumes | Requires separate installation |
-| `GPG` | Single file encryption | Ideal for reports and text files | Not suitable for large volumes |
+| `LUKS` + `cryptsetup` | partition encryption | integrated in the linux kernel, maximum performance | requires dedicated partition, linux-only format |
+| `VeraCrypt` | encrypted volume (file or partition) | cross-platform (linux/win/mac), hidden volumes | requires separate installation |
+| `GPG` | single file encryption | ideal for reports and text files | not suitable for large volumes |
 
 ---
 

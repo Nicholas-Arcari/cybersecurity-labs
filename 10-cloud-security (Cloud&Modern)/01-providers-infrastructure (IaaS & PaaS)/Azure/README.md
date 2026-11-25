@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Azure - Enumerazione Entra ID e Abuso delle Managed Identity
+# Azure - enumerazione Entra ID e abuso delle managed identity
 
 > - **Fase:** Cloud Security - Azure (IaaS & PaaS)
 > - **Visibilita:** Media - le attivita su Entra ID e ARM sono registrate nei log di Azure (Sign-in, Activity, Audit); l'abuso di managed identity via IMDS e piu silenzioso
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Azure organizza l'identita attorno a **Entra ID** (l'ex Azure Active Directory), il che rende la sicurezza Azure profondamente legata ai concetti di Active Directory on-premise visti nel modulo 07 - ma trasposti nel cloud. Chi ha familiarita con l'enumerazione AD (utenti, gruppi, ruoli, relazioni) ritrova qui gli stessi principi, con BloodHound che diventa AzureHound per mappare i percorsi di attacco nel tenant.
 
@@ -32,7 +32,7 @@ Azure/
 
 ---
 
-## Enumerazione Entra ID e Abuso delle Managed Identity
+## Enumerazione Entra ID e abuso delle managed identity
 
 **ID Finding:** `CLOUD-003` | **Severity:** `Alto` (abuso di managed identity per ereditare privilegi; enumerazione di Entra ID per il percorso d'attacco nel tenant)
 
@@ -40,7 +40,7 @@ Azure/
 
 Due vettori si combinano. L'enumerazione di Entra ID (con AzureHound) mappa utenti, gruppi, ruoli e relazioni, rivelando i percorsi verso i privilegi elevati - come BloodHound per l'AD on-premise. L'abuso della managed identity parte da una risorsa compromessa: interrogando l'IMDS locale, si ottiene un token con i permessi dell'identita assegnata alla risorsa.
 
-### PoC - Furto del token della Managed Identity (da risorsa compromessa)
+### PoC - furto del token della managed identity (da risorsa compromessa)
 
 ```Bash
 # Da una VM Azure compromessa: richiesta di un token al metadata service (IMDS)
@@ -53,7 +53,7 @@ curl -s -H "Metadata: true" \
                                               <-- token della managed identity (CLOUD-003)
 ```
 
-### PoC - Uso del token e enumerazione dei permessi
+### PoC - uso del token e enumerazione dei permessi
 
 ```Bash
 # Il token eredita i ruoli della managed identity: enumerazione delle risorse accessibili
@@ -67,7 +67,7 @@ vm-managed-identity    Contributor    /subscriptions/.../rg-prod   <-- ruolo ecc
 # "Contributor" sull'intero resource group = controllo di tutte le risorse
 ```
 
-### PoC - Mappatura di Entra ID (AzureHound)
+### PoC - mappatura di Entra ID (AzureHound)
 
 ```Bash
 # AzureHound raccoglie i dati per BloodHound: percorsi di attacco nel tenant
@@ -84,7 +84,7 @@ azurehound -u user@tenant --tenant <id> list -o azure-data.json
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 La continuita con il modulo 07 (Active Directory) e stata la chiave di comprensione. Entra ID non e un mondo nuovo ma la trasposizione cloud dell'AD: gli stessi concetti di utenti, gruppi, ruoli e relazioni sfruttabili, con AzureHound che genera per BloodHound gli stessi grafi di attacco. Chi ha imparato a mappare un dominio AD ritrova qui il metodo, adattato alle API di Microsoft Graph e ARM. Questo ha reso l'apprendimento di Azure piu rapido del previsto.
 
@@ -92,7 +92,7 @@ L'abuso della managed identity e stato il concetto piu istruttivo perche mostra 
 
 ---
 
-## Analisi Teorica: La Fiducia Trasferita alla Risorsa
+## Analisi teorica: la fiducia trasferita alla risorsa
 
 Le managed identity risolvono un problema reale (le credenziali hardcoded) spostando la fiducia dall'utente alla risorsa: non e piu "questa persona con questa password", ma "questa VM, per il fatto di essere questa VM". E un modello elegante, ma sposta il rischio invece di eliminarlo. Il segreto non e piu nel codice (dove poteva trapelare), ma la sua sostituzione - l'identita legata alla risorsa - e accessibile a chiunque controlli la risorsa. Si scambia il rischio di leak del segreto con il rischio di compromissione della risorsa.
 
@@ -100,11 +100,11 @@ Questo definisce il principio di difesa: se la fiducia e nella risorsa, lo scope
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Prospettiva dell'attaccante e del difensore.
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Kill Chain proiettata:**
 
@@ -123,7 +123,7 @@ Compromissione del tenant Entra ID -> controllo dell'intera organizzazione cloud
 
 **Impatto potenziale:** in Azure, la compromissione di Entra ID equivale al controllo dell'intera organizzazione cloud - identita, risorse, dati. Il percorso VM, managed identity, escalation nel tenant e il vettore che AzureHound rende visibile e che un attaccante percorre. L'integrazione ibrida frequente tra Entra ID e AD on-premise puo estendere la compromissione anche all'infrastruttura tradizionale.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **IOC:** richieste IMDS anomale da workload; uso di token managed identity da contesti inattesi; enumerazione di Entra ID (pattern AzureHound/Graph); assegnazioni di ruolo o sign-in anomali.
 
@@ -135,13 +135,13 @@ Compromissione del tenant Entra ID -> controllo dell'intera organizzazione cloud
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `az cli` | Cloud CLI | Ufficiale | Interazione con le API Azure/ARM |
-| `AzureHound` | Attack path mapping | Offensivo | Grafo dei percorsi d'attacco in Entra ID (BloodHound) |
-| `ROADtools` | Entra ID recon | Offensivo | Enumerazione e analisi di Entra ID |
-| `MicroBurst` | Azure toolkit | Offensivo | Enumerazione servizi, abuso managed identity |
-| `ScoutSuite` | Multi-cloud audit | Difensivo | Audit della configurazione Azure |
+| `az cli` | cloud cli | ufficiale | interazione con le api azure/arm |
+| `AzureHound` | attack path mapping | offensivo | grafo dei percorsi d'attacco in entra id (bloodhound) |
+| `ROADtools` | entra id recon | offensivo | enumerazione e analisi di entra id |
+| `MicroBurst` | azure toolkit | offensivo | enumerazione servizi, abuso managed identity |
+| `ScoutSuite` | multi-cloud audit | difensivo | audit della configurazione azure |
 
 > **Tool moderno consigliato:** `AzureHound` + BloodHound per i percorsi d'attacco (la continuita con l'AD del modulo 07), `MicroBurst` e `ROADtools` per l'enumerazione. Difensivamente `ScoutSuite` (`../../../Tooling/scoutsuite/`) per l'audit multi-cloud.
 
@@ -149,12 +149,12 @@ Compromissione del tenant Entra ID -> controllo dell'intera organizzazione cloud
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Steal Application Access Token | `T1528` | Furto del token della managed identity via IMDS (CLOUD-003) |
-| Discovery | Cloud Infrastructure Discovery | `T1580` | Enumerazione di Entra ID e delle risorse (CLOUD-003) |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | Escalation via ruoli eccessivi della managed identity |
-| Discovery | Permission Groups Discovery: Cloud Groups | `T1069.003` | Mappatura di ruoli e gruppi Entra ID (AzureHound) |
+| credential access | steal application access token | `T1528` | furto del token della managed identity via imds (CLOUD-003) |
+| discovery | cloud infrastructure discovery | `T1580` | enumerazione di entra id e delle risorse (CLOUD-003) |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | escalation via ruoli eccessivi della managed identity |
+| discovery | permission groups discovery: cloud groups | `T1069.003` | mappatura di ruoli e gruppi entra id (azurehound) |
 
 ---
 

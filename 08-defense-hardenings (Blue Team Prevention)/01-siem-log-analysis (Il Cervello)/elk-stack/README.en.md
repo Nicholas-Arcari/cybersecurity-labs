@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# ELK Stack - The Open Source SIEM (Elasticsearch, Logstash, Kibana)
+# ELK stack - the open source SIEM (elasticsearch, logstash, kibana)
 
 > - **Phase:** Defense & Hardening - Detection & Log Analysis (SIEM)
 > - **Category:** Detection - log centralization and correlation
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 The ELK Stack (Elasticsearch, Logstash, Kibana) is the open source alternative to commercial SIEMs like Splunk (`../splunk/`). It is the backbone of defensive detection: where the individual tools see a fragment (Wazuh a suspicious file, Suricata an anomalous packet), the SIEM aggregates everything in a single point and allows correlating events that, in isolation, would seem harmless.
 
@@ -23,7 +23,7 @@ Finding DEF-001 documents the detection capability enabled by centralization: wi
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 elk-stack/
@@ -33,15 +33,15 @@ elk-stack/
 
 ---
 
-## Centralized Detection with ELK
+## Centralized detection with ELK
 
 **Finding ID:** `DEF-001` | **Severity:** `High` (log centralization is the founding defensive capability: without visibility there is no detection)
 
-### Operational Context
+### Operational context
 
 The value of the SIEM is not to archive the logs but to make them queryable and correlatable in real time. The clearest didactic use case is the detection of an SSH brute force: a single failed login is noise, but dozens of failed logins from the same IP in a few seconds are an attack. Only an engine that aggregates the authentication logs of all the hosts can detect this pattern.
 
-### PoC - Phase 1: Stack deployment (Docker Compose)
+### PoC - phase 1: stack deployment (Docker compose)
 
 ```Bash
 # Minimal ELK stack in Docker (single-node for the lab)
@@ -55,7 +55,7 @@ curl -s http://localhost:9200/_cluster/health | jq .status
 "green"                                    <-- ELK cluster operational
 ```
 
-### PoC - Phase 2: Endpoint log ingestion (Filebeat)
+### PoC - phase 2: endpoint log ingestion (filebeat)
 
 ```YAML
 # /etc/filebeat/filebeat.yml (on the endpoint to monitor)
@@ -80,7 +80,7 @@ logstash: SIEM_IP:5044...
     talk to server... OK          <-- logs forwarded to the SIEM in real time
 ```
 
-### PoC - Phase 3: Detection rule (SSH brute force)
+### PoC - phase 3: detection rule (SSH brute force)
 
 ```
 # KQL query in Kibana: failed SSH logins aggregated by source IP
@@ -97,7 +97,7 @@ event.dataset : "system.auth" and system.auth.ssh.event : "Failed"
   host.name: web-prod-01
 ```
 
-### Tuning and Defensive Operations
+### Tuning and defensive operations
 
 - **False positive reduction:** exclude known management IPs and automated jobs; calibrate the thresholds on the real behavior of the environment (a legitimate bastion host generates more logins than a workstation)
 - **Resilience:** the key value of the SIEM is that the logs leave the host in real time, so an attacker who compromises the endpoint cannot delete the already-forwarded logs (structural countermeasure to log tampering, `07-post-exploitation`)
@@ -106,7 +106,7 @@ event.dataset : "system.auth" and system.auth.ssh.event : "Failed"
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The first obstacle was predictable and consistent with what was already seen on Wazuh (`../../02-endpoint-security-xdr/wazuh/installing&configuring/`): the RAM hunger of Elasticsearch. With the default JVM heap the stack saturated the lab VM's memory; limiting the heap to 2 GB (`ES_JAVA_OPTS=-Xms2g -Xmx2g`) stabilized everything. It is the same lesson as the Wazuh Indexer, which on closer inspection is OpenSearch, a fork of Elasticsearch: the technological kinship is direct.
 
@@ -116,7 +116,7 @@ The ELK vs Splunk choice (`../splunk/`) became clear in the field: ELK is free a
 
 ---
 
-## Theoretical Analysis: Why Centralization Is the Precondition of Detection
+## Theoretical analysis: why centralization is the precondition of detection
 
 Effective detection requires three properties that only a centralized log guarantees: **completeness** (all logs in one place), **correlation** (events from different sources put in temporal relation) and **integrity** (the logs out of reach of the attacker). A local log on a compromised host has none of the three: it is partial, isolated and tamperable.
 
@@ -126,15 +126,15 @@ This links directly to the anti-forensics principle seen in `07-post-exploitatio
 
 ---
 
-## Real-World Scenario: Detection in Action
+## Real-World scenario: detection in action
 
 > This section describes how this defensive control would operate in a real incident, showing the attacker's perspective and the defender's response.
 
-### Attacker Perspective (what they attempt)
+### Attacker perspective (what they attempt)
 
 The attacker launches an SSH brute force against an exposed server, trusting that the failed attempts get lost in the local logs and that no one looks at them. In an environment without a SIEM, this bet wins: the logs remain on the host, invisible until someone inspects them manually.
 
-### Defender Perspective (how the control responds)
+### Defender perspective (how the control responds)
 
 ```
 [DEF-001] Filebeat forwards auth.log in real time -> Logstash -> Elasticsearch
@@ -160,36 +160,36 @@ Threat hunting: retrospective query over the whole environment for the same IP
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `Elasticsearch` | Search/storage engine | Backend | Indexing and full-text search of the logs |
-| `Logstash` | Ingestion pipeline | Backend | Parsing, normalization and enrichment of the logs |
-| `Kibana` | Visualization/alerting | Frontend | Dashboards, KQL queries, detection rules |
-| `Filebeat` / `Winlogbeat` | Log shipper | Agent | Forwarding of the logs from Linux/Windows endpoints |
-| `Elastic SIEM` (Security) | Detection app | Module | Ready-made detection rules + native MITRE mapping |
-| `ElastAlert2` | Alerting engine | Add-on | Advanced alerting on self-hosted ELK clusters |
+| `Elasticsearch` | search/storage engine | backend | indexing and full-text search of the logs |
+| `Logstash` | ingestion pipeline | backend | parsing, normalization and enrichment of the logs |
+| `Kibana` | visualization/alerting | frontend | dashboards, kql queries, detection rules |
+| `Filebeat` / `Winlogbeat` | log shipper | agent | forwarding of the logs from linux/windows endpoints |
+| `Elastic SIEM` (security) | detection app | module | ready-made detection rules + native mitre mapping |
+| `ElastAlert2` | alerting engine | add-on | advanced alerting on self-hosted elk clusters |
 
 > **Recommended modern tool:** the `Elastic Security` module (formerly SIEM app) integrates ready-to-use detection rules with native MITRE ATT&CK mapping and enormously reduces the manual configuration work. For modern ingestion, `Elastic Agent` unifies the various Beats into a single centrally-managed agent. Comparison with the commercial alternative in `../splunk/`.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
 > In a defensive module, the table maps the attack techniques that the control **detects**. Complementary defensive reference: MITRE D3FEND (countermeasures).
 
-| Tactic (detected) | Technique | MITRE ID | Role of the control |
+| tactic (detected) | technique | mitre id | role of the control |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Brute Force: Password Guessing | `T1110.001` | Detection via aggregation of failed logins per IP (DEF-001) |
-| Credential Access | Brute Force: Password Spraying | `T1110.003` | Detection of an IP attempting many accounts with few passwords |
-| Initial Access | Valid Accounts | `T1078` | Detection of a successful login after a series of failures (successful brute force) |
-| Defense Evasion | Indicator Removal: Clear Linux Logs | `T1070.002` | Real-time forwarding makes the deletion of local logs ineffective |
+| credential access | brute force: password guessing | `T1110.001` | detection via aggregation of failed logins per ip (DEF-001) |
+| credential access | brute force: password spraying | `T1110.003` | detection of an ip attempting many accounts with few passwords |
+| initial access | valid accounts | `T1078` | detection of a successful login after a series of failures (successful brute force) |
+| defense evasion | indicator removal: clear linux logs | `T1070.002` | real-time forwarding makes the deletion of local logs ineffective |
 
-| Defensive countermeasure (D3FEND) | D3FEND ID | Application |
+| defensive countermeasure (d3fend) | d3fend id | application |
 | :--- | :--- | :--- |
-| Platform Monitoring | `D3-PM` | Centralized collection and monitoring of system logs |
-| User Behavior Analysis | `D3-UBA` | Analysis of authentication patterns to detect anomalies |
+| platform monitoring | `D3-PM` | centralized collection and monitoring of system logs |
+| user behavior analysis | `D3-UBA` | analysis of authentication patterns to detect anomalies |
 
 ---
 

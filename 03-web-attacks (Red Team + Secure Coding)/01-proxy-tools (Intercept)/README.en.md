@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 01 - Proxy Tools (Intercept)
+# 01 - Proxy tools (intercept)
 
 > - **Phase:** Web Attack - Proxy Setup & Traffic Interception
 > - **Visibility:** Local - traffic stays between browser and proxy, no additional packets towards the target
@@ -26,7 +26,7 @@ For HTTPS traffic, the proxy must generate fake SSL certificates on the fly. The
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 01-proxy-tools (Intercept)/
@@ -37,9 +37,9 @@ For HTTPS traffic, the proxy must generate fake SSL certificates on the fly. The
 
 ---
 
-## `burp-suite/` - Traffic Interception & Manipulation
+## `burp-suite/` - Traffic interception & manipulation
 
-### Operational Context
+### Operational context
 
 Burp Suite is the de facto standard for web application penetration testing. It is used in manual mode to analyze individual requests, manipulate parameters, test business logic and conduct targeted attacks. The Community Edition limits Scanner speed; the Professional Edition is used in real engagements.
 
@@ -49,7 +49,7 @@ Key use cases:
 - **Repeater:** resending modified requests to the server iteratively (useful for manual SQLi and IDOR testing).
 - **Intruder:** automated attacks on individual parameters (brute force, fuzzing).
 
-### Essential Commands
+### Essential commands
 
 ```Bash
 # Launch Burp Suite Community Edition from terminal
@@ -62,9 +62,9 @@ Browser configuration (Firefox):
 
 ---
 
-## `certificates/` - HTTPS Interception Setup
+## `certificates/` - HTTPS interception setup
 
-### Operational Context
+### Operational context
 
 Modern HTTPS traffic is encrypted end-to-end. To intercept it, the proxy generates an SSL certificate for each visited domain, signed by its own internal CA. The browser accepts this certificate only if the CA has been imported as a "trusted authority".
 
@@ -80,11 +80,11 @@ Without this step, the browser displays a `SEC_ERROR_UNKNOWN_ISSUER` error and r
 
 ---
 
-## `owasp-zap/` - Automated DAST Scanner
+## `owasp-zap/` - Automated DAST scanner
 
 **Finding ID:** `WEB-001` | **Severity:** `Medium` | **CVSS v3.1:** 5.4
 
-### Operational Context
+### Operational context
 
 OWASP ZAP (Zed Attack Proxy) is the reference open-source DAST scanner. Unlike Burp Suite (manual analysis), ZAP is optimized for automated scanning: it runs a crawler to map all pages and forms, then launches test payloads (SQLi, XSS, CSRF) on every parameter found.
 
@@ -113,7 +113,7 @@ URL: http://testphp.vulnweb.com/listproducts.php
 Parameter: cat
 ```
 
-### Finding WEB-001 Analysis
+### Finding WEB-001 analysis
 
 The `guestbook.php` form does not implement CSRF tokens. An attacker can build a malicious web page that sends POST requests to the form as if they came from the authenticated user, executing actions on their behalf (posting content, modifying profile).
 
@@ -125,7 +125,7 @@ The `guestbook.php` form does not implement CSRF tokens. An attacker can build a
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [1] Configure browser -> proxy 127.0.0.1:8080
@@ -149,29 +149,29 @@ The `guestbook.php` form does not implement CSRF tokens. An attacker can build a
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Primary Use Case |
+| tool | type | technique/access | primary use case |
 | :--- | :--- | :--- | :--- |
-| `Burp Suite Community` | Proxy / Interceptor | GUI + Browser Proxy | Manual analysis, request modification, Repeater |
-| `Burp Suite Professional` | Proxy / Scanner | GUI + Browser Proxy | Real engagements, advanced automated scanning |
-| `OWASP ZAP` | DAST Scanner | GUI + CLI | Automated scanning, CI/CD integration |
-| `mitmproxy` | CLI Proxy | Terminal | Lightweight command-line interception |
-| `Caido` | Modern Proxy | Web UI | Modern Burp alternative, browser-based interface |
+| `Burp Suite Community` | proxy / interceptor | gui + browser proxy | manual analysis, request modification, repeater |
+| `Burp Suite Professional` | proxy / scanner | gui + browser proxy | real engagements, advanced automated scanning |
+| `OWASP ZAP` | dast scanner | gui + cli | automated scanning, ci/cd integration |
+| `mitmproxy` | cli proxy | terminal | lightweight command-line interception |
+| `Caido` | modern proxy | web ui | modern burp alternative, browser-based interface |
 
 > **Recommended modern tool:** `Caido` - alternative to Burp Suite with native web interface, YAML-based workflows and excellent session management. Install from `https://caido.io` with the dedicated package manager.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Collection | Man-in-the-Middle | `T1557` | Positioning Burp Suite proxy between browser and server to intercept HTTP/HTTPS traffic |
-| Defense Evasion | Subvert Trust Controls: Install Root Certificate | `T1553.004` | Installing Burp CA certificate in the browser trust store to enable HTTPS interception without errors |
-| Collection | Man-in-the-Middle: AiTM HTTPS Interception | `T1557.002` | Generating fake SSL certificates for each visited domain, allowing encrypted traffic reading |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | DAST scanning with OWASP ZAP generating traffic towards the target to identify vulnerabilities (WEB-001) |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Identification of forms lacking CSRF tokens (WEB-001) as an attack vector for Cross-Site Request Forgery |
+| collection | man-in-the-middle | `T1557` | positioning burp suite proxy between browser and server to intercept http/https traffic |
+| defense evasion | subvert trust controls: install root certificate | `T1553.004` | installing burp ca certificate in the browser trust store to enable https interception without errors |
+| collection | man-in-the-middle: aitm https interception | `T1557.002` | generating fake ssl certificates for each visited domain, allowing encrypted traffic reading |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | dast scanning with owasp zap generating traffic towards the target to identify vulnerabilities (WEB-001) |
+| initial access | exploit public-facing application | `T1190` | identification of forms lacking csrf tokens (WEB-001) as an attack vector for cross-site request forgery |
 
 ---
 

@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 01 - Phishing Campaigns
+# 01 - Phishing campaigns
 
 > - **Fase:** Social Engineering - Phishing Campaign Deployment & Credential Harvesting
 > - **Visibilita:** Alta - le email phishing generano log SMTP, gli URL di tracking sono visibili ai filtri email/proxy, le landing page possono essere classificate da sistemi di URL reputation; Evilginx genera traffico TLS anomalo (doppio handshake)
@@ -34,7 +34,7 @@ Nella kill chain, questa sezione copre le fasi di Delivery ed Exploitation: l'em
 
 ---
 
-## `gophish/` - Campaign Management & Credential Harvesting
+## `gophish/` - Campaign management & credential harvesting
 
 **ID Finding:** `SE-001` | **Severity:** `Alto` (click rate > 30% su campagna simulata con credential submission)
 
@@ -62,7 +62,7 @@ cd /opt/gophish && sudo ./gophish
 
 ---
 
-## `evilginx/` - MFA Bypass via Reverse Proxy
+## `evilginx/` - MFA bypass via reverse proxy
 
 **ID Finding:** `SE-002` | **Severity:** `Critico` (session token MFA intercettato - accesso completo senza password)
 
@@ -94,7 +94,7 @@ sessions
 
 ---
 
-## `pyphisher/` - Quick Testing & Proof of Concept
+## `pyphisher/` - Quick testing & proof of concept
 
 ### Contesto operativo
 
@@ -133,39 +133,39 @@ PyPhisher e un tool Python che automatizza la creazione di pagine di phishing co
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `GoPhish` | Phishing platform | Web UI | Standard aziendale: campaign management, template, analytics |
-| `Evilginx 3.x` | Reverse proxy phisher | CLI | MFA bypass via session hijacking, phishlet per servizi cloud |
-| `PyPhisher` | Automated phishing | CLI - Python | Quick PoC con 77 template e tunnel automatico |
-| `King Phisher` | Phishing platform | GUI + CLI | Alternativa a GoPhish con reporting avanzato |
-| `Modlishka` | Reverse proxy | CLI - Go | Alternativa a Evilginx, piu leggero |
-| `Mailhog` | SMTP testing | Web UI | Fake SMTP server per test locali |
+| `GoPhish` | phishing platform | web ui | standard aziendale: campaign management, template, analytics |
+| `Evilginx 3.x` | reverse proxy phisher | cli | mfa bypass via session hijacking, phishlet per servizi cloud |
+| `PyPhisher` | automated phishing | cli - python | quick poc con 77 template e tunnel automatico |
+| `King Phisher` | phishing platform | gui + cli | alternativa a gophish con reporting avanzato |
+| `Modlishka` | reverse proxy | cli - go | alternativa a evilginx, piu leggero |
+| `Mailhog` | smtp testing | web ui | fake smtp server per test locali |
 
 > **Tool moderno consigliato:** `Evilginx 3.x` e il tool di riferimento per phishing avanzato nel 2024-2026. Per campagne enterprise, `GoPhish` + `Mailhog` permette testing completo senza rischio di invio a indirizzi reali.
 
 ---
 
-## Registro Finding
+## Registro finding
 
-| ID | Descrizione | Severity | CVSS | Sottocartella |
+| id | descrizione | severity | cvss | sottocartella |
 | :--- | :--- | :---: | :---: | :--- |
-| `SE-001` | GoPhish campaign: credential harvesting con click rate > 30% e submission rate 20% su 20 utenti simulati | `Alto` | 8.1 | `gophish/` |
-| `SE-002` | Evilginx: MFA bypass via reverse proxy - session token Microsoft 365 intercettato dopo autenticazione MFA completa | `Critico` | 9.3 | `evilginx/` |
+| `SE-001` | gophish campaign: credential harvesting con click rate > 30% e submission rate 20% su 20 utenti simulati | `Alto` | 8.1 | `gophish/` |
+| `SE-002` | evilginx: mfa bypass via reverse proxy - session token microsoft 365 intercettato dopo autenticazione mfa completa | `Critico` | 9.3 | `evilginx/` |
 
 ---
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Stage Capabilities: Upload Malware | `T1608.001` | SE-001, SE-002 |
-| Resource Development | Acquire Infrastructure: Domains | `T1583.001` | SE-002 |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | SE-001, SE-002 |
-| Execution | User Execution: Malicious Link | `T1204.001` | SE-001, SE-002 |
-| Credential Access | Input Capture: Web Portal Capture | `T1056.003` | SE-001 |
-| Credential Access | Steal Web Session Cookie | `T1539` | SE-002 |
-| Credential Access | Adversary-in-the-Middle | `T1557` | SE-002 |
+| resource development | stage capabilities: upload malware | `T1608.001` | SE-001, SE-002 |
+| resource development | acquire infrastructure: domains | `T1583.001` | SE-002 |
+| initial access | phishing: spearphishing link | `T1566.002` | SE-001, SE-002 |
+| execution | user execution: malicious link | `T1204.001` | SE-001, SE-002 |
+| credential access | input capture: web portal capture | `T1056.003` | SE-001 |
+| credential access | steal web session cookie | `T1539` | SE-002 |
+| credential access | adversary-in-the-middle | `T1557` | SE-002 |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](results.md)
 
-# Results - Experiment B (guessing entropy vs Shannon)
+# Results - experiment b (guessing entropy vs shannon)
 
 Verbatim output of `guessing_entropy.py` (deterministic, reproducible). Numbers **computed**
 exactly on the Zipf model, not estimated.

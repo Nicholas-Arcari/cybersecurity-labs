@@ -1,6 +1,6 @@
 > **English** | [Italiano](EXECUTIVE_SUMMARY.md)
 
-# Penetration Test - Executive Summary
+# Penetration test - executive summary
 
 ---
 
@@ -16,7 +16,7 @@ Recipients:      Management, CTO, CISO
 
 ---
 
-## 1. Context and Engagement Scope
+## 1. Context and engagement scope
 
 ### Objective
 
@@ -28,24 +28,24 @@ corporate network without pre-assigned privileges.
 
 ### Scope
 
-| Component | Target | Notes |
+| component | target | notes |
 | :--- | :--- | :--- |
-| Network infrastructure | LAN segment `10.0.2.0/24` and `192.168.0.0/24` | Host discovery, port scan, exposed services |
-| Server operating system | Windows 10 Pro (`10.0.2.3` / `192.168.0.109`) | OS vulnerabilities, SMB services, RDP |
-| Server operating system | Ubuntu Linux (`192.168.0.x`) | Insecure configurations, PrivEsc |
-| Web applications | LAMP/XAMPP stack, Drupal CMS, GraphQL API | OWASP Top 10, API security |
-| OSINT sources | Public profiles, DNS, search engines | Passive reconnaissance |
+| network infrastructure | lan segment `10.0.2.0/24` and `192.168.0.0/24` | host discovery, port scan, exposed services |
+| server operating system | windows 10 pro (`10.0.2.3` / `192.168.0.109`) | os vulnerabilities, smb services, rdp |
+| server operating system | ubuntu linux (`192.168.0.x`) | insecure configurations, privesc |
+| web applications | lamp/xampp stack, drupal cms, graphql api | owasp top 10, api security |
+| osint sources | public profiles, dns, search engines | passive reconnaissance |
 
-### Execution Period
+### Execution period
 
-| Phase | Description | Estimated Duration |
+| phase | description | estimated duration |
 | :--- | :--- | :--- |
-| Passive reconnaissance | OSINT, DNS, Shodan | 2 days |
-| Active reconnaissance | Network scan, service enumeration | 1 day |
-| Vulnerability Assessment | Credentialed scan, protocol audit | 3 days |
-| Web Application Testing | OWASP Top 10, API, CMS | 5 days |
-| System Exploitation | Initial access, privilege escalation | 4 days |
-| Reporting | Analysis, documentation, recommendations | 3 days |
+| passive reconnaissance | osint, dns, shodan | 2 days |
+| active reconnaissance | network scan, service enumeration | 1 day |
+| vulnerability assessment | credentialed scan, protocol audit | 3 days |
+| web application testing | owasp top 10, api, cms | 5 days |
+| system exploitation | initial access, privilege escalation | 4 days |
+| reporting | analysis, documentation, recommendations | 3 days |
 
 ### Methodology
 
@@ -56,7 +56,7 @@ outside the agreed scope. All tested systems are authorized lab environments.
 
 ---
 
-## 2. Methodology - Engagement Phases
+## 2. Methodology - engagement phases
 
 ```
 [PASSIVE RECON]          [ACTIVE RECON]          [ASSESSMENT]
@@ -77,37 +77,37 @@ privilege escalation.
 
 ---
 
-## 3. Overall Risk Overview
+## 3. Overall risk overview
 
-### Finding Distribution by Severity
+### Finding distribution by severity
 
-| Severity | Count | % of total | Potential Impact |
+| severity | count | % of total | potential impact |
 | :--- | :---: | :---: | :--- |
-| **Critical** | 15 | 25% | Total compromise, data loss, RCE |
-| **High** | 23 | 38% | Unauthorized access, privilege escalation |
-| **Medium** | 11 | 18% | Information disclosure, weak configurations |
+| **Critical** | 15 | 25% | total compromise, data loss, rce |
+| **High** | 23 | 38% | unauthorized access, privilege escalation |
+| **Medium** | 11 | 18% | information disclosure, weak configurations |
 | **Low** | 3 | 5% | Low probability of exploitation |
-| **Informational** | 8 | 14% | Observations with no direct immediate impact |
-| **Total** | **60** | 100% | |
+| **Informational** | 8 | 14% | observations with no direct immediate impact |
+| **total** | **60** | 100% | |
 
 > **Executive takeaway:** 63% of identified findings (38 out of 60) are classified
 > as Critical or High. This means that more than half of the identified vulnerabilities
 > are directly exploitable by an attacker with average skills to gain unauthorized
 > access, exfiltrate data or compromise the infrastructure.
 
-### Business Impact by Category
+### Business impact by category
 
-| Area | Findings | Business Impact |
+| area | findings | business impact |
 | :--- | :--- | :--- |
-| Network infrastructure | SCAN-003, VULN-001..004 | Internal traffic interception, access to corporate file shares |
-| Web applications | WEB-001..015 | User data theft, authentication bypass, server control |
-| Operating systems | EXPLOIT-001..019 | Total server control, persistence, lateral movement |
-| OSINT exposure | OSINT-001..004 | Employee data and credentials already circulating in breach databases |
-| Insecure configurations | EXPLOIT-016, EXPLOIT-017 | Plaintext system passwords, modifiable binaries |
+| network infrastructure | SCAN-003, VULN-001..004 | internal traffic interception, access to corporate file shares |
+| web applications | WEB-001..015 | user data theft, authentication bypass, server control |
+| operating systems | EXPLOIT-001..019 | total server control, persistence, lateral movement |
+| osint exposure | OSINT-001..004 | employee data and credentials already circulating in breach databases |
+| insecure configurations | EXPLOIT-016, EXPLOIT-017 | plaintext system passwords, modifiable binaries |
 
 ---
 
-## 4. Top 5 Critical Findings
+## 4. Top 5 critical findings
 
 The following five findings were selected from the 15 critical findings based on the
 combination of exploitability, organizational impact and attack surface coverage.
@@ -115,7 +115,7 @@ Each section is written in language accessible to management.
 
 ---
 
-### 4.1 - Total Windows Server Compromise via 9-Year-Old Known Vulnerability
+### 4.1 - Total Windows server compromise via 9-Year-Old known vulnerability
 
 **Finding:** VULN-002 + EXPLOIT-001 | **Severity:** Critical
 
@@ -138,7 +138,7 @@ system from the network. Estimated resolution time: less than 1 hour of technica
 
 ---
 
-### 4.2 - Corporate Database Accessible Through Web Application Vulnerability
+### 4.2 - Corporate database accessible through web application vulnerability
 
 **Finding:** WEB-004 + WEB-011 | **Severity:** Critical
 
@@ -165,7 +165,7 @@ Estimated resolution time: 3-5 days of development.
 
 ---
 
-### 4.3 - System Administrator Password Found in an Unprotected File
+### 4.3 - System administrator password found in an unprotected file
 
 **Finding:** EXPLOIT-016 | **Severity:** Critical
 
@@ -186,7 +186,7 @@ reuse). Estimated resolution time: less than 1 hour.
 
 ---
 
-### 4.4 - Full Application Access as Administrator Without Knowing the Password
+### 4.4 - Full application access as administrator without knowing the password
 
 **Finding:** WEB-012 | **Severity:** Critical
 
@@ -209,7 +209,7 @@ Estimated resolution time: less than 2 hours of development.
 
 ---
 
-### 4.5 - A Normal User Can View Any Other User's Financial Data
+### 4.5 - A normal user can view any other user's financial data
 
 **Finding:** WEB-014 | **Severity:** Critical
 
@@ -234,56 +234,56 @@ the resource owner. Estimated resolution time: 3-7 days of development.
 
 ---
 
-## 5. Strategic Recommendations
+## 5. Strategic recommendations
 
 Recommendations are organized by time horizon and prioritized based on the ratio
 between risk urgency and implementation effort.
 
-### Urgent Priority - within 30 days
+### Urgent priority - within 30 days
 
-| Priority | Action | Related findings | Effort |
+| priority | action | related findings | effort |
 | :---: | :--- | :--- | :--- |
-| 1 | Apply all overdue Windows security patches (particularly MS17-010) | VULN-002, EXPLOIT-001 | Low (operational) |
-| 2 | Delete Unattend.xml files and change Administrator credentials | EXPLOIT-016 | Low (<1 hour) |
-| 3 | Fix SQL Injections in the web application (prepared statements) | WEB-004, WEB-011 | Medium (3-5 days) |
-| 4 | Replace JWT secret with a cryptographically secure value | WEB-012 | Low (<2 hours) |
-| 5 | Implement object-level authorization in APIs (anti-IDOR) | WEB-014 | Medium (3-7 days) |
-| 6 | Enable mandatory SMB Signing via Group Policy | SCAN-003, VULN-001 | Low (GPO) |
+| 1 | apply all overdue windows security patches (particularly ms17-010) | VULN-002, EXPLOIT-001 | Low (operational) |
+| 2 | delete unattend.xml files and change administrator credentials | EXPLOIT-016 | Low (<1 hour) |
+| 3 | fix sql injections in the web application (prepared statements) | WEB-004, WEB-011 | Medium (3-5 days) |
+| 4 | replace jwt secret with a cryptographically secure value | WEB-012 | Low (<2 hours) |
+| 5 | implement object-level authorization in apis (anti-idor) | WEB-014 | Medium (3-7 days) |
+| 6 | enable mandatory smb signing via group policy | SCAN-003, VULN-001 | Low (gpo) |
 
-### Short Term - within 90 days
+### Short term - within 90 days
 
-| Priority | Action | Related findings | Effort |
+| priority | action | related findings | effort |
 | :---: | :--- | :--- | :--- |
-| 7 | Implement complex password policy (min. 14 characters) and MFA on all privileged systems | EXPLOIT-016..019 | Medium |
-| 8 | Remove or disable SMBv1 protocol | VULN-002 | Low |
-| 9 | Fix ACL permissions on service binaries (XAMPP and similar) | EXPLOIT-017 | Low |
-| 10 | Sanitize all server-side template engines (anti-SSTI) | WEB-008 | Medium |
-| 11 | Fix access control logic in Drupal CMS modules (version update) | WEB-015 | Low |
-| 12 | Disable GraphQL Introspection in production; validate all parameters | WEB-013 | Low |
+| 7 | implement complex password policy (min. 14 characters) and mfa on all privileged systems | EXPLOIT-016..019 | Medium |
+| 8 | remove or disable smbv1 protocol | VULN-002 | Low |
+| 9 | fix acl permissions on service binaries (xampp and similar) | EXPLOIT-017 | Low |
+| 10 | sanitize all server-side template engines (anti-ssti) | WEB-008 | Medium |
+| 11 | fix access control logic in drupal cms modules (version update) | WEB-015 | Low |
+| 12 | disable graphql introspection in production; validate all parameters | WEB-013 | Low |
 
-### Medium Term - within 180 days
+### Medium term - within 180 days
 
-| Priority | Action | Notes |
+| priority | action | notes |
 | :---: | :--- | :--- |
-| 13 | Deploy a Web Application Firewall (WAF) in front of the web application | Reduces attack surface for automated attacks |
-| 14 | Start a structured Vulnerability Management program (monthly automated scans) | Prevents re-accumulation of security technical debt |
-| 15 | Internal network segmentation (VLAN) to isolate critical systems | Limits lateral movement in case of compromise |
-| 16 | Developer training on secure coding (OWASP Top 10) | Reduces web findings at the root cause |
+| 13 | deploy a web application firewall (waf) in front of the web application | reduces attack surface for automated attacks |
+| 14 | start a structured vulnerability management program (monthly automated scans) | prevents re-accumulation of security technical debt |
+| 15 | internal network segmentation (vlan) to isolate critical systems | limits lateral movement in case of compromise |
+| 16 | developer training on secure coding (owasp top 10) | reduces web findings at the root cause |
 
-### Long Term - strategic plan
+### Long term - strategic plan
 
-| Initiative | Description |
+| initiative | description |
 | :--- | :--- |
-| **Secure Development Lifecycle (SDL)** | Integrate security review into the development process: code review, SAST/DAST in CI/CD, threat modeling before developing new features |
-| **Annual Penetration Test** | Repeat an equivalent testing activity every year or after significant architectural changes, to measure progress and detect new risks |
-| **Incident Response Plan** | Define formal incident response procedures: who calls whom, which systems to isolate, how to preserve evidence for forensic analysis |
-| **Asset Inventory and Patch Management** | Maintain an updated registry of all systems, with software versions and patch status; automate updates where possible |
+| **secure development lifecycle (sdl)** | integrate security review into the development process: code review, sast/dast in ci/cd, threat modeling before developing new features |
+| **annual penetration test** | repeat an equivalent testing activity every year or after significant architectural changes, to measure progress and detect new risks |
+| **incident response plan** | define formal incident response procedures: who calls whom, which systems to isolate, how to preserve evidence for forensic analysis |
+| **asset inventory and patch management** | maintain an updated registry of all systems, with software versions and patch status; automate updates where possible |
 
 ---
 
 ## 6. Conclusion
 
-### Current Posture
+### Current posture
 
 The engagement identified **60 vulnerabilities in 18 days of testing**, of which 63%
 are Critical or High severity. Total compromise of the Windows server was achieved
@@ -294,7 +294,7 @@ The most relevant criticalities do not require advanced techniques: most Critica
 findings are exploitable with publicly available and free tools by anyone with basic
 technical skills. This significantly lowers the risk threshold.
 
-### Target Posture
+### Target posture
 
 The recovery path is defined and realistic. Short-term measures (patching, removal
 of sensitive files, SQL Injection fixes, cryptographic secrets) can reduce the
@@ -306,15 +306,15 @@ technical interventions, software development process review and establishment o
 continuous security practices (patch management, vulnerability scanning, periodic
 penetration testing).
 
-### Reference Metrics
+### Reference metrics
 
-| Indicator | Current value | 6-month target |
+| indicator | current value | 6-month target |
 | :--- | :--- | :--- |
-| Open Critical findings | 15 | 0 |
-| Open High findings | 23 | < 5 |
-| Time to total compromise | < 3 minutes | > 30 days (realistic objective) |
-| Systems with overdue patches | All tested systems | 0 unpatched critical systems |
-| Systems with MFA enabled | 0% | 100% on privileged access |
+| open Critical findings | 15 | 0 |
+| open High findings | 23 | < 5 |
+| time to total compromise | < 3 minutes | > 30 days (realistic objective) |
+| systems with overdue patches | all tested systems | 0 unpatched critical systems |
+| systems with mfa enabled | 0% | 100% on privileged access |
 
 ---
 

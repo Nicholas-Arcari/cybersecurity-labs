@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Cloud Asset Discovery: Exposed S3 Buckets, Azure Blob and GCP Storage
+# Cloud asset discovery: exposed s3 buckets, Azure blob and GCP storage
 
 > - **Phase:** Reconnaissance - Infrastructure Intelligence (cloud attack surface)
 > - **Visibility:** Low - the enumeration of the bucket names happens via DNS resolution and HTTP requests toward the cloud providers' endpoints (AWS/Azure/GCP), not toward the target's infrastructure; some tools query only passive databases (Zero)
@@ -21,7 +21,7 @@ This section is the natural bridge between reconnaissance (module 01) and cloud 
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 cloud-asset-discovery/
@@ -31,11 +31,11 @@ cloud-asset-discovery/
 
 ---
 
-## Enumeration of the Cloud Storage Buckets
+## Enumeration of the cloud storage buckets
 
 **Finding ID:** `INTEL-006` | **Severity:** `Variable (Medium / Critical)`
 
-### Operational Context
+### Operational context
 
 The enumeration combines two approaches: **permutation generation** of the bucket names based on the target's brand, and **search on passive indexes** of buckets already discovered by third parties (GrayHatWarfare). The first is active toward the provider's endpoints but invisible to the target; the second is completely passive.
 
@@ -103,7 +103,7 @@ Web search on buckets.grayhatwarfare.com:
 
 ---
 
-## Lab Experience
+## Lab experience
 
 To operate safely, a controlled lab was set up by creating a test S3 bucket with public-read permissions and fake files, so as to verify the tool's discovery capability without touching real third-party data; the broader enumeration was limited to keywords we own or to programs that explicitly authorize cloud recon in the scope. Execution highlighted the fundamental distinction between existing but protected buckets (which respond 403, confirming only the validity of the naming) and actually open buckets (with listable content): most of the guessed names fall into the first case, and the real finding is the second. When accessible content was identified, we decided never to download potentially sensitive files: the exposure was documented by noting the bucket name, permissions and type of files listed, enough to demonstrate the risk without exfiltrating data. This discipline is the difference between an assessment and a breach.
 
@@ -113,7 +113,7 @@ Typical attention points:
 - The bucket names are globally unique on AWS: if `targetcorp-backups` exists but is protected, an attacker cannot create a namesake, but the confirmation of the naming pattern guides further permutations (`targetcorp-backups-2`, `targetcorp-db-backups`).
 - The quality of the result depends on the mutation wordlist: include terms like `backup`, `bak`, `prod`, `dev`, `staging`, `logs`, `assets`, `static`, `data`, `dump`, `private`.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 The security model of cloud storage is based on explicit permissions (ACLs and bucket policies), not on the secrecy of the name. The globally unique and predictable naming is a design choice that favors accessibility, under the assumption that the access control is configured correctly. The misconfiguration arises when this assumption is violated: a bucket created "public" to serve static assets ends up also containing sensitive data, or a too-permissive policy (`"Principal": "*"`) grants read to anyone.
 
@@ -121,7 +121,7 @@ This is a manifestation of the cloud **shared responsibility** model: the provid
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [INPUT] Brand, domain and keywords of the target
@@ -151,11 +151,11 @@ This is a manifestation of the cloud **shared responsibility** model: the provid
 
 ---
 
-## Real-World Scenario: Post-Reconnaissance Projection
+## Real-World scenario: Post-Reconnaissance projection
 
 > This section describes how INTEL-006 would fit into a real engagement.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** an S3 bucket of the organization with anonymous read enabled, containing a database backup and a `.env.production` file.
 
@@ -186,7 +186,7 @@ Data exfiltration / lateral movement in the cloud
 - "Leakware" ransomware: threat to publish the already-exfiltrated data
 - Supply chain: if the bucket is writable, alteration of files served to users (JS/assets)
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** anonymous access to an S3 bucket is recorded in S3 Server Access Logs and CloudTrail (if enabled). A spike of `GetObject`/`ListBucket` requests from unknown external IPs indicates exfiltration in progress. AWS also offers native alerts (S3 Block Public Access, Access Analyzer) that flag public buckets.
 
@@ -207,29 +207,29 @@ Data exfiltration / lateral movement in the cloud
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `cloud_enum` | Cloud recon | CLI (Python) | Multi-cloud enumeration (AWS/Azure/GCP) by keyword |
-| `GrayHatWarfare` | Cloud recon | Web | Passive search on an index of already-discovered buckets |
-| `awscli` | Cloud interaction | CLI | Anonymous listing/download of S3 buckets (`--no-sign-request`) |
-| `S3Scanner` | Cloud recon | CLI | Enumeration and permission test of S3 buckets |
-| `Prowler` | Cloud audit | CLI | Defensive audit of the configuration (see module 10) |
-| `ScoutSuite` | Cloud audit | CLI | Multi-cloud posture assessment (see module 10) |
+| `cloud_enum` | cloud recon | cli (python) | multi-cloud enumeration (aws/azure/gcp) by keyword |
+| `GrayHatWarfare` | cloud recon | web | passive search on an index of already-discovered buckets |
+| `awscli` | cloud interaction | cli | anonymous listing/download of s3 buckets (`--no-sign-request`) |
+| `S3Scanner` | cloud recon | cli | enumeration and permission test of s3 buckets |
+| `Prowler` | cloud audit | cli | defensive audit of the configuration (see module 10) |
+| `ScoutSuite` | cloud audit | cli | multi-cloud posture assessment (see module 10) |
 
 > **Recommended modern tool:** `cloud_enum` covers the three main providers in a single pass and is actively maintained. For an exclusively AWS target, `S3Scanner scan -f bucket_names.txt` checks in bulk the existence and permissions (READ/WRITE) of the buckets. On the defensive side, `Prowler` (`prowler aws`) proactively identifies all the public buckets of the account before an attacker does.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Search Open Technical Databases | `T1596` | Search for exposed cloud buckets on public indexes (GrayHatWarfare) and by name permutation (INTEL-006) |
-| Reconnaissance | Gather Victim Host Info | `T1592` | Identification of the cloud storage assets owned by the target (INTEL-006) |
-| Collection | Data from Cloud Storage | `T1530` | Enumeration and anonymous access to the contents of cloud buckets with public permissions (INTEL-006) |
-| Credential Access | Unsecured Credentials: Credentials In Files | `T1552.001` | Extraction of credentials and secrets from files (.env, backups) contained in the exposed buckets (INTEL-006) |
+| reconnaissance | search open technical databases | `T1596` | search for exposed cloud buckets on public indexes (grayhatwarfare) and by name permutation (INTEL-006) |
+| reconnaissance | gather victim host info | `T1592` | identification of the cloud storage assets owned by the target (INTEL-006) |
+| collection | data from cloud storage | `T1530` | enumeration and anonymous access to the contents of cloud buckets with public permissions (INTEL-006) |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | extraction of credentials and secrets from files (.env, backups) contained in the exposed buckets (INTEL-006) |
 
 ---
 

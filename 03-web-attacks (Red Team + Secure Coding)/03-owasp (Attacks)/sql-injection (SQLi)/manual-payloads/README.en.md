@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Manual SQL Injection (SQLi)
+# Manual SQL injection (SQLi)
 
 > - **Phase:** Web Attack - SQL Injection (Manual)
 > - **Visibility:** Medium - HTTP requests with SQL payload in URL parameter or POST body
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 During the Security Assessment activity performed on target `testphp.vulnweb.com`, multiple critical SQL Injection (SQLi) vulnerabilities were identified.
 
@@ -27,9 +27,9 @@ The risk level is assessed as CRITICAL since the compromise is total (Confidenti
 
 ---
 
-## 2 Technical Analysis
+## 2 Technical analysis
 
-#### Scenario A: Authentication Bypass (Login)
+#### Scenario a: authentication bypass (login)
 
 The login module does not properly sanitize user input, allowing injection of SQL fragments that alter the authentication query logic.
 
@@ -61,7 +61,7 @@ Evidence:
 
 Access successfully executed to the administrative dashboard.
 
-#### Scenario B: UNION Based Injection (Data Extraction)
+#### Scenario b: UNION based injection (data extraction)
 
 The `artists.php` endpoint through the GET parameter `artist` is vulnerable to UNION-Based SQL Injection. This allows merging the original query results with results from an attacker-injected query.
 
@@ -91,7 +91,7 @@ Scenario C: Database Dumping (The Kill Chain)
 
 Exploiting the UNION vulnerability, complete exfiltration of the database schema and sensitive data was performed.
 
-#### Step 1: Table Enumeration
+#### Step 1: table enumeration
 
 Access to the system table `information_schema.tables` to list all present tables.
 
@@ -107,7 +107,7 @@ Result: `artists, carts, categ, featured, guestbook, pictures, products, users`.
 
 The `users` table was identified as the high-value target.
 
-#### Step 2: Column Enumeration
+#### Step 2: column enumeration
 
 Access to `information_schema.columns` to discover the `users` table structure.
 
@@ -121,7 +121,7 @@ http://testphp.vulnweb.com/artists.php?artist=-1 UNION SELECT 1, group_concat(co
 
 Result: `uname, pass, cc, address, email, name, phone`.
 
-#### Step 3: Data Exfiltration (Final Dump)
+#### Step 3: data exfiltration (final dump)
 
 Mass extraction of usernames and passwords from the users table.
 
@@ -144,7 +144,7 @@ The server returns credentials in plaintext directly in the page, demonstrating 
 
 ---
 
-## 3 Remediation Strategy (Defense)
+## 3 Remediation strategy (defense)
 
 To mitigate the identified vulnerabilities, immediate adoption of the following Secure Coding practices is recommended:
 
@@ -177,13 +177,13 @@ As a defense-in-depth measure, implement a WAF to detect and block common SQL at
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | SQL Injection exploitation on the login form (`admin' #`) and `artist` parameter of `testphp.vulnweb.com` for unauthorized access (WEB-004) |
-| Discovery | Account Discovery: Local Account | `T1087.001` | Database user enumeration through `information_schema.tables` and recovery of the `users` table structure (WEB-004) |
-| Collection | Data from Information Repositories | `T1213` | Complete dump of the `users` table containing credentials (`test:test`), emails, phone numbers and credit card data through UNION-based injection (WEB-004) |
+| initial access | exploit public-facing application | `T1190` | sql injection exploitation on the login form (`admin' #`) and `artist` parameter of `testphp.vulnweb.com` for unauthorized access (WEB-004) |
+| discovery | account discovery: local account | `T1087.001` | database user enumeration through `information_schema.tables` and recovery of the `users` table structure (WEB-004) |
+| collection | data from information repositories | `T1213` | complete dump of the `users` table containing credentials (`test:test`), emails, phone numbers and credit card data through union-based injection (WEB-004) |
 
 ---
 

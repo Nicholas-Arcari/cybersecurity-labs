@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Container Runtime Security - Escape Techniques
+# Container runtime security - escape techniques
 
 > - **Phase:** Cloud Security - Container Escape (Privilege Escalation)
 > - **Visibility:** Medium - the execution of commands in the container and the breakout leave traces in the daemon and host logs; runtime monitoring (Falco) detects the escape patterns
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 A container is not a virtual machine: there is no hypervisor that completely isolates the guest from the host. A container shares the host's kernel and is isolated only by mechanisms of the kernel itself (namespaces, cgroups, capabilities). This isolation is effective when the container is configured correctly, but fragile when it is not: some common misconfigurations allow **escaping** from the container and gaining control of the hosting host - the "container escape".
 
@@ -23,7 +23,7 @@ The severity is `Critical` because the escape completely nullifies the isolation
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 runtime-security/
@@ -33,15 +33,15 @@ runtime-security/
 
 ---
 
-## Container Escape via Docker Socket
+## Container escape via Docker socket
 
 **Finding ID:** `CLOUD-006` | **Severity:** `Critical` (escape from the container and root on the hosting host; completely nullifies the container's isolation)
 
-### Operational Context
+### Operational context
 
 The Docker socket (`/var/run/docker.sock`) is sometimes mounted inside a container to allow it to manage other containers ("Docker-in-Docker" pattern, CI runners, monitoring). But giving a container access to the socket is equivalent to giving it control of the host's Docker daemon - and therefore of the host itself, because the daemon runs as root and can create containers that mount anything.
 
-### PoC - Detection of the misconfiguration
+### PoC - detection of the misconfiguration
 
 ```Bash
 # Inside the container: is the Docker socket mounted? (misconfiguration)
@@ -52,7 +52,7 @@ ls -la /var/run/docker.sock
 srw-rw---- 1 root docker 0 /var/run/docker.sock   <-- socket mounted: escape possible (CLOUD-006)
 ```
 
-### PoC - Escape: from the container to root on the host
+### PoC - escape: from the container to root on the host
 
 ```Bash
 # From the container with the socket: I create a new privileged container
@@ -70,7 +70,7 @@ root:$6$...:19000:0:99999:7:::
 # complete control of the hosting host and all its containers
 ```
 
-### PoC - Other escape paths (variants)
+### PoC - other escape paths (variants)
 
 ```Bash
 # Privileged container: direct access to the host devices
@@ -91,7 +91,7 @@ fdisk -l                    # if --privileged: the host disks are visible -> mou
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The container escape overturned my perception of isolation. Coming from the virtual machine model, I assumed a container was a solid barrier; discovering that it shares the host's kernel and that the isolation depends on correct (and fragile) configurations was a shift of mental model. A container is not a VM: it is a process isolated by kernel mechanisms, and those mechanisms can be bypassed when the configuration weakens them.
 
@@ -101,7 +101,7 @@ The defensive reflection was on the link with the rest of the path. A web RCE (m
 
 ---
 
-## Theoretical Analysis: Isolation as Configuration, not as a Barrier
+## Theoretical analysis: isolation as configuration, not as a barrier
 
 The fundamental difference between container and VM is the nature of the isolation. A VM is isolated by a hypervisor that simulates separate hardware: the guest does not, by construction, have access to the host. A container is isolated by mechanisms of the shared kernel (namespaces for visibility, cgroups for resources, capabilities for privileges): the isolation is not a physical barrier but a set of configurable restrictions. This makes containers lightweight and efficient, but shifts security from the presence of a barrier to the correctness of a configuration.
 
@@ -111,11 +111,11 @@ This defines the principle of container security: the default must be least priv
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > Attacker and defender perspectives in a real engagement.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** root on the Docker host obtained via escape from a misconfigured container (CLOUD-006).
 
@@ -139,7 +139,7 @@ Compromise of the host infrastructure + lateral movement
 
 **Potential impact:** the escape turns the compromise of a single application into control of the host and everything running on it. In an environment where multiple services share the same Docker host, an escape from just one exposes all the others - their data, their secrets, their credentials. The link with module 03 is direct: a web RCE, contained if the container is secure, becomes the compromise of the infrastructure if the container allows the escape.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** Falco detects the escape patterns in real time - shell spawning in a container, Docker socket access, anomalous mounts, execution of `docker run` from inside a container. Runtime monitoring is the key control because the escape happens at runtime, not at the build.
 
@@ -159,33 +159,33 @@ Compromise of the host infrastructure + lateral movement
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `docker cli` | Container CLI | Official | Interaction with the daemon (including via the abused socket) |
-| `Falco` | Runtime security | Defensive | Real-time detection of the escape patterns |
-| `amicontained` | Container recon | Analysis | Verification of the container's capabilities, seccomp, namespaces |
-| `deepce` | Escape enumeration | Offensive | Automatic enumeration of the escape paths |
-| `AppArmor`/`seccomp` | Sandbox | Defensive | Restriction of the syscalls and capabilities |
+| `docker cli` | container cli | official | interaction with the daemon (including via the abused socket) |
+| `Falco` | runtime security | defensive | real-time detection of the escape patterns |
+| `amicontained` | container recon | analysis | verification of the container's capabilities, seccomp, namespaces |
+| `deepce` | escape enumeration | offensive | automatic enumeration of the escape paths |
+| `AppArmor`/`seccomp` | sandbox | defensive | restriction of the syscalls and capabilities |
 
 > **Recommended modern tool:** offensively `deepce` (Docker Enumeration and Escape) automates the discovery of the escape paths. Defensively `Falco` is the standard for container runtime detection, with native rules for the escapes. `amicontained` to quickly verify a container's security posture.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Privilege Escalation | Escape to Host | `T1611` | Escape from the container to the host via Docker socket (CLOUD-006) |
-| Execution | Deploy Container | `T1610` | Creation of a privileged container for the breakout (CLOUD-006) |
-| Discovery | Container and Resource Discovery | `T1613` | Enumeration of the containers and the misconfigurations |
-| Lateral Movement | (host) to other containers | `T1611` | From the compromised host to control of the other containers |
+| privilege escalation | escape to host | `T1611` | escape from the container to the host via docker socket (CLOUD-006) |
+| execution | deploy container | `T1610` | creation of a privileged container for the breakout (CLOUD-006) |
+| discovery | container and resource discovery | `T1613` | enumeration of the containers and the misconfigurations |
+| lateral movement | (host) to other containers | `T1611` | from the compromised host to control of the other containers |
 
-| Defensive countermeasure (D3FEND) | D3FEND ID | Application |
+| defensive countermeasure (d3fend) | d3fend id | application |
 | :--- | :--- | :--- |
-| Process Spawn Analysis | `D3-PSA` | Falco detects the anomalous spawning of shells/processes |
-| Mandatory Access Control | `D3-MAC` | seccomp/AppArmor restrict the container's capabilities |
+| process spawn analysis | `D3-PSA` | falco detects the anomalous spawning of shells/processes |
+| mandatory access control | `D3-MAC` | seccomp/apparmor restrict the container's capabilities |
 
 ---
 

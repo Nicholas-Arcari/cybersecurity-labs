@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Tooling - Cloud Security Tools
+# Tooling - cloud security tools
 
 > - **Phase:** Cloud Security - Cross-cutting toolkit
 > - **Category:** Tool reference (offensive and defensive)
@@ -22,7 +22,7 @@ The symmetry is the central theme of cloud security: the same paths an offensive
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 Tooling/
@@ -36,7 +36,7 @@ Tooling/
 
 ---
 
-## When to Use Which Tool
+## When to use which tool
 
 ```
 [RECON]      cloud-enum   -> discovery of assets, buckets, exposed services (multi-cloud)
@@ -54,15 +54,15 @@ Tooling/
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Perspective | Provider | Main role |
+| tool | perspective | provider | main role |
 | :--- | :--- | :--- | :--- |
-| `cloud_enum` | Recon | Multi | Asset and bucket discovery via name permutation |
-| `Pacu` | Offensive | AWS | "Metasploit for AWS": enum, privesc, exploitation |
-| `Prowler` | Defensive | AWS/Azure/GCP | Security and compliance checks (CIS, ...) |
-| `ScoutSuite` | Defensive | Multi | Multi-cloud audit of the configuration |
-| `Trivy` | Defensive | (container/IaC) | Universal scanner (see `../02-.../image-scanning/`) |
+| `cloud_enum` | recon | multi | asset and bucket discovery via name permutation |
+| `Pacu` | offensive | aws | "metasploit for aws": enum, privesc, exploitation |
+| `Prowler` | defensive | aws/azure/gcp | security and compliance checks (cis, ...) |
+| `ScoutSuite` | defensive | multi | multi-cloud audit of the configuration |
+| `Trivy` | defensive | (container/iac) | universal scanner (see `../02-.../image-scanning/`) |
 
 > **Recommended modern tool:** for a complete cloud assessment, `cloud_enum` for the recon, `Pacu` for the AWS exploitation, `Prowler` and `ScoutSuite` for the defensive audit. `Trivy` (documented in `../02-containers-security/image-scanning/`) as a universal scanner for containers and IaC.
 

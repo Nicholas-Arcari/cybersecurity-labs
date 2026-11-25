@@ -16,11 +16,11 @@ agire permette di scegliere il vettore a piu basso costo e minor rumore. I fonda
 
 ## Struttura della cartella
 
-| Sottocartella | Tecnica | Severity tipica | Stato |
+| sottocartella | tecnica | severity tipica | stato |
 | :--- | :--- | :---: | :--- |
-| `bloodhound/` | Raccolta e analisi del grafo del dominio (BloodHound/SharpHound) | `Informativo` | Scritta |
-| `domain-enumeration/` | Enumerazione LDAP/RPC/SMB (ldapsearch, rpcclient, nxc, enum4linux-ng) | `Basso` | Scritta |
-| `kerbrute-userenum/` | User enumeration e password spraying via Kerberos | `Variabile (Basso / Alto)` | Scritta |
+| `bloodhound/` | raccolta e analisi del grafo del dominio (bloodhound/sharphound) | `Informativo` | scritta |
+| `domain-enumeration/` | enumerazione ldap/rpc/smb (ldapsearch, rpcclient, nxc, enum4linux-ng) | `Basso` | scritta |
+| `kerbrute-userenum/` | user enumeration e password spraying via kerberos | `Variabile (Basso / Alto)` | scritta |
 
 ## Flusso operativo consigliato
 

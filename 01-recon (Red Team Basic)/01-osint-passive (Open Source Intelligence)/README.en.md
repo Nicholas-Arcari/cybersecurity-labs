@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 01 - Passive OSINT (Open Source Intelligence)
+# 01 - Passive OSINT (open source intelligence)
 
 > - **Phase:** Reconnaissance - Passive Information Gathering
 > - **Visibility:** Zero - no packets sent to the target, no logs generated on target systems
@@ -23,7 +23,7 @@ Passive OSINT directly feeds subsequent phases:
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 01-osint-passive (Open Source Intelligence)/
@@ -46,7 +46,7 @@ Passive OSINT directly feeds subsequent phases:
 
 ---
 
-## `breach-data/` - Compromised Credentials Analysis
+## `breach-data/` - Compromised credentials analysis
 
 **Finding ID:** `OSINT-001` | **Severity:** `High`
 
@@ -58,7 +58,7 @@ Main tools: `h8mail` (CLI), `HaveIBeenPwned` (Web).
 
 ---
 
-## `email-harvesting/` - Exposed Email Mapping
+## `email-harvesting/` - Exposed email mapping
 
 **Finding ID:** `OSINT-002` | **Severity:** `Informational`
 
@@ -68,7 +68,7 @@ In this lab: audit of the personal domain `nicholas-arcari.github.io`. Result: m
 
 ---
 
-## `google-dorks/` - Sensitive Data Exposure via Search Engines
+## `google-dorks/` - Sensitive data exposure via search engines
 
 **Finding ID:** `OSINT-003` | **Severity:** `Variable (Low / High)`
 
@@ -78,7 +78,7 @@ Target: `nasa.gov` (public disclosure program, educational purposes only).
 
 ---
 
-## `user-enumeration/` - Identity Correlation and User Tracking
+## `user-enumeration/` - Identity correlation and user tracking
 
 **Finding ID:** `OSINT-004` | **Severity:** `Low`
 
@@ -88,7 +88,7 @@ Critical attention: false positives are frequent. Each hit must be manually veri
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [INPUT] A starting data point (e.g., domain, email, full name)
@@ -123,42 +123,42 @@ Critical attention: false positives are frequent. Each hit must be manually veri
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main Use Case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `h8mail` | Breach data | CLI (Python) | Automated breach credential search |
-| `HaveIBeenPwned` | Breach data | Web | Manual validation on authoritative source |
-| `theHarvester` | Email/Subdomain harvesting | CLI | Email and subdomain aggregation from search engines |
-| `Sherlock` | Username enumeration | CLI (Python) | Identity correlation across 300+ platforms |
-| Google GHDB | Sensitive data exposure | Web | Google Hacking Database - pre-built queries |
-| `Maltego` | OSINT aggregator | GUI | OSINT graph visualization (free community edition) |
-| `SpiderFoot` | OSINT aggregator | CLI/Web | Multi-source OSINT automation (open source) |
+| `h8mail` | breach data | cli (python) | automated breach credential search |
+| `HaveIBeenPwned` | breach data | web | manual validation on authoritative source |
+| `theHarvester` | email/subdomain harvesting | cli | email and subdomain aggregation from search engines |
+| `Sherlock` | username enumeration | cli (python) | identity correlation across 300+ platforms |
+| google ghdb | sensitive data exposure | web | google hacking database - pre-built queries |
+| `Maltego` | osint aggregator | gui | osint graph visualization (free community edition) |
+| `SpiderFoot` | osint aggregator | cli/web | multi-source osint automation (open source) |
 
 > **Recommended modern tool:** `SpiderFoot HX` - compared to manual workflow, it automates correlation between emails, domains, breaches and social media in a single navigable graph. For enterprise environments, it replaces hours of manual research.
 
 ---
 
-## Finding Registry
+## Finding registry
 
-| ID | Description | Severity | File |
+| id | description | severity | file |
 | :--- | :--- | :---: | :--- |
-| `OSINT-001` | Target credentials identified in public data breaches | `High` | `breach-data/README.md` |
-| `OSINT-002` | Email exposure on personal domain - minimal surface | `Informational` | `email-harvesting/README.md` |
-| `OSINT-003` | Documents and login panels indexed on nasa.gov | `Variable (Low / High)` | `google-dorks/README.md` |
-| `OSINT-004` | Identity correlation through reused username | `Low` | `user-enumeration/README.md` |
+| `OSINT-001` | target credentials identified in public data breaches | `High` | `breach-data/README.md` |
+| `OSINT-002` | email exposure on personal domain - minimal surface | `Informational` | `email-harvesting/README.md` |
+| `OSINT-003` | documents and login panels indexed on nasa.gov | `Variable (Low / High)` | `google-dorks/README.md` |
+| `OSINT-004` | identity correlation through reused username | `Low` | `user-enumeration/README.md` |
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Info: Credentials | `T1589.001` | Compromised credential search on HIBP and h8mail (OSINT-001) |
-| Reconnaissance | Gather Victim Identity Info: Email Addresses | `T1589.002` | Email harvesting with theHarvester and Google Dorks on target domain (OSINT-002) |
-| Reconnaissance | Search Open Websites/Domains: Search Engines | `T1593.002` | Google Dorking to locate exposed PDF files, login panels and directory listings (OSINT-003) |
-| Reconnaissance | Gather Victim Identity Info: Employee Names | `T1589.003` | Identity correlation through username with Sherlock across 300+ platforms (OSINT-004) |
-| Reconnaissance | Search Open Websites/Domains: Social Media | `T1593.001` | Target social presence enumeration for profiling and Social Engineering (OSINT-004) |
+| reconnaissance | gather victim identity info: credentials | `T1589.001` | compromised credential search on hibp and h8mail (OSINT-001) |
+| reconnaissance | gather victim identity info: email addresses | `T1589.002` | email harvesting with theharvester and google dorks on target domain (OSINT-002) |
+| reconnaissance | search open websites/domains: search engines | `T1593.002` | google dorking to locate exposed pdf files, login panels and directory listings (OSINT-003) |
+| reconnaissance | gather victim identity info: employee names | `T1589.003` | identity correlation through username with sherlock across 300+ platforms (OSINT-004) |
+| reconnaissance | search open websites/domains: social media | `T1593.001` | target social presence enumeration for profiling and social engineering (OSINT-004) |
 
 ---
 

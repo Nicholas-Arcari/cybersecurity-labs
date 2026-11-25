@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Drupal Core Remote Code Execution (Drupalgeddon 2)
+# Drupal core remote code execution (drupalgeddon 2)
 
 > - **Fase:** Web Attack - CMS Exploitation
 > - **Visibilita:** Media - richieste HTTP POST con payload verso form Drupal, rilevabile ma spesso non bloccato da WAF generici
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 Durante l'attività di Penetration Testing condotta sull'ambiente di test Windows 10, è stata identificata e sfruttata con successo una vulnerabilità critica nell'istanza del CMS Drupal (versione 7.54).
 
@@ -27,9 +27,9 @@ CVSS Score: 9.8 (Critical)
 
 ---
 
-## 2 Technical Analysis
+## 2 Technical analysis
 
-#### 1. Reconnaissance & Fingerprinting
+#### 1. Reconnaissance & fingerprinting
 
 La fase iniziale di ricognizione ha permesso di identificare la versione specifica di Drupal in uso.
 
@@ -55,7 +55,7 @@ Esecuzione:
 
 Inizialmente sono stati tentati exploit automatici, bloccati dalle policy di sicurezza dell'host Windows. È stato quindi eseguito un attacco manuale inviando un payload specifico per verificare l'esecuzione di codice (`RCE verification`).
 
-#### 3. Post-Exploitation & Persistence
+#### 3. Post-Exploitation & persistence
 
 Una volta confermata la vulnerabilità, l'accesso è stato consolidato trasformando l'RCE in una Web Shell persistente.
 
@@ -71,7 +71,7 @@ Lo screenshot seguente documenta il successo dell'operazione. È visibile la pag
 
 ---
 
-## 3 Business Impact
+## 3 Business impact
 
 L'impatto di questa vulnerabilità è classificato come CRITICO per i seguenti motivi:
 
@@ -83,7 +83,7 @@ Poiché l'attacco non richiede autenticazione, il sito è esposto a qualsiasi at
 
 ---
 
-## 4 Remediation Plan
+## 4 Remediation plan
 
 Si raccomanda di applicare le seguenti azioni correttive con urgenza immediata:
 
@@ -106,9 +106,9 @@ Si raccomanda di applicare le seguenti azioni correttive con urgenza immediata:
 
 ---
 
-## Analisi a Basso Livello: Meccanica di Drupalgeddon 2
+## Analisi a basso livello: meccanica di drupalgeddon 2
 
-### Form API Rendering Pipeline
+### Form API rendering pipeline
 
 CVE-2018-7600 sfrutta il modo in cui Drupal processa i form attraverso il suo Form API. La vulnerabilita risiede nel sottosistema di rendering AJAX:
 
@@ -136,7 +136,7 @@ Perche funziona:
 - #post_render accetta callable PHP (exec, passthru, system)
 ```
 
-### PHP Filter Module: Persistenza Nativa
+### PHP filter module: persistenza nativa
 
 Il modulo "PHP Filter" e un componente core di Drupal (disabilitato per default dalla versione 8) che permette di inserire codice PHP nei nodi di contenuto:
 
@@ -160,20 +160,20 @@ Vantaggi per l'attaccante:
 - Appare come una pagina normale nel CMS
 ```
 
-### Drupal vs WordPress: Confronto Superficie di Attacco
+### Drupal vs WordPress: confronto superficie di attacco
 
-| Aspetto | WordPress | Drupal |
+| aspetto | wordpress | drupal |
 | :--- | :--- | :--- |
-| Versioning esposto | `readme.html`, meta generator | `CHANGELOG.txt`, `INSTALL.txt` |
-| Plugin path | `/wp-content/plugins/` | `/sites/all/modules/`, `/modules/` |
-| Admin panel | `/wp-admin/` (nascondibile) | `/user/login` (non nascondibile) |
-| RCE post-auth | Theme Editor (PHP diretto) | PHP Filter module (nel database) |
-| API REST | `/wp-json/` (dalla 4.7) | `/jsonapi/` (dalla 8.x) |
-| Scanner dedicato | WPScan | Droopescan |
+| versioning esposto | `readme.html`, meta generator | `CHANGELOG.txt`, `INSTALL.txt` |
+| plugin path | `/wp-content/plugins/` | `/sites/all/modules/`, `/modules/` |
+| admin panel | `/wp-admin/` (nascondibile) | `/user/login` (non nascondibile) |
+| rce post-auth | theme editor (php diretto) | php filter module (nel database) |
+| api rest | `/wp-json/` (dalla 4.7) | `/jsonapi/` (dalla 8.x) |
+| scanner dedicato | wpscan | droopescan |
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il tentativo iniziale con exploit automatici (Metasploit `drupal_drupalgeddon2`) e stato bloccato da Windows Defender sulla macchina target. Questo ha forzato il passaggio all'exploitation manuale via curl, che si e rivelata piu formativa: costruire il payload POST a mano ha richiesto di comprendere la meccanica del Form API render array, non solo di lanciare un modulo preconfigurato.
 
@@ -185,12 +185,12 @@ L'output di `ipconfig` tramite la web shell ha confermato che il server girava s
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Fingerprinting della versione Drupal 7.54 tramite accesso al file `CHANGELOG.txt` pubblico e identificazione della vulnerabilita CVE-2018-7600 (WEB-015) |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation manuale di CVE-2018-7600 tramite manipolazione dei parametri `#post_render` nel Form API di Drupal per ottenere RCE non autenticata (WEB-015) |
-| Persistence | Server Software Component: Web Shell | `T1505.003` | Deploy di Web Shell PHP attraverso il modulo "PHP Filter" di Drupal, creando una pagina "system diagnostyc" che esegue comandi di sistema (WEB-015) |
-| Discovery | File and Directory Discovery | `T1083` | Esecuzione del comando `ipconfig` tramite Web Shell per mappare la configurazione di rete del server Windows sottostante (WEB-015) |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | fingerprinting della versione drupal 7.54 tramite accesso al file `CHANGELOG.txt` pubblico e identificazione della vulnerabilita CVE-2018-7600 (WEB-015) |
+| initial access | exploit public-facing application | `T1190` | exploitation manuale di CVE-2018-7600 tramite manipolazione dei parametri `#post_render` nel form api di drupal per ottenere rce non autenticata (WEB-015) |
+| persistence | server software component: web shell | `T1505.003` | deploy di web shell php attraverso il modulo "php filter" di drupal, creando una pagina "system diagnostyc" che esegue comandi di sistema (WEB-015) |
+| discovery | file and directory discovery | `T1083` | esecuzione del comando `ipconfig` tramite web shell per mappare la configurazione di rete del server windows sottostante (WEB-015) |
 
 ---
 

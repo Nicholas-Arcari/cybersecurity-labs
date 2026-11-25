@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Insecure Deserialization (gadget chain, ysoserial)
+# Insecure deserialization (gadget chain, ysoserial)
 
 > - **Fase:** Web Exploitation - OWASP A08:2021 Software and Data Integrity Failures (deserializzazione di dati non fidati)
 > - **Visibilita:** Media - invio di oggetti serializzati anomali; l'esecuzione del gadget chain genera processi figli dal processo applicativo
@@ -11,7 +11,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 La serializzazione converte un oggetto in memoria in un flusso di byte (per salvarlo o trasmetterlo); la
 deserializzazione fa l'inverso. Il problema sorge quando un'applicazione deserializza dati forniti
@@ -34,9 +34,9 @@ per pickle Python). La decisione operativa chiave e identificare il formato (Jav
 quali gadget chain sono disponibili nel classpath/ambiente dell'app: non basta che l'app deserializzi, serve
 una catena di gadget sfruttabile. ysoserial automatizza la generazione per Java provando le chain note.
 
-## Esecuzione / Comandi
+## Esecuzione / comandi
 
-### Fase 1 - Identificazione del formato serializzato
+### Fase 1 - identificazione del formato serializzato
 
 ```bash
 # Un blob Base64 che decodifica a byte che iniziano con 0xAC 0xED (o 'rO0' in Base64) = oggetto Java serializzato
@@ -49,7 +49,7 @@ Output illustrativo:
 00000000: aced 0005 7372 ...        <-- magic bytes Java serialization: candidato a insecure deserialization
 ```
 
-### Fase 2 - Generazione del payload (concetto, ysoserial)
+### Fase 2 - generazione del payload (concetto, ysoserial)
 
 ysoserial genera un oggetto serializzato basato su una gadget chain nota. A livello concettuale:
 
@@ -62,7 +62,7 @@ Il comando incapsulato, in un test di laboratorio, e tipicamente un semplice mar
 `ping` verso la macchina attaccante o la scrittura di un file), NON un payload distruttivo. La verifica OOB
 (il server contatta l'attaccante) conferma l'RCE senza bisogno di una shell completa.
 
-### Fase 3 - Invio e conferma
+### Fase 3 - invio e conferma
 
 Il payload viene inviato nel punto di deserializzazione (cookie, parametro, corpo) e si osserva l'effetto
 del comando (callback di rete, file creato). Output illustrativo lato attaccante:
@@ -80,7 +80,7 @@ dimostrazione del finding non richiede di spingersi oltre la prova OOB. Se l'app
 una gadget chain sfruttabile nel classpath, l'impatto si riduce (possibile DoS o nessun effetto): il finding
 reale va classificato in base all'esito effettivo in lab.
 
-### Analisi Teorica
+### Analisi teorica
 
 La deserializzazione insicura e un caso estremo di confusione tra dati e codice: l'applicazione tratta un
 flusso di byte come la ricetta per ricostruire oggetti arbitrari, e la ricostruzione ha effetti collaterali
@@ -90,7 +90,7 @@ esistente (simile nello spirito al ROP del binary exploitation). La contromisura
 mai dati non fidati con meccanismi che permettono tipi arbitrari; dove inevitabile, usare allow-list dei tipi
 e formati che trasportano solo dati (JSON) senza istruzioni.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Rilevamento (WAF/SIEM/EDR).**
 - Input con marcatori di serializzazione (`rO0`/`0xACED` per Java, `gASV`/`\x80\x04` per pickle, `TypeError`
@@ -110,11 +110,11 @@ e formati che trasportano solo dati (JSON) senza istruzioni.
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Vale per l'esito "RCE confermata" (severity Critico).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** punto di deserializzazione individuato (es. cookie Java serializzato) e gadget chain
 disponibile.
@@ -144,7 +144,7 @@ sistema.
 **Vettori di monetizzazione tipici:** ransomware/esfiltrazione a valle dell'RCE; uso del server come pivot
 verso la rete interna.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** marcatori di serializzazione in input; processi figli anomali dal processo applicativo;
 callback in uscita.
@@ -168,12 +168,12 @@ filtro a valle.
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `ysoserial` | Exploit generator | CLI - Attivo | Genera payload Java per gadget chain note (CommonsCollections, Spring, ...) |
-| `ysoserial.net` | Exploit generator | CLI - Attivo | Equivalente per .NET (BinaryFormatter, Json.NET, ...) |
-| `Burp Suite` | Proxy/scanner | Web - Attivo | Individua e modifica input serializzati; estensione "Java Deserialization Scanner" |
-| `phpggc` | Exploit generator | CLI - Attivo | Gadget chain per PHP (unserialize) |
+| `ysoserial` | exploit generator | cli - attivo | genera payload java per gadget chain note (commonscollections, spring, ...) |
+| `ysoserial.net` | exploit generator | cli - attivo | equivalente per .net (binaryformatter, json.net, ...) |
+| `Burp Suite` | proxy/scanner | web - attivo | individua e modifica input serializzati; estensione "java deserialization scanner" |
+| `phpggc` | exploit generator | cli - attivo | gadget chain per php (unserialize) |
 
 ## Note di metodologia
 
@@ -184,20 +184,20 @@ non distruttivo per dimostrare l'RCE.
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Sfruttamento della deserializzazione insicura su un endpoint esposto. |
-| Execution | Command and Scripting Interpreter | `T1059` | Esecuzione di comandi sul server tramite la gadget chain deserializzata. |
+| initial access | exploit public-facing application | `T1190` | sfruttamento della deserializzazione insicura su un endpoint esposto. |
+| execution | command and scripting interpreter | `T1059` | esecuzione di comandi sul server tramite la gadget chain deserializzata. |
 
 ---
 
 ## Correlazioni con altri finding
 
-| Provenienza | Questa tecnica | Effetto |
+| provenienza | questa tecnica | effetto |
 | :--- | :--- | :--- |
-| [02-web-recon](../../02-web-recon (Enumeration)/README.md) | Deserializzazione | individua input serializzati (cookie/parametri con marcatori noti) |
-| Deserializzazione (RCE) | [04-system-exploitation](../../../04-system-exploitation/README.md) | l'RCE apre a enumerazione locale e privilege escalation |
-| Deserializzazione | [secure-coding-lab](../../06-secure-coding-lab (Defense)/README.md) | la remediation (no deserializzazione di dati non fidati) si collega al secure coding |
+| [02-web-recon](../../02-web-recon (Enumeration)/README.md) | deserializzazione | individua input serializzati (cookie/parametri con marcatori noti) |
+| deserializzazione (rce) | [04-system-exploitation](../../../04-system-exploitation/README.md) | l'rce apre a enumerazione locale e privilege escalation |
+| deserializzazione | [secure-coding-lab](../../06-secure-coding-lab (Defense)/README.md) | la remediation (no deserializzazione di dati non fidati) si collega al secure coding |
 
 ---
 

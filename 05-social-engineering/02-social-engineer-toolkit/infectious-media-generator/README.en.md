@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# SET Infectious Media Generator: Autorun USB Payload
+# SET infectious media generator: autorun USB payload
 
 > - **Phase:** Social Engineering - Infectious Media Generator - Physical Access Vector
 > - **Visibility:** Medium - USB insertion is logged in system logs (Event ID 6416 for PnP); payload execution can trigger AV/EDR; no network traffic in the delivery phase (physical delivery)
@@ -14,7 +14,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 SET's Infectious Media Generator automates the creation of payloads for removable media (USB drives) with autorun configuration. The technique exploits the Windows AutoRun/AutoPlay mechanism to automatically execute a payload when the USB device is mounted. Although AutoRun is disabled by default starting from Windows 7 SP1 (Microsoft Security Advisory 967940), the technique remains relevant in three contexts: legacy environments (unpatched Windows XP/7, SCADA/ICS industrial systems), environments with GPO policies that re-enable AutoRun, and scenarios where social engineering convinces the user to manually open the file.
 
@@ -22,7 +22,7 @@ In the lab, the autorun structure (file `autorun.inf` + executable payload) was 
 
 ---
 
-## Finding SE-005: Autorun Payload on USB Drive
+## Finding SE-005: autorun payload on USB drive
 
 **Finding ID:** `SE-005` | **Severity:** `Medium` | **CVSS:** 5.3
 
@@ -30,7 +30,7 @@ An attacker with physical access to the target area can deposit a USB drive cont
 
 **PoC Scenario:** The analyst generates an autorun structure with Meterpreter payload via SET, copies it to a USB drive, and inserts it into the target Windows 7 VM. Autorun executes the payload and establishes a reverse shell.
 
-### PoC - Phase 1: Listener Setup
+### PoC - phase 1: listener setup
 
 ```Bash
 msfconsole -q
@@ -46,7 +46,7 @@ exploit -j
 [*] Started reverse TCP handler on 192.168.0.110:4445                <--
 ```
 
-### PoC - Phase 2: Payload Generation with SET
+### PoC - phase 2: payload generation with SET
 
 ```Bash
 sudo setoolkit
@@ -91,7 +91,7 @@ set:infectious> 1
 [*] Copy the contents of /root/.set/autorun/ to your USB drive.
 ```
 
-### PoC - Phase 3: Analysis of Generated Structure
+### PoC - phase 3: analysis of generated structure
 
 ```Bash
 cat /root/.set/autorun/autorun.inf
@@ -116,7 +116,7 @@ drwxr-xr-x 5 root root  4096 Mar 28 15:10 ..
 -rwxr-xr-x 1 root root 73802 Mar 28 15:10 payload.exe              <--
 ```
 
-### PoC - Phase 4: Copy to USB and Test on Target
+### PoC - phase 4: copy to USB and test on target
 
 Files are copied to the USB drive (mounted on Kali as `/media/usb`).
 
@@ -139,11 +139,11 @@ Server username: WIN7-LAB\utente                                     <--
 
 ---
 
-## Impact and Remediation (Blue Team)
+## Impact and remediation (blue team)
 
 Payload execution via USB drive provides the attacker access to the target system without any network interaction during the delivery phase. The physical vector completely bypasses perimeter controls (firewall, email gateway, proxy).
 
-### Recommended Countermeasures
+### Recommended countermeasures
 
 1. **Disable AutoRun via Group Policy:** `Computer Configuration -> Administrative Templates -> Windows Components -> AutoPlay Policies -> Turn off AutoPlay: All drives`. This is the most effective and zero-cost countermeasure.
 2. **USB Device Control:** solutions like Microsoft Defender for Endpoint Device Control, Symantec DLP, or Carbon Black to block or limit access to removable USB devices.
@@ -153,7 +153,7 @@ Payload execution via USB drive provides the attacker access to the target syste
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The test environment required a specific configuration: the lab Windows 10 VM had AutoRun disabled by default, making automatic execution impossible. To test the technique in its original form, a Windows 7 VM with AutoRun enabled was necessary.
 
@@ -167,7 +167,7 @@ An important observation: in a modern real engagement, the attacker would not us
 
 ---
 
-## Theoretical Analysis: Physical Vector and Social Engineering
+## Theoretical analysis: physical vector and social engineering
 
 The removable media attack exploits two distinct vulnerabilities:
 
@@ -183,13 +183,13 @@ The Medium severity reflects the physical access requirement and AutoRun being d
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Obtain Capabilities: Tool | `T1588.002` | Use of SET for automatic generation of payload and autorun.inf file for USB drive. |
-| Initial Access | Replication Through Removable Media | `T1091` | Payload delivered via USB drive deposited in target area; automatic execution via AutoRun or manual via social engineering. |
-| Execution | User Execution: Malicious File | `T1204.002` | On systems without AutoRun, the victim manually opens the payload file, induced by the device's deceptive labeling. |
+| resource development | obtain capabilities: tool | `T1588.002` | use of set for automatic generation of payload and autorun.inf file for usb drive. |
+| initial access | replication through removable media | `T1091` | payload delivered via usb drive deposited in target area; automatic execution via autorun or manual via social engineering. |
+| execution | user execution: malicious file | `T1204.002` | on systems without autorun, the victim manually opens the payload file, induced by the device's deceptive labeling. |
 
 ---
 

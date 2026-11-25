@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 03 - Web Attacks (Red Team + Secure Coding)
+# 03 - Web attacks (red team + secure coding)
 
 > - **Fase:** Web Application Penetration Testing
 > - **Visibilita:** Variabile - da Zero (analisi passiva del codice) ad Alta (scanner automatici come Nikto)
@@ -101,59 +101,59 @@ Il flusso operativo e il seguente: identificazione tecnologia target (`02-web-re
 
 ---
 
-## Registro Finding - Modulo 03-web-attacks
+## Registro finding - modulo 03-web-attacks
 
-| ID | Descrizione | Severity | CVSS v3.1 | Sottocartella |
+| id | descrizione | severity | cvss v3.1 | sottocartella |
 | :--- | :--- | :---: | :---: | :--- |
-| `WEB-001` | Assenza token CSRF - form non protetti da Cross-Site Request Forgery | `Medio` | 5.4 | `01-proxy-tools/owasp-zap/` |
-| `WEB-002` | PHP 5.6.40 EOL + header X-Powered-By esposto | `Alto` | 7.5 | `02-web-recon/tech-profiler/` |
-| `WEB-003` | Directory CVS e cartella .idea esposti pubblicamente | `Alto` | 7.5 | `02-web-recon/dir-busting/` |
-| `WEB-004` | SQL Injection manuale: auth bypass e UNION-based data exfiltration | `Critico` | 9.8 | `03-owasp/sql-injection/manual-payloads/` |
-| `WEB-005` | XSS Reflected - input URL riflesso senza encoding | `Medio` | 6.1 | `03-owasp/xss/reflected/` |
-| `WEB-006` | XSS Stored - payload persistente nel database (profilo utente) | `Alto` | 8.2 | `03-owasp/xss/stored/` |
-| `WEB-007` | XSS Blind/OOB - callback su webhook.site da area admin | `Alto` | 8.2 | `03-owasp/xss/xss-hunter-payloads/` |
-| `WEB-008` | SSTI Jinja2 - Remote Code Execution tramite template injection | `Critico` | 9.8 | `03-owasp/ssti/` |
-| `WEB-009` | Brute Force autenticazione web - assenza rate limiting e lockout | `Alto` | 7.5 | `03-owasp/auth-attacks/bruteforce-web/` |
-| `WEB-010` | Session Hijacking - cookie privo di flag HttpOnly e Secure | `Alto` | 8.0 | `03-owasp/auth-attacks/session-hijacking/` |
-| `WEB-011` | SQLi automatizzata sqlmap - dump completo DB con PAN carte di credito | `Critico` | 9.8 | `03-owasp/sql-injection/sql-map-data/` |
-| `WEB-012` | JWT weak secret (secret123) - token forging con ruolo admin | `Critico` | 9.8 | `05-api-security/jwt-tokens/` |
-| `WEB-013` | GraphQL Introspection abilitata + Command Injection RCE | `Critico` | 9.8 | `05-api-security/graphql/` |
-| `WEB-014` | IDOR/BOLA - accesso dati finanziari di altri utenti senza autorizzazione | `Critico` | 9.1 | `05-api-security/postman/` |
-| `WEB-015` | Drupal CVE-2018-7600 Drupalgeddon2 - RCE e Web Shell su Windows | `Critico` | 9.8 | `04-cms-specific/drupal/` |
+| `WEB-001` | assenza token csrf - form non protetti da cross-site request forgery | `Medio` | 5.4 | `01-proxy-tools/owasp-zap/` |
+| `WEB-002` | php 5.6.40 eol + header x-powered-by esposto | `Alto` | 7.5 | `02-web-recon/tech-profiler/` |
+| `WEB-003` | directory cvs e cartella .idea esposti pubblicamente | `Alto` | 7.5 | `02-web-recon/dir-busting/` |
+| `WEB-004` | sql injection manuale: auth bypass e union-based data exfiltration | `Critico` | 9.8 | `03-owasp/sql-injection/manual-payloads/` |
+| `WEB-005` | xss reflected - input url riflesso senza encoding | `Medio` | 6.1 | `03-owasp/xss/reflected/` |
+| `WEB-006` | xss stored - payload persistente nel database (profilo utente) | `Alto` | 8.2 | `03-owasp/xss/stored/` |
+| `WEB-007` | xss blind/oob - callback su webhook.site da area admin | `Alto` | 8.2 | `03-owasp/xss/xss-hunter-payloads/` |
+| `WEB-008` | ssti jinja2 - remote code execution tramite template injection | `Critico` | 9.8 | `03-owasp/ssti/` |
+| `WEB-009` | brute force autenticazione web - assenza rate limiting e lockout | `Alto` | 7.5 | `03-owasp/auth-attacks/bruteforce-web/` |
+| `WEB-010` | session hijacking - cookie privo di flag httponly e secure | `Alto` | 8.0 | `03-owasp/auth-attacks/session-hijacking/` |
+| `WEB-011` | sqli automatizzata sqlmap - dump completo db con pan carte di credito | `Critico` | 9.8 | `03-owasp/sql-injection/sql-map-data/` |
+| `WEB-012` | jwt weak secret (secret123) - token forging con ruolo admin | `Critico` | 9.8 | `05-api-security/jwt-tokens/` |
+| `WEB-013` | graphql introspection abilitata + command injection rce | `Critico` | 9.8 | `05-api-security/graphql/` |
+| `WEB-014` | idor/bola - accesso dati finanziari di altri utenti senza autorizzazione | `Critico` | 9.1 | `05-api-security/postman/` |
+| `WEB-015` | drupal CVE-2018-7600 drupalgeddon2 - rce e web shell su windows | `Critico` | 9.8 | `04-cms-specific/drupal/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | WEB-001, WEB-002, WEB-003 |
-| Reconnaissance | Active Scanning: Wordlist Scanning | `T1595.003` | WEB-003, WEB-013 |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | WEB-002 |
-| Reconnaissance | Gather Victim Network Info: Domain Properties | `T1590.001` | (subdomain-enum) |
-| Collection | Man-in-the-Middle | `T1557` | WEB-001 (OWASP ZAP proxy) |
-| Collection | Browser Session Hijacking | `T1185` | WEB-007, WEB-010 |
-| Credential Access | Brute Force: Password Guessing | `T1110.001` | WEB-009 |
-| Credential Access | Brute Force: Password Spraying | `T1110.004` | WEB-009 |
-| Credential Access | Brute Force: Password Cracking | `T1110.002` | WEB-012 |
-| Credential Access | Steal Web Session Cookie | `T1539` | WEB-005, WEB-006, WEB-007, WEB-010 |
-| Initial Access | Exploit Public-Facing Application | `T1190` | WEB-004, WEB-005, WEB-006, WEB-008, WEB-011, WEB-015 |
-| Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | WEB-013 |
-| Execution | Command and Scripting Interpreter: Python | `T1059.006` | WEB-008 |
-| Persistence | Server Software Component: Web Shell | `T1505.003` | WEB-006, WEB-015 |
-| Defense Evasion | Subvert Trust Controls: Install Root Certificate | `T1553.004` | (certificates) |
-| Defense Evasion | Use Alternate Authentication Material: Web Session Cookie | `T1550.004` | WEB-010 |
-| Defense Evasion | Use Alternate Authentication Material | `T1550` | WEB-012 |
-| Discovery | File and Directory Discovery | `T1083` | WEB-003, WEB-008 |
-| Discovery | Account Discovery | `T1087` | WEB-004, WEB-014 |
-| Discovery | Network Service Scanning | `T1046` | (vulnerability-scanners) |
-| Collection | Data from Information Repositories | `T1213` | WEB-003, WEB-004, WEB-011, WEB-013, WEB-014 |
-| Exfiltration | Exfiltration Over Web Service | `T1567` | WEB-011 |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | WEB-005 |
-| Lateral Movement | Valid Accounts | `T1078` | WEB-014 |
-| Lateral Movement | Valid Accounts: Cloud Accounts | `T1078.003` | WEB-012 |
-| Reconnaissance | Gather Victim Identity Information | `T1589` | WEB-007 |
-| Collection | Man-in-the-Middle: AiTM HTTPS Interception | `T1557.002` | WEB-010 |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | WEB-001, WEB-002, WEB-003 |
+| reconnaissance | active scanning: wordlist scanning | `T1595.003` | WEB-003, WEB-013 |
+| reconnaissance | gather victim host info: software | `T1592.002` | WEB-002 |
+| reconnaissance | gather victim network info: domain properties | `T1590.001` | (subdomain-enum) |
+| collection | man-in-the-middle | `T1557` | WEB-001 (owasp zap proxy) |
+| collection | browser session hijacking | `T1185` | WEB-007, WEB-010 |
+| credential access | brute force: password guessing | `T1110.001` | WEB-009 |
+| credential access | brute force: password spraying | `T1110.004` | WEB-009 |
+| credential access | brute force: password cracking | `T1110.002` | WEB-012 |
+| credential access | steal web session cookie | `T1539` | WEB-005, WEB-006, WEB-007, WEB-010 |
+| initial access | exploit public-facing application | `T1190` | WEB-004, WEB-005, WEB-006, WEB-008, WEB-011, WEB-015 |
+| execution | command and scripting interpreter: unix shell | `T1059.004` | WEB-013 |
+| execution | command and scripting interpreter: python | `T1059.006` | WEB-008 |
+| persistence | server software component: web shell | `T1505.003` | WEB-006, WEB-015 |
+| defense evasion | subvert trust controls: install root certificate | `T1553.004` | (certificates) |
+| defense evasion | use alternate authentication material: web session cookie | `T1550.004` | WEB-010 |
+| defense evasion | use alternate authentication material | `T1550` | WEB-012 |
+| discovery | file and directory discovery | `T1083` | WEB-003, WEB-008 |
+| discovery | account discovery | `T1087` | WEB-004, WEB-014 |
+| discovery | network service scanning | `T1046` | (vulnerability-scanners) |
+| collection | data from information repositories | `T1213` | WEB-003, WEB-004, WEB-011, WEB-013, WEB-014 |
+| exfiltration | exfiltration over web service | `T1567` | WEB-011 |
+| initial access | phishing: spearphishing link | `T1566.002` | WEB-005 |
+| lateral movement | valid accounts | `T1078` | WEB-014 |
+| lateral movement | valid accounts: cloud accounts | `T1078.003` | WEB-012 |
+| reconnaissance | gather victim identity information | `T1589` | WEB-007 |
+| collection | man-in-the-middle: aitm https interception | `T1557.002` | WEB-010 |
 
 ---
 

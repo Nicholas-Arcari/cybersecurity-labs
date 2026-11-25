@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Network Scanning: DNS Enumeration & Zone Transfers
+# Network scanning: DNS enumeration & zone transfers
 
 > - **Phase:** Reconnaissance - DNS Enumeration
 > - **Visibility:** Low - standard DNS queries towards the target's public Name Servers, compatible with legitimate traffic
@@ -17,7 +17,7 @@ Tools: `dig`, `host`, `dnsenum`
 
 ---
 
-## 1 Theoretical Introduction
+## 1 Theoretical introduction
 
 DNS (Domain Name System) typically operates on port 53 (UDP/TCP).
 
@@ -29,11 +29,11 @@ It is a DNS database replication mechanism between primary and secondary servers
 
 ---
 
-## 2 Technical Execution
+## 2 Technical execution
 
 **Finding ID:** `DNS-001` | **Severity:** `Critical`
 
-#### A. Name Server (NS) Identification
+#### A. name server (NS) identification
 
 Before attacking, you need to know "who" manages the target's DNS.
 
@@ -47,7 +47,7 @@ host -t ns zonetransfer.me
 
 Analysis: Servers nsztm1.digi.ninja and nsztm2.digi.ninja were identified.
 
-#### B. Zone Transfer Execution (Attack)
+#### B. zone transfer execution (attack)
 
 Using the dig tool, we query the identified Name Server requesting a complete copy of the zone (axfr).
 
@@ -69,7 +69,7 @@ Extracted Data Analysis: Critical subdomains usually hidden emerged from the dum
 - `office.zonetransfer.me` (Internal network)
 - Comments in TXT records revealing internal details.
 
-#### C. Automation with DNSenum
+#### C. automation with DNSenum
 
 To speed up the process, dnsenum is used which combines Google queries, Brute Force and Zone Transfer in a single command.
 
@@ -86,7 +86,7 @@ dnsenum zonetransfer.me
 
 ---
 
-## 3 Conclusions and Remediation
+## 3 Conclusions and remediation
 
 The attack was successful confirming a Critical Misconfiguration. Complete DNS zone exposure nullifies "Security by Obscurity", providing the attacker with the complete network topology.
 
@@ -94,12 +94,12 @@ Remediation (Blue Team): Configure the DNS server (e.g., BIND9 or Windows DNS) t
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Network Info: DNS | `T1590.002` | AXFR Zone Transfer on zonetransfer.me through dig and dnsenum, obtaining the complete list of subdomains and IPs including vpn, dev and office (DNS-001) |
-| Reconnaissance | Search Open Technical Databases: DNS/Passive DNS | `T1596.001` | Querying the target's public Name Servers to identify NS, MX records and transferable subzones (DNS-001) |
+| reconnaissance | gather victim network info: dns | `T1590.002` | axfr zone transfer on zonetransfer.me through dig and dnsenum, obtaining the complete list of subdomains and ips including vpn, dev and office (DNS-001) |
+| reconnaissance | search open technical databases: dns/passive dns | `T1596.001` | querying the target's public name servers to identify ns, mx records and transferable subzones (DNS-001) |
 
 ---
 

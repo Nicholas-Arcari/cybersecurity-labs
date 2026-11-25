@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Disk Forensics - Acquisizione, Timeline e Recupero degli Artefatti
+# Disk forensics - acquisizione, timeline e recupero degli artefatti
 
 > - **Fase:** Digital Forensics & Incident Response - Disk & Memory Analysis
 > - **Categoria:** Analysis - ricostruzione post-incidente dalle prove su disco
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 La disk forensics e l'analisi post-incidente: quando un sistema e stato compromesso, l'analista forense ricostruisce cosa e successo esaminando le tracce lasciate sul disco (e in memoria). E il modulo dove le tecniche offensive dei moduli 01-07 vengono viste dall'altra parte - non come si esegue un attacco, ma come lo si ricostruisce dopo, dalle prove che ha inevitabilmente lasciato.
 
@@ -33,7 +33,7 @@ Il finding FOR-001 documenta il ciclo forense completo su un sistema di test com
 
 ---
 
-## Il Ciclo Forense: dall'Acquisizione al Recupero
+## Il ciclo forense: dall'Acquisizione al recupero
 
 **ID Finding:** `FOR-001` | **Severity:** `Alto` (ricostruzione completa dell'intrusione dalle prove su disco, incluso il recupero di artefatti cancellati dall'attaccante)
 
@@ -41,7 +41,7 @@ Il finding FOR-001 documenta il ciclo forense completo su un sistema di test com
 
 L'ordine delle operazioni forensi non e arbitrario ma segue l'**ordine di volatilita**: si acquisiscono prima le prove piu effimere (memoria RAM, connessioni di rete, processi) e poi quelle persistenti (disco). La RAM contiene tracce che spariscono allo spegnimento - chiavi di cifratura, processi malevoli, connessioni C2 - e va catturata per prima se il sistema e ancora acceso.
 
-### PoC - Fase 1: Acquisizione dell'immagine (con integrita)
+### PoC - fase 1: acquisizione dell'immagine (con integrita)
 
 ```Bash
 # Acquisizione forense del disco con dc3dd (calcola l'hash durante la copia)
@@ -55,7 +55,7 @@ dc3dd: 500 GB copied
 evidence.dd: 500 GB written
 ```
 
-### PoC - Fase 2: Verifica di integrita (la copia e fedele?)
+### PoC - fase 2: verifica di integrita (la copia e fedele?)
 
 ```Bash
 # L'hash dell'immagine deve corrispondere a quello dell'originale
@@ -67,7 +67,7 @@ sha256sum evidence.dd
 # corrispondenza confermata -> l'immagine e ammissibile come prova
 ```
 
-### PoC - Fase 3: Acquisizione ed analisi della memoria (Volatility)
+### PoC - fase 3: acquisizione ed analisi della memoria (Volatility)
 
 ```Bash
 # Analisi di un dump di memoria: processi attivi al momento dell'incidente
@@ -81,7 +81,7 @@ PID    PPID   Name             Note
                                netscan: 6612 -> 45.83.x.x:443  (C2 attivo)
 ```
 
-### PoC - Fase 4: Timeline dell'incidente
+### PoC - fase 4: timeline dell'incidente
 
 ```Bash
 # Costruzione della super-timeline con plaso (log2timeline)
@@ -97,7 +97,7 @@ psort.py -o l2tcsv -w timeline.csv timeline.plaso
 2026-06-14 03:15  FILE  /tmp/exfil.tar.gz        created    <-- staging esfiltrazione
 ```
 
-### PoC - Fase 5: Recupero di file cancellati (carving)
+### PoC - fase 5: recupero di file cancellati (carving)
 
 ```Bash
 # Recupero di file cancellati dall'attaccante (foremost/photorec)
@@ -110,7 +110,7 @@ Processing: evidence.dd
 # cio che l'attaccante ha cancellato per coprire le tracce e stato recuperato
 ```
 
-### Metodologia e Catena di Custodia
+### Metodologia e catena di custodia
 
 - **Mai sull'originale:** ogni analisi si conduce sull'immagine, mai sul supporto originale; il write blocker garantisce che l'acquisizione non alteri la prova
 - **Integrita verificabile:** l'hash acquisito al momento della copia va riverificato prima e dopo l'analisi; una discrepanza invalida la prova
@@ -119,7 +119,7 @@ Processing: evidence.dd
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 La lezione piu importante e stata la disciplina dell'integrita, non la tecnica. Acquisire un'immagine con `dd` e banale; farlo in modo forensicamente valido - write blocker, hash calcolato durante la copia, verifica successiva - e cio che distingue un'analisi ammissibile da una contaminata. La prima volta ho montato distrattamente l'immagine in lettura-scrittura e ho alterato i timestamp: lezione appresa a mie spese sul perche ogni passaggio del protocollo esista. La prova digitale non perdona la sciatteria.
 
@@ -129,7 +129,7 @@ Il momento piu istruttivo e stato il recupero dell'archivio di esfiltrazione can
 
 ---
 
-## Analisi Teorica: La Prova Digitale come Ricostruzione del Passato
+## Analisi teorica: la prova digitale come ricostruzione del passato
 
 La forensics e archeologia del recente: ricostruire un evento passato (l'attacco) dalle tracce materiali che ha lasciato. Ogni azione su un sistema informatico lascia residui - file creati, timestamp modificati, voci di log, blocchi non allocati contenenti dati cancellati - e l'analista li interpreta per ricomporre la sequenza degli eventi. Il fondamento e che l'attivita non e mai senza traccia: anche l'attaccante piu attento altera lo stato del sistema, e ogni alterazione e potenzialmente una prova.
 
@@ -139,7 +139,7 @@ Il principio dell'integrita, infine, colloca la forensics all'incrocio tra tecni
 
 ---
 
-## Scenario Reale: La Ricostruzione dell'Incidente
+## Scenario reale: la ricostruzione dell'Incidente
 
 > Questa sezione descrive come l'analisi forense opererebbe in un incidente reale, ricostruendo l'attacco per la risposta e l'eventuale attribuzione.
 
@@ -180,15 +180,15 @@ Report: timeline + IOC + scope della compromissione -> risposta e lezioni difens
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `dc3dd` / `Guymager` | Imager | Acquisizione | Copia forense con hashing integrato |
-| `Sleuth Kit` (TSK) | Forensic toolkit | CLI | Analisi filesystem, recupero, timeline (fls/mactime) |
-| `Autopsy` | Forensic platform | GUI | Front-end di TSK: analisi visuale, keyword search, artefatti |
-| `Volatility 3` | Memory forensics | CLI | Analisi dei dump di RAM (processi, rete, injection) |
-| `plaso` / `log2timeline` | Timeline | CLI | Super-timeline correlata da tutte le sorgenti |
-| `foremost` / `photorec` | File carving | CLI | Recupero di file cancellati dallo spazio non allocato |
-| `write blocker` | Hardware/software | Preservazione | Impedisce la scrittura sul supporto originale |
+| `dc3dd` / `Guymager` | imager | acquisizione | copia forense con hashing integrato |
+| `Sleuth Kit` (tsk) | forensic toolkit | cli | analisi filesystem, recupero, timeline (fls/mactime) |
+| `Autopsy` | forensic platform | gui | front-end di tsk: analisi visuale, keyword search, artefatti |
+| `Volatility 3` | memory forensics | cli | analisi dei dump di ram (processi, rete, injection) |
+| `plaso` / `log2timeline` | timeline | cli | super-timeline correlata da tutte le sorgenti |
+| `foremost` / `photorec` | file carving | cli | recupero di file cancellati dallo spazio non allocato |
+| `write blocker` | hardware/software | preservazione | impedisce la scrittura sul supporto originale |
 
 > **Tool moderno consigliato:** per un flusso completo, `Autopsy` (front-end di Sleuth Kit) copre analisi filesystem, timeline e keyword search in un'unica interfaccia. `Volatility 3` e lo standard per la memoria. `plaso` per le super-timeline. La distribuzione `SIFT Workstation` (SANS) integra l'intero arsenale forense pronto all'uso.
 
@@ -198,19 +198,19 @@ Report: timeline + IOC + scope della compromissione -> risposta e lezioni difens
 
 > La tabella mappa le tecniche d'attacco che l'analisi forense **ricostruisce/rileva** a posteriori.
 
-| Tattica (ricostruita) | Tecnica | ID MITRE | Ruolo dell'analisi |
+| tattica (ricostruita) | tecnica | id mitre | ruolo dell'analisi |
 | :--- | :--- | :--- | :--- |
-| Defense Evasion | Indicator Removal: File Deletion | `T1070.004` | Carving recupera i file cancellati dall'attaccante (FOR-001) |
-| Defense Evasion | Indicator Removal: Clear Linux Logs | `T1070.002` | La timeline evidenzia il troncamento dei log |
-| Persistence | Account Manipulation: SSH Authorized Keys | `T1098.004` | La timeline rivela la modifica di authorized_keys |
-| Command and Control | Application Layer Protocol | `T1071` | Memory analysis rivela le connessioni C2 attive |
-| Exfiltration | Data Staged | `T1074` | Il carving recupera l'archivio di staging dell'esfiltrazione |
+| defense evasion | indicator removal: file deletion | `T1070.004` | carving recupera i file cancellati dall'attaccante (FOR-001) |
+| defense evasion | indicator removal: clear linux logs | `T1070.002` | la timeline evidenzia il troncamento dei log |
+| persistence | account manipulation: ssh authorized keys | `T1098.004` | la timeline rivela la modifica di authorized_keys |
+| command and control | application layer protocol | `T1071` | memory analysis rivela le connessioni c2 attive |
+| exfiltration | data staged | `T1074` | il carving recupera l'archivio di staging dell'esfiltrazione |
 
-| Contromisura difensiva (D3FEND) | ID D3FEND | Applicazione |
+| contromisura difensiva (d3fend) | id d3fend | applicazione |
 | :--- | :--- | :--- |
-| System Call Analysis | `D3-SCA` | Analisi degli artefatti di esecuzione sul disco |
-| Memory Boundary Tracking | `D3-MBT` | Analisi forense della memoria per processi/injection |
-| File Analysis | `D3-FA` | Recupero e analisi degli artefatti su filesystem |
+| system call analysis | `D3-SCA` | analisi degli artefatti di esecuzione sul disco |
+| memory boundary tracking | `D3-MBT` | analisi forense della memoria per processi/injection |
+| file analysis | `D3-FA` | recupero e analisi degli artefatti su filesystem |
 
 ---
 

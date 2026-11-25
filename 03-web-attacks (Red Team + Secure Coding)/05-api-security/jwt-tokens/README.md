@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# JWT Authentication Mechanism
+# JWT authentication mechanism
 
 > - **Fase:** Web Attack - API Security (JWT)
 > - **Visibilita:** Bassa - il brute force della firma JWT e offline, nessuna richiesta verso il server durante il crack
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 Durante l'analisi del meccanismo di autenticazione dell'applicazione target, è stata individuata una vulnerabilità critica nella gestione dei token di sessione (JWT - JSON Web Tokens).
 
@@ -23,7 +23,7 @@ Impatto: Un attaccante può impersonare qualsiasi utente, incluso l'amministrato
 
 ---
 
-## 2 Dettagli Tecnici della Vulnerabilità
+## 2 Dettagli tecnici della vulnerabilità
 Descrizione
 
 L'applicazione rilascia token JWT firmati con l'algoritmo HS256 (HMAC con SHA-256). Questo è un algoritmo simmetrico, il che significa che la stessa chiave viene usata sia per firmare che per verificare il token.
@@ -67,7 +67,7 @@ Quando il token falsificato viene inviato all'applicazione, questa lo accetta co
 
 ---
 
-## 3 Root Cause Analysis (Codice Vulnerabile)
+## 3 Root cause analysis (codice vulnerabile)
 
 Di seguito l'analisi del codice Python responsabile della vulnerabilità.
 
@@ -90,11 +90,11 @@ def create_token(user):
 
 ---
 
-## 4 Remediation (Secure Coding)
+## 4 Remediation (secure coding)
 
 Per mitigare questa vulnerabilità, si raccomandano due approcci possibili.
 
-#### Soluzione A: Strong Secret (Se si mantiene HS256)
+#### Soluzione a: strong secret (se si mantiene HS256)
 
 Se si deve usare HS256, la chiave deve essere una stringa casuale ad alta entropia (minimo 32-64 caratteri) e non deve mai essere scritta nel codice, ma caricata da variabili d'ambiente.
 
@@ -114,7 +114,7 @@ def create_token(user):
     # ... logica uguale ...
 ```
 
-#### Soluzione B: Crittografia Asimmetrica (RS256) - Consigliata
+#### Soluzione b: crittografia asimmetrica (RS256) - consigliata
 
 L'approccio migliore per sistemi distribuiti è usare una coppia di chiavi (Privata per firmare, Pubblica per verificare). Anche se un attaccante trova la chiave pubblica, non può creare nuovi token.
 
@@ -142,9 +142,9 @@ Si raccomanda l'immediata rotazione delle chiavi crittografiche e l'adozione di 
 
 ---
 
-## Analisi a Basso Livello: Struttura JWT e Vettori di Attacco
+## Analisi a basso livello: struttura JWT e vettori di attacco
 
-### Anatomia di un Token JWT
+### Anatomia di un token JWT
 
 Un JWT e composto da tre parti separate da punti, ciascuna codificata in Base64URL:
 
@@ -182,7 +182,7 @@ token = header.decode() + "." + payload.decode() + "."  # firma vuota
 # Librerie moderne (PyJWT >= 2.x) rifiutano alg:none per default
 ```
 
-### Hashcat per JWT Cracking
+### Hashcat per JWT cracking
 
 ```Bash
 # Formato hashcat per JWT (mode 16500)
@@ -198,18 +198,18 @@ hashcat -m 16500 jwt.txt /usr/share/wordlists/rockyou.txt
 # Una password da dizionario viene trovata in secondi
 ```
 
-### Confronto Algoritmi JWT
+### Confronto algoritmi JWT
 
-| Algoritmo | Tipo | Chiave | Caso d'uso | Rischio se chiave debole |
+| algoritmo | tipo | chiave | caso d'uso | rischio se chiave debole |
 | :--- | :--- | :--- | :--- | :--- |
-| HS256 | Simmetrico | Shared secret | Monoliti (singolo server) | Brute force offline |
-| RS256 | Asimmetrico | Private/Public key pair | Microservizi distribuiti | Nessuno (chiave > 2048 bit) |
-| ES256 | Asimmetrico (ECDSA) | Private/Public key pair | Mobile, IoT (chiavi piccole) | Nessuno (curva P-256) |
-| none | Nessuno | Nessuna | MAI in produzione | Token forgiabile senza limiti |
+| hs256 | simmetrico | shared secret | monoliti (singolo server) | brute force offline |
+| rs256 | asimmetrico | private/public key pair | microservizi distribuiti | nessuno (chiave > 2048 bit) |
+| es256 | asimmetrico (ecdsa) | private/public key pair | mobile, iot (chiavi piccole) | nessuno (curva p-256) |
+| none | nessuno | nessuna | mai in produzione | token forgiabile senza limiti |
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il cracking offline della chiave `secret123` ha richiesto meno di un secondo con lo script `jwt_cracker.py` basato su dizionario. Questo tempo e significativo: l'attacco e completamente invisibile al server perche il cracking avviene localmente sulla macchina dell'attaccante. Non ci sono log, non ci sono richieste HTTP, nessun IDS puo rilevare la fase di cracking. L'unica richiesta al server e quella iniziale per ottenere un token valido (una singola richiesta legittima).
 
@@ -221,11 +221,11 @@ La modifica del payload da `"role": "user"` a `"role": "admin"` con successivo r
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Brute Force: Password Cracking | `T1110.002` | Brute force offline della firma HMAC-SHA256 del token JWT usando `jwt_cracker.py` con dizionario, recuperando la chiave `secret123` (WEB-012) |
-| Defense Evasion | Use Alternate Authentication Material | `T1550` | Utilizzo del token JWT falsificato con payload `{"role": "admin"}` e firma ricalcolata per accedere a funzionalita amministrative (WEB-012) |
-| Lateral Movement | Valid Accounts: Cloud Accounts | `T1078.003` | Impersonazione dell'account admin tramite token JWT forgiato, ottenendo accesso completo all'applicazione (WEB-012) |
+| credential access | brute force: password cracking | `T1110.002` | brute force offline della firma hmac-sha256 del token jwt usando `jwt_cracker.py` con dizionario, recuperando la chiave `secret123` (WEB-012) |
+| defense evasion | use alternate authentication material | `T1550` | utilizzo del token jwt falsificato con payload `{"role": "admin"}` e firma ricalcolata per accedere a funzionalita amministrative (WEB-012) |
+| lateral movement | valid accounts: cloud accounts | `T1078.003` | impersonazione dell'account admin tramite token jwt forgiato, ottenendo accesso completo all'applicazione (WEB-012) |
 
 ---
 

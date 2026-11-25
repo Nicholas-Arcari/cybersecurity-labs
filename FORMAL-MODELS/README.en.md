@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Formal Models - Protocol Verification
+# Formal models - protocol verification
 
 > - **Level:** Formal verification (formal methods applied to a security protocol)
 > - **Purpose:** Provide an executable, verified formal model of a protocol, as a research-level artifact complementing the theory (`THEORETICAL-FOUNDATIONS`) and the empirical measurement (`EVALUATION`).
@@ -22,7 +22,7 @@ and not of the cryptographic primitives. Here that thesis is **mechanically demo
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 FORMAL-MODELS/

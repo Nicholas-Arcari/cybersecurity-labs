@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# SMTP Relay - Sending Infrastructure Configuration
+# SMTP relay - sending infrastructure configuration
 
 > - **Phase:** Social Engineering - Email Infrastructure Setup
 > - **Visibility:** Medium - the relay configuration is internal, but sending emails generates SMTP logs, DNS records (SPF, DKIM, rDNS), and contributes to domain reputation trackable by services such as MXToolbox and Talos Intelligence
@@ -12,13 +12,13 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 SMTP relay configuration is the step that transforms a phishing tool (GoPhish, SET) into an operational delivery platform. Without a properly configured relay, phishing emails end up in spam or are rejected by destination servers. This section documents three approaches with different trade-offs between ease of setup, deliverability, and operational control.
 
 ---
 
-## Approach 1: Transactional Service (Recommended for Lab)
+## Approach 1: transactional service (recommended for lab)
 
 Services such as SendGrid, Mailgun, and Amazon SES offer high deliverability thanks to their consolidated domain reputation. They are the optimal choice for labs and authorized security awareness campaigns.
 
@@ -37,7 +37,7 @@ Services such as SendGrid, Mailgun, and Amazon SES offer high deliverability tha
 
 ---
 
-## Approach 2: Dedicated Server (Postfix + OpenDKIM)
+## Approach 2: dedicated server (postfix + OpenDKIM)
 
 ```Bash
 # Postfix installation on Kali
@@ -71,7 +71,7 @@ swaks --to test@mailhog-lab.local --from noreply@attacker-lab.com --server 127.0
 
 ---
 
-## Approach 3: Local Testing with Mailhog
+## Approach 3: local testing with mailhog
 
 ```Bash
 # Mailhog: fake SMTP server for testing without real sending
@@ -96,7 +96,7 @@ MailHog
 
 ---
 
-## Domain Warming
+## Domain warming
 
 A freshly registered domain has zero reputation. Immediately sending hundreds of phishing emails causes instant blocking. Domain warming is the process of gradually building reputation:
 
@@ -111,24 +111,24 @@ Week 4+: target campaign volume
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Primary Use Case |
+| tool | type | technique/access | primary use case |
 | :--- | :--- | :--- | :--- |
-| `Postfix` | SMTP server | CLI - Config | Dedicated SMTP relay with DKIM support |
-| `OpenDKIM` | DKIM signer | CLI - Config | DKIM cryptographic signing for outgoing emails |
-| `Mailhog` | SMTP testing | Web UI | Local testing without real sending |
-| `swaks` | SMTP testing | CLI | Send testing with custom headers/body |
-| `MXToolbox` | Diagnostics | Web | SPF, DKIM, blacklist, deliverability verification |
+| `Postfix` | smtp server | cli - config | dedicated smtp relay with dkim support |
+| `OpenDKIM` | dkim signer | cli - config | dkim cryptographic signing for outgoing emails |
+| `Mailhog` | smtp testing | web ui | local testing without real sending |
+| `swaks` | smtp testing | cli | send testing with custom headers/body |
+| `MXToolbox` | diagnostics | web | spf, dkim, blacklist, deliverability verification |
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Acquire Infrastructure: Email Accounts | `T1583.002` | SMTP relay configuration for campaign email sending |
-| Resource Development | Stage Capabilities: Email Accounts | `T1608.003` | Domain warming and SPF/DKIM configuration for deliverability |
+| resource development | acquire infrastructure: email accounts | `T1583.002` | smtp relay configuration for campaign email sending |
+| resource development | stage capabilities: email accounts | `T1608.003` | domain warming and spf/dkim configuration for deliverability |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](THEORETICAL-FOUNDATIONS.md)
 
-# Theoretical Foundations - Module 08: Defense & Hardening
+# Theoretical foundations - module 08: defense & hardening
 
 > - **Level:** Academic analysis (theoretical complement to the operational READMEs of the module)
 > - **Purpose:** Quantitatively derive the base-rate problem of detection, ground anomaly detection and deception, and formalize hardening as attack surface reduction.
@@ -14,13 +14,13 @@ This document provides the quantitative foundation of defense. The central resul
 
 ---
 
-## 1. The Defender Model
+## 1. The Defender model
 
 The defender observes a stream of events `E` (logs, packets, calls) and must decide for each whether it is benign or malicious, with the objective of maximizing the detection of the malicious while minimizing false alarms, under a constraint of finite analysis resources. Formally it is a problem of **detection theory** with two types of error: false positive (alarm on a benign event) and false negative (malicious event not detected). The defender does not control the base rate of malicious events, which is structurally very low: it is this asymmetry, not the accuracy of the detector, that determines the difficulty (section 3.1).
 
 ---
 
-## 2. Security Properties at Stake
+## 2. Security properties at stake
 
 - **Visibility:** precondition of every detection; without observability there is no detection. Centralized logging realizes it (module 07, section 3.4).
 - **Effective detection:** maximize the predictive value of detection under the base-rate constraint (section 3.1).
@@ -29,9 +29,9 @@ The defender observes a stream of events `E` (logs, packets, calls) and must dec
 
 ---
 
-## 3. Theoretical Foundations
+## 3. Theoretical foundations
 
-### 3.1 The base-rate fallacy: Bayesian derivation
+### 3.1 The base-rate fallacy: bayesian derivation
 
 [Axelsson 2000] applies Bayes's theorem to intrusion detection, obtaining the most important result of detection theory in security. Let `I` be the event "intrusion" and `A` the event "alarm". The relevant quantities are:
 
@@ -71,7 +71,7 @@ Hardening is the systematic application of attack surface minimization [Manadhat
 
 ---
 
-## 4. Quantitative Analysis
+## 4. Quantitative analysis
 
 > **Empirical validation:** the Bayesian derivation of the base-rate fallacy (section 3.1) is
 > experimentally verified on measured data in [`../EVALUATION/exp01-detection-base-rate/`](../EVALUATION/exp01-detection-base-rate/results.en.md):
@@ -88,13 +88,13 @@ Active response compresses the dwell time (module 07, section 4.1) to zero for h
 
 ---
 
-## 5. Literature Review
+## 5. Literature review
 
 The central quantitative result is by [Axelsson 2000], who brought Bayes's theorem to the heart of the difficulty of intrusion detection. The foundations of anomaly detection are by [Denning 1987] and [Forrest et al. 1996]; the limits of applied machine learning are analyzed by [Sommer & Paxson 2010]. Hardening as surface reduction rests on [Manadhata & Wing 2011] and on the principles of [Saltzer & Schroeder 1975]; log integrity on [Biba 1977]. The reference offensive taxonomy is MITRE ATT&CK [Strom et al. 2020], with the defensive dual D3FEND. The Diamond Model [Caltagirone et al. 2013] provides the analytical frame for the threat intelligence produced by deception.
 
 ---
 
-## 6. Limitations and Open Problems
+## 6. Limitations and open problems
 
 1. **Irreducibility of the base-rate.** Since `P(I)` is structurally very low, no realistic improvement of the detector's accuracy eliminates the domain of false positives [Axelsson 2000]. Effective detection necessarily requires correlation, context or deception to circumvent the limit - not a better detector.
 
@@ -104,7 +104,7 @@ The central quantitative result is by [Axelsson 2000], who brought Bayes's theor
 
 ---
 
-## 7. Synthesis and Connection to Practice
+## 7. Synthesis and connection to practice
 
 The `DEF-` findings of the module instantiate this framework: SIEM detection (DEF-001/002) operates under the base-rate constraint of section 3.1, and the correlation documented in the READMEs is the raising of the effective base rate of section 4.1; deception (DEF-005/006) is the base-rate evasion of section 3.2, with its unit predictive value; FIM and active response (DEF-003/004) apply the anomaly detection and the automation trade-off of sections 3.3 and 4.2; hardening (DEF-007/008) is the surface reduction and the breaking of the transitivity of trust of section 3.4. The D3FEND tables of the READMEs are the taxonomic counterpart of the framework formalized here. The document provides the defensive practice with the quantitative justification of why "a better detector" is not enough (base-rate), of why deception is disproportionately valuable (unit predictive value) and of why hardening upstream beats detection downstream (removed edges vs events to detect).
 

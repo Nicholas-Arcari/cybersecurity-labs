@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Auth Attacks: Brute-Force Web (Hydra)
+# Auth attacks: Brute-Force web (Hydra)
 
 > - **Fase:** Web Attack - Authentication Brute Force
 > - **Visibilita:** Alta - Hydra genera molte richieste di login in breve tempo, facilmente rilevabile da IDS e sistemi di monitoring
@@ -21,7 +21,7 @@ Strumenti: `THC-Hydra` (Network Login Cracker), `Firefox DevTools`
 
 ---
 
-## 1 Introduzione Teorica
+## 1 Introduzione teorica
 
 Il Brute-Force Web consiste nel tentare sistematicamente numerose combinazioni di username e password.
 
@@ -31,7 +31,7 @@ Rischio (OWASP): Broken Authentication. La mancanza di meccanismi di protezione 
 
 ---
 
-## 2 Analisi del Target e "False Positive Trap"
+## 2 Analisi del target e "false positive trap"
 
 L'analisi preliminare con i Developer Tools ha rivelato i parametri del form (`uname`, `pass`) inviati a `/userinfo.php`.
 
@@ -71,7 +71,7 @@ Hydra ha scartato correttamente le password errate (come admin o 123456) e ha id
 
 ---
 
-## 4 Secure Coding & Difesa
+## 4 Secure coding & difesa
 
 Per mitigare questi attacchi:
 
@@ -83,7 +83,7 @@ Per mitigare questi attacchi:
 
 ---
 
-## 5 Scenario Docker & Localhost (Lab Setup)
+## 5 Scenario Docker & localhost (lab setup)
 
 L'attacco è stato replicato contro un'infrastruttura reale containerizzata (Docker) per simulare uno scenario di "Internal Penetration Test".
 
@@ -111,18 +111,18 @@ Questo ha permesso di confermare che le richieste arrivavano al server, ma veniv
 
 ---
 
-## 6 Case Study: "The Laravel Wall" (Analisi Difensiva)
+## 6 Case study: "the laravel wall" (analisi difensiva)
 
 Durante il tentativo di forzare l'autenticazione dell'applicazione Laravel, l'attacco si è evoluto attraverso diverse fasi di troubleshooting che hanno evidenziato le moderne difese dei framework web.
 
-#### Fase 1: Il "Frontend Trap"
+#### Fase 1: il "frontend trap"
 
 Inizialmente, l'attacco è stato diretto verso l'URL visibile nel browser: `http://host:5173/login`.
 
 - Risultato: `HTTP 404 Not Found`.
 - Analisi: Essendo una Single Page Application (SPA), la rotta `/login` sulla porta 5173 è virtuale (gestita da JavaScript). Il vero endpoint API risiedeva sulla porta 80.
 
-#### Fase 2: Complessità del Protocollo (JSON vs Form)
+#### Fase 2: complessità del protocollo (JSON vs form)
 
 Hydra è ottimizzato per form HTML standard (`application/x-www-form-urlencoded`). L'API target richiedeva un payload JSON.
 
@@ -172,7 +172,7 @@ done < passlist.txt
 
 ![](./img/Screenshot_2026-02-14_21_38_45.jpg)
 
-#### Fase 3: Lo scontro con il CSRF (Sanctum)
+#### Fase 3: lo scontro con il CSRF (sanctum)
 
 Una volta raggiunto correttamente l'endpoint `/login` sulla porta 80 con lo script custom, il server ha risposto sistematicamente con un errore `HTTP 419`.
 
@@ -197,9 +197,9 @@ Questo test ha dimostrato che i moderni framework MVC/API (come Laravel, Django,
 
 ---
 
-## Analisi a Basso Livello: Protocollo HTTP e Configurazione Hydra
+## Analisi a basso livello: protocollo HTTP e configurazione Hydra
 
-### Anatomia di una Richiesta Hydra http-post-form
+### Anatomia di una richiesta Hydra http-post-form
 
 Hydra costruisce richieste HTTP POST basandosi su tre componenti separati da `:` nel modulo `http-post-form`:
 
@@ -231,18 +231,18 @@ F=<stringa>  -> FALLIMENTO se la stringa e presente nella risposta
 S=<stringa>  -> SUCCESSO se la stringa e presente nella risposta
 ```
 
-### Protezioni Moderne Anti-Brute Force
+### Protezioni moderne Anti-Brute force
 
-| Difesa | Meccanismo | Bypass possibile | Efficacia |
+| difesa | meccanismo | bypass possibile | efficacia |
 | :--- | :--- | :--- | :--- |
-| Rate Limiting (IP) | Max N richieste/minuto per IP | Rotazione IP (proxy chain) | Media |
-| Account Lockout | Blocco account dopo N tentativi | Password spraying (molti utenti, poche password) | Alta |
-| CAPTCHA | Challenge visivo/interattivo | OCR, servizi solving (2captcha) | Media-Alta |
-| CSRF Token | Token univoco per ogni richiesta | Script con session handling (requests.Session) | Alta |
-| MFA/2FA | Secondo fattore (TOTP, SMS) | Phishing real-time (Evilginx2) | Molto Alta |
-| Progressive Delay | Ritardo esponenziale dopo ogni fallimento | Rende il brute force impraticabile su scala | Alta |
+| rate limiting (ip) | max n richieste/minuto per ip | rotazione ip (proxy chain) | media |
+| account lockout | blocco account dopo n tentativi | password spraying (molti utenti, poche password) | alta |
+| captcha | challenge visivo/interattivo | ocr, servizi solving (2captcha) | media-alta |
+| csrf token | token univoco per ogni richiesta | script con session handling (requests.session) | alta |
+| mfa/2fa | secondo fattore (totp, sms) | phishing real-time (evilginx2) | molto alta |
+| progressive delay | ritardo esponenziale dopo ogni fallimento | rende il brute force impraticabile su scala | alta |
 
-### Hydra vs Script Custom: Quando Serve Lo Script
+### Hydra vs script custom: quando serve lo script
 
 ```
 Hydra funziona per:
@@ -265,7 +265,7 @@ In questi casi -> script Python con requests.Session():
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il problema del "False Positive Trap" (HTTP 302 sia per successo che fallimento) e stato l'aspetto piu formativo dell'intero lab. La maggior parte dei tutorial Hydra assume che il server risponda con una stringa di errore chiara ("Invalid credentials"), ma molti siti reali usano redirect (302) per entrambi i casi, indirizzando a pagine diverse. L'inversione della logica (`S=Logout` invece di `F=error`) e una tecnica operativa fondamentale che non e documentata nella manpage di Hydra.
 
@@ -277,12 +277,12 @@ Il monitoraggio dei log Docker (`docker logs -f`) durante l'attacco ha fornito u
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Brute Force: Password Guessing | `T1110.001` | Attacco con Hydra su form login `testphp.vulnweb.com/userinfo.php` usando `passlist.txt`, identificando le credenziali `test:test` (WEB-009) |
-| Credential Access | Brute Force: Password Spraying | `T1110.004` | Test di password comuni (`admin`, `123456`, `password`) contro l'utente `test` come fase preliminare (WEB-009) |
-| Credential Access | Modify Authentication Process | `T1556` | Analisi e bypass della protezione Anti-CSRF di Laravel Sanctum (HTTP 419) che dimostrava l'inefficacia di Hydra su framework moderni |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Sfruttamento dell'assenza di rate limiting e account lockout sul form di login per eseguire brute force non bloccato (WEB-009) |
+| credential access | brute force: password guessing | `T1110.001` | attacco con hydra su form login `testphp.vulnweb.com/userinfo.php` usando `passlist.txt`, identificando le credenziali `test:test` (WEB-009) |
+| credential access | brute force: password spraying | `T1110.004` | test di password comuni (`admin`, `123456`, `password`) contro l'utente `test` come fase preliminare (WEB-009) |
+| credential access | modify authentication process | `T1556` | analisi e bypass della protezione anti-csrf di laravel sanctum (http 419) che dimostrava l'inefficacia di hydra su framework moderni |
+| initial access | exploit public-facing application | `T1190` | sfruttamento dell'assenza di rate limiting e account lockout sul form di login per eseguire brute force non bloccato (WEB-009) |
 
 ---
 

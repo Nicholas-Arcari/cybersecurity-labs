@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Vulnerability Assessment: Stored Cross-Site Scripting (XSS)
+# Vulnerability assessment: stored Cross-Site scripting (XSS)
 
 > - **Fase:** Web Attack - XSS Stored
 > - **Visibilita:** Bassa - il payload viene inserito una volta e poi colpisce tutti i visitatori della pagina senza ulteriori richieste dall'attaccante
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 Durante l'analisi dell'applicazione `testphp.vulnweb.com`, è stata individuata una vulnerabilità critica di tipo Stored Cross-Site Scripting (XSS).
 
@@ -25,9 +25,9 @@ L'impatto è critico poiché l'attacco non richiede che la vittima clicchi su un
 
 ---
 
-## 2 Technical Analysis
+## 2 Technical analysis
 
-#### Scenario: Profile Persistence Injection
+#### Scenario: profile persistence injection
 
 Il modulo di registrazione permette l'inserimento di dati anagrafici. È stato verificato che il campo "Address" accetta e salva tag HTML e JavaScript.
 
@@ -55,7 +55,7 @@ Il popup conferma che il codice JavaScript è stato persistito ed eseguito dal c
 
 ---
 
-## 3 Remediation Plan
+## 3 Remediation plan
 
 La mitigazione della Stored XSS richiede interventi rigorosi sia in ingresso che in uscita.
 
@@ -77,9 +77,9 @@ La mitigazione della Stored XSS richiede interventi rigorosi sia in ingresso che
 
 ---
 
-## Analisi a Basso Livello: Stored XSS - Dal Database al DOM
+## Analisi a basso livello: stored XSS - dal database al DOM
 
-### Ciclo di Vita del Payload Stored XSS
+### Ciclo di vita del payload stored XSS
 
 A differenza della Reflected XSS (che richiede un click su un link malevolo), la Stored XSS persiste nel database e colpisce ogni visitatore:
 
@@ -111,19 +111,19 @@ Fase 2: Trigger (vittima visita la pagina)
     -> document.cookie esfiltrato, sessione compromessa
 ```
 
-### Contesti di Injection e Encoding
+### Contesti di injection e encoding
 
 Il contesto in cui il dato viene inserito determina il tipo di encoding necessario:
 
-| Contesto | Esempio | Encoding corretto | Errore comune |
+| contesto | esempio | encoding corretto | errore comune |
 | :--- | :--- | :--- | :--- |
-| HTML body | `<p>DATO</p>` | `htmlspecialchars()` | Nessun encoding |
-| HTML attribute | `<input value="DATO">` | `htmlspecialchars()` con ENT_QUOTES | Solo ENT_COMPAT |
-| JavaScript | `var x = "DATO";` | `json_encode()` o JS escape | htmlspecialchars (insufficiente) |
-| URL parameter | `<a href="http://x?q=DATO">` | `urlencode()` | htmlspecialchars (insufficiente) |
-| CSS | `<div style="color:DATO">` | Whitelist di valori | Nessun encoding |
+| html body | `<p>DATO</p>` | `htmlspecialchars()` | nessun encoding |
+| html attribute | `<input value="DATO">` | `htmlspecialchars()` con ent_quotes | solo ent_compat |
+| javascript | `var x = "DATO";` | `json_encode()` o js escape | htmlspecialchars (insufficiente) |
+| url parameter | `<a href="http://x?q=DATO">` | `urlencode()` | htmlspecialchars (insufficiente) |
+| css | `<div style="color:DATO">` | whitelist di valori | nessun encoding |
 
-### Payload Avanzati per Bypass Filtri
+### Payload avanzati per bypass filtri
 
 ```html
 <!-- Payload base (bloccato da filtri basilari) -->
@@ -149,11 +149,11 @@ Il contesto in cui il dato viene inserito determina il tipo di encoding necessar
 
 ---
 
-## Scenario Reale: Da Stored XSS a Account Takeover dell'Amministratore (WEB-006)
+## Scenario reale: da stored XSS a account takeover dell'Amministratore (WEB-006)
 
 In un assessment reale, la Stored XSS e il vettore per compromettere l'account dell'amministratore senza interazione diretta.
 
-### Kill Chain: Stored XSS, Cookie Theft, Admin Takeover
+### Kill chain: stored XSS, cookie theft, admin takeover
 
 ```
 Fase 1: Injection del payload nel profilo utente
@@ -187,7 +187,7 @@ Fase 5: Post-Exploitation (come admin)
 
 ---
 
-## Blue Team: Detection e Difese Multi-Layer
+## Blue team: detection e difese Multi-Layer
 
 ### Detection
 
@@ -201,7 +201,7 @@ Fase 5: Post-Exploitation (come admin)
   Con CSP attivo, anche se il payload XSS viene iniettato, il browser rifiuta di eseguirlo perche non ha il nonce corretto
 - **Monitoring:** alert su richieste outbound dal browser dei visitatori verso domini non nella whitelist (indicatore di cookie exfiltration)
 
-### Difese Server-Side (Defense in Depth)
+### Difese Server-Side (defense in depth)
 
 ```php
 // SBAGLIATO: output diretto dal database
@@ -220,7 +220,7 @@ echo "<p>" . htmlspecialchars($row['address'], ENT_QUOTES, 'UTF-8') . "</p>";
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'aspetto piu istruttivo e stato verificare la persistenza del payload: dopo aver iniettato lo script nel campo "Address" durante la registrazione, ogni successiva visita alla pagina del profilo ri-eseguiva lo script. Questo ha reso tangibile la differenza con la Reflected XSS: nella Reflected, la vittima deve cliccare un link specifico; nella Stored, basta visitare una pagina qualsiasi che mostra il dato infetto.
 
@@ -232,11 +232,11 @@ La remediation con `htmlspecialchars()` e stata dimostrata come soluzione minima
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Injection del payload XSS nel campo "Address" del form di registrazione di `testphp.vulnweb.com`, persistito nel database senza sanitizzazione (WEB-006) |
-| Persistence | Server Software Component: Web Shell | `T1505.003` | Il payload XSS Stored equivale a una componente malevola persistente lato server che si esegue automaticamente ogni volta che la pagina viene visualizzata (WEB-006) |
-| Credential Access | Steal Web Session Cookie | `T1539` | Il payload Stored XSS e il vettore per rubare il cookie di sessione dell'amministratore quando visualizza il profilo infetto, senza richiedere interazione dell'attaccante (WEB-006) |
+| initial access | exploit public-facing application | `T1190` | injection del payload xss nel campo "address" del form di registrazione di `testphp.vulnweb.com`, persistito nel database senza sanitizzazione (WEB-006) |
+| persistence | server software component: web shell | `T1505.003` | il payload xss stored equivale a una componente malevola persistente lato server che si esegue automaticamente ogni volta che la pagina viene visualizzata (WEB-006) |
+| credential access | steal web session cookie | `T1539` | il payload stored xss e il vettore per rubare il cookie di sessione dell'amministratore quando visualizza il profilo infetto, senza richiedere interazione dell'attaccante (WEB-006) |
 
 ---
 

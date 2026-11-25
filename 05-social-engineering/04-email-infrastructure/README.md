@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 04 - Email Infrastructure
+# 04 - Email infrastructure
 
 > - **Fase:** Social Engineering - Email Infrastructure Setup & Audit
 > - **Visibilita:** Bassa (l'audit SPF/DKIM/DMARC e passivo: query DNS pubbliche) / Media (la configurazione SMTP relay e l'acquisto di domini typosquatting lasciano tracce registrabili)
@@ -34,7 +34,7 @@ Questa sezione documenta tre componenti complementari:
 
 ---
 
-## `spf-dkim-dmarc/` - Email Security Audit
+## `spf-dkim-dmarc/` - Email security audit
 
 **ID Finding:** `SE-011` | **Severity:** `Medio` (DMARC policy `none` - spoofing possibile)
 
@@ -86,7 +86,7 @@ python3 spoofcheck.py target-lab.com
 
 ---
 
-## `smtp-relay/` - Configurazione SMTP per Campagne
+## `smtp-relay/` - Configurazione SMTP per campagne
 
 ### Contesto operativo
 
@@ -122,7 +122,7 @@ swaks --to victim@target-lab.com \
 
 ---
 
-## `domain-typosquatting/` - Generazione Domini Confondibili
+## `domain-typosquatting/` - Generazione domini confondibili
 
 **ID Finding:** `SE-012` | **Severity:** `Informativo` (domini confondibili non registrati identificati)
 
@@ -179,38 +179,38 @@ targt-lab.com                                               <-- SE-012: acquista
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `spoofcheck` | Email audit | CLI - Python | Verifica SPF/DKIM/DMARC e possibilita di spoofing |
-| `dnstwist` | Domain analysis | CLI - Python | Generazione e verifica domini typosquatting |
-| `URLCrazy` | Domain analysis | CLI - Ruby | Alternativa a dnstwist con focus su typo e bit-flip |
-| `Postfix` | SMTP server | CLI - Config | Server SMTP per relay email con DKIM signing |
-| `opendkim` | DKIM signer | CLI - Config | Generazione chiavi e firma DKIM per email in uscita |
-| `swaks` | SMTP testing | CLI | Swiss Army Knife per SMTP: test invio, header, allegati |
-| `Mailhog` | SMTP testing | Web UI | Fake SMTP per test locali senza invio reale |
+| `spoofcheck` | email audit | cli - python | verifica spf/dkim/dmarc e possibilita di spoofing |
+| `dnstwist` | domain analysis | cli - python | generazione e verifica domini typosquatting |
+| `URLCrazy` | domain analysis | cli - ruby | alternativa a dnstwist con focus su typo e bit-flip |
+| `Postfix` | smtp server | cli - config | server smtp per relay email con dkim signing |
+| `opendkim` | dkim signer | cli - config | generazione chiavi e firma dkim per email in uscita |
+| `swaks` | smtp testing | cli | swiss army knife per smtp: test invio, header, allegati |
+| `Mailhog` | smtp testing | web ui | fake smtp per test locali senza invio reale |
 
 > **Tool moderno consigliato:** `dnstwist` con flag `--all` per includere omoglifi Unicode e IDN homograph attacks. Per il monitoraggio continuo, servizi come `PhishLabs` o `Bolster` automatizzano la detection di domini typosquatting attivi.
 
 ---
 
-## Registro Finding
+## Registro finding
 
-| ID | Descrizione | Severity | CVSS | Sottocartella |
+| id | descrizione | severity | cvss | sottocartella |
 | :--- | :--- | :---: | :---: | :--- |
-| `SE-011` | SPF/DKIM/DMARC audit: dominio target con SPF softfail e DMARC policy `none` - email spoofing possibile | `Medio` | 5.3 | `spf-dkim-dmarc/` |
-| `SE-012` | Domain typosquatting: 3+ domini confondibili non registrati e acquistabili da un attaccante | `Informativo` | 3.1 | `domain-typosquatting/` |
+| `SE-011` | spf/dkim/dmarc audit: dominio target con spf softfail e dmarc policy `none` - email spoofing possibile | `Medio` | 5.3 | `spf-dkim-dmarc/` |
+| `SE-012` | domain typosquatting: 3+ domini confondibili non registrati e acquistabili da un attaccante | `Informativo` | 3.1 | `domain-typosquatting/` |
 
 ---
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Network Information: DNS | `T1590.002` | SE-011 |
-| Reconnaissance | Search Open Technical Databases: DNS/Passive DNS | `T1596.001` | SE-011, SE-012 |
-| Resource Development | Acquire Infrastructure: Domains | `T1583.001` | SE-012 |
-| Resource Development | Acquire Infrastructure: Email Accounts | `T1583.002` | SE-011 |
-| Resource Development | Compromise Infrastructure: Domains | `T1584.001` | SE-012 |
+| reconnaissance | gather victim network information: dns | `T1590.002` | SE-011 |
+| reconnaissance | search open technical databases: dns/passive dns | `T1596.001` | SE-011, SE-012 |
+| resource development | acquire infrastructure: domains | `T1583.001` | SE-012 |
+| resource development | acquire infrastructure: email accounts | `T1583.002` | SE-011 |
+| resource development | compromise infrastructure: domains | `T1584.001` | SE-012 |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# NFC Tools - Reading and Enumeration of HF NFC/RFID Tags
+# NFC tools - reading and enumeration of HF NFC/RFID tags
 
 > - **Phase:** Wireless Security - Physical Access Reconnaissance (NFC/RFID 13.56 MHz)
 > - **Visibility:** Zero - NFC reading requires physical proximity (a few centimeters) but leaves no trace on the target system; it is a passive operation from the access control standpoint
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 This section enters the border zone between information security and physical security: access control badges, hotel cards, transport passes and many identification systems operate on NFC/RFID at 13.56 MHz (High Frequency). The objective is not a network but a physical token of identity, and compromising it means impersonating the person it belongs to.
 
@@ -23,7 +23,7 @@ This section covers reading and enumeration (identify the technology, recover th
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 nfc-tools/
@@ -33,11 +33,11 @@ nfc-tools/
 
 ---
 
-## Tag Identification and Reading
+## Tag identification and reading
 
 **Finding ID:** `WIFI-010` | **Severity:** `Medium` (key recovery and dump of a MIFARE Classic badge; direct premise of cloning and unauthorized access)
 
-### Operational Context
+### Operational context
 
 The first step is to identify the type of tag: the technology (MIFARE Classic, Ultralight, NTAG, DESFire) completely determines the attack approach. `nfc-list` queries any tag in proximity and reveals its UID, type and ATQA/SAK (the parameters that identify the family).
 
@@ -59,9 +59,9 @@ NFC device: ACS / ACR122U opened
 
 The SAK `08` and the string "MIFARE Classic 1K" identify a tag based on Crypto-1, the cryptographically broken NXP proprietary algorithm.
 
-### Execution - Key recovery with mfoc
+### Execution - key recovery with mfoc
 
-### Operational Context (key recovery)
+### Operational context (key recovery)
 
 MIFARE Classic 1K organizes the memory in 16 sectors, each protected by two keys (A and B). mfoc (MIFARE Offline Cracker) exploits a weakness of Crypto-1: if even a single key of a sector is known (typically a default key that the installer never changed), the "nested" attack recovers all the other keys by exploiting the weakness of the tag's pseudo-random number generator.
 
@@ -90,7 +90,7 @@ The dump `badge_dump.mfd` now contains the entire content of the badge and all t
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The most revealing aspect of the exercise was how much the attack depends on the default keys. The test badge used the key `FFFFFFFFFFFF` (factory default) on sector 0: from that single foothold, mfoc recovered all the other keys in a few minutes via the nested attack. This mirrors the reality of very many installations: the systems are deployed with the default keys and never reconfigured, making the attack almost immediate.
 
@@ -100,7 +100,7 @@ Methodological note: the entire attack requires physical proximity to the badge.
 
 ---
 
-## Theoretical Analysis: Why MIFARE Classic Is Cryptographically Broken
+## Theoretical analysis: why MIFARE classic is cryptographically broken
 
 MIFARE Classic is based on Crypto-1, a proprietary NXP stream cipher with a 48-bit key, kept secret according to the (wrong) principle of security by obscurity. In 2008, the reverse engineering of the chip (Nohl and Plotz) and the cryptographic analysis (Garcia et al., Radboud University) revealed fatal weaknesses: a predictable pseudo-random number generator (PRNG) and a cipher structure that allows attacks of much reduced complexity.
 
@@ -110,29 +110,29 @@ The cryptographic lesson is twofold. First, security by obscurity fails: a secre
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `libnfc` (nfc-list) | NFC library | CLI | Identification and reading of ISO14443A/B tags |
-| `mfoc` | MIFARE cracker | CLI | Nested attack: key recovery from a known/default key |
-| `mfcuk` | MIFARE cracker | CLI | Darkside attack: key recovery without known keys (slower) |
-| `Mifare Classic Tool` | NFC app | Android | MIFARE reading/writing from a smartphone with NFC |
-| `nfc-mfclassic` | MIFARE dump/write | CLI | Dump and writing of the MIFARE Classic content |
-| `Proxmark3` | RFID multi-tool | Hardware | Professional hardware for LF/HF and protected tags (`../proxmark3-client/`) |
+| `libnfc` (nfc-list) | nfc library | cli | identification and reading of iso14443a/b tags |
+| `mfoc` | mifare cracker | cli | nested attack: key recovery from a known/default key |
+| `mfcuk` | mifare cracker | cli | darkside attack: key recovery without known keys (slower) |
+| `Mifare Classic Tool` | nfc app | android | mifare reading/writing from a smartphone with nfc |
+| `nfc-mfclassic` | mifare dump/write | cli | dump and writing of the mifare classic content |
+| `Proxmark3` | rfid multi-tool | hardware | professional hardware for lf/hf and protected tags (`../proxmark3-client/`) |
 
 > **Recommended modern tool:** for field work, the `Proxmark3 RDV4` or the [Flipper Zero](https://github.com/Nicholas-Arcari/FlipperZero-guide) (with integrated NFC module) replace the ACR122U with much wider capabilities (LF 125 kHz + HF 13.56 MHz, emulation, advanced attacks). The ACR122U remains valid for MIFARE Classic 1K in the lab.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Host Information | `T1592` | Identification of the NFC/RFID tag type and its parameters (WIFI-010) |
-| Credential Access | Brute Force | `T1110` | Recovery of the MIFARE Classic sector keys via nested/darkside attack (WIFI-010) |
-| Credential Access | Steal Application Access Token | `T1528` | Extraction of the badge content (access identifier) via dump (WIFI-010) |
-| Initial Access | Hardware Additions | `T1200` | Use of the NFC reader to acquire the badge material |
+| reconnaissance | gather victim host information | `T1592` | identification of the nfc/rfid tag type and its parameters (WIFI-010) |
+| credential access | brute force | `T1110` | recovery of the mifare classic sector keys via nested/darkside attack (WIFI-010) |
+| credential access | steal application access token | `T1528` | extraction of the badge content (access identifier) via dump (WIFI-010) |
+| initial access | hardware additions | `T1200` | use of the nfc reader to acquire the badge material |
 
 ---
 

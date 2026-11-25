@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 02 - Containers Security (Docker)
+# 02 - Containers security (Docker)
 
 > - **Phase:** Cloud Security - Container Security
 > - **Category:** Defensive + Offensive - supply chain and isolation
@@ -25,7 +25,7 @@ The two findings cover the life cycle: scanning prevents the known vulnerabiliti
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 02-containers-security (Docker)/
@@ -37,7 +37,7 @@ The two findings cover the life cycle: scanning prevents the known vulnerabiliti
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [BUILD] Image built
@@ -60,37 +60,37 @@ The two findings cover the life cycle: scanning prevents the known vulnerabiliti
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Phase | Type | Main use case |
+| tool | phase | type | main use case |
 | :--- | :--- | :--- | :--- |
-| `Trivy` | Build | Defensive | CVE scanning of images (standard) |
-| `Dive` | Build | Analysis | Inspection of the layers |
-| `Falco` | Runtime | Defensive | Runtime detection of the escapes |
-| `deepce` | Runtime | Offensive | Enumeration of the escape paths |
-| `seccomp`/`AppArmor` | Runtime | Defensive | Restriction of the syscalls/capabilities |
+| `Trivy` | build | defensive | cve scanning of images (standard) |
+| `Dive` | build | analysis | inspection of the layers |
+| `Falco` | runtime | defensive | runtime detection of the escapes |
+| `deepce` | runtime | offensive | enumeration of the escape paths |
+| `seccomp`/`AppArmor` | runtime | defensive | restriction of the syscalls/capabilities |
 
 > **Recommended modern tool:** `Trivy` for the build (supply chain), `Falco` for the runtime (escape detection). The combination covers both surfaces. See `../Tooling/` for the broader cloud scanners.
 
 ---
 
-## Finding Registry - Containers Security
+## Finding registry - containers security
 
-| ID | Description | Severity | Subfolder |
+| id | description | severity | subfolder |
 | :--- | :--- | :---: | :--- |
-| `CLOUD-005` | Image scanning: known vulnerabilities (CVE) in the images before deployment | `Medium` | `image-scanning/` |
-| `CLOUD-006` | Container escape via Docker socket: evasion and root on the host | `Critical` | `runtime-security/` |
+| `CLOUD-005` | image scanning: known vulnerabilities (cve) in the images before deployment | `Medium` | `image-scanning/` |
+| `CLOUD-006` | container escape via docker socket: evasion and root on the host | `Critical` | `runtime-security/` |
 
 ---
 
-## MITRE ATT&CK Mapping - Aggregated
+## MITRE ATT&CK mapping - aggregated
 
-| Tactic | Technique | MITRE ID | Related Finding |
+| tactic | technique | mitre id | related finding |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Supply Chain Compromise | `T1195` | CLOUD-005 |
-| Privilege Escalation | Escape to Host | `T1611` | CLOUD-006 |
-| Execution | Deploy Container | `T1610` | CLOUD-006 |
-| Discovery | Container and Resource Discovery | `T1613` | CLOUD-006 |
+| initial access | supply chain compromise | `T1195` | CLOUD-005 |
+| privilege escalation | escape to host | `T1611` | CLOUD-006 |
+| execution | deploy container | `T1610` | CLOUD-006 |
+| discovery | container and resource discovery | `T1613` | CLOUD-006 |
 
 ---
 

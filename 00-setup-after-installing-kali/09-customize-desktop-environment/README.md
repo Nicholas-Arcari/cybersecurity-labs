@@ -54,13 +54,13 @@ Minore produttivita e maggiore probabilita di commettere errori di lettura su ou
 
 ## Personalizzazioni consigliate
 
-| Impostazione | Raccomandazione |
+| impostazione | raccomandazione |
 | :--- | :--- |
-| Font terminale | `Hack Nerd Font` o `JetBrains Mono` - monospazio ottimizzato per codice |
-| Tema | Tema scuro (es. `Kali-Dark`) - riduce affaticamento visivo in ambienti bui |
-| Dimensione font | 12-14pt per schermi standard, 16pt per HiDPI |
-| Workspace | 4 workspace: terminali, browser, tool GUI, note |
-| Opacita terminale | 85-90% per leggibilita mantenendo il contesto dello schermo |
+| font terminale | `Hack Nerd Font` o `JetBrains Mono` - monospazio ottimizzato per codice |
+| tema | tema scuro (es. `Kali-Dark`) - riduce affaticamento visivo in ambienti bui |
+| dimensione font | 12-14pt per schermi standard, 16pt per hidpi |
+| workspace | 4 workspace: terminali, browser, tool gui, note |
+| opacita terminale | 85-90% per leggibilita mantenendo il contesto dello schermo |
 
 ---
 

@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# GNU Radio Flowgraphs - Elaborazione del Segnale Personalizzata
+# GNU radio flowgraphs - elaborazione del segnale personalizzata
 
 > - **Fase:** Wireless Security - Custom DSP & Signal Processing (Software Defined Radio)
 > - **Visibilita:** Zero in ricezione; Media in trasmissione (dipende dal flowgraph)
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 GNU Radio e il framework di elaborazione del segnale (DSP) di riferimento per la Software Defined Radio. Mentre GQRX visualizza, rtl_433 decodifica protocolli noti e URH gestisce i casi comuni di reverse engineering (vedere `../signal-analysis/`), GNU Radio interviene quando serve costruire una catena di elaborazione personalizzata: modulazioni non standard, protocolli complessi, decodifica in tempo reale, o l'integrazione di piu stadi (filtri, demodulatori, decodificatori) in un flusso su misura.
 
@@ -31,7 +31,7 @@ gnu-radio-flowgraphs/
 
 ---
 
-## Anatomia di un Flowgraph di Ricezione
+## Anatomia di un flowgraph di ricezione
 
 ### Contesto operativo
 
@@ -72,7 +72,7 @@ Il flowgraph, una volta costruito e validato, e riutilizzabile e parametrizzabil
 
 ---
 
-## Quando Usare GNU Radio invece di URH o rtl_433
+## Quando usare GNU radio invece di URH o rtl_433
 
 ### Analisi comparativa
 
@@ -86,7 +86,7 @@ La progressione naturale in un assessment RF e quindi: tentare rtl_433, poi URH,
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Nel percorso di laboratorio, GNU Radio e stato lo strumento meno utilizzato ma il piu formativo. Per i dispositivi di test (sensore meteo, telecomandi), rtl_433 e URH sono stati sufficienti e GNU Radio sarebbe stato un sovradimensionamento. La sua utilita e emersa nel comprendere cosa quei tool fanno "sotto il cofano": costruire manualmente un flowgraph di demodulazione ASK ha chiarito concetti (decimazione, filtraggio del canale, slicing dei bit) che URH esegue automaticamente ma nasconde.
 
@@ -96,13 +96,13 @@ La curva di apprendimento e ripida e legata ai fondamenti dell'elaborazione del 
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `GNU Radio Companion` | DSP framework | GUI - Flowgraph | Costruzione visuale di catene di elaborazione del segnale |
-| `gr-osmosdr` | SDR source block | Libreria | Interfaccia GNU Radio verso RTL-SDR, HackRF, altri SDR |
-| `Universal Radio Hacker` | Signal analyzer | GUI | Alternativa piu semplice per la maggior parte dei casi (vedere `../signal-analysis/`) |
-| `Python + NumPy/SciPy` | DSP scripting | Codice | Elaborazione del segnale programmatica per casi custom |
-| `inspectrum` | Signal visualizer | GUI | Analisi visuale preliminare prima di costruire il flowgraph |
+| `GNU Radio Companion` | dsp framework | gui - flowgraph | costruzione visuale di catene di elaborazione del segnale |
+| `gr-osmosdr` | sdr source block | libreria | interfaccia gnu radio verso rtl-sdr, hackrf, altri sdr |
+| `Universal Radio Hacker` | signal analyzer | gui | alternativa piu semplice per la maggior parte dei casi (vedere `../signal-analysis/`) |
+| `Python + NumPy/SciPy` | dsp scripting | codice | elaborazione del segnale programmatica per casi custom |
+| `inspectrum` | signal visualizer | gui | analisi visuale preliminare prima di costruire il flowgraph |
 
 > **Tool moderno consigliato:** per la maggior parte degli assessment, `Universal Radio Hacker` copre i casi d'uso con una frazione della complessita di GNU Radio. Riservare GNU Radio ai segnali con modulazioni non standard o alla necessita di elaborazione in tempo reale. GNU Radio resta lo standard accademico e professionale per il DSP quando la flessibilita e prioritaria.
 
@@ -110,10 +110,10 @@ La curva di apprendimento e ripida e legata ai fondamenti dell'elaborazione del 
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Host Information | `T1592` | Costruzione di catene DSP custom per demodulare e analizzare segnali RF non standard |
-| Credential Access | Network Sniffing | `T1040` | Elaborazione del segnale per estrarre dati da trasmissioni RF con protocolli custom |
+| reconnaissance | gather victim host information | `T1592` | costruzione di catene dsp custom per demodulare e analizzare segnali rf non standard |
+| credential access | network sniffing | `T1040` | elaborazione del segnale per estrarre dati da trasmissioni rf con protocolli custom |
 
 ---
 

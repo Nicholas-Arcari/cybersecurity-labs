@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Subdomain Discovery
+# Subdomain discovery
 
 > - **Fase:** Reconnaissance - DNS Enumeration
 > - **Visibilita:** Bassa (passivo) - interrogazione di fonti di terze parti (CT logs, motori ricerca) senza contattare i server del target
@@ -17,7 +17,7 @@ Strumenti: `Sublist3r`, `Assetfinder`
 
 ---
 
-## 1 Introduzione Teorica
+## 1 Introduzione teorica
 
 La Passive Subdomain Enumeration consiste nel raccogliere informazioni sui sottodomini di un target interrogando fonti di terze parti (Motori di ricerca, Log di "Certificate Transparency", VirusTotal, ecc.) invece di interrogare direttamente i server DNS dell'azienda.
 
@@ -29,11 +29,11 @@ Perché è importante?
 
 ---
 
-## 2 Esecuzione Tecnica
+## 2 Esecuzione tecnica
 
 **ID Finding:** `DNS-003` | **Severity:** `Medio`
 
-#### A. Aggregazione OSINT (Sublist3r)
+#### A. aggregazione OSINT (sublist3r)
 
 È stato utilizzato `Sublist3r` per interrogare molteplici motori di ricerca (Google, Bing, Yahoo, Baidu) e aggregare i risultati storici.
 
@@ -47,7 +47,7 @@ sublist3r -d tesla.com -o tesla_sublist3r.txt
 
 Analisi: Il tool ha impiegato diversi minuti per interrogare le API dei motori di ricerca, restituendo una lista di sottodomini "storici" e ben indicizzati.
 
-#### B. Certificate Transparency Analysis (Assetfinder)
+#### B. certificate transparency analysis (Assetfinder)
 
 È stato utilizzato assetfinder per un'enumerazione rapida basata sui certificati SSL. Questa tecnica è estremamente efficace per trovare infrastrutture interne esposte (VPN, Mail Server) che hanno un certificato valido ma non sono indicizzate su Google.
 
@@ -80,17 +80,17 @@ grep "admin" tesla_assetfinder.txt
 
 ---
 
-## 3 Analisi dei Risultati (Attack Surface)
+## 3 Analisi dei risultati (attack surface)
 
 Dall'unione dei risultati dei due tool, è stata compilata una lista di oltre 500+ sottodomini unici. Di seguito alcuni esempi di "High Value Targets" identificati che richiederebbero ulteriore investigazione (Active Recon):
 
-| Sottodominio Rilevato | Categoria | Interesse per Bug Bounty |
+| sottodominio rilevato | categoria | interesse per bug bounty |
 | ----------------------- | ----------- | -------------------------- |
-| toolbox.tesla.com | Internal Tool | Alto (Pannelli strumenti interni) |
-| sso.tesla.com | Authentication | Critico (Single Sign-On, target phishing) |
-| vpn.tesla.com | Network Access | Alto (Punto di ingresso infrastrutturale) |
-| energysupport.tesla.com | Customer Support | Medio (Ticket systems, possibili XSS) |
-| dev-app.tesla.com | Development | Alto (Ambienti di test spesso vulnerabili) |
+| toolbox.tesla.com | internal tool | Alto (pannelli strumenti interni) |
+| sso.tesla.com | authentication | Critico (single sign-on, target phishing) |
+| vpn.tesla.com | network access | Alto (punto di ingresso infrastrutturale) |
+| energysupport.tesla.com | customer support | Medio (ticket systems, possibili xss) |
+| dev-app.tesla.com | development | Alto (ambienti di test spesso vulnerabili) |
 
 Nota Tecnica: A differenza di un laboratorio controllato, in un target reale come Tesla la quantità di dati richiede post-processing (filtraggio dei domini morti con tool come `httprobe`) prima di procedere con gli attacchi.
 
@@ -102,9 +102,9 @@ L'utilizzo combinato di `Sublist3r` e `Assetfinder` su un target Enterprise ha d
 
 ---
 
-## Analisi a Basso Livello: Certificate Transparency e Fonti di Subdomain Discovery
+## Analisi a basso livello: certificate transparency e fonti di subdomain discovery
 
-### Certificate Transparency (CT) Logs
+### Certificate transparency (CT) logs
 
 I CT logs (RFC 6962) sono registri pubblici append-only gestiti da operatori indipendenti (Google, Cloudflare, DigiCert). Ogni Certificate Authority (CA) e obbligata a registrare ogni certificato SSL/TLS emesso in almeno due CT log prima che il certificato sia considerato valido dai browser (Chrome richiede SCT - Signed Certificate Timestamp).
 
@@ -130,17 +130,17 @@ crt.sh / Censys indicizzano il CT log -> sottodominio PUBBLICAMENTE visibile
 
 **Implicazione per la sicurezza:** ogni certificato SSL emesso per un sottodominio interno (staging, dev, vpn, admin) diventa immediatamente visibile a chiunque interroghi i CT logs. Questo rende impossibile nascondere infrastrutture HTTPS dietro la "Security through Obscurity". I tool come Assetfinder interrogano direttamente `crt.sh` (interfaccia web/API ai CT logs di Comodo) e aggregano i risultati.
 
-### Confronto delle Fonti di Discovery
+### Confronto delle fonti di discovery
 
-| Fonte | Tecnica | Copertura | Latenza |
+| fonte | tecnica | copertura | latenza |
 | :--- | :--- | :--- | :--- |
-| **CT Logs** (crt.sh) | Certificati SSL emessi | Tutti i sottodomini con HTTPS | Minuti (quasi real-time) |
-| **Motori di ricerca** (Google, Bing) | Crawling e indicizzazione | Solo pagine web linkate/crawlate | Giorni-settimane |
-| **VirusTotal** | Correlazione DNS passivo | Sottodomini visti in sample malware/URL | Variabile |
-| **DNS Brute Force** | Query DNS per wordlist | Limitata alla qualita della wordlist | Tempo di esecuzione |
-| **GitHub/Pastebin** | Scraping codice sorgente | Sottodomini hardcoded nel codice | Variabile |
+| **ct logs** (crt.sh) | certificati ssl emessi | tutti i sottodomini con https | minuti (quasi real-time) |
+| **motori di ricerca** (google, bing) | crawling e indicizzazione | solo pagine web linkate/crawlate | giorni-settimane |
+| **virustotal** | correlazione dns passivo | sottodomini visti in sample malware/url | variabile |
+| **dns brute force** | query dns per wordlist | limitata alla qualita della wordlist | tempo di esecuzione |
+| **github/pastebin** | scraping codice sorgente | sottodomini hardcoded nel codice | variabile |
 
-### Tool Moderno: Subfinder (ProjectDiscovery)
+### Tool moderno: Subfinder (ProjectDiscovery)
 
 Sublist3r e un tool datato (ultimo aggiornamento 2019) con fonti spesso non funzionanti. L'alternativa moderna e `subfinder` (ProjectDiscovery), che supporta 40+ fonti dati e API key configurabili:
 
@@ -157,7 +157,7 @@ subfinder -d tesla.com -silent | dnsx -silent | httpx -silent -title -status-cod
 
 ---
 
-## Blue Team: Monitoraggio della Superficie di Attacco Esterna
+## Blue team: monitoraggio della superficie di attacco esterna
 
 **Monitoring proattivo:**
 - Configurare alert su crt.sh per il proprio dominio: `https://crt.sh/?q=%.dominio.it` monitora tutti i certificati emessi per qualsiasi sottodominio - rileva sia certificati legittimi che certificati fraudolenti emessi da attaccanti per phishing
@@ -170,7 +170,7 @@ subfinder -d tesla.com -silent | dnsx -silent | httpx -silent -title -status-cod
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'enumerazione su tesla.com ha prodotto oltre 500 sottodomini unici, un volume che in un assessment reale richiederebbe post-processing significativo. La fase critica non e stata la raccolta (automatica e veloce) ma il triage: separare i sottodomini ad alto valore (vpn, sso, dev-app, toolbox) dai sottodomini a basso interesse (cdn, static, assets).
 
@@ -182,10 +182,10 @@ Un dettaglio operativo: il filtering con `grep "dev"` e `grep "admin"` e una tec
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Search Open Technical Databases: DNS/Passive DNS | `T1596.001` | Enumerazione sottodomini di tesla.com tramite Certificate Transparency logs con Assetfinder, identificando 500+ host inclusi vpn e sso (DNS-003) |
-| Reconnaissance | Gather Victim Network Info: DNS | `T1590.002` | Aggregazione sottodomini da motori di ricerca (Sublist3r) per mappare la superficie di attacco esterna del target (DNS-003) |
+| reconnaissance | search open technical databases: dns/passive dns | `T1596.001` | enumerazione sottodomini di tesla.com tramite certificate transparency logs con assetfinder, identificando 500+ host inclusi vpn e sso (DNS-003) |
+| reconnaissance | gather victim network info: dns | `T1590.002` | aggregazione sottodomini da motori di ricerca (sublist3r) per mappare la superficie di attacco esterna del target (DNS-003) |
 
 ---
 

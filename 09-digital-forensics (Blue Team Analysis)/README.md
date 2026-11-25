@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 09 - Digital Forensics (Blue Team Analysis)
+# 09 - Digital forensics (blue team analysis)
 
 > - **Fase:** Difesa - Digital Forensics & Incident Response (DFIR)
 > - **Categoria:** Analysis - ricostruzione dell'incidente dalle prove
@@ -74,48 +74,48 @@ Il posizionamento nel percorso e alla fine della catena difensiva: prevenire (08
 
 ## Tool di riferimento
 
-| Tool | Area | Ruolo | Caso d'uso principale |
+| tool | area | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Autopsy` / `Sleuth Kit` | Disk | Piattaforma | Analisi filesystem, timeline, recupero (FOR-001) |
-| `Volatility 3` | Memory | Analyzer | Analisi dei dump di RAM (processi, rete, injection) |
-| `plaso` / `log2timeline` | Disk | Timeline | Super-timeline correlata dell'incidente |
-| `Wireshark` / `tshark` | Network | Analyzer | Analisi PCAP, ricostruzione sessioni (FOR-002) |
-| `Zeek` | Network | Framework | Log strutturati del traffico su larga scala |
-| `dc3dd` / write blocker | Acquisizione | Preservazione | Copia forense con integrita garantita |
+| `Autopsy` / `Sleuth Kit` | disk | piattaforma | analisi filesystem, timeline, recupero (FOR-001) |
+| `Volatility 3` | memory | analyzer | analisi dei dump di ram (processi, rete, injection) |
+| `plaso` / `log2timeline` | disk | timeline | super-timeline correlata dell'incidente |
+| `Wireshark` / `tshark` | network | analyzer | analisi pcap, ricostruzione sessioni (FOR-002) |
+| `Zeek` | network | framework | log strutturati del traffico su larga scala |
+| `dc3dd` / write blocker | acquisizione | preservazione | copia forense con integrita garantita |
 
 > **Tool moderno consigliato:** la `SIFT Workstation` (SANS) integra l'intero arsenale forense pronto all'uso (Autopsy, Volatility, plaso, Wireshark). Per un flusso disco, memoria, rete, la combinazione `Autopsy` + `Volatility 3` + `Wireshark` copre l'analisi completa di un incidente, dalla timeline su disco alla conferma sul traffico.
 
 ---
 
-## Registro Finding - Modulo 09
+## Registro finding - modulo 09
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `FOR-001` | Disk forensics: acquisizione, timeline dell'incidente, recupero artefatti cancellati | `Alto` | `01-disk-forensics/` |
-| `FOR-002` | Network forensics (Wireshark): ricostruzione sessioni, conferma C2/esfil, IOC | `Alto` | `02-network-forensics/wireshark/` |
+| `FOR-001` | disk forensics: acquisizione, timeline dell'incidente, recupero artefatti cancellati | `Alto` | `01-disk-forensics/` |
+| `FOR-002` | network forensics (wireshark): ricostruzione sessioni, conferma c2/esfil, ioc | `Alto` | `02-network-forensics/wireshark/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
 > Il modulo forense mappa le tecniche d'attacco che l'analisi **ricostruisce e conferma** a posteriori dalle prove. Framework complementare: MITRE D3FEND.
 
-| Tattica (ricostruita) | Tecnica | ID MITRE | Finding Correlato |
+| tattica (ricostruita) | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Defense Evasion | Indicator Removal: File Deletion | `T1070.004` | FOR-001 (carving recupera i file cancellati) |
-| Defense Evasion | Indicator Removal: Clear Linux Logs | `T1070.002` | FOR-001 (la timeline evidenzia il tampering) |
-| Persistence | Account Manipulation: SSH Authorized Keys | `T1098.004` | FOR-001 |
-| Command and Control | Application Layer Protocol: Web Protocols | `T1071.001` | FOR-001, FOR-002 |
-| Command and Control | Application Layer Protocol: DNS | `T1071.004` | FOR-002 |
-| Exfiltration | Exfiltration Over C2 Channel | `T1041` | FOR-002 |
-| Exfiltration | Data Staged | `T1074` | FOR-001 |
-| Credential Access | Network Sniffing | `T1040` | FOR-002 |
+| defense evasion | indicator removal: file deletion | `T1070.004` | FOR-001 (carving recupera i file cancellati) |
+| defense evasion | indicator removal: clear linux logs | `T1070.002` | FOR-001 (la timeline evidenzia il tampering) |
+| persistence | account manipulation: ssh authorized keys | `T1098.004` | FOR-001 |
+| command and control | application layer protocol: web protocols | `T1071.001` | FOR-001, FOR-002 |
+| command and control | application layer protocol: dns | `T1071.004` | FOR-002 |
+| exfiltration | exfiltration over c2 channel | `T1041` | FOR-002 |
+| exfiltration | data staged | `T1074` | FOR-001 |
+| credential access | network sniffing | `T1040` | FOR-002 |
 
-| Contromisura difensiva (D3FEND) | ID D3FEND | Area |
+| contromisura difensiva (d3fend) | id d3fend | area |
 | :--- | :--- | :--- |
-| File Analysis | `D3-FA` | Disk forensics (artefatti su filesystem) |
-| Memory Boundary Tracking | `D3-MBT` | Memory forensics (analisi RAM) |
-| Network Traffic Analysis | `D3-NTA` | Network forensics (analisi PCAP) |
+| file analysis | `D3-FA` | disk forensics (artefatti su filesystem) |
+| memory boundary tracking | `D3-MBT` | memory forensics (analisi ram) |
+| network traffic analysis | `D3-NTA` | network forensics (analisi pcap) |
 
 ---
 

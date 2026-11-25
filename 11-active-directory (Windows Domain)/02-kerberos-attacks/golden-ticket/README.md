@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Golden Ticket: persistenza di dominio tramite forgiatura del TGT
+# Golden ticket: persistenza di dominio tramite forgiatura del TGT
 
 > - **Fase:** Persistence / Privilege Escalation (dominio Active Directory)
 > - **Visibilita:** Bassa all'emissione (il ticket e forgiato offline, nessuna richiesta al KDC), potenzialmente rilevabile all'uso (anomalie nel ticket)
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Il Golden Ticket e la persistenza di dominio per eccellenza. Il TGT (Ticket Granting Ticket) e cifrato e
 firmato con la chiave dell'account `krbtgt`: chi possiede quella chiave puo forgiare TGT arbitrari, per
@@ -33,7 +33,7 @@ inesistente, gruppi incoerenti) sono piu facili da rilevare. Un operatore attent
 parametri plausibili (durata standard, utente reale) per ridurre i segnali, e usa AES invece di RC4 per
 evitare la detection basata su downgrade.
 
-## Esecuzione / Comandi
+## Esecuzione / comandi
 
 ### Forgiatura (Impacket ticketer)
 
@@ -68,7 +68,7 @@ un "accesso in piu": e una chiave maestra che bypassa l'autenticazione normale. 
 perche l'impatto e il controllo duraturo e la difficolta di eradicazione: finche krbtgt non viene ruotato
 due volte, i ticket forgiati restano validi anche dopo il reset di tutte le altre password.
 
-### Analisi Teorica
+### Analisi teorica
 
 La radice del Golden Ticket e strutturale in Kerberos (vedi
 [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.md>), sez. 3.1): il TGT e cifrato e firmato con la
@@ -79,7 +79,7 @@ non si autentica, falsifica il materiale che prova l'autenticazione. Il fatto ch
 doppio reset di krbtgt deriva dalla gestione a due chiavi (corrente/precedente) pensata per la continuita
 della replica, non per la sicurezza offensiva.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Rilevamento.** TGT con durata anomala (molto oltre il default di 10 ore / 7 giorni di rinnovo); ticket per
 utenti inesistenti o con gruppi incoerenti rispetto all'oggetto reale; uso di RC4 dove ci si attende AES;
@@ -92,11 +92,11 @@ parametri dei TGT.
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Il Golden Ticket e gia una fase avanzata: lo scenario descrive la persistenza e le sue conseguenze.
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** hash di krbtgt ottenuto (tipicamente via DCSync) e SID del dominio noto.
 
@@ -127,7 +127,7 @@ ai team non specializzati.
 **Vettori di monetizzazione tipici:** accesso persistente rivenduto; ransomware ritardato; esfiltrazione
 prolungata di dati.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** anomalie nei TGT (durata, utente, gruppi, etype); uso di ticket per account inesistenti.
 
@@ -148,12 +148,12 @@ corretta quando necessario.
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `ticketer.py` (Impacket) | Kerberos tool | CLI - Attivo | Forgiatura del Golden Ticket da Linux |
-| `Mimikatz` | Credential/ticket tool | CLI - Attivo | `kerberos::golden` da host Windows, con iniezione (ptt) |
-| `Rubeus` | .NET Kerberos tool | CLI - Attivo | Forgiatura/uso ticket e manipolazione da Windows |
-| `klist` / `kinit` | Kerberos nativi | CLI | Gestione e verifica dei ticket in cache |
+| `ticketer.py` (impacket) | kerberos tool | cli - attivo | forgiatura del golden ticket da linux |
+| `Mimikatz` | credential/ticket tool | cli - attivo | `kerberos::golden` da host windows, con iniezione (ptt) |
+| `Rubeus` | .net kerberos tool | cli - attivo | forgiatura/uso ticket e manipolazione da windows |
+| `klist` / `kinit` | kerberos nativi | cli | gestione e verifica dei ticket in cache |
 
 ## Note di metodologia
 
@@ -163,19 +163,19 @@ procedura di bonifica (doppio reset krbtgt) come contromisura verificata.
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Steal or Forge Kerberos Tickets: Golden Ticket | `T1558.001` | Forgiatura di un TGT arbitrario firmato con la chiave di krbtgt. |
-| Persistence | Account Manipulation | `T1098` | Accesso persistente al dominio indipendente dalle credenziali utente. |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Ticket | `T1550.003` | Uso del ticket forgiato per autenticarsi ai servizi. |
+| credential access | steal or forge kerberos tickets: golden ticket | `T1558.001` | forgiatura di un tgt arbitrario firmato con la chiave di krbtgt. |
+| persistence | account manipulation | `T1098` | accesso persistente al dominio indipendente dalle credenziali utente. |
+| lateral movement | use alternate authentication material: pass the ticket | `T1550.003` | uso del ticket forgiato per autenticarsi ai servizi. |
 
 ## Correlazioni con altri moduli
 
-| Provenienza | Questa tecnica | Effetto |
+| provenienza | questa tecnica | effetto |
 | :--- | :--- | :--- |
-| [DCSync](<../../05-credential-dumping/dcsync/README.md>) | Golden Ticket | fornisce l'hash di krbtgt, prerequisito della forgiatura |
-| Golden Ticket | [07-post-exploitation - persistence](<../../../07-post-exploitation/README.md>) | e la forma di persistenza di dominio piu potente |
-| [Silver Ticket](<../silver-ticket/README.md>) | Golden Ticket | il Silver e la variante limitata a un servizio; il Golden e dominio-wide |
+| [dcsync](<../../05-credential-dumping/dcsync/README.md>) | golden ticket | fornisce l'hash di krbtgt, prerequisito della forgiatura |
+| golden ticket | [07-post-exploitation - persistence](<../../../07-post-exploitation/README.md>) | e la forma di persistenza di dominio piu potente |
+| [silver ticket](<../silver-ticket/README.md>) | golden ticket | il silver e la variante limitata a un servizio; il golden e dominio-wide |
 
 ---
 

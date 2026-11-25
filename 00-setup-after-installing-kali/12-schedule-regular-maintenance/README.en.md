@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 12 - Schedule Regular Maintenance (Cron)
+# 12 - Schedule regular maintenance (cron)
 
 > - **Phase:** System Setup - Maintenance Automation
 > - **Priority:** Medium - prevents disk issues and keeps the system updated over time
@@ -52,7 +52,7 @@ The disk gradually fills up until it blocks the system, often at the worst momen
 
 ---
 
-## Crontab Syntax (quick reference)
+## Crontab syntax (quick reference)
 
 ```
 * * * * * command

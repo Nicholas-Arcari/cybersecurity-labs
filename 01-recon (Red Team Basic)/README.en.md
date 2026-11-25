@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 01 - Reconnaissance (Red Team Basic)
+# 01 - Reconnaissance (red team basic)
 
 > - **Phase:** Reconnaissance - Pre-engagement Information Gathering
 > - **Visibility:** Zero / Low - from passive OSINT to active network scanning
@@ -23,7 +23,7 @@ In the Cyber Kill Chain (Lockheed Martin), this phase corresponds to the first s
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 01-recon (Red Team Basic)/
@@ -57,7 +57,7 @@ In the Cyber Kill Chain (Lockheed Martin), this phase corresponds to the first s
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [START] Scope defined and authorization obtained
@@ -92,47 +92,47 @@ In the Cyber Kill Chain (Lockheed Martin), this phase corresponds to the first s
 
 ---
 
-## Finding Registry
+## Finding registry
 
 All findings identified during the Reconnaissance phase are listed below. The "File" column points to the subfolder README containing the complete technical details.
 
-| ID | Description | Severity | File |
+| id | description | severity | file |
 | :--- | :--- | :---: | :--- |
-| `OSINT-001` | Target credentials identified in public data breaches | `High` | `01-osint-passive/breach-data/` |
-| `OSINT-002` | Email exposure on personal domain - minimal attack surface | `Informational` | `01-osint-passive/email-harvesting/` |
-| `OSINT-003` | Documents and login panels indexed by Google on nasa.gov | `Variable (Low / High)` | `01-osint-passive/google-dorks/` |
-| `OSINT-004` | Identity correlation through username reused across multiple platforms | `Low` | `01-osint-passive/user-enumeration/` |
-| `SCAN-001` | Active hosts identified in subnet 10.0.2.0/24 (Windows 10 target) | `Informational` | `02-network-scanning-active/live-host-discovery/` |
-| `SCAN-002` | Port discovery with Masscan - false negative in virtualized NAT environment | `Informational` | `02-network-scanning-active/port-scanning (Nmap)/masscan/` |
-| `SCAN-003` | SMB Signing not mandatory on 10.0.2.3 - SMB Relay vector enabled | `High` | `02-network-scanning-active/port-scanning (Nmap)/nmap-scripts/` |
-| `DNS-001` | Successful Zone Transfer on zonetransfer.me - complete DNS zone exposure | `Critical` | `03-dns-enumeration/dns-recon/` |
-| `DNS-002` | Unpublished Virtual Host accessible via /etc/hosts manipulation | `Medium` | `03-dns-enumeration/hosts-file/` |
+| `OSINT-001` | target credentials identified in public data breaches | `High` | `01-osint-passive/breach-data/` |
+| `OSINT-002` | email exposure on personal domain - minimal attack surface | `Informational` | `01-osint-passive/email-harvesting/` |
+| `OSINT-003` | documents and login panels indexed by google on nasa.gov | `Variable (Low / High)` | `01-osint-passive/google-dorks/` |
+| `OSINT-004` | identity correlation through username reused across multiple platforms | `Low` | `01-osint-passive/user-enumeration/` |
+| `SCAN-001` | active hosts identified in subnet 10.0.2.0/24 (windows 10 target) | `Informational` | `02-network-scanning-active/live-host-discovery/` |
+| `SCAN-002` | port discovery with masscan - false negative in virtualized nat environment | `Informational` | `02-network-scanning-active/port-scanning (Nmap)/masscan/` |
+| `SCAN-003` | smb signing not mandatory on 10.0.2.3 - smb relay vector enabled | `High` | `02-network-scanning-active/port-scanning (Nmap)/nmap-scripts/` |
+| `DNS-001` | successful zone transfer on zonetransfer.me - complete dns zone exposure | `Critical` | `03-dns-enumeration/dns-recon/` |
+| `DNS-002` | unpublished virtual host accessible via /etc/hosts manipulation | `Medium` | `03-dns-enumeration/hosts-file/` |
 | `DNS-003` | 500+ tesla.com subdomains passively enumerated (including vpn, sso, dev-app) | `Medium` | `03-dns-enumeration/subdomain-finding/` |
-| `INTEL-001` | 60+ devices with exposed RDP in Parma - Information Disclosure (hostnames, OS) | `High` | `04-infrastructure-intel/shodan-censys/` |
-| `INTEL-002` | Workstation with RDP + Apache + non-standard ports exposed on public IP | `High` | `04-infrastructure-intel/shodan-censys/` |
-| `INTEL-003` | Corporate server with VoIP (3CX) + FTP (FileZilla) + RDP exposed on consumer ADSL | `Critical` | `04-infrastructure-intel/shodan-censys/` |
-| `INTEL-004` | tesla.com protected by Akamai WAF - fingerprinting blocked, HSTS active | `Informational` | `04-infrastructure-intel/tech-stack/` |
+| `INTEL-001` | 60+ devices with exposed rdp in parma - information disclosure (hostnames, os) | `High` | `04-infrastructure-intel/shodan-censys/` |
+| `INTEL-002` | workstation with rdp + apache + non-standard ports exposed on public ip | `High` | `04-infrastructure-intel/shodan-censys/` |
+| `INTEL-003` | corporate server with voip (3cx) + ftp (filezilla) + rdp exposed on consumer adsl | `Critical` | `04-infrastructure-intel/shodan-censys/` |
+| `INTEL-004` | tesla.com protected by akamai waf - fingerprinting blocked, hsts active | `Informational` | `04-infrastructure-intel/tech-stack/` |
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
 Aggregated table of all MITRE ATT&CK techniques detected during the Reconnaissance phase.
 
-| Tactic | Technique | MITRE ID | Correlated Finding |
+| tactic | technique | mitre id | correlated finding |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Info: Credentials | `T1589.001` | OSINT-001 |
-| Reconnaissance | Gather Victim Identity Info: Email Addresses | `T1589.002` | OSINT-002 |
-| Reconnaissance | Search Open Websites/Domains: Search Engines | `T1593.002` | OSINT-003 |
-| Reconnaissance | Gather Victim Identity Info: Employee Names | `T1589.003` | OSINT-004 |
-| Reconnaissance | Search Open Websites/Domains: Social Media | `T1593.001` | OSINT-004 |
-| Reconnaissance | Remote System Discovery | `T1018` | SCAN-001 |
-| Reconnaissance | Network Service Discovery | `T1046` | SCAN-001, SCAN-002, SCAN-003 |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | SCAN-003, INTEL-004 |
-| Reconnaissance | Gather Victim Network Info: DNS | `T1590.002` | DNS-001, DNS-003 |
-| Reconnaissance | Search Open Technical Databases: DNS/Passive DNS | `T1596.001` | DNS-001, DNS-003 |
-| Reconnaissance | Search Open Technical Databases: Scan Databases | `T1596.005` | INTEL-001, INTEL-002, INTEL-003 |
-| Reconnaissance | Gather Victim Network Info: Network Topology | `T1590.004` | INTEL-001, INTEL-002, INTEL-003 |
+| reconnaissance | gather victim identity info: credentials | `T1589.001` | OSINT-001 |
+| reconnaissance | gather victim identity info: email addresses | `T1589.002` | OSINT-002 |
+| reconnaissance | search open websites/domains: search engines | `T1593.002` | OSINT-003 |
+| reconnaissance | gather victim identity info: employee names | `T1589.003` | OSINT-004 |
+| reconnaissance | search open websites/domains: social media | `T1593.001` | OSINT-004 |
+| reconnaissance | remote system discovery | `T1018` | SCAN-001 |
+| reconnaissance | network service discovery | `T1046` | SCAN-001, SCAN-002, SCAN-003 |
+| reconnaissance | gather victim host info: software | `T1592.002` | SCAN-003, INTEL-004 |
+| reconnaissance | gather victim network info: dns | `T1590.002` | DNS-001, DNS-003 |
+| reconnaissance | search open technical databases: dns/passive dns | `T1596.001` | DNS-001, DNS-003 |
+| reconnaissance | search open technical databases: scan databases | `T1596.005` | INTEL-001, INTEL-002, INTEL-003 |
+| reconnaissance | gather victim network info: network topology | `T1590.004` | INTEL-001, INTEL-002, INTEL-003 |
 
 ---
 

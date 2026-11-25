@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# GCP (Google Cloud Platform) - Metadata SSRF e Service Account Abuse
+# GCP (Google cloud platform) - metadata SSRF e service account abuse
 
 > - **Fase:** Cloud Security - GCP (IaaS & PaaS)
 > - **Visibilita:** Media - le attivita sono registrate in Cloud Audit Logs; l'accesso al metadata service da un workload compromesso e piu difficile da distinguere dal traffico legittimo
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 GCP organizza le risorse in **progetti** e l'accesso attorno ai **Service Account** (SA): identita non umane assegnate a risorse (VM, Cloud Functions, GKE) per accedere ai servizi. Come le managed identity di Azure, i service account eliminano le credenziali hardcoded ma trasferiscono la fiducia alla risorsa - e sono il bersaglio primario di un attacco GCP.
 
@@ -32,7 +32,7 @@ GCP (Google Cloud Platform)/
 
 ---
 
-## Furto del Token del Service Account via Metadata
+## Furto del token del service account via metadata
 
 **ID Finding:** `CLOUD-004` | **Severity:** `Alto` (furto del token del service account via metadata/SSRF; accesso ai servizi GCP con i permessi del SA - `Critico` se il SA e privilegiato)
 
@@ -40,7 +40,7 @@ GCP (Google Cloud Platform)/
 
 Il metadata service di GCP fornisce alle risorse i token dei loro service account. Chi puo far interrogare il metadata (dalla risorsa stessa o inducendola via SSRF) ottiene un token OAuth con i permessi del SA. Il caso SSRF e particolarmente grave perche non richiede l'accesso alla macchina: basta una web app che segua una URL fornita dall'attaccante.
 
-### PoC - Furto del token via metadata (da risorsa compromessa)
+### PoC - furto del token via metadata (da risorsa compromessa)
 
 ```Bash
 # Da una VM GCP: richiesta del token del service account al metadata service
@@ -53,7 +53,7 @@ curl -s -H "Metadata-Flavor: Google" \
                                    <-- token del service account (CLOUD-004)
 ```
 
-### PoC - Furto via SSRF (senza accesso alla macchina)
+### PoC - furto via SSRF (senza accesso alla macchina)
 
 ```Bash
 # Web app vulnerabile a SSRF: l'attaccante la induce a interrogare il metadata
@@ -66,7 +66,7 @@ curl "https://vuln-app.example/fetch?url=http://metadata.google.internal/compute
 "access_token": "ya29.c.b0..."   <-- token esfiltrato via SSRF, nessun accesso alla VM (CLOUD-004)
 ```
 
-### PoC - Enumerazione e abuso dei permessi
+### PoC - enumerazione e abuso dei permessi
 
 ```Bash
 # Uso del token rubato per enumerare cosa il service account puo fare
@@ -89,7 +89,7 @@ role: roles/editor
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il vettore SSRF verso metadata e stato il piu istruttivo perche collega due mondi del percorso: la web security (modulo 03) e la cloud security. Un SSRF, che on-premise poteva permettere di raggiungere servizi interni, nel cloud diventa devastante: la web app vulnerabile diventa un proxy verso il metadata service, e l'attaccante ruba il token del service account senza mai toccare la macchina. La stessa vulnerabilita cambia di gravita a seconda del contesto - nel cloud, un SSRF e spesso una via diretta al furto di credenziali.
 
@@ -97,7 +97,7 @@ La simmetria con Azure e stata evidente: metadata service, token dell'identita g
 
 ---
 
-## Analisi Teorica: L'SSRF come Amplificatore nel Cloud
+## Analisi teorica: L'SSRF come amplificatore nel cloud
 
 L'SSRF illustra come una vulnerabilita cambi gravita col contesto. On-premise, un SSRF permette di raggiungere servizi interni non esposti - grave, ma limitato. Nel cloud, lo stesso SSRF punta al metadata service, un endpoint che per progettazione consegna credenziali a chi lo interroga dall'interno della risorsa. L'SSRF trasforma la web app in quel "chi dall'interno", e la vulnerabilita passa da "accesso a servizi interni" a "furto di credenziali cloud". Il contesto cloud amplifica l'impatto.
 
@@ -105,11 +105,11 @@ La radice e una fiducia implicita basata sulla posizione di rete: il metadata se
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Prospettiva dell'attaccante e del difensore.
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Kill Chain proiettata:**
 
@@ -128,7 +128,7 @@ Esfiltrazione dati / persistenza / controllo del progetto GCP
 
 **Impatto potenziale:** un service account con ruolo "Editor" o "Owner" trasforma un SSRF in un controllo quasi completo del progetto. L'accesso a Cloud Storage e BigQuery espone i dati; la possibilita di creare risorse abilita persistenza e abuso (cryptomining). Il pattern SSRF, metadata, service account privilegiato e uno dei vettori cloud piu documentati.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **IOC:** richieste al metadata da web app (pattern SSRF); uso di token SA da IP/contesti anomali; enumerazione IAM inattesa; creazione di risorse fuori dai processi normali.
 
@@ -140,13 +140,13 @@ Esfiltrazione dati / persistenza / controllo del progetto GCP
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `gcloud` | Cloud CLI | Ufficiale | Interazione con le API GCP |
-| GCP metadata API | Endpoint | Vettore | Fonte dei token dei service account |
-| `ScoutSuite` | Multi-cloud audit | Difensivo | Audit dei SA sovraprivilegiati e misconfig |
-| `GCP IAM Recommender` | Least privilege | Difensivo | Suggerimenti di riduzione dei permessi |
-| `Prowler` | Security scanner | Difensivo | Controlli di sicurezza su GCP |
+| `gcloud` | cloud cli | ufficiale | interazione con le api gcp |
+| gcp metadata api | endpoint | vettore | fonte dei token dei service account |
+| `ScoutSuite` | multi-cloud audit | difensivo | audit dei sa sovraprivilegiati e misconfig |
+| `GCP IAM Recommender` | least privilege | difensivo | suggerimenti di riduzione dei permessi |
+| `Prowler` | security scanner | difensivo | controlli di sicurezza su gcp |
 
 > **Tool moderno consigliato:** difensivamente `ScoutSuite` (`../../../Tooling/scoutsuite/`) per l'audit multi-cloud e l'`IAM Recommender` nativo per il least privilege. La prevenzione SSRF a livello applicativo (modulo 03) e la contromisura che spezza il vettore alla radice.
 
@@ -154,12 +154,12 @@ Esfiltrazione dati / persistenza / controllo del progetto GCP
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Steal Application Access Token | `T1528` | Furto del token del service account via metadata/SSRF (CLOUD-004) |
-| Credential Access | Unsecured Credentials: Cloud Instance Metadata API | `T1552.005` | Accesso al metadata service per ottenere le credenziali (CLOUD-004) |
-| Discovery | Cloud Infrastructure Discovery | `T1580` | Enumerazione delle risorse e dei permessi del progetto |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | Abuso dei permessi del service account |
+| credential access | steal application access token | `T1528` | furto del token del service account via metadata/ssrf (CLOUD-004) |
+| credential access | unsecured credentials: cloud instance metadata api | `T1552.005` | accesso al metadata service per ottenere le credenziali (CLOUD-004) |
+| discovery | cloud infrastructure discovery | `T1580` | enumerazione delle risorse e dei permessi del progetto |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | abuso dei permessi del service account |
 
 ---
 

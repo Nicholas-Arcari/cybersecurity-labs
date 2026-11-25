@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# SPF/DKIM/DMARC - Email Authentication Audit
+# SPF/DKIM/DMARC - email authentication audit
 
 > - **Fase:** Social Engineering - Email Infrastructure Reconnaissance
 > - **Visibilita:** Zero - l'audit si basa su query DNS pubbliche (record TXT), nessun pacchetto inviato al mail server del target, nessun log generato
@@ -14,7 +14,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 SPF (Sender Policy Framework), DKIM (DomainKeys Identified Mail) e DMARC (Domain-based Message Authentication, Reporting and Conformance) sono i tre pilastri dell'autenticazione email. La loro configurazione corretta impedisce a un attaccante di inviare email spoofate che appaiono provenire dal dominio del target. La loro misconfiguration - in particolare DMARC con policy `none` - e uno dei finding piu comuni e impattanti in un assessment di social engineering: permette all'attaccante di impersonare qualsiasi indirizzo email del dominio senza che il server destinatario blocchi il messaggio.
 
@@ -22,11 +22,11 @@ Il laboratorio ha documentato l'audit completo della configurazione email di un 
 
 ---
 
-## SPF/DKIM/DMARC Audit: Spoofing Assessment
+## SPF/DKIM/DMARC audit: spoofing assessment
 
 **ID Finding:** `SE-011` | **Severity:** `Medio`
 
-### PoC - Fase 1: Verifica SPF
+### PoC - fase 1: verifica SPF
 
 ```Bash
 dig +short TXT target-lab.com | grep spf
@@ -38,7 +38,7 @@ dig +short TXT target-lab.com | grep spf
 
 **Analisi:** Il record SPF e presente ma utilizza `~all` (softfail) anziche `-all` (hardfail). Con softfail, le email provenienti da IP non autorizzati vengono marcate come sospette ma non rifiutate. In assenza di DMARC enforcement, il softfail non ha alcun effetto pratico.
 
-### PoC - Fase 2: Verifica DKIM
+### PoC - fase 2: verifica DKIM
 
 ```Bash
 # DKIM richiede il selettore specifico (spesso "google", "mail", "selector1")
@@ -51,7 +51,7 @@ dig +short TXT selector1._domainkey.target-lab.com
 # Nessun record trovato per i selettori comuni                 <-- DKIM non configurato o selettore non standard
 ```
 
-### PoC - Fase 3: Verifica DMARC
+### PoC - fase 3: verifica DMARC
 
 ```Bash
 dig +short TXT _dmarc.target-lab.com
@@ -63,7 +63,7 @@ dig +short TXT _dmarc.target-lab.com
 
 **Analisi:** `p=none` significa che il dominio istruisce i server destinatari a non intraprendere alcuna azione sulle email che falliscono SPF e DKIM. L'unico effetto e l'invio di report aggregati all'indirizzo RUA - utili per il monitoraggio ma inutili come difesa.
 
-### PoC - Fase 4: Verifica Automatizzata con spoofcheck
+### PoC - fase 4: verifica automatizzata con spoofcheck
 
 ```Bash
 python3 spoofcheck.py target-lab.com
@@ -78,7 +78,7 @@ python3 spoofcheck.py target-lab.com
 [!] DOMAIN IS SPOOFABLE                                         <-- conclusione: spoofing possibile
 ```
 
-### PoC - Fase 5: Verifica Pratica di Spoofing
+### PoC - fase 5: verifica pratica di spoofing
 
 ```Bash
 # Test di invio email spoofata (verso Mailhog di test, NON verso server reali)
@@ -104,7 +104,7 @@ swaks --to victim@test-lab.local \
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'audit e stato eseguito interamente tramite query DNS pubbliche, senza alcuna interazione diretta con il mail server del target. Questo aspetto e fondamentale: l'analisi SPF/DKIM/DMARC e completamente passiva e non genera log sul sistema target, rendendola una delle prime attivita di reconnaissance in un engagement di social engineering.
 
@@ -114,7 +114,7 @@ Un'osservazione critica: anche con SPF `-all` e DKIM attivo, senza DMARC `reject
 
 ---
 
-## Analisi Teorica: Il Triangolo SPF/DKIM/DMARC
+## Analisi teorica: il triangolo SPF/DKIM/DMARC
 
 **SPF** definisce quali server IP sono autorizzati a inviare email per un dominio. Il record DNS TXT contiene una lista di IP/range/include autorizzati e un qualificatore finale: `-all` (hardfail: rifiuta tutto il resto), `~all` (softfail: marca come sospetto), `?all` (neutral: nessuna indicazione). Il problema di SPF da solo: opera sull'envelope sender (MAIL FROM), non sull'header From visualizzato dall'utente. Un attaccante puo utilizzare un envelope sender diverso e mostrare comunque `ceo@target.com` nell'header.
 
@@ -126,11 +126,11 @@ Un'osservazione critica: anche con SPF `-all` e DKIM attivo, senza DMARC `reject
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Network Information: DNS | `T1590.002` | Query DNS TXT per record SPF, DKIM, DMARC del dominio target |
-| Reconnaissance | Search Open Technical Databases: DNS/Passive DNS | `T1596.001` | Analisi automatizzata con spoofcheck (SE-011) |
-| Resource Development | Acquire Infrastructure: Email Accounts | `T1583.002` | La misconfiguration DMARC abilita l'uso del dominio target per spoofing |
+| reconnaissance | gather victim network information: dns | `T1590.002` | query dns txt per record spf, dkim, dmarc del dominio target |
+| reconnaissance | search open technical databases: dns/passive dns | `T1596.001` | analisi automatizzata con spoofcheck (SE-011) |
+| resource development | acquire infrastructure: email accounts | `T1583.002` | la misconfiguration dmarc abilita l'uso del dominio target per spoofing |
 
 ---
 

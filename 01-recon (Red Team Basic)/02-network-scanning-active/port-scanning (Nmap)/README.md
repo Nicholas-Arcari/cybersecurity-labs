@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Active Scanning: Port Scanning Phase
+# Active scanning: port scanning phase
 
 Obiettivo: Identificazione dei servizi attivi, filtraggio delle porte e analisi approfondita delle configurazioni esposte sul target. Strumenti: Masscan, Nmap
 

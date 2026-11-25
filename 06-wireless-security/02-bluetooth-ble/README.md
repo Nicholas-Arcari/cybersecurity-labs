@@ -63,39 +63,39 @@ Il filo conduttore della sezione e un principio di sicurezza IoT: molti disposit
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `bettercap` | MITM framework | CLI | Il riferimento BLE: `ble.recon`, `ble.enum`, `ble.write` |
-| `gatttool` | GATT client | CLI | Lettura/scrittura diretta di caratteristiche (legacy ma preciso) |
-| `bluetoothctl` | BlueZ CLI | CLI | Discovery, pairing e gestione device |
-| `spooftooph` | BT address spoofer | CLI | Clonazione indirizzo Bluetooth per impersonation |
-| `btlejack` | BLE hijacker | CLI | Hijacking di connessioni BLE attive (hardware Micro:bit) |
-| `nRF Connect` | BLE explorer | GUI / Mobile | Esplorazione GATT interattiva |
+| `bettercap` | mitm framework | cli | il riferimento ble: `ble.recon`, `ble.enum`, `ble.write` |
+| `gatttool` | gatt client | cli | lettura/scrittura diretta di caratteristiche (legacy ma preciso) |
+| `bluetoothctl` | bluez cli | cli | discovery, pairing e gestione device |
+| `spooftooph` | bt address spoofer | cli | clonazione indirizzo bluetooth per impersonation |
+| `btlejack` | ble hijacker | cli | hijacking di connessioni ble attive (hardware micro:bit) |
+| `nRF Connect` | ble explorer | gui / mobile | esplorazione gatt interattiva |
 
 > **Tool moderno consigliato:** `bettercap` e il riferimento indiscusso per il recon e la manipolazione BLE (sostituisce gatttool/hcitool deprecati). Per lo sniffing del pairing serve hardware dedicato (`nRF52840`, `Ubertooth One`); il [Flipper Zero](https://github.com/Nicholas-Arcari/FlipperZero-guide) copre scenari di recon/replay portatili.
 
 ---
 
-## Registro Finding - Sezione Bluetooth & BLE
+## Registro finding - sezione bluetooth & BLE
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `WIFI-006` | Enumerazione GATT: caratteristica di controllo scrivibile senza autenticazione su device IoT | `Informativo` | `recon/` |
-| `WIFI-007` | GATT write non autorizzata: manipolazione dello stato di una serratura smart di test | `Medio` | `spoofing/` |
+| `WIFI-006` | enumerazione gatt: caratteristica di controllo scrivibile senza autenticazione su device iot | `Informativo` | `recon/` |
+| `WIFI-007` | gatt write non autorizzata: manipolazione dello stato di una serratura smart di test | `Medio` | `spoofing/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning | `T1595` | WIFI-006 |
-| Reconnaissance | Gather Victim Host Information | `T1592` | WIFI-006 |
-| Credential Access | Network Sniffing | `T1040` | WIFI-006 |
-| Collection | Adversary-in-the-Middle | `T1557` | WIFI-007 |
-| Defense Evasion | Impersonation | `T1656` | WIFI-007 |
-| Impact (ICS) | Manipulation of Control | `T0831` | WIFI-007 |
-| Initial Access | Hardware Additions | `T1200` | WIFI-007 |
+| reconnaissance | active scanning | `T1595` | WIFI-006 |
+| reconnaissance | gather victim host information | `T1592` | WIFI-006 |
+| credential access | network sniffing | `T1040` | WIFI-006 |
+| collection | adversary-in-the-middle | `T1557` | WIFI-007 |
+| defense evasion | impersonation | `T1656` | WIFI-007 |
+| impact (ics) | manipulation of control | `T0831` | WIFI-007 |
+| initial access | hardware additions | `T1200` | WIFI-007 |
 
 ---
 

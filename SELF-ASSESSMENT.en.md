@@ -1,6 +1,6 @@
 > **English** | [Italiano](SELF-ASSESSMENT.md)
 
-# Critical Self-Assessment and Threats to Validity
+# Critical Self-Assessment and threats to validity
 
 > - **What it is:** an *internal adversarial* critical review of the work in this repository, written in
 >   the voice of a skeptical reviewer trying to demolish it.

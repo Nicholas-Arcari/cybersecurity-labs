@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 15 - Test Defensive Tools
+# 15 - Test defensive tools
 
 > - **Phase:** System Setup - Defense Validation (Defense Testing)
 > - **Priority:** High - unvalidated configuration is a false sense of security
@@ -47,16 +47,16 @@ You have objective, evidence-based confirmation that the configured defenses det
 
 ---
 
-## Validation Checklist
+## Validation checklist
 
-| Test | Command | Expected Result |
+| test | command | expected result |
 | :--- | :--- | :--- |
-| Firewall active | `sudo ufw status` | `Status: active` |
-| Closed ports | `nmap [IP]` from another VM | Only authorized ports visible |
-| SSH custom port | `ssh -p 2222 user@[IP]` | Login successful |
-| SSH root blocked | `ssh root@[IP] -p 2222` | `Permission denied` |
-| IDS port scan alert | `nmap -sS [IP]` + `fast.log` | ET SCAN alert in Suricata |
-| Kernel hardening | `sysctl net.ipv4.tcp_syncookies` | `= 1` |
+| firewall active | `sudo ufw status` | `Status: active` |
+| closed ports | `nmap [IP]` from another vm | only authorized ports visible |
+| ssh custom port | `ssh -p 2222 user@[IP]` | login successful |
+| ssh root blocked | `ssh root@[IP] -p 2222` | `Permission denied` |
+| ids port scan alert | `nmap -sS [IP]` + `fast.log` | et scan alert in suricata |
+| kernel hardening | `sysctl net.ipv4.tcp_syncookies` | `= 1` |
 
 ---
 

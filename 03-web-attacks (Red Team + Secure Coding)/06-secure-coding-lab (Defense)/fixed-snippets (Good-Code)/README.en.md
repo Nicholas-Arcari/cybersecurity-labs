@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# SQL Injection - Post-Remediation Verification
+# SQL injection - Post-Remediation verification
 
 > - **Phase:** Secure Coding - Post-Remediation Verification (SQL Injection)
 > - **Visibility:** Zero - local test on PHP application with local SQLite/MySQL database
@@ -9,7 +9,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 Previously, the login module was vulnerable to SQL Injection, allowing an attacker to manipulate database queries and gain administrative access without valid credentials.
 
@@ -17,9 +17,9 @@ A fix based on Prepared Statements (PDO) was implemented. Verification tests con
 
 ---
 
-## 2 Fix Details (Secure Coding)
+## 2 Fix details (secure coding)
 
-#### Before (Vulnerable)
+#### Before (vulnerable)
 
 The code directly concatenated user input into the SQL string. The database could not distinguish between the legitimate command and the malicious data.
 
@@ -31,7 +31,7 @@ $sql = "SELECT * FROM users WHERE email = '" . $_POST['email'] . "'";
 
 ![](./img/Screenshot_2026-02-18_18_27_28.jpg)
 
-#### After (Secure - Prepared Statements)
+#### After (secure - prepared statements)
 
 The PDO Prepared Statements pattern was adopted.
 
@@ -45,7 +45,7 @@ $stmt->execute(['email' => $user_email]);
 
 ---
 
-## 3 Verification (Proof of Defense)
+## 3 Verification (proof of defense)
 
 A manual penetration test was conducted against the patched code to verify the resilience of the fix.
 
@@ -77,11 +77,11 @@ The code is now compliant with OWASP security standards.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Description (Defensive - Mitigation) |
+| tactic | technique | mitre id | description (defensive - mitigation) |
 | :--- | :--- | :--- | :--- |
-| (Mitigation) | Exploit Public-Facing Application | `T1190` | Implementation of PDO Prepared Statements that separates the SQL structure from user data, completely neutralizing the SQL Injection vector (CWE-89) |
+| (mitigation) | exploit public-facing application | `T1190` | implementation of pdo prepared statements that separates the sql structure from user data, completely neutralizing the sql injection vector (cwe-89) |
 
 ---
 

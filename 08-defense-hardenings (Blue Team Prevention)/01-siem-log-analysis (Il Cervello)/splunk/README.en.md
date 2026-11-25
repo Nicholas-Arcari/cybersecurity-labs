@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Splunk - Correlation and Threat Hunting with SPL
+# Splunk - correlation and threat hunting with SPL
 
 > - **Phase:** Defense & Hardening - Detection & Correlation (commercial SIEM)
 > - **Category:** Detection - multi-source correlation and threat hunting
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Splunk is the industry-reference commercial SIEM. Compared to the ELK Stack (`../elk-stack/`) it offers a lot ready to use - automatic parsing, pre-built apps, an extremely expressive search language (SPL) - at the cost of a license based on the volume of data ingested per day.
 
@@ -27,7 +27,7 @@ Finding DEF-002 documents the correlation capability: building SPL queries that 
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 splunk/
@@ -40,15 +40,15 @@ splunk/
 
 ---
 
-## Detection via SPL Correlation
+## Detection via SPL correlation
 
 **Finding ID:** `DEF-002` | **Severity:** `High` (multi-source correlation detects attacks invisible to the individual isolated sources)
 
-### Operational Context
+### Operational context
 
 The Search Processing Language (SPL) is Splunk's proprietary language: a pipeline of commands (Unix-style, chained with `|`) that filters, aggregates and correlates the events. Building a library of SPL queries for common attacks is the central defensive work: each query encodes the "behavioral signature" of an attack.
 
-### PoC - Log ingestion (Universal Forwarder)
+### PoC - log ingestion (universal forwarder)
 
 ```Bash
 # On the endpoint: the Universal Forwarder forwards the logs to Splunk
@@ -116,7 +116,7 @@ src_ip        events
 
 This is the correlation that no single source can provide: the firewall sees the scan, the server sees the login, but only Splunk sees that they are the same attacker and that the second event is the consequence of the first.
 
-### Tuning and Defensive Operations
+### Tuning and defensive operations
 
 - **Save the queries as Saved Searches:** every detection query should be saved as a scheduled alert with a threshold and an action (notification, ticket, active response)
 - **False positive reduction:** whitelist the authorized vulnerability scanners and bastion hosts; calibrate the thresholds to the environment
@@ -125,7 +125,7 @@ This is the correlation that no single source can provide: the firewall sees the
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The learning curve of Splunk was the inverse of ELK: where ELK requires building everything but teaches every piece, Splunk starts productive immediately but hides the complexity. Within a few minutes, with the Universal Forwarder configured, the logs were searchable; writing the first brute force query in SPL was immediate and intuitive (`stats count by src_ip | where count > 10`). This immediacy explains why Splunk dominates the enterprise market despite the cost.
 
@@ -135,7 +135,7 @@ The strategic note of the lab became clear using the tools side by side: Splunk 
 
 ---
 
-## Theoretical Analysis: Correlation as Kill Chain Reconstruction
+## Theoretical analysis: correlation as kill chain reconstruction
 
 An attack is not a single event but a sequence: reconnaissance, initial access, escalation, lateral movement, action on objective. Each phase generates events on different systems and, taken in isolation, each event is below the alarm threshold - a port scan is "Internet noise", a successful login is "normal activity". Correlation reconstructs the sequence, and the sequence is the attack.
 
@@ -145,15 +145,15 @@ This defines Splunk's place in the defensive architecture: it is not a sensor (i
 
 ---
 
-## Real-World Scenario: Detection in Action
+## Real-World scenario: detection in action
 
 > This section describes how this defensive control would operate in a real incident.
 
-### Attacker Perspective (what they attempt)
+### Attacker perspective (what they attempt)
 
 The attacker deliberately distributes their activity to stay below the thresholds: a slow scan, a few scattered login attempts, a "legitimate" access minutes apart. They trust that each system, looking only at its own logs, sees nothing alarming.
 
-### Defender Perspective (how the control responds)
+### Defender perspective (how the control responds)
 
 ```
 [DEF-002] Universal Forwarder -> Splunk indexes firewall + server + Wazuh logs
@@ -179,36 +179,36 @@ Threat hunting: pivot on svc_web -> every system touched by the account
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `Splunk Enterprise` | Commercial SIEM | Platform | Indexing, SPL, alerting, dashboards |
-| `Universal Forwarder` | Log shipper | Agent | Lightweight forwarding of the logs from the endpoints |
-| `SPL` | Search language | Language | Detection and correlation queries |
-| `Splunk ES` (Enterprise Security) | Premium SIEM | App | Ready-made correlation searches + MITRE framework |
-| `Splunk Free` | SIEM (limited) | Platform | Lab and small volumes (500 MB/day, no auth) |
-| `Sysmon` | Endpoint sensor | Agent (Win) | Detailed process telemetry to correlate in SPL |
+| `Splunk Enterprise` | commercial siem | platform | indexing, spl, alerting, dashboards |
+| `Universal Forwarder` | log shipper | agent | lightweight forwarding of the logs from the endpoints |
+| `SPL` | search language | language | detection and correlation queries |
+| `Splunk ES` (enterprise security) | premium siem | app | ready-made correlation searches + mitre framework |
+| `Splunk Free` | siem (limited) | platform | lab and small volumes (500 mb/day, no auth) |
+| `Sysmon` | endpoint sensor | agent (win) | detailed process telemetry to correlate in spl |
 
 > **Recommended modern tool:** for a production environment, `Splunk Enterprise Security` (ES) provides ready-to-use correlation searches mapped to MITRE ATT&CK. In a home lab, `Splunk Free` is sufficient to learn SPL. Pairing with `Sysmon` on the Windows endpoints provides the process telemetry that makes the correlation much richer. Complete open source alternative in `../elk-stack/`.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
 > The table maps the attack techniques that the control **detects** via SPL correlation.
 
-| Tactic (detected) | Technique | MITRE ID | Role of the control |
+| tactic (detected) | technique | mitre id | role of the control |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Scanning IP Blocks | `T1595.001` | SPL query: an IP toward many distinct ports (port scan) (DEF-002) |
-| Credential Access | Brute Force | `T1110` | SPL query: aggregation of failed logins per IP/user (DEF-002) |
-| Initial Access | Valid Accounts | `T1078` | Correlation scan - successful login (access obtained) |
-| Lateral Movement | Remote Services | `T1021` | Correlation: same account on multiple hosts in sequence |
+| reconnaissance | active scanning: scanning ip blocks | `T1595.001` | spl query: an ip toward many distinct ports (port scan) (DEF-002) |
+| credential access | brute force | `T1110` | spl query: aggregation of failed logins per ip/user (DEF-002) |
+| initial access | valid accounts | `T1078` | correlation scan - successful login (access obtained) |
+| lateral movement | remote services | `T1021` | correlation: same account on multiple hosts in sequence |
 
-| Defensive countermeasure (D3FEND) | D3FEND ID | Application |
+| defensive countermeasure (d3fend) | d3fend id | application |
 | :--- | :--- | :--- |
-| Network Traffic Analysis | `D3-NTA` | Correlation of the network logs to detect scanning and accesses |
-| User Behavior Analysis | `D3-UBA` | Detection of anomalous activity sequences per user/IP |
+| network traffic analysis | `D3-NTA` | correlation of the network logs to detect scanning and accesses |
+| user behavior analysis | `D3-UBA` | detection of anomalous activity sequences per user/ip |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# cloud_enum - Cloud Asset Recon
+# Cloud_enum - cloud asset recon
 
 > - **Phase:** Cloud Security - Reconnaissance (multi-cloud)
 > - **Category:** Recon - discovery of exposed assets
@@ -11,7 +11,7 @@
 
 ---
 
-## What It Is and What It Is For
+## What it is and what it is for
 
 `cloud_enum` is an OSINT reconnaissance tool for the cloud: given a keyword (typically the name of the company or the project), it generates plausible permutations and checks which public cloud assets exist and are accessible, across the three major providers. It is the starting point of a cloud assessment from the outside: mapping what the target exposes without authentication.
 
@@ -35,7 +35,7 @@ python3 cloud_enum.py -k companyname -k companyname-prod
 
 ---
 
-## When to Use It in the Flow
+## When to use it in the flow
 
 - **First step of an external cloud assessment:** before having credentials, mapping the public surface of the target
 - **Input for the targeted attacks:** the discovered buckets feed the S3 attacks (`../../01-providers-infrastructure (IaaS & PaaS)/AWS (Amazon Web Services)/S3-buckets-attacks/`)
@@ -43,24 +43,24 @@ python3 cloud_enum.py -k companyname -k companyname-prod
 
 ---
 
-## Related Tools
+## Related tools
 
-| Tool | Role | Relationship |
+| tool | role | relationship |
 | :--- | :--- | :--- |
-| `cloud_enum` | Multi-cloud recon | This tool |
-| `s3scanner` | S3 enum | Focused on AWS buckets |
-| `Prowler` / `ScoutSuite` | Defensive audit | Find the exposed assets from inside the account |
+| `cloud_enum` | multi-cloud recon | this tool |
+| `s3scanner` | s3 enum | focused on aws buckets |
+| `Prowler` / `ScoutSuite` | defensive audit | find the exposed assets from inside the account |
 
 > **Recommended modern tool:** `cloud_enum` for the external multi-cloud recon. From the defensive side, the audit from inside the account (`Prowler`/`ScoutSuite`) is more complete because it sees all the assets, not just those with a guessable name.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Description |
+| tactic | technique | mitre id | description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Search Open Websites/Domains | `T1593` | Discovery of public cloud assets via name permutation |
-| Discovery | Cloud Infrastructure Discovery | `T1580` | Enumeration of the exposed cloud assets |
+| reconnaissance | search open websites/domains | `T1593` | discovery of public cloud assets via name permutation |
+| discovery | cloud infrastructure discovery | `T1580` | enumeration of the exposed cloud assets |
 
 ---
 

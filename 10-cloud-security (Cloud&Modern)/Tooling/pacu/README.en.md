@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Pacu - AWS Exploitation Framework
+# Pacu - AWS exploitation framework
 
 > - **Phase:** Cloud Security - AWS Exploitation
 > - **Category:** Offensive - the post-exploitation framework for AWS
@@ -11,7 +11,7 @@
 
 ---
 
-## What It Is and What It Is For
+## What it is and what it is for
 
 `Pacu` is often described as "the Metasploit for AWS": a modular exploitation framework to test the security of Amazon environments. As Metasploit organizes exploits into modules, Pacu organizes the cloud techniques (enumeration, privilege escalation, persistence, exfiltration) into modules callable on a set of imported credentials.
 
@@ -42,7 +42,7 @@ pacu
 
 ---
 
-## When to Use It in the Flow
+## When to use it in the flow
 
 - **After obtaining an AWS credential:** import and automatic enumeration of the permissions
 - **Search for privilege escalation:** `iam__privesc_scan` as the first check on every credential
@@ -50,27 +50,27 @@ pacu
 
 ---
 
-## Related Tools
+## Related tools
 
-| Tool | Role | Relationship |
+| tool | role | relationship |
 | :--- | :--- | :--- |
-| `Pacu` | AWS exploitation | This tool (offensive) |
-| `enumerate-iam` | Permission enum | Quick recon of the permissions |
-| `Prowler` / `ScoutSuite` | Defensive audit | Find the same weaknesses from the defense side |
-| `PMapper` | IAM graph | Graph analysis of the escalation paths |
+| `Pacu` | aws exploitation | this tool (offensive) |
+| `enumerate-iam` | permission enum | quick recon of the permissions |
+| `Prowler` / `ScoutSuite` | defensive audit | find the same weaknesses from the defense side |
+| `PMapper` | iam graph | graph analysis of the escalation paths |
 
 > **Recommended modern tool:** `Pacu` is the standard for AWS exploitation. Its defensive symmetry are `Prowler`, `ScoutSuite` and `PMapper`: the same privesc paths Pacu exploits, these tools identify to close them. Using them together covers attack and defense.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Description |
+| tactic | technique | mitre id | description |
 | :--- | :--- | :--- | :--- |
-| Discovery | Cloud Infrastructure Discovery | `T1580` | Automated enumeration of permissions and resources |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | Search for and exploitation of the IAM privesc paths |
-| Persistence | Account Manipulation: Additional Cloud Credentials | `T1098.001` | Creation of persistence credentials |
-| Collection | Data from Cloud Storage | `T1530` | Exfiltration of accessible buckets |
+| discovery | cloud infrastructure discovery | `T1580` | automated enumeration of permissions and resources |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | search for and exploitation of the iam privesc paths |
+| persistence | account manipulation: additional cloud credentials | `T1098.001` | creation of persistence credentials |
+| collection | data from cloud storage | `T1530` | exfiltration of accessible buckets |
 
 ---
 

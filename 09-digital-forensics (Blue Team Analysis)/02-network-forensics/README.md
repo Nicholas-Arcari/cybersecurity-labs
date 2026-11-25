@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 02 - Network Forensics
+# 02 - Network forensics
 
 > - **Fase:** Digital Forensics & Incident Response - Network Analysis
 > - **Categoria:** Analysis - ricostruzione dell'incidente dal traffico di rete
@@ -64,36 +64,36 @@ Il collegamento con il resto della difesa e diretto: la network forensics e l'ul
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Wireshark` | Packet analyzer | GUI | Analisi di dettaglio, Follow Stream (FOR-002) |
-| `tshark` | Packet analyzer | CLI | Analisi scriptabile ed estrazione automatica |
-| `Zeek` (Bro) | Network analysis | Framework | Log strutturati per l'analisi su larga scala |
-| `NetworkMiner` | Network forensics | GUI | Estrazione automatica di file/credenziali/host |
-| `Suricata` | IDS | Engine | Detection che innesca l'analisi |
+| `Wireshark` | packet analyzer | gui | analisi di dettaglio, follow stream (FOR-002) |
+| `tshark` | packet analyzer | cli | analisi scriptabile ed estrazione automatica |
+| `Zeek` (bro) | network analysis | framework | log strutturati per l'analisi su larga scala |
+| `NetworkMiner` | network forensics | gui | estrazione automatica di file/credenziali/host |
+| `Suricata` | ids | engine | detection che innesca l'analisi |
 
 > **Tool moderno consigliato:** `Zeek` per il quadro d'insieme (log strutturati di connessioni, DNS, HTTP, file) e `Wireshark`/`tshark` per il dettaglio del singolo stream. La combinazione copre entrambi i livelli - metadati e contenuto - dell'analisi di rete.
 
 ---
 
-## Registro Finding - Sezione Network Forensics
+## Registro finding - sezione network forensics
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `FOR-002` | Wireshark: ricostruzione sessioni, conferma C2/esfiltrazione, estrazione IOC dal PCAP | `Alto` | `wireshark/` |
+| `FOR-002` | wireshark: ricostruzione sessioni, conferma c2/esfiltrazione, estrazione ioc dal pcap | `Alto` | `wireshark/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
 > Tecniche d'attacco **ricostruite/confermate** dall'analisi di rete.
 
-| Tattica (ricostruita) | Tecnica | ID MITRE | Finding Correlato |
+| tattica (ricostruita) | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Command and Control | Application Layer Protocol: Web Protocols | `T1071.001` | FOR-002 |
-| Command and Control | Application Layer Protocol: DNS | `T1071.004` | FOR-002 |
-| Exfiltration | Exfiltration Over C2 Channel | `T1041` | FOR-002 |
-| Credential Access | Network Sniffing | `T1040` | FOR-002 |
+| command and control | application layer protocol: web protocols | `T1071.001` | FOR-002 |
+| command and control | application layer protocol: dns | `T1071.004` | FOR-002 |
+| exfiltration | exfiltration over c2 channel | `T1041` | FOR-002 |
+| credential access | network sniffing | `T1040` | FOR-002 |
 
 ---
 

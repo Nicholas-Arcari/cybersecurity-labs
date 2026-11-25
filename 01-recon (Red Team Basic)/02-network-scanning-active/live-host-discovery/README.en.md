@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Network Scanning Active: Live Host Discovery
+# Network scanning Active: live host discovery
 
 > - **Phase:** Reconnaissance - Active Network Scanning
 > - **Visibility:** Low - ARP/ICMP packets towards the local subnet, detectable by IDS but common in legitimate traffic
@@ -16,7 +16,7 @@ Tools: `arp-scan`, `netdiscover`, `nmap`
 
 ---
 
-## 1 Theoretical Introduction
+## 1 Theoretical introduction
 
 Live Host Discovery is the preliminary phase of Network Scanning. It consists of identifying which IP addresses within a network range are assigned to active devices.
 
@@ -31,11 +31,11 @@ This activity is fundamental for:
 
 ---
 
-## 2 Technical Execution
+## 2 Technical execution
 
 **Finding ID:** `SCAN-001` | **Severity:** `Informational`
 
-#### A. ARP Scan (arp-scan)
+#### A. ARP scan (arp-scan)
 `arp-scan` was used for rapid host detection in the local subnet. This method bypasses OS-level firewalls.
 
 Command:
@@ -49,7 +49,7 @@ sudo arp-scan -l
 
 Analysis: 3 devices were detected, including the Windows 10 target machine (identifiable by MAC Address or known IP).
 
-#### B. Active Mapping (Netdiscover)
+#### B. Active mapping (netdiscover)
 
 netdiscover was used in active mode to query the entire network range.
 
@@ -64,7 +64,7 @@ sudo netdiscover -r 10.0.2.0/24
 
 Analysis: The tool provided a clear list of IPs and related MAC vendors (e.g., Oracle VirtualBox).
 
-#### C. Ping Sweep (Nmap)
+#### C. ping sweep (Nmap)
 
 An ICMP scan (Ping Sweep) was performed to verify host visibility through routable protocols.
 
@@ -84,12 +84,12 @@ The Live Host Discovery activity successfully identified the Windows 10 target a
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Discovery | Remote System Discovery | `T1018` | ARP sweep with arp-scan and ICMP ping sweep with nmap -sn to identify active hosts in subnet 10.0.2.0/24, detecting the Windows 10 target at 10.0.2.3 (SCAN-001) |
-| Discovery | Network Service Discovery | `T1046` | Netdiscover in active mode to map active IPs and vendor MAC addresses in the local network (SCAN-001) |
+| discovery | remote system discovery | `T1018` | arp sweep with arp-scan and icmp ping sweep with nmap -sn to identify active hosts in subnet 10.0.2.0/24, detecting the windows 10 target at 10.0.2.3 (SCAN-001) |
+| discovery | network service discovery | `T1046` | netdiscover in active mode to map active ips and vendor mac addresses in the local network (SCAN-001) |
 
 ---
 

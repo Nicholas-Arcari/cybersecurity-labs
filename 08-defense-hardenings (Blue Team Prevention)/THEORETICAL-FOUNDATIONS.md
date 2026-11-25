@@ -1,6 +1,6 @@
 > [English](THEORETICAL-FOUNDATIONS.en.md) | **Italiano**
 
-# Fondamenti Teorici - Modulo 08: Defense & Hardening
+# Fondamenti teorici - modulo 08: defense & hardening
 
 > - **Livello:** Analisi accademica (complemento teorico ai README operativi del modulo)
 > - **Scopo:** Derivare quantitativamente il problema base-rate del rilevamento, fondare l'anomaly detection e la deception, e formalizzare l'hardening come riduzione della superficie d'attacco.
@@ -14,13 +14,13 @@ Questo documento fornisce il fondamento quantitativo della difesa. Il risultato 
 
 ---
 
-## 1. Modello del Difensore
+## 1. Modello del difensore
 
 Il difensore osserva un flusso di eventi `E` (log, pacchetti, chiamate) e deve decidere per ciascuno se e benigno o malevolo, con l'obiettivo di massimizzare il rilevamento dei malevoli minimizzando i falsi allarmi, sotto vincolo di risorse di analisi finite. Formalmente e un problema di **teoria del rilevamento** (detection theory) con due tipi di errore: falso positivo (allarme su evento benigno) e falso negativo (evento malevolo non rilevato). Il difensore non controlla il tasso base degli eventi malevoli, che e strutturalmente bassissimo: e questa asimmetria, non l'accuratezza del rilevatore, a determinare la difficolta (sezione 3.1).
 
 ---
 
-## 2. Proprieta di Sicurezza in Gioco
+## 2. Proprieta di sicurezza in gioco
 
 - **Visibilita:** precondizione di ogni rilevamento; senza osservabilita non c'e detection. Il logging centralizzato la realizza (modulo 07, sezione 3.4).
 - **Detection efficace:** massimizzare il valore predittivo del rilevamento sotto il vincolo del base-rate (sezione 3.1).
@@ -29,7 +29,7 @@ Il difensore osserva un flusso di eventi `E` (log, pacchetti, chiamate) e deve d
 
 ---
 
-## 3. Fondamenti Teorici
+## 3. Fondamenti teorici
 
 ### 3.1 Il base-rate fallacy: derivazione bayesiana
 
@@ -71,7 +71,7 @@ L'hardening e l'applicazione sistematica della minimizzazione della superficie d
 
 ---
 
-## 4. Analisi Quantitativa
+## 4. Analisi quantitativa
 
 > **Validazione empirica:** la derivazione bayesiana del base-rate fallacy (sez. 3.1) e verificata
 > sperimentalmente su dati misurati in [`../EVALUATION/exp01-detection-base-rate/`](../EVALUATION/exp01-detection-base-rate/results.md):
@@ -88,13 +88,13 @@ L'active response comprime il dwell time (modulo 07, sezione 4.1) a zero per le 
 
 ---
 
-## 5. Rassegna della Letteratura
+## 5. Rassegna della letteratura
 
 Il risultato quantitativo centrale e di [Axelsson 2000], che ha portato il teorema di Bayes al cuore della difficolta dell'intrusion detection. Le fondamenta dell'anomaly detection sono di [Denning 1987] e [Forrest et al. 1996]; i limiti del machine learning applicato sono analizzati da [Sommer & Paxson 2010]. L'hardening come riduzione della superficie si fonda su [Manadhata & Wing 2011] e sui principi di [Saltzer & Schroeder 1975]; l'integrita dei log su [Biba 1977]. La tassonomia offensiva di riferimento e MITRE ATT&CK [Strom et al. 2020], con la duale difensiva D3FEND. Il modello del Diamante [Caltagirone et al. 2013] fornisce la cornice analitica per la threat intelligence prodotta dalla deception.
 
 ---
 
-## 6. Limiti e Problemi Aperti
+## 6. Limiti e problemi aperti
 
 1. **Irriducibilita del base-rate.** Poiche `P(I)` e strutturalmente bassissimo, nessun miglioramento realistico dell'accuratezza del rilevatore elimina il dominio dei falsi positivi [Axelsson 2000]. La detection efficace richiede necessariamente correlazione, contesto o deception per aggirare il limite - non un rilevatore migliore.
 
@@ -104,7 +104,7 @@ Il risultato quantitativo centrale e di [Axelsson 2000], che ha portato il teore
 
 ---
 
-## 7. Sintesi e Collegamento alla Pratica
+## 7. Sintesi e collegamento alla pratica
 
 I finding `DEF-` del modulo istanziano questo quadro: la detection SIEM (DEF-001/002) opera sotto il vincolo base-rate della sezione 3.1, e la correlazione documentata nei README e l'innalzamento del base-rate effettivo della sezione 4.1; la deception (DEF-005/006) e l'evasione del base-rate della sezione 3.2, con il suo valore predittivo unitario; il FIM e l'active response (DEF-003/004) applicano l'anomaly detection e il compromesso di automazione delle sezioni 3.3 e 4.2; l'hardening (DEF-007/008) e la riduzione della superficie e la rottura della transitivita della fiducia della sezione 3.4. Le tabelle D3FEND dei README sono la controparte tassonomica del quadro qui formalizzato. Il documento fornisce alla pratica difensiva la giustificazione quantitativa del perche non basti "un rilevatore migliore" (base-rate), del perche la deception sia sproporzionatamente preziosa (valore predittivo unitario) e del perche l'hardening a monte batta la detection a valle (archi rimossi contro eventi da rilevare).
 

@@ -33,15 +33,15 @@ Perdi tempo prezioso in operazioni macchinose, hai meno visibilita su cosa consu
 
 ## Tool di riferimento
 
-| Tool | Caso d'uso principale |
+| tool | caso d'uso principale |
 | :--- | :--- |
-| `htop` | Monitor interattivo processi con colori, filtri e kill diretto |
-| `tmux` | Multiplexer terminale: sessioni persistenti, split pane, detach/attach |
-| `curl` | HTTP client CLI: test endpoint, download script, interazione API REST |
-| `net-tools` | Toolkit rete legacy: `ifconfig`, `netstat`, `route` |
-| `wget` | Download file da riga di comando con resume e ricorsivita |
-| `git` | Version control: clonare tool, script e repository di exploit |
-| `vim` | Editor testo avanzato per modifica file di configurazione |
+| `htop` | monitor interattivo processi con colori, filtri e kill diretto |
+| `tmux` | multiplexer terminale: sessioni persistenti, split pane, detach/attach |
+| `curl` | http client cli: test endpoint, download script, interazione api rest |
+| `net-tools` | toolkit rete legacy: `ifconfig`, `netstat`, `route` |
+| `wget` | download file da riga di comando con resume e ricorsivita |
+| `git` | version control: clonare tool, script e repository di exploit |
+| `vim` | editor testo avanzato per modifica file di configurazione |
 
 ---
 

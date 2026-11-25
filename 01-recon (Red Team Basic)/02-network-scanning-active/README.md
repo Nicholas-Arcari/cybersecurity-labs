@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 02 - Network Scanning Attivo
+# 02 - Network scanning attivo
 
 > - **Fase:** Reconnaissance - Active Network Scanning
 > - **Visibilita:** Bassa / Alta - da ARP sweep locale a SYN flood su reti remote
@@ -47,7 +47,7 @@ Il Network Scanning e il prerequisito diretto per il modulo `02-vulnerability-as
 
 ---
 
-## `live-host-discovery/` - Identificazione Host Attivi
+## `live-host-discovery/` - Identificazione host attivi
 
 **ID Finding:** `SCAN-001` | **Severity:** `Informativo`
 
@@ -62,7 +62,7 @@ Tre approcci complementari:
 
 ---
 
-## `port-scanning (Nmap)/masscan/` - High-Speed Port Discovery
+## `port-scanning (Nmap)/masscan/` - High-Speed port discovery
 
 **ID Finding:** `SCAN-002` | **Severity:** `Informativo`
 
@@ -74,7 +74,7 @@ Masscan e uno scanner di porte TCP asincrono con stack TCP/IP personalizzato. Pe
 
 ---
 
-## `port-scanning (Nmap)/nmap-scripts/` - NSE Enumeration
+## `port-scanning (Nmap)/nmap-scripts/` - NSE enumeration
 
 **ID Finding:** `SCAN-003` | **Severity:** `Alto`
 
@@ -118,36 +118,36 @@ La misconfiguration SMB Signing rilevata qui (SCAN-003) viene sfruttata attivame
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `arp-scan` | Port scanner | CLI (Layer 2) | Live host discovery in LAN, bypassa firewall OS |
-| `netdiscover` | Port scanner | CLI (ARP attivo) | Discovery passivo/attivo in reti con broadcast |
-| `nmap` | Port scanner / Service enumerator | CLI | Standard per port scan, versioning e NSE |
-| `Masscan` | Port scanner | CLI (raw socket) | High-speed port discovery su reti fisiche |
-| `RustScan` | Port scanner | CLI | Discovery veloce compatibile con NAT, feed Nmap |
-| `nmap -sC` (NSE) | Service enumerator | CLI | Automazione test di configurazione via script |
+| `arp-scan` | port scanner | cli (layer 2) | live host discovery in lan, bypassa firewall os |
+| `netdiscover` | port scanner | cli (arp attivo) | discovery passivo/attivo in reti con broadcast |
+| `nmap` | port scanner / service enumerator | cli | standard per port scan, versioning e nse |
+| `Masscan` | port scanner | cli (raw socket) | high-speed port discovery su reti fisiche |
+| `RustScan` | port scanner | cli | discovery veloce compatibile con nat, feed nmap |
+| `nmap -sC` (nse) | service enumerator | cli | automazione test di configurazione via script |
 
 > **Tool moderno consigliato:** `RustScan` (`rustscan -a <IP> -- -sC -sV`) - esegue il port discovery in pochi secondi e passa automaticamente le porte trovate a Nmap per l'enumeration dettagliata, risolvendo il problema NAT di Masscan in ambienti virtualizzati.
 
 ---
 
-## Registro Finding
+## Registro finding
 
-| ID | Descrizione | Severity | File |
+| id | descrizione | severity | file |
 | :--- | :--- | :---: | :--- |
-| `SCAN-001` | Host attivi identificati in 10.0.2.0/24, target Windows 10 a 10.0.2.3 | `Informativo` | `live-host-discovery/README.md` |
-| `SCAN-002` | Port discovery con Masscan - falso negativo documentato in ambiente NAT | `Informativo` | `port-scanning (Nmap)/masscan/README.md` |
-| `SCAN-003` | SMB Signing non obbligatorio + NetBIOS name disclosure su 10.0.2.3 | `Alto` | `port-scanning (Nmap)/nmap-scripts/README.md` |
+| `SCAN-001` | host attivi identificati in 10.0.2.0/24, target windows 10 a 10.0.2.3 | `Informativo` | `live-host-discovery/README.md` |
+| `SCAN-002` | port discovery con masscan - falso negativo documentato in ambiente nat | `Informativo` | `port-scanning (Nmap)/masscan/README.md` |
+| `SCAN-003` | smb signing non obbligatorio + netbios name disclosure su 10.0.2.3 | `Alto` | `port-scanning (Nmap)/nmap-scripts/README.md` |
 
 ---
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Remote System Discovery | `T1018` | ARP sweep e ICMP ping sweep per identificare host attivi nella subnet 10.0.2.0/24 (SCAN-001) |
-| Reconnaissance | Network Service Discovery | `T1046` | Port scanning con Masscan e Nmap per identificare servizi esposti sul target (SCAN-001, SCAN-002, SCAN-003) |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | NSE scripts per identificare versioni software e configurazioni di sicurezza SMB (SCAN-003) |
+| reconnaissance | remote system discovery | `T1018` | arp sweep e icmp ping sweep per identificare host attivi nella subnet 10.0.2.0/24 (SCAN-001) |
+| reconnaissance | network service discovery | `T1046` | port scanning con masscan e nmap per identificare servizi esposti sul target (SCAN-001, SCAN-002, SCAN-003) |
+| reconnaissance | gather victim host info: software | `T1592.002` | nse scripts per identificare versioni software e configurazioni di sicurezza smb (SCAN-003) |
 
 ---
 

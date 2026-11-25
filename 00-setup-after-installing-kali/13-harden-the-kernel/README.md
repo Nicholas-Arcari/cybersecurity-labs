@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 13 - Rafforza il kernel (sysctl Hardening)
+# 13 - Rafforza il kernel (sysctl hardening)
 
 > - **Fase:** System Setup - Kernel & Network Hardening
 > - **Priorita:** Alta - protezione da classi di attacchi di rete comuni

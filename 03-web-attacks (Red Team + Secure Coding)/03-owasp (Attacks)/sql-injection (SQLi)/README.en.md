@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# SQL Injection (SQLi)
+# SQL injection (SQLi)
 
 > - **Phase:** Web Attack - SQL Injection Testing
 > - **Visibility:** Medium - HTTP requests with payload in URL parameter or POST body
@@ -17,17 +17,17 @@ The root cause is almost always the same: **direct concatenation of user input i
 
 The main types of SQLi and their mechanisms:
 
-| Type | Mechanism | When to Use |
+| type | mechanism | when to use |
 | :--- | :--- | :--- |
-| Error-based | The database returns error messages with structural info | Known technology stack, verbose messages |
-| UNION-based | Adds arbitrary query results to the normal response | The original query returns visible output |
-| Boolean-based Blind | The app responds differently to true/false conditions | No direct output, only binary behavior |
-| Time-based Blind | `SLEEP(N)` is used to infer information from delay | No output, no behavioral difference |
-| Out-of-Band | The app exfiltrates data to an external server (DNS, HTTP) | Perimeter defenses block other techniques |
+| error-based | the database returns error messages with structural info | known technology stack, verbose messages |
+| union-based | adds arbitrary query results to the normal response | the original query returns visible output |
+| boolean-based blind | the app responds differently to true/false conditions | no direct output, only binary behavior |
+| time-based blind | `SLEEP(N)` is used to infer information from delay | no output, no behavioral difference |
+| out-of-band | the app exfiltrates data to an external server (dns, http) | perimeter defenses block other techniques |
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 sql-injection (SQLi)/
@@ -37,11 +37,11 @@ sql-injection (SQLi)/
 
 ---
 
-## `manual-payloads/` - Manual SQL Injection
+## `manual-payloads/` - Manual SQL injection
 
 **Finding ID:** `WEB-004` | **Severity:** `Critical` | **CVSS v3.1:** 9.8
 
-### Operational Context
+### Operational context
 
 The manual approach to SQLi is fundamental for two reasons. First, it allows understanding exactly how the vulnerable query works, revealing the database structure and present defenses. Second, it is often necessary when sqlmap is blocked by the WAF or when the server response format is non-standard.
 
@@ -63,7 +63,7 @@ The document `manual-payloads/README.md` covers three progressive scenarios:
 
 **Finding ID:** `WEB-011` | **Severity:** `Critical` | **CVSS v3.1:** 9.8
 
-### Operational Context
+### Operational context
 
 sqlmap is the standard tool for automated verification and exploitation of SQL Injection. Unlike the manual approach, sqlmap automatically detects the injection type (boolean, error, union, time-based), the backend database and its version, and automates the entire data exfiltration process.
 
@@ -83,7 +83,7 @@ Finding WEB-011 presents a critical PCI-DSS violation: credit card numbers (PAN)
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [1] Identify endpoints with dynamic parameters
@@ -111,29 +111,29 @@ Finding WEB-011 presents a critical PCI-DSS violation: credit card numbers (PAN)
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Primary Use Case |
+| tool | type | technique/access | primary use case |
 | :--- | :--- | :--- | :--- |
-| `sqlmap` | SQL Injection framework | CLI - Active | Automated exploitation, database dump |
-| `Burp Suite Repeater` | Web proxy | GUI - Manual | Manual iterative SQL payload testing |
-| `Burp Suite Intruder` | Web proxy | GUI - Semi-auto | Parameter fuzzing with payload lists |
-| `ghauri` | Modern SQLi tool | CLI - Active | sqlmap alternative, improved WAF evasion |
-| `havij` | SQLi framework | GUI - Active | Legacy tool (unmaintained), avoid in prod |
+| `sqlmap` | sql injection framework | cli - active | automated exploitation, database dump |
+| `Burp Suite Repeater` | web proxy | gui - manual | manual iterative sql payload testing |
+| `Burp Suite Intruder` | web proxy | gui - semi-auto | parameter fuzzing with payload lists |
+| `ghauri` | modern sqli tool | cli - active | sqlmap alternative, improved waf evasion |
+| `havij` | sqli framework | gui - active | legacy tool (unmaintained), avoid in prod |
 
 > **Recommended modern tool:** `ghauri` - modern alternative to sqlmap with better WAF evasion capabilities and support for advanced injection techniques. Installation: `pip3 install ghauri`.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | SQL Injection exploitation on the `artist` parameter and login form of `testphp.vulnweb.com` (WEB-004, WEB-011) |
-| Discovery | Account Discovery: Local Account | `T1087.001` | Database user enumeration through UNION injection on `information_schema.tables` (WEB-004) |
-| Collection | Data from Information Repositories | `T1213` | Complete dump of `users` table with plaintext credentials and credit card PANs (WEB-004, WEB-011) |
-| Exfiltration | Exfiltration Over Web Service | `T1567` | Database dump saved to local CSV file through sqlmap (WEB-011) |
-| Credential Access | Brute Force: Password Guessing | `T1110.001` | Use of extracted credentials (`test:test`) to access the application (WEB-004) |
+| initial access | exploit public-facing application | `T1190` | sql injection exploitation on the `artist` parameter and login form of `testphp.vulnweb.com` (WEB-004, WEB-011) |
+| discovery | account discovery: local account | `T1087.001` | database user enumeration through union injection on `information_schema.tables` (WEB-004) |
+| collection | data from information repositories | `T1213` | complete dump of `users` table with plaintext credentials and credit card pans (WEB-004, WEB-011) |
+| exfiltration | exfiltration over web service | `T1567` | database dump saved to local csv file through sqlmap (WEB-011) |
+| credential access | brute force: password guessing | `T1110.001` | use of extracted credentials (`test:test`) to access the application (WEB-004) |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Vulnerability Assessment: Reflected Cross-Site Scripting (XSS)
+# Vulnerability assessment: reflected Cross-Site scripting (XSS)
 
 > - **Phase:** Web Attack - XSS Reflected
 > - **Visibility:** Low - single request with payload in URL parameter, indistinguishable from normal navigation
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 During the analysis of the web application `testphp.vulnweb.com`, a Reflected Cross-Site Scripting (XSS) vulnerability was identified.
 
@@ -29,9 +29,9 @@ Risks include:
 
 ---
 
-## 2 Technical Analysis
+## 2 Technical analysis
 
-#### Scenario A: URL Parameter Injection
+#### Scenario a: URL parameter injection
 
 The `listproducts.php` endpoint accepts the `cat` parameter to filter products. It was verified that inserting HTML/JavaScript code in the parameter value causes it to be executed by the browser without filters.
 
@@ -51,7 +51,7 @@ As shown in the screenshot below, the payload injected in the URL is processed b
 
 ![](./img/Screenshot_2026-02-15_19_02_29.jpg)
 
-#### Scenario B: Virtual Defacement (Phishing Vector)
+#### Scenario b: virtual defacement (phishing vector)
 
 Beyond JavaScript code execution, it was verified that the application allows injection of arbitrary HTML tags (HTML Injection).
 
@@ -71,7 +71,7 @@ The screenshot below shows the visual alteration of the page. The application re
 
 ---
 
-## 3 Remediation Plan
+## 3 Remediation plan
 
 The Reflected XSS vulnerability must be fixed by treating all user input as untrusted.
 
@@ -107,13 +107,13 @@ Implement CSP headers to limit sources from which the browser can load and execu
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation of the `cat` parameter vulnerable to Reflected XSS on `listproducts.php`, with injection of `<script>alert('XSS Riuscito')</script>` (WEB-005) |
-| Credential Access | Steal Web Session Cookie | `T1539` | The Reflected XSS payload is the primary vector for stealing the session cookie from the victim who clicks the malicious link (WEB-005) |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | Distribution of the malicious URL `listproducts.php?cat=<PAYLOAD>` through email or social engineering to target specific users (WEB-005) |
+| initial access | exploit public-facing application | `T1190` | exploitation of the `cat` parameter vulnerable to reflected xss on `listproducts.php`, with injection of `<script>alert('XSS Riuscito')</script>` (WEB-005) |
+| credential access | steal web session cookie | `T1539` | the reflected xss payload is the primary vector for stealing the session cookie from the victim who clicks the malicious link (WEB-005) |
+| initial access | phishing: spearphishing link | `T1566.002` | distribution of the malicious url `listproducts.php?cat=<PAYLOAD>` through email or social engineering to target specific users (WEB-005) |
 
 ---
 

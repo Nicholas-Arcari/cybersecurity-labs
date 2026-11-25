@@ -1,148 +1,148 @@
 > [English](CERT_MAPPING.en.md) | **Italiano**
 
-# Mappatura Certificazioni - Lab vs Syllabus
+# Mappatura certificazioni - lab vs syllabus
 
 Questa tabella mappa ogni modulo della repository agli obiettivi delle principali certificazioni di cybersecurity. L'obiettivo e duplice: (1) dimostrare la copertura pratica del syllabus attraverso lab documentati, (2) identificare eventuali gap da colmare prima di sostenere l'esame.
 
 ---
 
-## Copertura Stimata
+## Copertura stimata
 
-| Certificazione | Ente | Copertura Lab | Note |
+| certificazione | ente | copertura lab | note |
 | :--- | :--- | :--- | :--- |
-| **OSCP** (PEN-200) | OffSec | ~75% del syllabus | Mancano: Active Directory, client-side attacks |
-| **eJPT** (v2) | INE Security | ~95% del syllabus | Copertura quasi completa |
-| **CEH** (v13) | EC-Council | ~70% dei moduli | Mancano: mobile hacking, IoT, teoria pura |
-| **Security+** (SY0-701) | CompTIA | ~60% dei domini | Focus pratico, manca governance/compliance |
-| **PenTest+** (PT0-002) | CompTIA | ~80% dei domini | Manca: scoping/planning formale |
+| **oscp** (pen-200) | offsec | ~75% del syllabus | mancano: active directory, client-side attacks |
+| **ejpt** (v2) | ine security | ~95% del syllabus | copertura quasi completa |
+| **ceh** (v13) | ec-council | ~70% dei moduli | mancano: mobile hacking, iot, teoria pura |
+| **security+** (sy0-701) | comptia | ~60% dei domini | focus pratico, manca governance/compliance |
+| **pentest+** (pt0-002) | comptia | ~80% dei domini | manca: scoping/planning formale |
 
 ---
 
-## Matrice Dettagliata
+## Matrice dettagliata
 
-### Modulo 00 - Kali Setup
+### Modulo 00 - Kali setup
 
-| Lab | Argomento | OSCP | eJPT | CEH | Sec+ | PenTest+ |
+| lab | argomento | oscp | ejpt | ceh | sec+ | pentest+ |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| 00-setup | Hardening piattaforma attacco, UFW, SSH | Ch. 2-4 | - | - | 3.0 | 5.3 |
+| 00-setup | hardening piattaforma attacco, ufw, ssh | ch. 2-4 | - | - | 3.0 | 5.3 |
 
-### Modulo 01 - Reconnaissance
+### Modulo 01 - reconnaissance
 
-| Lab | Argomento | OSCP | eJPT | CEH | Sec+ | PenTest+ |
+| lab | argomento | oscp | ejpt | ceh | sec+ | pentest+ |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| osint-passive | Google Dorking, theHarvester, Sherlock | Ch. 6 | 1.1 | Mod. 2 | 1.1 | 2.1 |
-| google-dorks | Operatori di ricerca avanzati | Ch. 6 | 1.1 | Mod. 2 | - | 2.1 |
-| breach-data | HIBP, DeHashed, correlazione credenziali | Ch. 6 | - | Mod. 2 | 1.1 | 2.1 |
-| email-harvesting | Enumerazione indirizzi email, OSINT | Ch. 6 | 1.1 | Mod. 2 | - | 2.1 |
-| user-enumeration | Username discovery, social media scraping | Ch. 6 | - | Mod. 2 | - | 2.1 |
-| network-scanning | Nmap, host/port discovery, evasion | Ch. 7 | 1.2, 2.1 | Mod. 3 | 1.4 | 2.2 |
-| live-host-discovery | ARP scan, ICMP sweep, SYN ping | Ch. 7 | 1.2 | Mod. 3 | - | 2.2 |
-| port-scanning | SYN/TCP/UDP scan, timing, output | Ch. 7 | 1.2 | Mod. 3 | 4.1 | 2.2 |
-| masscan | Scansione ad alta velocita, full-range | Ch. 7 | - | Mod. 3 | - | 2.2 |
-| nmap-scripts | NSE vuln, SMB/HTTP enum | Ch. 7 | 2.1 | Mod. 3 | - | 2.2 |
-| dns-enumeration | Zone transfer, subdomain brute | Ch. 7 | 1.2 | Mod. 4 | - | 2.2 |
-| infrastructure-intel | Shodan, Censys, tech profiling | Ch. 6 | - | Mod. 2 | 1.1 | 2.1 |
+| osint-passive | google dorking, theharvester, sherlock | ch. 6 | 1.1 | mod. 2 | 1.1 | 2.1 |
+| google-dorks | operatori di ricerca avanzati | ch. 6 | 1.1 | mod. 2 | - | 2.1 |
+| breach-data | hibp, dehashed, correlazione credenziali | ch. 6 | - | mod. 2 | 1.1 | 2.1 |
+| email-harvesting | enumerazione indirizzi email, osint | ch. 6 | 1.1 | mod. 2 | - | 2.1 |
+| user-enumeration | username discovery, social media scraping | ch. 6 | - | mod. 2 | - | 2.1 |
+| network-scanning | nmap, host/port discovery, evasion | ch. 7 | 1.2, 2.1 | mod. 3 | 1.4 | 2.2 |
+| live-host-discovery | arp scan, icmp sweep, syn ping | ch. 7 | 1.2 | mod. 3 | - | 2.2 |
+| port-scanning | syn/tcp/udp scan, timing, output | ch. 7 | 1.2 | mod. 3 | 4.1 | 2.2 |
+| masscan | scansione ad alta velocita, full-range | ch. 7 | - | mod. 3 | - | 2.2 |
+| nmap-scripts | nse vuln, smb/http enum | ch. 7 | 2.1 | mod. 3 | - | 2.2 |
+| dns-enumeration | zone transfer, subdomain brute | ch. 7 | 1.2 | mod. 4 | - | 2.2 |
+| infrastructure-intel | shodan, censys, tech profiling | ch. 6 | - | mod. 2 | 1.1 | 2.1 |
 
-### Modulo 02 - Vulnerability Assessment
+### Modulo 02 - vulnerability assessment
 
-| Lab | Argomento | OSCP | eJPT | CEH | Sec+ | PenTest+ |
+| lab | argomento | oscp | ejpt | ceh | sec+ | pentest+ |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| nessus | Credentialed scan, plugin families | Ch. 8 | 2.1 | Mod. 5 | 4.1 | 2.3 |
-| nmap-nse-vuln | NSE vulnerability scanning | Ch. 8 | 2.1 | Mod. 5 | 4.1 | 2.3 |
-| open-vas-gvm | OpenVAS deployment, NVT config | Ch. 8 | 2.1 | Mod. 5 | 4.1 | 2.3 |
-| smb-net-bios | Null session, share enum, EternalBlue | Ch. 7-8 | 2.1 | Mod. 3 | - | 2.3 |
-| smtp | Open relay, VRFY/EXPN user enum | Ch. 7 | - | Mod. 3 | - | 2.3 |
-| snmp | Community string brute, MIB walking | Ch. 7 | - | Mod. 3 | - | 2.3 |
-| ssl-tls | Certificate chain, cipher analysis | Ch. 7 | - | Mod. 20 | 3.1 | 2.3 |
-| cvss-calculator | CVSS v3.1, risk prioritization | - | - | Mod. 5 | 5.2 | 4.1 |
-| reporting-templates | Executive summary, technical findings | - | - | - | - | 4.1 |
+| nessus | credentialed scan, plugin families | ch. 8 | 2.1 | mod. 5 | 4.1 | 2.3 |
+| nmap-nse-vuln | nse vulnerability scanning | ch. 8 | 2.1 | mod. 5 | 4.1 | 2.3 |
+| open-vas-gvm | openvas deployment, nvt config | ch. 8 | 2.1 | mod. 5 | 4.1 | 2.3 |
+| smb-net-bios | null session, share enum, eternalblue | ch. 7-8 | 2.1 | mod. 3 | - | 2.3 |
+| smtp | open relay, vrfy/expn user enum | ch. 7 | - | mod. 3 | - | 2.3 |
+| snmp | community string brute, mib walking | ch. 7 | - | mod. 3 | - | 2.3 |
+| ssl-tls | certificate chain, cipher analysis | ch. 7 | - | mod. 20 | 3.1 | 2.3 |
+| cvss-calculator | cvss v3.1, risk prioritization | - | - | mod. 5 | 5.2 | 4.1 |
+| reporting-templates | executive summary, technical findings | - | - | - | - | 4.1 |
 
-### Modulo 03 - Web Attacks
+### Modulo 03 - web attacks
 
-| Lab | Argomento | OSCP | eJPT | CEH | Sec+ | PenTest+ |
+| lab | argomento | oscp | ejpt | ceh | sec+ | pentest+ |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| burp-suite | Proxy, Repeater, Intruder, scope | Ch. 9 | 4.1 | Mod. 14 | - | 3.1 |
-| owasp-zap | Spider, active scan, auth handling | Ch. 9 | 4.1 | Mod. 14 | - | 3.1 |
-| dir-busting | Gobuster, ffuf, wordlist selection | Ch. 9 | 4.1 | Mod. 13 | - | 3.1 |
-| sql-injection | UNION, blind, error-based, WAF bypass | Ch. 10 | 4.2 | Mod. 15 | 1.2 | 3.2 |
-| sqlmap | Tamper scripts, dump, OS shell | Ch. 10 | 4.2 | Mod. 15 | - | 3.2 |
-| xss | Reflected, Stored, DOM, filter bypass | Ch. 9 | 4.2 | Mod. 14 | 1.2 | 3.2 |
-| ssti | Jinja2/Twig detection, sandbox escape, RCE | Ch. 9 | - | - | - | 3.2 |
-| auth-attacks | Bruteforce web, session hijacking | Ch. 9 | 4.2 | Mod. 11 | 1.2 | 3.2 |
-| jwt-tokens | None algo, key confusion, token forgery | Ch. 9 | - | - | - | 3.2 |
-| graphql | Introspection, IDOR, batching, RCE | Ch. 9 | - | - | - | 3.2 |
-| cms-specific | WordPress, Drupal, Joomla exploitation | Ch. 9 | 4.1 | Mod. 13 | - | 3.1 |
-| secure-coding | Prepared statements, encoding, CSP | - | - | - | 1.2 | - |
+| burp-suite | proxy, repeater, intruder, scope | ch. 9 | 4.1 | mod. 14 | - | 3.1 |
+| owasp-zap | spider, active scan, auth handling | ch. 9 | 4.1 | mod. 14 | - | 3.1 |
+| dir-busting | gobuster, ffuf, wordlist selection | ch. 9 | 4.1 | mod. 13 | - | 3.1 |
+| sql-injection | union, blind, error-based, waf bypass | ch. 10 | 4.2 | mod. 15 | 1.2 | 3.2 |
+| sqlmap | tamper scripts, dump, os shell | ch. 10 | 4.2 | mod. 15 | - | 3.2 |
+| xss | reflected, stored, dom, filter bypass | ch. 9 | 4.2 | mod. 14 | 1.2 | 3.2 |
+| ssti | jinja2/twig detection, sandbox escape, rce | ch. 9 | - | - | - | 3.2 |
+| auth-attacks | bruteforce web, session hijacking | ch. 9 | 4.2 | mod. 11 | 1.2 | 3.2 |
+| jwt-tokens | none algo, key confusion, token forgery | ch. 9 | - | - | - | 3.2 |
+| graphql | introspection, idor, batching, rce | ch. 9 | - | - | - | 3.2 |
+| cms-specific | wordpress, drupal, joomla exploitation | ch. 9 | 4.1 | mod. 13 | - | 3.1 |
+| secure-coding | prepared statements, encoding, csp | - | - | - | 1.2 | - |
 
-### Modulo 04 - System Exploitation
+### Modulo 04 - system exploitation
 
-| Lab | Argomento | OSCP | eJPT | CEH | Sec+ | PenTest+ |
+| lab | argomento | oscp | ejpt | ceh | sec+ | pentest+ |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| empire | C2 fileless, PowerShell stager, LotL | Ch. 20 | 3.1 | Mod. 6 | 1.2 | 3.3 |
-| metasploit | reverse_tcp, migration, SOCKS pivot | Ch. 20 | 3.1 | Mod. 6 | - | 3.3 |
-| compiled-exploits | Cross-compilation, in-memory shellcode | Ch. 12-14 | - | Mod. 6 | - | 3.3 |
-| searchsploit | Nmap XML correlation, exploit triage | Ch. 12 | 3.1 | Mod. 5 | - | 2.3 |
-| linux-priv-esc | SUID, GTFOBins, LinPEAS, cronjob | Ch. 17 | 3.2 | Mod. 6 | - | 3.4 |
-| windows-priv-esc | Token impersonation, WinPEAS, Sherlock | Ch. 16 | 3.2 | Mod. 6 | - | 3.4 |
-| buffer-overflow | EIP control, bad chars, JMP ESP | Ch. 12-13 | - | Mod. 6 | - | 5.2 |
-| pwntools | ROP chain, ASLR bypass, GOT leak | - | - | - | - | 5.2 |
-| password-cracking | Hashcat mask/rules, John, wordlists | Ch. 15 | 3.1 | Mod. 20 | - | 3.5 |
+| empire | c2 fileless, powershell stager, lotl | ch. 20 | 3.1 | mod. 6 | 1.2 | 3.3 |
+| metasploit | reverse_tcp, migration, socks pivot | ch. 20 | 3.1 | mod. 6 | - | 3.3 |
+| compiled-exploits | cross-compilation, in-memory shellcode | ch. 12-14 | - | mod. 6 | - | 3.3 |
+| searchsploit | nmap xml correlation, exploit triage | ch. 12 | 3.1 | mod. 5 | - | 2.3 |
+| linux-priv-esc | suid, gtfobins, linpeas, cronjob | ch. 17 | 3.2 | mod. 6 | - | 3.4 |
+| windows-priv-esc | token impersonation, winpeas, sherlock | ch. 16 | 3.2 | mod. 6 | - | 3.4 |
+| buffer-overflow | eip control, bad chars, jmp esp | ch. 12-13 | - | mod. 6 | - | 5.2 |
+| pwntools | rop chain, aslr bypass, got leak | - | - | - | - | 5.2 |
+| password-cracking | hashcat mask/rules, john, wordlists | ch. 15 | 3.1 | mod. 20 | - | 3.5 |
 
-### Modulo 05 - Social Engineering
+### Modulo 05 - social engineering
 
-| Lab | Argomento | OSCP | eJPT | CEH | Sec+ | PenTest+ |
+| lab | argomento | oscp | ejpt | ceh | sec+ | pentest+ |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| phishing-campaigns | GoPhish, EvilGinx, PyPhisher | - | - | Mod. 9 | 1.1 | 3.6 |
-| social-engineer-toolkit | SET vectors, credential harvester | Ch. 11 | - | Mod. 9 | 1.1 | 3.6 |
-| payload-delivery | Macro, HTML smuggling, ISO/LNK | Ch. 11 | - | Mod. 9 | 1.2 | 3.3 |
-| email-infrastructure | SPF/DKIM/DMARC, typosquatting | - | - | Mod. 9 | 1.1 | 3.6 |
+| phishing-campaigns | gophish, evilginx, pyphisher | - | - | mod. 9 | 1.1 | 3.6 |
+| social-engineer-toolkit | set vectors, credential harvester | ch. 11 | - | mod. 9 | 1.1 | 3.6 |
+| payload-delivery | macro, html smuggling, iso/lnk | ch. 11 | - | mod. 9 | 1.2 | 3.3 |
+| email-infrastructure | spf/dkim/dmarc, typosquatting | - | - | mod. 9 | 1.1 | 3.6 |
 
-### Modulo 06 - Wireless Security
+### Modulo 06 - wireless security
 
-| Lab | Argomento | OSCP | eJPT | CEH | Sec+ | PenTest+ |
+| lab | argomento | oscp | ejpt | ceh | sec+ | pentest+ |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| wifi | Handshake capture, WPA cracking, rogue AP | - | - | Mod. 16 | 3.4 | 3.7 |
-| bluetooth-ble | BLE recon, GATT enum, spoofing | - | - | - | - | - |
-| sdr | Signal analysis, replay attacks | - | - | - | - | - |
-| rfid-nfc | MIFARE cloning, Proxmark3 | - | - | - | 3.4 | 3.7 |
+| wifi | handshake capture, wpa cracking, rogue ap | - | - | mod. 16 | 3.4 | 3.7 |
+| bluetooth-ble | ble recon, gatt enum, spoofing | - | - | - | - | - |
+| sdr | signal analysis, replay attacks | - | - | - | - | - |
+| rfid-nfc | mifare cloning, proxmark3 | - | - | - | 3.4 | 3.7 |
 
 ### Modulo 07 - Post-Exploitation
 
-| Lab | Argomento | OSCP | eJPT | CEH | Sec+ | PenTest+ |
+| lab | argomento | oscp | ejpt | ceh | sec+ | pentest+ |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| local-enumeration | Situational awareness Linux/Windows | Ch. 16-17 | 3.2 | Mod. 6 | - | 3.4 |
-| mimikatz | sekurlsa, DCSync, golden ticket | Ch. 15 | - | Mod. 6 | - | 3.5 |
-| la-zagne | Browser/WiFi/email credential recovery | Ch. 15 | - | Mod. 6 | - | 3.5 |
-| persistence | Cron, registry, scheduled tasks, webshells | Ch. 16-17 | - | Mod. 6 | - | 3.4 |
-| pivoting-tunneling | Chisel, Ligolo-ng, sshuttle, socat | Ch. 18-19 | 3.3 | Mod. 6 | - | 3.8 |
-| exfiltration | Covert channels, log cleaning | - | - | Mod. 6 | - | 3.9 |
+| local-enumeration | situational awareness linux/windows | ch. 16-17 | 3.2 | mod. 6 | - | 3.4 |
+| mimikatz | sekurlsa, dcsync, golden ticket | ch. 15 | - | mod. 6 | - | 3.5 |
+| la-zagne | browser/wifi/email credential recovery | ch. 15 | - | mod. 6 | - | 3.5 |
+| persistence | cron, registry, scheduled tasks, webshells | ch. 16-17 | - | mod. 6 | - | 3.4 |
+| pivoting-tunneling | chisel, ligolo-ng, sshuttle, socat | ch. 18-19 | 3.3 | mod. 6 | - | 3.8 |
+| exfiltration | covert channels, log cleaning | - | - | mod. 6 | - | 3.9 |
 
-### Modulo 08 - Defense & Hardening
+### Modulo 08 - defense & hardening
 
-| Lab | Argomento | OSCP | eJPT | CEH | Sec+ | PenTest+ |
+| lab | argomento | oscp | ejpt | ceh | sec+ | pentest+ |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| siem-log-analysis | Splunk, ELK Stack, log aggregation | - | - | Mod. 12 | 4.3 | 4.2 |
-| wazuh | XDR deployment, active response, Suricata | - | - | Mod. 12 | 4.3 | 4.2 |
-| honeypots | T-Pot, Canary Tokens, deception | - | - | Mod. 12 | 4.4 | - |
-| hardening-scripts | CIS benchmark, GPO, sysctl | - | - | Mod. 6 | 3.0 | 5.3 |
+| siem-log-analysis | splunk, elk stack, log aggregation | - | - | mod. 12 | 4.3 | 4.2 |
+| wazuh | xdr deployment, active response, suricata | - | - | mod. 12 | 4.3 | 4.2 |
+| honeypots | t-pot, canary tokens, deception | - | - | mod. 12 | 4.4 | - |
+| hardening-scripts | cis benchmark, gpo, sysctl | - | - | mod. 6 | 3.0 | 5.3 |
 
-### Modulo 09 - Digital Forensics
+### Modulo 09 - digital forensics
 
-| Lab | Argomento | OSCP | eJPT | CEH | Sec+ | PenTest+ |
+| lab | argomento | oscp | ejpt | ceh | sec+ | pentest+ |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| disk-forensics | Image acquisition, timeline, artifacts | - | - | Mod. 8 | 4.4 | - |
-| wireshark | Display filters, stream reconstruction | Ch. 4 | 2.1 | Mod. 8 | 4.4 | 2.2 |
+| disk-forensics | image acquisition, timeline, artifacts | - | - | mod. 8 | 4.4 | - |
+| wireshark | display filters, stream reconstruction | ch. 4 | 2.1 | mod. 8 | 4.4 | 2.2 |
 
-### Modulo 10 - Cloud Security
+### Modulo 10 - cloud security
 
-| Lab | Argomento | OSCP | eJPT | CEH | Sec+ | PenTest+ |
+| lab | argomento | oscp | ejpt | ceh | sec+ | pentest+ |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| aws | IAM enum, S3 bucket attacks | - | - | Mod. 19 | 2.2 | 3.10 |
-| azure | Entra ID, RBAC abuse | - | - | Mod. 19 | 2.2 | 3.10 |
-| gcp | Service account abuse, Cloud Storage | - | - | Mod. 19 | 2.2 | 3.10 |
-| docker | Image scanning, runtime security | - | - | - | 2.2 | 3.10 |
-| kubernetes | Pod escape, RBAC review, kube-bench | - | - | - | 2.2 | 3.10 |
-| iac-security | Terraform scanning, secrets management | - | - | - | 2.2 | 5.3 |
+| aws | iam enum, s3 bucket attacks | - | - | mod. 19 | 2.2 | 3.10 |
+| azure | entra id, rbac abuse | - | - | mod. 19 | 2.2 | 3.10 |
+| gcp | service account abuse, cloud storage | - | - | mod. 19 | 2.2 | 3.10 |
+| docker | image scanning, runtime security | - | - | - | 2.2 | 3.10 |
+| kubernetes | pod escape, rbac review, kube-bench | - | - | - | 2.2 | 3.10 |
+| iac-security | terraform scanning, secrets management | - | - | - | 2.2 | 5.3 |
 
 ---
 
@@ -157,7 +157,7 @@ Questa tabella mappa ogni modulo della repository agli obiettivi delle principal
 
 ---
 
-## Gap Analysis
+## Gap analysis
 
 ### Per OSCP (PEN-200)
 - **Coperto:** Information Gathering, Vulnerability Scanning, Web Attacks, SQL Injection, Public Exploits, Password Attacks, Linux/Windows PrivEsc, Tunneling, Metasploit

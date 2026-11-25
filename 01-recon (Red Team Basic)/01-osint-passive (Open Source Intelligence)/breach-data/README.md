@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# OSINT Passive: Breach Data Analysis
+# OSINT passive: breach data analysis
 
 > - **Fase:** Reconnaissance - Passive Information Gathering
 > - **Visibilita:** Zero - nessun pacchetto inviato al target, ricerca su database pubblici di terze parti
@@ -15,7 +15,7 @@ Strumenti: h8mail, HaveIBeenPwned (HIBP).
 
 ---
 
-## 1 Introduzione Teorica
+## 1 Introduzione teorica
 
 I Breach Data sono collezioni di informazioni riservate (credenziali, PII) esfiltrate durante attacchi informatici e rese pubbliche.
 
@@ -28,7 +28,7 @@ Concetti Chiave:
 
 ---
 
-## 2 Attività di Ricerca (Esercizio Pratico)
+## 2 Attività di ricerca (esercizio pratico)
 
 **ID Finding:** `OSINT-001` | **Severity:** `Alto`
 
@@ -61,14 +61,14 @@ Per la validazione dei risultati, è stata effettuata una ricerca manuale tramit
 
 ---
 
-## 3 Approfondimento Tecnico: Digital Footprint vs Breach
+## 3 Approfondimento tecnico: digital footprint vs breach
 
 1. Differenza Concettuale
 
-|Tipologia|Descrizione|Esempio|Strumenti|
+|tipologia|descrizione|esempio|strumenti|
 |-------|-------------|---------|--------|
-|Digital footprint|Indica che l'utente esiste e opera online. Non implica necessariamente un rischio di sicurezza, ma fornisce informazioni per il Social Engineering|Profilo LinkedIn, Commit su GitHub, Recensioni Amazon|Google Dorks, Sherlock, TheHarvester|
-|Brench Data|Indica che i dati dell'utente sono stati RUBATI e resi pubblici illegalmente. Comporta un rischio critico immediato|Password presente in un dump di database (es. LinkedIn 2012 leak)|h8mail, HaveIBeenPwned, Intelligence X|
+|digital footprint|indica che l'utente esiste e opera online. non implica necessariamente un rischio di sicurezza, ma fornisce informazioni per il social engineering|profilo linkedin, commit su github, recensioni amazon|google dorks, sherlock, theharvester|
+|brench data|indica che i dati dell'utente sono stati rubati e resi pubblici illegalmente. comporta un rischio critico immediato|password presente in un dump di database (es. linkedin 2012 leak)|h8mail, haveibeenpwned, intelligence x|
 
 1. Differenze Metodologiche
 
@@ -81,7 +81,7 @@ La discrepanza tra i risultati ottenuti via web e via riga di comando (CLI) è d
 
 ---
 
-## 4 Analisi Critica: Limiti degli Strumenti Automatizzati
+## 4 Analisi critica: limiti degli strumenti automatizzati
 
 Durante l'attività è stata riscontrata una discrepanza significativa tra i risultati degli strumenti:
 
@@ -95,7 +95,7 @@ Gli strumenti di OSINT automatici dipendono dalla disponibilità delle fonti est
 
 ---
 
-## Analisi a Basso Livello: Meccanica del Credential Stuffing e Formato Hash nei Breach
+## Analisi a basso livello: meccanica del credential stuffing e formato hash nei breach
 
 Il Credential Stuffing si distingue dal Brute Force per un aspetto fondamentale: l'attaccante non genera combinazioni casuali, ma utilizza coppie `email:password` gia validate in un breach precedente. Il tasso di successo medio e compreso tra l'1% e il 3% (fonte: Akamai State of the Internet Report 2024) - un valore apparentemente basso che diventa devastante quando applicato a milioni di credenziali.
 
@@ -124,13 +124,13 @@ Successo 1-3% -> account takeover -> lateral movement
 
 I dati nei breach non sono sempre in chiaro. La crackabilita dipende dall'algoritmo utilizzato dall'applicazione compromessa:
 
-| Formato | Esempio troncato | Crackabilita | Note |
+| formato | esempio troncato | crackabilita | note |
 | :--- | :--- | :--- | :--- |
-| Plaintext | `password123` | Immediata | Nessun hashing (worst case) |
-| MD5 unsalted | `482c811da5d5b4bc...` | Secondi | Rainbow table pre-computate disponibili |
-| SHA-1 unsalted | `cbfdac6008f9cab4...` | Minuti | LinkedIn 2012 usava SHA-1 senza salt |
-| bcrypt ($2a$) | `$2a$10$N9qo8uLO...` | Settimane-mesi | Memory-hard, resistente a GPU |
-| Argon2id | `$argon2id$v=19$...` | Anni | Standard moderno, salt + pepper + memory cost |
+| plaintext | `password123` | immediata | nessun hashing (worst case) |
+| md5 unsalted | `482c811da5d5b4bc...` | secondi | rainbow table pre-computate disponibili |
+| sha-1 unsalted | `cbfdac6008f9cab4...` | minuti | linkedin 2012 usava sha-1 senza salt |
+| bcrypt ($2a$) | `$2a$10$N9qo8uLO...` | settimane-mesi | memory-hard, resistente a gpu |
+| argon2id | `$argon2id$v=19$...` | anni | standard moderno, salt + pepper + memory cost |
 
 I breach storici (LinkedIn 2012, Adobe 2013, Collection #1-5) contenevano hash MD5 o SHA-1 senza salt, oggi interamente pre-computati in rainbow table pubbliche. Le password recuperate sono immediatamente utilizzabili per Credential Stuffing senza alcun overhead computazionale.
 
@@ -140,11 +140,11 @@ HIBP protegge la privacy delle query tramite il modello k-Anonymity (Cloudflare 
 
 ---
 
-## Scenario Reale: Proiezione in un Engagement di Red Teaming
+## Scenario reale: proiezione in un engagement di red teaming
 
 > Questa sezione descrive come OSINT-001 si inserirebbe in un engagement reale.
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** email aziendale del target identificata tramite theHarvester/LinkedIn; analisi breach database rivela presenza in 3+ breach con password riutilizzata.
 
@@ -179,7 +179,7 @@ Compromissione totale dell'infrastruttura
 - Ransomware: VPN, rete interna, Domain Admin, cifratura sistemi (100.000-5.000.000 USD di riscatto)
 - Spear phishing interno: email legittime dall'account compromesso verso colleghi con allegati weaponized
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** il Credential Stuffing genera pattern rilevabili: login da IP/geolocalizzazione anomala, login simultanei da location incompatibili (impossible travel), volume anomalo di tentativi falliti seguiti da un successo.
 
@@ -199,7 +199,7 @@ Compromissione totale dell'infrastruttura
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'esercizio ha evidenziato un aspetto critico dell'OSINT tooling che un analista deve interiorizzare: la dipendenza dalle fonti dati esterne. Il primo tentativo con h8mail ha restituito zero risultati - un falso negativo che in un engagement reale avrebbe potuto portare a sottovalutare il rischio di credential reuse per il target. La causa era banale (il motore gratuito scylla.so era offline al momento del test), ma la lezione e profonda: un tool di OSINT non e migliore delle API a cui si appoggia.
 
@@ -211,9 +211,9 @@ Un aspetto non ovvio emerso durante il laboratorio: h8mail supporta la configura
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Info: Credentials | `T1589.001` | Ricerca credenziali compromesse del target su h8mail e HaveIBeenPwned per valutare il rischio di Credential Reuse (OSINT-001) |
+| reconnaissance | gather victim identity info: credentials | `T1589.001` | ricerca credenziali compromesse del target su h8mail e haveibeenpwned per valutare il rischio di credential reuse (OSINT-001) |
 
 ---
 

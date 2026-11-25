@@ -17,17 +17,17 @@ reconfiguration.
 CVEs of this class have a life cycle: they become rare in well-managed environments but remain very dangerous on
 legacy or poorly updated infrastructure. They must therefore always be verified during an assessment.
 
-## Folder Structure
+## Folder structure
 
-| Subfolder | Technique | CVE | Typical severity | Status |
+| subfolder | technique | cve | typical severity | status |
 | :--- | :--- | :--- | :---: | :--- |
-| `nopac/` | noPac (sAMAccountName spoofing) - from user to DA | CVE-2021-42278 + CVE-2021-42287 | `Critical` | Written |
+| `nopac/` | nopac (samaccountname spoofing) - from user to da | CVE-2021-42278 + CVE-2021-42287 | `Critical` | written |
 
 > Extensible sub-area: other domain CVEs candidate to this section are ZeroLogon (CVE-2020-1472), PrintNightmare
 > (CVE-2021-34527) and dMSA/BadSuccessor (abuse of delegated Managed Service Accounts). They should be added when
 > documented in a lab, with the same standard.
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 1. With valid domain user credentials, check the patch status of the Domain Controllers and the specific
    prerequisites (e.g., `MachineAccountQuota` for noPac).

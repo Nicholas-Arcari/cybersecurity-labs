@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 DCSync is the technique that, in practice, marks total domain compromise. It exploits the Domain Controller
 replication protocol (MS-DRSR): a DC that joins the forest must receive a copy of the identity database from
@@ -38,9 +38,9 @@ visible than a targeted DCSync of just `krbtgt` and a few privileged accounts. A
 requests only what is needed (krbtgt for the Golden Ticket, the domain Administrator), reducing the volume of
 anomalous replication requests.
 
-## Execution / Commands
+## Execution / commands
 
-### Phase 1 - Verify the replication rights
+### Phase 1 - verify the replication rights
 
 Before acting, the operator verifies who holds the replication rights on the domain object (to understand
 whether the current account can DCSync, or which account to target).
@@ -60,7 +60,7 @@ svc_backup  has  DS-Replication-Get-Changes + DS-Replication-Get-Changes-All  on
 The relevant rights are three (see [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.en.md>), sec. 3.3):
 DS-Replication-Get-Changes, DS-Replication-Get-Changes-All, DS-Replication-Get-Changes-In-Filtered-Set.
 
-### Phase 2 - Targeted DCSync (OPSEC)
+### Phase 2 - targeted DCSync (OPSEC)
 
 ```bash
 # secretsdump (Impacket): DCSync of krbtgt only. -just-dc-user limits the request to a single account
@@ -76,7 +76,7 @@ krbtgt:502:aad3b435b51404eeaad3b435b51404ee:<NT_HASH_TRUNCATED>:::   <-- key for
 The `aad3b435b51404eeaad3b435b51404ee` portion is the empty-LM hash constant (LM disabled in modern Windows
 versions): it is normal and not a secret.
 
-### Phase 3 - Full DCSync (if allowed by scope)
+### Phase 3 - full DCSync (if allowed by scope)
 
 ```bash
 # Dump of all domain accounts (noisier): -just-dc extracts NT hashes and Kerberos keys
@@ -101,7 +101,7 @@ It is important to note what DCSync does not require: no interactive login on th
 suspicious process running on the controller. This makes it as powerful as it is hard to detect without
 specific replication monitoring.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 DCSync breaks nothing: it abuses the MS-DRSR protocol exactly as it is designed (see
 [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.en.md>), sec. 3.3). The violation is of property P3
@@ -114,7 +114,7 @@ and a Linux attacker machine, Impacket is immediate and requires no code on the 
 already in session, Mimikatz exploits the current context. In both cases the lever is the replication right,
 not a cryptographic flaw.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection (SOC/SIEM).**
 
@@ -137,11 +137,11 @@ not a cryptographic flaw.
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > How DCSync would fit into a real engagement, from the attacker's and the defender's perspective.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** possession of an account with replication rights (Domain Admin obtained via escalation, a
 DC's machine account via ESC8, or a service account with delegated replication).
@@ -177,7 +177,7 @@ insidious because it is not invalidated by a single krbtgt reset.
 - Double extortion with exfiltration of the domain's sensitive data.
 - Access brokering of the Domain Admin control.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** Event ID 4662 with the replication GUIDs from non-DC principals/hosts; DRSUAPI replication
 from an IP not belonging to the DCs.
@@ -201,13 +201,13 @@ ACLs, not a patch: there is nothing to patch, only to confine.
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `secretsdump.py` (Impacket) | Python toolkit | CLI - Active | DCSync from Linux (`-just-dc`, `-just-dc-user`), without code on the DC |
-| `Mimikatz` | Credential tool | CLI - Active | `lsadump::dcsync` from a Windows host in a privileged session |
-| `NetExec` (`nxc`) | AD/SMB toolkit | CLI - Active | `ntdsutil`/`dcsync` module and related actions |
-| `BloodHound` / `SharpHound` | Graph enum | CLI/GUI - Active | Identify who holds the replication rights (the "DCSync" privilege) |
-| `ticketer.py` (Impacket) | Kerberos tool | CLI - Active | Forging the Golden Ticket downstream, with the obtained krbtgt hash |
+| `secretsdump.py` (impacket) | python toolkit | cli - active | dcsync from linux (`-just-dc`, `-just-dc-user`), without code on the dc |
+| `Mimikatz` | credential tool | cli - active | `lsadump::dcsync` from a windows host in a privileged session |
+| `NetExec` (`nxc`) | ad/smb toolkit | cli - active | `ntdsutil`/`dcsync` module and related actions |
+| `BloodHound` / `SharpHound` | graph enum | cli/gui - active | identify who holds the replication rights (the "dcsync" privilege) |
+| `ticketer.py` (impacket) | kerberos tool | cli - active | forging the golden ticket downstream, with the obtained krbtgt hash |
 
 ---
 
@@ -220,19 +220,19 @@ outcomes become the real finding (`AD-NNN`).
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Credential Access | OS Credential Dumping: DCSync | `T1003.006` | Abused replication request (MS-DRSR) to extract hashes and keys from the DC. |
-| Credential Access | Steal or Forge Kerberos Tickets: Golden Ticket | `T1558.001` | Follow-on: use of the obtained krbtgt hash for the Golden Ticket. |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Hash | `T1550.002` | Follow-on: authentication with the extracted NT hashes. |
+| credential access | os credential dumping: dcsync | `T1003.006` | abused replication request (ms-drsr) to extract hashes and keys from the dc. |
+| credential access | steal or forge kerberos tickets: golden ticket | `T1558.001` | follow-on: use of the obtained krbtgt hash for the golden ticket. |
+| lateral movement | use alternate authentication material: pass the hash | `T1550.002` | follow-on: authentication with the extracted nt hashes. |
 
 ## Links to other modules
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
-| [Kerberoasting](<../../02-kerberos-attacks/kerberoasting/README.en.md>) / [ESC8](<../../03-adcs/esc8-relay-adcs/README.en.md>) | DCSync | provide the privileged account (or the DC's credentials) with replication rights |
-| DCSync (krbtgt hash) | Golden Ticket ([02-kerberos-attacks](<../../02-kerberos-attacks/README.en.md>)) | the krbtgt key enables domain persistence |
-| DCSync (NT hashes) | Pass-the-Hash ([07-post-exploitation](<../../../07-post-exploitation/README.en.md>)) | the extracted hashes enable lateral movement without cracking |
+| [kerberoasting](<../../02-kerberos-attacks/kerberoasting/README.en.md>) / [esc8](<../../03-adcs/esc8-relay-adcs/README.en.md>) | dcsync | provide the privileged account (or the dc's credentials) with replication rights |
+| dcsync (krbtgt hash) | golden ticket ([02-kerberos-attacks](<../../02-kerberos-attacks/README.en.md>)) | the krbtgt key enables domain persistence |
+| dcsync (nt hashes) | pass-the-hash ([07-post-exploitation](<../../../07-post-exploitation/README.en.md>)) | the extracted hashes enable lateral movement without cracking |
 
 ---
 

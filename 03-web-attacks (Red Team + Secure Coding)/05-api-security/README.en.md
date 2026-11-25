@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 05 - API Security
+# 05 - API security
 
 > - **Phase:** Web Attack - API Security Testing (OWASP API Top 10:2023)
 > - **Visibility:** Variable - Low (JWT offline crack) / Medium (GraphQL, REST with curl) / Low (IDOR - legitimate requests)
@@ -22,16 +22,16 @@ API vulnerabilities differ from those of traditional web applications because:
 
 The OWASP API Security Top 10:2023 documents the most critical vulnerabilities in modern APIs:
 
-| Category | Finding | Subdirectory |
+| category | finding | subdirectory |
 | :--- | :--- | :--- |
-| API2:2023 - Broken Authentication | WEB-012 (JWT weak secret) | `jwt-tokens/` |
-| API8:2023 - Security Misconfiguration | WEB-013 (GraphQL Introspection) | `graphql/` |
-| API3:2023 - Broken Object Property Level Authorization | WEB-013 (Command Injection via GraphQL) | `graphql/` |
-| API1:2023 - Broken Object Level Authorization (BOLA) | WEB-014 (IDOR) | `postman/` |
+| api2:2023 - broken authentication | WEB-012 (jwt weak secret) | `jwt-tokens/` |
+| api8:2023 - security misconfiguration | WEB-013 (graphql introspection) | `graphql/` |
+| api3:2023 - broken object property level authorization | WEB-013 (command injection via graphql) | `graphql/` |
+| api1:2023 - broken object level authorization (bola) | WEB-014 (idor) | `postman/` |
 
 ---
 
-## Directory Structure
+## Directory structure
 
 ```
 05-api-security/
@@ -42,11 +42,11 @@ The OWASP API Security Top 10:2023 documents the most critical vulnerabilities i
 
 ---
 
-## `jwt-tokens/` - JWT Authentication Exploitation
+## `jwt-tokens/` - JWT authentication exploitation
 
 **Finding ID:** `WEB-012` | **Severity:** `Critical` | **CVSS v3.1:** 9.8
 
-### Operational Context
+### Operational context
 
 JSON Web Tokens (JWT) are the most widespread authentication mechanism in modern APIs. A JWT contains three Base64-encoded parts: header (algorithm), payload (claims: user, role, expiration), signature (HMAC hash or RSA signature).
 
@@ -56,11 +56,11 @@ The danger is amplified by the offline nature of the brute force: no IDS, no rat
 
 ---
 
-## `graphql/` - GraphQL Introspection & Command Injection
+## `graphql/` - GraphQL introspection & command injection
 
 **Finding ID:** `WEB-013` | **Severity:** `Critical` | **CVSS v3.1:** 9.8
 
-### Operational Context
+### Operational context
 
 GraphQL is an API query language developed by Facebook. Its distinctive feature is the single endpoint (`/graphql`) that serves all requests, and the **Introspection** functionality: a special query (`__schema`) that returns the entire database structure, available queries, data types, and fields.
 
@@ -73,11 +73,11 @@ In production, Introspection should be disabled because it provides the attacker
 
 ---
 
-## `postman/` - IDOR/BOLA Testing
+## `postman/` - IDOR/BOLA testing
 
 **Finding ID:** `WEB-014` | **Severity:** `Critical` | **CVSS v3.1:** 9.1
 
-### Operational Context
+### Operational context
 
 IDOR (Insecure Direct Object Reference), classified as BOLA (Broken Object Level Authorization) in the OWASP API Top 10:2023, is the most common and critical vulnerability in APIs. The application accepts a resource ID in the URL (e.g., `/api/balance/1001`) and returns the corresponding data **without verifying whether the authenticated user is the owner of that resource**.
 
@@ -89,7 +89,7 @@ The document `postman/README.md` details:
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [1] Identify the authentication mechanism
@@ -119,46 +119,46 @@ The document `postman/README.md` details:
 
 ---
 
-## Finding Registry - API Security
+## Finding registry - API security
 
-| ID | Description | Severity | CVSS | Subdirectory |
+| id | description | severity | cvss | subdirectory |
 | :--- | :--- | :---: | :---: | :--- |
-| `WEB-012` | JWT weak secret (`secret123`) - admin token forging via offline brute force | `Critical` | 9.8 | `jwt-tokens/` |
-| `WEB-013` | GraphQL Introspection enabled + Command Injection RCE via `systemDebug` | `Critical` | 9.8 | `graphql/` |
-| `WEB-014` | IDOR/BOLA - access to financial data of all users without authorization | `Critical` | 9.1 | `postman/` |
+| `WEB-012` | jwt weak secret (`secret123`) - admin token forging via offline brute force | `Critical` | 9.8 | `jwt-tokens/` |
+| `WEB-013` | graphql introspection enabled + command injection rce via `systemDebug` | `Critical` | 9.8 | `graphql/` |
+| `WEB-014` | idor/bola - access to financial data of all users without authorization | `Critical` | 9.1 | `postman/` |
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Primary Use Case |
+| tool | type | technique/access | primary use case |
 | :--- | :--- | :--- | :--- |
-| `jwt_tool` | JWT analyzer | CLI - Offline | JWT analysis, brute force, and forging |
-| `hashcat` | Password cracker | CLI - Offline | JWT hash brute force with GPU acceleration |
-| `Burp Suite` | Web proxy | GUI - Manual | Interception and modification of API requests with JWT |
-| `curl` | HTTP client | CLI | Manual testing of GraphQL and REST endpoints |
-| `Postman` | API client | GUI | Interactive REST API testing, Collections, scripting |
-| `graphql-voyager` | GraphQL visualizer | Web UI | Graphical visualization of the GraphQL schema |
-| `clairvoyance` | GraphQL enum | CLI - Active | GraphQL schema enumeration even without Introspection |
-| `nuclei` | Template-based | CLI - Active | OWASP API Top 10 and JWT vulnerability templates |
+| `jwt_tool` | jwt analyzer | cli - offline | jwt analysis, brute force, and forging |
+| `hashcat` | password cracker | cli - offline | jwt hash brute force with gpu acceleration |
+| `Burp Suite` | web proxy | gui - manual | interception and modification of api requests with jwt |
+| `curl` | http client | cli | manual testing of graphql and rest endpoints |
+| `Postman` | api client | gui | interactive rest api testing, collections, scripting |
+| `graphql-voyager` | graphql visualizer | web ui | graphical visualization of the graphql schema |
+| `clairvoyance` | graphql enum | cli - active | graphql schema enumeration even without introspection |
+| `nuclei` | template-based | cli - active | owasp api top 10 and jwt vulnerability templates |
 
 > **Recommended modern tool:** `jwt_tool` (ticarpi/jwt_tool) - dedicated JWT tool with support for brute force, payload modification, vulnerability testing (alg:none, RS256 to HS256). Installation: `pip3 install jwt_tool`.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Brute Force: Password Cracking | `T1110.002` | Offline brute force of the JWT HS256 signature using a dictionary to recover the key `secret123` (WEB-012) |
-| Defense Evasion | Use Alternate Authentication Material | `T1550` | Use of the forged JWT token with admin role to access privileged functionality (WEB-012) |
-| Lateral Movement | Valid Accounts: Cloud Accounts | `T1078.003` | Impersonation of the admin account through a forged JWT token (WEB-012) |
-| Reconnaissance | Active Scanning: Wordlist Scanning | `T1595.003` | GraphQL Introspection to map all available queries, including undocumented ones (WEB-013) |
-| Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | Command Injection through the `arg` parameter of the `systemDebug` query -> RCE with `; id` (WEB-013) |
-| Collection | Data from Information Repositories | `T1213` | Exfiltration of admin credentials from `config.py` and SQLite database dump through RCE (WEB-013) |
-| Discovery | Account Discovery | `T1087` | Enumeration of account IDs on the `/api/balance/<id>` endpoint to map all users (WEB-014) |
-| Collection | Data from Information Repositories | `T1213` | Access to financial data of unauthorized users through IDOR/BOLA (WEB-014) |
-| Lateral Movement | Valid Accounts | `T1078` | Use of a legitimate account to perform IDOR requests against other users' accounts (WEB-014) |
+| credential access | brute force: password cracking | `T1110.002` | offline brute force of the jwt hs256 signature using a dictionary to recover the key `secret123` (WEB-012) |
+| defense evasion | use alternate authentication material | `T1550` | use of the forged jwt token with admin role to access privileged functionality (WEB-012) |
+| lateral movement | valid accounts: cloud accounts | `T1078.003` | impersonation of the admin account through a forged jwt token (WEB-012) |
+| reconnaissance | active scanning: wordlist scanning | `T1595.003` | graphql introspection to map all available queries, including undocumented ones (WEB-013) |
+| execution | command and scripting interpreter: unix shell | `T1059.004` | command injection through the `arg` parameter of the `systemDebug` query -> rce with `; id` (WEB-013) |
+| collection | data from information repositories | `T1213` | exfiltration of admin credentials from `config.py` and sqlite database dump through rce (WEB-013) |
+| discovery | account discovery | `T1087` | enumeration of account ids on the `/api/balance/<id>` endpoint to map all users (WEB-014) |
+| collection | data from information repositories | `T1213` | access to financial data of unauthorized users through idor/bola (WEB-014) |
+| lateral movement | valid accounts | `T1078` | use of a legitimate account to perform idor requests against other users' accounts (WEB-014) |
 
 ---
 

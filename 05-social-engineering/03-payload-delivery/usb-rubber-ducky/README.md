@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# USB Rubber Ducky - HID Attack Fisico
+# USB rubber ducky - HID attack fisico
 
 > - **Fase:** Social Engineering - Physical Payload Delivery via HID Injection
 > - **Visibilita:** Bassa per il sistema (il dispositivo appare come una tastiera legittima, nessun driver sospetto); Alta per l'utente presente (lo schermo mostra finestre che si aprono rapidamente) ma la velocita di esecuzione (< 30 secondi) limita la finestra di intervento
@@ -14,7 +14,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Il USB Rubber Ducky e un dispositivo di attacco fisico che sfrutta il modello di fiducia implicita dei sistemi operativi verso i dispositivi HID (Human Interface Device). Quando il Rubber Ducky viene inserito in una porta USB, il sistema lo identifica come una tastiera - un tipo di dispositivo che tutti i sistemi operativi accettano senza autenticazione, driver aggiuntivi o conferma dell'utente. Il dispositivo esegue quindi un payload DuckyScript che inietta sequenze di tasti a velocita sovraumana (millisecondi per carattere), eseguendo comandi nel contesto dell'utente loggato.
 
@@ -22,7 +22,7 @@ Il laboratorio ha documentato un payload che estrae tutte le credenziali WiFi sa
 
 ---
 
-## USB Rubber Ducky: Esfiltrazione Credenziali WiFi
+## USB rubber ducky: esfiltrazione credenziali WiFi
 
 **ID Finding:** `SE-010` | **Severity:** `Alto`
 
@@ -30,7 +30,7 @@ Il laboratorio ha documentato un payload che estrae tutte le credenziali WiFi sa
 
 Lo scenario simula un attaccante con accesso fisico momentaneo a una workstation Windows con sessione utente attiva. L'attaccante inserisce il Rubber Ducky nella porta USB, il payload si esegue automaticamente, e le credenziali WiFi vengono estratte e salvate in un file. L'intera operazione si completa in meno di 30 secondi.
 
-### PoC - Fase 1: Scrittura Payload DuckyScript
+### PoC - fase 1: scrittura payload DuckyScript
 
 ```Bash
 # Payload DuckyScript: esfiltrazione WiFi passwords (Windows)
@@ -58,7 +58,7 @@ STRING Copy-Item "$env:TEMP\wifi_creds.txt" "$(Get-WmiObject Win32_Volume | Wher
 ENTER
 ```
 
-### PoC - Fase 2: Compilazione e Caricamento
+### PoC - fase 2: compilazione e caricamento
 
 ```Bash
 # Compilazione DuckyScript (con encoder Java o DuckToolkit)
@@ -69,7 +69,7 @@ java -jar duckencoder.jar -i wifi_dump.txt -o inject.bin -l it
 # Inserire la microSD nel Rubber Ducky -> pronto per l'uso
 ```
 
-### PoC - Fase 3: Esecuzione e Risultato
+### PoC - fase 3: esecuzione e risultato
 
 ```
 # Inserimento Rubber Ducky nella porta USB:
@@ -99,7 +99,7 @@ Password: MyH0meP4ss!                                       <-- credenziale WiFi
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il test e stato condotto con un Hak5 USB Rubber Ducky (hardware reale) su una VM Windows 10 con sessione utente attiva. La prima versione del payload utilizzava `cmd.exe` con `netsh wlan show profiles` e pipe, ma la complessita dei comandi cmd con pipe e for loop causava errori di timing (caratteri persi quando la VM era sotto carico). Il passaggio a PowerShell one-liner ha risolto il problema: un singolo comando PS gestisce l'intera logica senza dipendenze di timing tra comandi multipli.
 
@@ -109,7 +109,7 @@ Il tempo totale di esecuzione (28 secondi) include un DELAY conservativo di 3 se
 
 ---
 
-## Analisi Teorica: Il Modello di Fiducia HID
+## Analisi teorica: il modello di fiducia HID
 
 I sistemi operativi moderni implementano meccanismi di autenticazione e autorizzazione sofisticati per software, rete e utenti. Tuttavia, i dispositivi HID (tastiere, mouse) godono di un modello di fiducia implicita: qualsiasi dispositivo che si identifichi come tastiera USB (USB Class 03h, Subclass 01h, Protocol 01h) viene accettato e attivato istantaneamente, senza driver aggiuntivi, senza conferma dell'utente, e senza alcun controllo di integrita.
 
@@ -119,11 +119,11 @@ La difesa deve quindi operare a livello piu alto: USB Device Control (whitelist 
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Questa sezione descrive come questo finding si inserirebbe in un engagement reale.
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** credenziali WiFi aziendali esfiltrate (SE-010).
 
@@ -145,7 +145,7 @@ Exploitation di servizi interni non esposti su Internet
 Lateral Movement -> Domain compromise
 ```
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **IOC da monitorare:**
 - Event ID 6416: nuovo dispositivo PnP connesso (HID keyboard da vendor non noto)
@@ -163,15 +163,15 @@ Lateral Movement -> Domain compromise
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Replication Through Removable Media | `T1091` | Inserimento USB Rubber Ducky nella workstation target |
-| Execution | User Execution: Malicious File | `T1204.002` | Il payload DuckyScript si esegue automaticamente all'inserimento (SE-010) |
-| Execution | Command and Scripting Interpreter: PowerShell | `T1059.001` | PowerShell one-liner per estrazione credenziali WiFi |
-| Credential Access | Credentials from Password Stores: Windows Credential Manager | `T1555.004` | Estrazione password WiFi salvate via `netsh wlan show profile key=clear` |
-| Collection | Input Capture: Credential API Hooking | `T1056.004` | HID injection simula input tastiera per esecuzione comandi |
-| Exfiltration | Exfiltration Over Physical Medium: Exfiltration over USB | `T1052.001` | Copia del file con credenziali su dispositivo rimovibile |
-| Discovery | System Information Discovery | `T1082` | Enumerazione profili WiFi e configurazione di rete |
+| initial access | replication through removable media | `T1091` | inserimento usb rubber ducky nella workstation target |
+| execution | user execution: malicious file | `T1204.002` | il payload duckyscript si esegue automaticamente all'inserimento (SE-010) |
+| execution | command and scripting interpreter: powershell | `T1059.001` | powershell one-liner per estrazione credenziali wifi |
+| credential access | credentials from password stores: windows credential manager | `T1555.004` | estrazione password wifi salvate via `netsh wlan show profile key=clear` |
+| collection | input capture: credential api hooking | `T1056.004` | hid injection simula input tastiera per esecuzione comandi |
+| exfiltration | exfiltration over physical Medium: exfiltration over usb | `T1052.001` | copia del file con credenziali su dispositivo rimovibile |
+| discovery | system information discovery | `T1082` | enumerazione profili wifi e configurazione di rete |
 
 ---
 

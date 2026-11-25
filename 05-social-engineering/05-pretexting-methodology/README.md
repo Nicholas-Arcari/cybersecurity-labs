@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 05 - Pretexting Methodology
+# 05 - Pretexting methodology
 
 > - **Fase:** Social Engineering - Pretexting & Target Profiling (dimensione umana dell'attacco)
 > - **Visibilita:** Zero (ricerca OSINT passiva) / Bassa (interazione telefonica/email con pretesto)
@@ -33,7 +33,7 @@ La sezione documenta due competenze complementari:
 
 ---
 
-## `target-profiling/` - OSINT-Based Dossier Construction
+## `target-profiling/` - OSINT-Based dossier construction
 
 **ID Finding:** `SE-013` | **Severity:** `Informativo` (dossier completo su target via fonti pubbliche)
 
@@ -73,7 +73,7 @@ linkedin2username -c target-lab -s "Italy"
 
 ---
 
-## `pretext-scenarios/` - Template Scenari di Pretexting
+## `pretext-scenarios/` - Template scenari di pretexting
 
 ### Contesto operativo
 
@@ -81,16 +81,16 @@ I template di pretexting sono scenari pre-costruiti calibrati per ruolo aziendal
 
 ---
 
-## I Sei Principi di Cialdini nel Social Engineering
+## I sei principi di cialdini nel social engineering
 
-| Principio | Definizione | Applicazione SE |
+| principio | definizione | applicazione se |
 | :--- | :--- | :--- |
-| **Autorita** | Tendiamo a obbedire a figure di autorita | Email dal CEO, dall'IT, dal fornitore |
-| **Urgenza/Scarsita** | Agiamo impulsivamente sotto pressione temporale | "Entro 24 ore", "Account sara sospeso" |
-| **Reciprocita** | Ci sentiamo obbligati a ricambiare un favore | "Ti ho inviato il report, puoi confermare?" |
-| **Riprova Sociale** | Seguiamo il comportamento degli altri | "Il 90% dei colleghi ha gia completato" |
-| **Impegno/Coerenza** | Manteniamo coerenza con azioni precedenti | Follow-up a una richiesta gia accettata |
-| **Simpatia** | Siamo influenzati da persone che ci piacciono | Tono amichevole, interessi comuni |
+| **autorita** | tendiamo a obbedire a figure di autorita | email dal ceo, dall'it, dal fornitore |
+| **urgenza/scarsita** | agiamo impulsivamente sotto pressione temporale | "entro 24 ore", "account sara sospeso" |
+| **reciprocita** | ci sentiamo obbligati a ricambiare un favore | "ti ho inviato il report, puoi confermare?" |
+| **riprova sociale** | seguiamo il comportamento degli altri | "il 90% dei colleghi ha gia completato" |
+| **impegno/coerenza** | manteniamo coerenza con azioni precedenti | follow-up a una richiesta gia accettata |
+| **simpatia** | siamo influenzati da persone che ci piacciono | tono amichevole, interessi comuni |
 
 ---
 
@@ -132,36 +132,36 @@ I template di pretexting sono scenari pre-costruiti calibrati per ruolo aziendal
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `theHarvester` | OSINT email | CLI | Raccolta email e sottodomini da fonti pubbliche |
-| `linkedin2username` | OSINT sociale | CLI - Python | Generazione username da profili LinkedIn |
-| `Maltego` | OSINT aggregator | GUI | Visualizzazione relazioni tra entita (persone, email, domini) |
-| `SpiderFoot` | OSINT automation | Web UI | Raccolta automatizzata OSINT da 200+ fonti |
-| `Recon-ng` | OSINT framework | CLI | Framework modulare per ricognizione con moduli per social media |
+| `theHarvester` | osint email | cli | raccolta email e sottodomini da fonti pubbliche |
+| `linkedin2username` | osint sociale | cli - python | generazione username da profili linkedin |
+| `Maltego` | osint aggregator | gui | visualizzazione relazioni tra entita (persone, email, domini) |
+| `SpiderFoot` | osint automation | web ui | raccolta automatizzata osint da 200+ fonti |
+| `Recon-ng` | osint framework | cli | framework modulare per ricognizione con moduli per social media |
 
 > **Tool moderno consigliato:** `SpiderFoot HX` (hosted) o `SpiderFoot` (self-hosted) per automazione OSINT completa. `Maltego CE` per visualizzazione grafica delle relazioni. Per LinkedIn, `linkedin2username` combinato con ricerca manuale per contesto qualitativo.
 
 ---
 
-## Registro Finding
+## Registro finding
 
-| ID | Descrizione | Severity | CVSS | Sottocartella |
+| id | descrizione | severity | cvss | sottocartella |
 | :--- | :--- | :---: | :---: | :--- |
-| `SE-013` | Target profiling OSINT: dossier completo su target (ruolo, contatti, stack tech, abitudini social) costruito interamente da fonti pubbliche | `Informativo` | 2.1 | `target-profiling/` |
+| `SE-013` | target profiling osint: dossier completo su target (ruolo, contatti, stack tech, abitudini social) costruito interamente da fonti pubbliche | `Informativo` | 2.1 | `target-profiling/` |
 
 ---
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Information: Email Addresses | `T1589.002` | SE-013 |
-| Reconnaissance | Gather Victim Identity Information: Employee Names | `T1589.003` | SE-013 |
-| Reconnaissance | Gather Victim Org Information: Identify Roles | `T1591.004` | SE-013 |
-| Reconnaissance | Gather Victim Org Information: Identify Business Tempo | `T1591.003` | SE-013 |
-| Reconnaissance | Search Open Websites/Domains: Social Media | `T1593.001` | SE-013 |
-| Reconnaissance | Search Victim-Owned Websites | `T1594` | SE-013 |
+| reconnaissance | gather victim identity information: email addresses | `T1589.002` | SE-013 |
+| reconnaissance | gather victim identity information: employee names | `T1589.003` | SE-013 |
+| reconnaissance | gather victim org information: identify roles | `T1591.004` | SE-013 |
+| reconnaissance | gather victim org information: identify business tempo | `T1591.003` | SE-013 |
+| reconnaissance | search open websites/domains: social media | `T1593.001` | SE-013 |
+| reconnaissance | search victim-owned websites | `T1594` | SE-013 |
 
 ---
 

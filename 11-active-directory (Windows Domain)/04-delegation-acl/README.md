@@ -20,11 +20,11 @@ I fondamenti (deleghe e modello di autorizzazione) sono in
 
 ## Struttura della cartella
 
-| Sottocartella | Tecnica | Severity tipica | Stato |
+| sottocartella | tecnica | severity tipica | stato |
 | :--- | :--- | :---: | :--- |
-| `rbcd/` | Resource-Based Constrained Delegation abuse | `Critico` | Scritta |
-| `delegation-unconstrained-constrained/` | Unconstrained e Constrained Delegation abuse | `Critico` | Scritta |
-| `acl-abuse/` | Abuso di ACL/DACL (GenericAll, WriteDACL, WriteOwner, ...) | `Alto` (fino a `Critico`) | Scritta |
+| `rbcd/` | resource-based constrained delegation abuse | `Critico` | scritta |
+| `delegation-unconstrained-constrained/` | unconstrained e constrained delegation abuse | `Critico` | scritta |
+| `acl-abuse/` | abuso di acl/dacl (genericall, writedacl, writeowner, ...) | `Alto` (fino a `Critico`) | scritta |
 
 ## Flusso operativo consigliato
 

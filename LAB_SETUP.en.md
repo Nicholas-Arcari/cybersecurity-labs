@@ -1,13 +1,13 @@
 > **English** | [Italiano](LAB_SETUP.md)
 
-# LAB_SETUP.md - Lab Topology and Configuration
+# LAB_SETUP.md - lab topology and configuration
 
 > Technical reference document for reproducing the lab environment used in this repository.
 > All testing sessions were performed in a virtualized environment isolated from the production network.
 
 ---
 
-## Table of Contents
+## Table of contents
 
 - [Hardware requirements](#hardware-requirements)
 - [Virtualization software](#virtualization-software)
@@ -23,67 +23,67 @@
 
 ---
 
-## Hardware Requirements
+## Hardware requirements
 
-| Resource | Minimum | Recommended |
+| resource | minimum | recommended |
 | :--- | :--- | :--- |
-| Total host RAM | 8 GB | 16 GB |
-| CPU | Quad-core, VT-x enabled | 8 cores, VT-x/AMD-V |
-| Host disk | 100 GB free | 200 GB SSD |
-| Network adapter | 1x (NAT sufficient) | 1x (Bridge requires LAN access) |
+| total host ram | 8 gb | 16 gb |
+| cpu | quad-core, vt-x enabled | 8 cores, vt-x/amd-v |
+| host disk | 100 gb free | 200 gb ssd |
+| network adapter | 1x (nat sufficient) | 1x (bridge requires lan access) |
 
 ---
 
-## Virtualization Software
+## Virtualization software
 
-| Software | Version used | Notes |
+| software | version used | notes |
 | :--- | :--- | :--- |
-| VirtualBox | 7.0.x | Main hypervisor, free |
-| VirtualBox Extension Pack | same version | Required for USB 3.0 and advanced network adapters |
-| Host OS | Any (Linux/Windows/macOS) | Lab executed on Linux host |
+| virtualbox | 7.0.x | main hypervisor, free |
+| virtualbox extension pack | same version | required for usb 3.0 and advanced network adapters |
+| host os | any (linux/windows/macos) | lab executed on linux host |
 
 ---
 
-## Virtual Machines
+## Virtual machines
 
-### Kali Linux (Attacker)
+### Kali Linux (attacker)
 
-| Parameter | Value |
+| parameter | value |
 | :--- | :--- |
-| OS | Kali Linux 2024.x (rolling) |
-| RAM | 4096 MB |
-| CPU | 2 vCPU |
-| Disk | 80 GB (thin provisioned) |
-| Network adapters | 2x (Adapter 1: NAT or Bridge depending on module) |
-| Pre-operative snapshots | Recommended before every exploitation session |
+| os | kali linux 2024.x (rolling) |
+| ram | 4096 mb |
+| cpu | 2 vcpu |
+| disk | 80 gb (thin provisioned) |
+| network adapters | 2x (adapter 1: nat or bridge depending on module) |
+| pre-operative snapshots | recommended before every exploitation session |
 
-### Windows 10 (Primary Target)
+### Windows 10 (primary target)
 
-| Parameter | Value |
+| parameter | value |
 | :--- | :--- |
-| OS | Windows 10 Pro x64 (unpatched, vulnerable by design) |
-| RAM | 2048 MB |
-| CPU | 2 vCPU |
-| Disk | 60 GB |
-| Security configuration | Firewall disabled, UAC reduced, SMBv1 enabled |
-| Configured users | `Administrator` (weak password), `user1`, `svc_backup` |
-| Exposed services | SMB (445), RDP (3389), HTTP (8080), SNMP (161 UDP) |
+| os | windows 10 pro x64 (unpatched, vulnerable by design) |
+| ram | 2048 mb |
+| cpu | 2 vcpu |
+| disk | 60 gb |
+| security configuration | firewall disabled, uac reduced, smbv1 enabled |
+| configured users | `Administrator` (weak password), `user1`, `svc_backup` |
+| exposed services | smb (445), rdp (3389), http (8080), snmp (161 udp) |
 
-### Ubuntu Linux (Secondary Target - Linux PrivEsc)
+### Ubuntu Linux (secondary target - Linux PrivEsc)
 
-| Parameter | Value |
+| parameter | value |
 | :--- | :--- |
-| OS | Ubuntu Server 20.04 LTS |
-| RAM | 1024 MB |
-| CPU | 1 vCPU |
-| Disk | 20 GB |
-| Security configuration | Intentionally misconfigured for PrivEsc |
-| Configured users | `ubuntu` (low-privilege), `www-data` (web service) |
-| Exposed services | SSH (22), HTTP (80), misconfigured SUID services |
+| os | ubuntu server 20.04 lts |
+| ram | 1024 mb |
+| cpu | 1 vcpu |
+| disk | 20 gb |
+| security configuration | intentionally misconfigured for privesc |
+| configured users | `ubuntu` (low-privilege), `www-data` (web service) |
+| exposed services | ssh (22), http (80), misconfigured suid services |
 
 ---
 
-## Network Topologies
+## Network topologies
 
 The lab used two distinct network modes depending on the testing phase.
 The choice depends on the objective: NAT for maximum isolation, Bridge for simulating
@@ -123,21 +123,21 @@ realistic scenarios on a LAN segment.
 
 ---
 
-## NAT Configuration (Modules 01-02)
+## NAT configuration (modules 01-02)
 
 Used for: passive/active reconnaissance, vulnerability assessment, phases that
 do not require direct visibility on the real LAN.
 
-### IP Addresses (NAT)
+### IP addresses (NAT)
 
-| VM | Hostname | IP | Role |
+| vm | hostname | ip | role |
 | :--- | :--- | :--- | :--- |
-| Kali Linux | kali | `10.0.2.15` | Attacker |
-| Windows 10 | WIN10-TARGET | `10.0.2.3` | Primary target |
-| VirtualBox Gateway | - | `10.0.2.1` | Default gateway |
-| VirtualBox DHCP | - | `10.0.2.2` | DHCP server |
+| kali linux | kali | `10.0.2.15` | attacker |
+| windows 10 | win10-target | `10.0.2.3` | primary target |
+| virtualbox gateway | - | `10.0.2.1` | default gateway |
+| virtualbox dhcp | - | `10.0.2.2` | dhcp server |
 
-### VirtualBox Configuration (NAT)
+### VirtualBox configuration (NAT)
 
 ```
 VM Settings > Network > Adapter 1:
@@ -145,7 +145,7 @@ VM Settings > Network > Adapter 1:
   - (Advanced) Port Forwarding: not required for internal traffic
 ```
 
-### Optional Port Forwarding (host to VM access in NAT)
+### Optional port forwarding (host to VM access in NAT)
 
 ```
 Host: 127.0.0.1:2222  -->  Guest: 10.0.2.15:22   (SSH Kali)
@@ -161,7 +161,7 @@ VM Settings > Network > Adapter 1 > Advanced > Port Forwarding > [+]
 
 ---
 
-## Network Bridge Configuration (Modules 03-04)
+## Network bridge configuration (modules 03-04)
 
 Used for: active exploitation, privilege escalation, post-exploitation,
 phases simulating an attacker already on the same network as the target.
@@ -170,16 +170,16 @@ phases simulating an attacker already on the same network as the target.
 > ALWAYS run in a controlled network environment (isolated home network or dedicated VLAN).
 > Never on a corporate or public network.
 
-### IP Addresses (Bridge)
+### IP addresses (bridge)
 
-| VM | Hostname | IP | Role |
+| vm | hostname | ip | role |
 | :--- | :--- | :--- | :--- |
-| Kali Linux | kali | `192.168.0.110` | Attacker |
-| Windows 10 | WIN10-TARGET | `192.168.0.109` | Primary target |
-| LAN Gateway | router | `192.168.0.1` | Default gateway |
-| Subnet | - | `192.168.0.0/24` | Lab segment |
+| kali linux | kali | `192.168.0.110` | attacker |
+| windows 10 | win10-target | `192.168.0.109` | primary target |
+| lan gateway | router | `192.168.0.1` | default gateway |
+| subnet | - | `192.168.0.0/24` | lab segment |
 
-### VirtualBox Configuration (Bridge)
+### VirtualBox configuration (bridge)
 
 ```
 VM Settings > Network > Adapter 1:
@@ -191,7 +191,7 @@ VM Settings > Network > Adapter 1:
 > IPs 192.168.0.109 and 192.168.0.110 may vary. Assign static IPs
 > or verify with `ip a` (Kali) and `ipconfig` (Windows) at the beginning of each session.
 
-### Static IP Assignment on Kali (Bridge)
+### Static IP assignment on Kali (bridge)
 
 ```Bash
 sudo ip addr add 192.168.0.110/24 dev eth0
@@ -210,26 +210,26 @@ iface eth0 inet static
 
 ---
 
-## Modules by Topology
+## Modules by topology
 
-| Module | Topology | Kali IP | Target IP |
+| module | topology | kali ip | target ip |
 | :--- | :--- | :--- | :--- |
-| `01-recon` | NAT | 10.0.2.15 | 10.0.2.3 |
-| `02-vulnerability-assessment` | NAT | 10.0.2.15 | 10.0.2.3 |
-| `03-web-attacks` | NAT | 10.0.2.15 | 10.0.2.3 |
-| `04-system-exploitation` | Bridge | 192.168.0.110 | 192.168.0.109 |
-| `05-social-engineering` | Bridge | 192.168.0.110 | 192.168.0.109 |
-| `06-wireless-security` | Bridge | 192.168.0.110 | N/A (physical AP) |
-| `07-post-exploitation` | Bridge | 192.168.0.110 | 192.168.0.109 |
-| `08-defense-hardenings` | NAT | 10.0.2.15 | N/A (self) |
-| `09-digital-forensics` | NAT | N/A | local disk images |
-| `10-cloud-security` | Internet | N/A | cloud endpoints |
+| `01-recon` | nat | 10.0.2.15 | 10.0.2.3 |
+| `02-vulnerability-assessment` | nat | 10.0.2.15 | 10.0.2.3 |
+| `03-web-attacks` | nat | 10.0.2.15 | 10.0.2.3 |
+| `04-system-exploitation` | bridge | 192.168.0.110 | 192.168.0.109 |
+| `05-social-engineering` | bridge | 192.168.0.110 | 192.168.0.109 |
+| `06-wireless-security` | bridge | 192.168.0.110 | n/a (physical ap) |
+| `07-post-exploitation` | bridge | 192.168.0.110 | 192.168.0.109 |
+| `08-defense-hardenings` | nat | 10.0.2.15 | n/a (self) |
+| `09-digital-forensics` | nat | n/a | local disk images |
+| `10-cloud-security` | internet | n/a | cloud endpoints |
 
 ---
 
-## Snapshots and VM Management
+## Snapshots and VM management
 
-### Recommended Snapshot Strategy
+### Recommended snapshot strategy
 
 ```
 [BASE SNAPSHOT]                          <- clean state post-installation
@@ -243,7 +243,7 @@ iface eth0 inet static
       |                             +-- [PRE-PRIVESC SNAPSHOT]
 ```
 
-### VirtualBox CLI Commands (vboxmanage)
+### VirtualBox CLI commands (vboxmanage)
 
 ```Bash
 # Create snapshot
@@ -261,7 +261,7 @@ vboxmanage snapshot "Kali Linux" delete "pre-exploitation"
 
 ---
 
-## Reproducing the Lab
+## Reproducing the lab
 
 ### Prerequisites
 
@@ -277,7 +277,7 @@ sudo apt install virtualbox virtualbox-ext-pack
 # Windows 10:   https://www.microsoft.com/evalcenter/download-windows-10-enterprise (90-day eval ISO)
 ```
 
-### Setup Sequence
+### Setup sequence
 
 1. Import Kali Linux OVA into VirtualBox (`File > Import Appliance`)
 2. Install Windows 10 from ISO in a new VM with parameters from the table above
@@ -286,7 +286,7 @@ sudo apt install virtualbox virtualbox-ext-pack
 5. Take a base snapshot of both VMs before starting
 6. Verify connectivity with `ping` before every session
 
-### Connectivity Verification (NAT)
+### Connectivity verification (NAT)
 
 ```Bash
 # From Kali
@@ -294,7 +294,7 @@ ping 10.0.2.3 -c 3
 nmap -sn 10.0.2.3
 ```
 
-### Connectivity Verification (Bridge)
+### Connectivity verification (bridge)
 
 ```Bash
 # From Kali
@@ -302,7 +302,7 @@ ping 192.168.0.109 -c 3
 nmap -sn 192.168.0.109
 ```
 
-### Windows Target Configuration (PowerShell script - run as Administrator)
+### Windows target configuration (PowerShell script - run as administrator)
 
 ```Bash
 # Disable firewall
@@ -323,23 +323,23 @@ net localgroup "Remote Desktop Users" user1 /add
 
 ---
 
-## Containerized Web Targets (Docker Compose)
+## Containerized web targets (Docker compose)
 
 For module 03 (Web Attacks) and parts of module 02 labs, a `docker-compose.yml` is available in the repository root providing containerized web targets. This is **complementary** to the VirtualBox topology - it does not replace it.
 
-### What Docker Compose Covers
+### What Docker compose covers
 
-| Service | Port | Module | Target for |
+| service | port | module | target for |
 | :--- | :--- | :--- | :--- |
-| DVWA | `localhost:8080` | 03-web-attacks | SQLi, XSS, Command Injection, CSRF |
-| DVGA | `localhost:5013` | 03-web-attacks | GraphQL Introspection, IDOR, Batching |
-| Juice Shop | `localhost:3000` | 03-web-attacks | Full OWASP Top 10 (100+ challenges) |
+| dvwa | `localhost:8080` | 03-web-attacks | sqli, xss, command injection, csrf |
+| dvga | `localhost:5013` | 03-web-attacks | graphql introspection, idor, batching |
+| juice shop | `localhost:3000` | 03-web-attacks | full owasp top 10 (100+ challenges) |
 
-### What Still Requires VirtualBox
+### What still requires VirtualBox
 
 System Exploitation (module 04), Post-Exploitation (module 07), Wireless (module 06) labs and all Windows-based scenarios require the VMs documented in previous sections.
 
-### Quick Start
+### Quick start
 
 ```Bash
 # Start all web targets
@@ -361,7 +361,7 @@ docker compose down -v
 
 ---
 
-## Demo Recording with Asciinema
+## Demo recording with asciinema
 
 To record demonstrative terminal sessions of labs, use [asciinema](https://asciinema.org/). Recordings complement screenshots (static PoC) and show the complete operational workflow.
 
@@ -399,15 +399,15 @@ Or in Markdown format (GitHub-compatible):
 [![asciicast](https://asciinema.org/a/XXXXX.svg)](https://asciinema.org/a/XXXXX)
 ```
 
-### Recommended Labs to Record
+### Recommended labs to record
 
-| Lab | File | Target Duration |
+| lab | file | target duration |
 | :--- | :--- | :--- |
-| Nmap 3-phase scan | `01-recon/.../nmap/` | 2-3 min |
-| Manual SQLi on DVWA | `03-web-attacks/.../sql-injection/` | 3-5 min |
-| WinPEAS enumeration | `04-system-exploitation/.../winpeas/` | 2-3 min |
-| Hashcat mask attack | `04-system-exploitation/.../hashcat/` | 1-2 min |
-| Mimikatz credential dump | `07-post-exploitation/.../mimikatz/` | 2-3 min |
+| nmap 3-phase scan | `01-recon/.../nmap/` | 2-3 min |
+| manual sqli on dvwa | `03-web-attacks/.../sql-injection/` | 3-5 min |
+| winpeas enumeration | `04-system-exploitation/.../winpeas/` | 2-3 min |
+| hashcat mask attack | `04-system-exploitation/.../hashcat/` | 1-2 min |
+| mimikatz credential dump | `07-post-exploitation/.../mimikatz/` | 2-3 min |
 
 ---
 

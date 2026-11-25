@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 02 - Create a Non-Root User
+# 02 - Create a Non-Root user
 
 > - **Phase:** System Setup - Local Identity & Access Management
 > - **Priority:** High - abandoning root for daily use is a fundamental practice

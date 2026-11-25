@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 BloodHound changed the way Active Directory is attacked, shifting enumeration from static lists to a graph
 of relationships. A collector (SharpHound on Windows, bloodhound-python on Linux) gathers from LDAP and from
@@ -33,7 +33,7 @@ from here". BloodHound answers with a graph. Collection must be calibrated for O
 is relatively discreet; user-session collection (who is logged in where) requires querying many hosts over
 SMB and is noisier. A careful operator chooses the collection methods based on the acceptable noise level.
 
-## Execution / Commands
+## Execution / commands
 
 ### Collection from Linux (bloodhound-python)
 
@@ -69,7 +69,7 @@ based on what the graph reveals: the mere map is `Informational`, but the existe
 Domain Admins from a low-privilege user is effectively a higher-severity finding, to be documented in the
 specific technique the path exploits.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 BloodHound models the domain as a directed graph whose nodes are principals and whose edges are control
 relationships (MemberOf, GenericAll, WriteDacl, AddKeyCredentialLink, AllowedToDelegate, HasSession, ...).
@@ -78,7 +78,7 @@ reduction is what makes abuse chains visible: no single relationship is a vulner
 composition is. It is the practical application of the principle that AD security is a property of the whole
 authorization graph, not of individual objects.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection (SOC/SIEM).**
 - Anomalous volume of LDAP queries from a single account in a short time.
@@ -93,13 +93,13 @@ authorization graph, not of individual objects.
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `bloodhound-python` | Python collector | CLI - Active | Remote graph collection from Linux with credentials |
-| `SharpHound` | .NET collector | CLI - Active | Collection from a Windows host in the domain |
-| `BloodHound` / `BloodHound CE` | Graph analysis | GUI | Attack-path analysis, prebuilt queries |
-| `NetExec` (`nxc`) | AD/SMB toolkit | CLI - Active | Complementary collection and enumeration |
-| `AzureHound` | Collector | CLI - Active | Extension of the graph to Entra ID / Azure |
+| `bloodhound-python` | python collector | cli - active | remote graph collection from linux with credentials |
+| `SharpHound` | .net collector | cli - active | collection from a windows host in the domain |
+| `BloodHound` / `BloodHound CE` | graph analysis | gui | attack-path analysis, prebuilt queries |
+| `NetExec` (`nxc`) | ad/smb toolkit | cli - active | complementary collection and enumeration |
+| `AzureHound` | collector | cli - active | extension of the graph to entra id / azure |
 
 ## Methodology notes
 
@@ -109,19 +109,19 @@ techniques of the other subfolders.
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Discovery | Account Discovery: Domain Account | `T1087.002` | Enumeration of domain users and computers via LDAP. |
-| Discovery | Permission Groups Discovery: Domain Groups | `T1069.002` | Enumeration of groups and memberships. |
-| Discovery | Domain Trust Discovery | `T1482` | Mapping of trusts and relationships between domains/forests. |
-| Discovery | System Network Connections Discovery | `T1049` | Collection of active user sessions on hosts. |
+| discovery | account discovery: domain account | `T1087.002` | enumeration of domain users and computers via ldap. |
+| discovery | permission groups discovery: domain groups | `T1069.002` | enumeration of groups and memberships. |
+| discovery | domain trust discovery | `T1482` | mapping of trusts and relationships between domains/forests. |
+| discovery | system network connections discovery | `T1049` | collection of active user sessions on hosts. |
 
 ## Links to other modules
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
-| First domain access | BloodHound | provides the map of paths to choose the escalation technique |
-| BloodHound | [ACL abuse](<../../04-delegation-acl/acl-abuse/README.en.md>), [RBCD](<../../04-delegation-acl/rbcd/README.en.md>), [DCSync](<../../05-credential-dumping/dcsync/README.en.md>) | the identified paths indicate which abuse to chain |
+| first domain access | bloodhound | provides the map of paths to choose the escalation technique |
+| bloodhound | [acl abuse](<../../04-delegation-acl/acl-abuse/README.en.md>), [rbcd](<../../04-delegation-acl/rbcd/README.en.md>), [dcsync](<../../05-credential-dumping/dcsync/README.en.md>) | the identified paths indicate which abuse to chain |
 
 ---
 

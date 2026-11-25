@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# OSINT Passive: User Enumeration & Identity Correlation
+# OSINT passive: user enumeration & identity correlation
 
 > - **Fase:** Reconnaissance - Passive Information Gathering
 > - **Visibilita:** Zero - il tool invia richieste HTTP a piattaforme pubbliche, non al target direttamente
@@ -15,7 +15,7 @@ Strumenti: `Sherlock`
 
 ---
 
-## 1 Introduzione Teorica
+## 1 Introduzione teorica
 
 La User Enumeration passiva sfrutta la tendenza degli utenti a riutilizzare lo stesso handle (nome utente) su molteplici servizi.
 Attraverso strumenti automatizzati, è possibile interrogare centinaia di piattaforme social, forum e servizi tecnici per verificare l'esistenza di un profilo.
@@ -26,11 +26,11 @@ Utilità per il Red Team:
 
 ---
 
-## 2 Esecuzione Tecnica
+## 2 Esecuzione tecnica
 
 **ID Finding:** `OSINT-004` | **Severity:** `Basso`
 
-### Ricerca con Sherlock
+### Ricerca con sherlock
 È stato utilizzato lo strumento `Sherlock` per scansionare oltre 300 siti web alla ricerca dell'username target.
 
 ```Bash
@@ -43,7 +43,7 @@ sherlock <USERNAME>
 
 ---
 
-## 3 Analisi dei Falsi Positivi
+## 3 Analisi dei falsi positivi
 
 Durante l'analisi è fondamentale verificare manualmente i link.
 
@@ -59,9 +59,9 @@ L'impronta digitale del target e stata valutata in base al numero di piattaforme
 
 ---
 
-## Analisi a Basso Livello: Meccanica della User Enumeration e Tecniche di Rilevamento
+## Analisi a basso livello: meccanica della user enumeration e tecniche di rilevamento
 
-### Come Sherlock Verifica l'Esistenza di un Profilo
+### Come sherlock verifica l'Esistenza di un profilo
 
 Sherlock non utilizza API ufficiali delle piattaforme. Per ogni sito nel suo database (350+), lo script invia una richiesta HTTP GET all'URL del profilo costruito con il pattern specifico del sito e analizza la risposta:
 
@@ -78,13 +78,13 @@ Per ogni sito nel database:
 
 Il database di Sherlock (`sherlock/resources/data.json`) definisce per ogni sito il metodo di verifica:
 
-| Metodo | Logica | Affidabilita |
+| metodo | logica | affidabilita |
 | :--- | :--- | :--- |
-| `status_code` | 200 = esiste, 404 = non esiste | Alta (se il sito usa 404 correttamente) |
-| `message` | Cerca stringa specifica nella pagina (es. "Page not found") | Media (dipende dal layout del sito) |
-| `response_url` | Verifica redirect verso pagina di errore | Bassa (redirect chain complessi) |
+| `status_code` | 200 = esiste, 404 = non esiste | alta (se il sito usa 404 correttamente) |
+| `message` | cerca stringa specifica nella pagina (es. "page not found") | media (dipende dal layout del sito) |
+| `response_url` | verifica redirect verso pagina di errore | bassa (redirect chain complessi) |
 
-### Fonti di Falsi Positivi e Falsi Negativi
+### Fonti di falsi positivi e falsi negativi
 
 La user enumeration su larga scala e intrinsecamente imprecisa. I falsi positivi derivano da tre fonti principali:
 
@@ -111,7 +111,7 @@ sherlock <USERNAME> --timeout 10
 
 ---
 
-## Blue Team: Protezione della Digital Footprint Aziendale
+## Blue team: protezione della digital footprint aziendale
 
 **Monitoring:**
 - Eseguire periodicamente Sherlock sugli username dei dipendenti chiave (CEO, CISO, admin IT) per mappare la loro esposizione prima che lo faccia un attaccante
@@ -127,7 +127,7 @@ sherlock <USERNAME> --timeout 10
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'esecuzione di Sherlock ha prodotto una lista di circa 20-30 match su 350+ siti scansionati. La fase piu critica dell'esercizio non e stata la scansione in se (automatica e rapida), ma la validazione manuale dei risultati. Ogni match richiede una verifica: il profilo GitHub mostrava la stessa immagine e bio del target confermato, mentre un match su un forum sconosciuto si e rivelato un falso positivo (username identico ma persona diversa, confermato dall'assenza di correlazioni nei contenuti pubblicati).
 
@@ -139,10 +139,10 @@ La scelta di limitare la severity a Basso e stata dettata dal fatto che le infor
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Info: Employee Names | `T1589.003` | Correlazione identita digitale tramite Sherlock per mappare la presenza dell'username target su 300+ piattaforme (OSINT-004) |
-| Reconnaissance | Search Open Websites/Domains: Social Media | `T1593.001` | Enumerazione account social del target (GitHub, Reddit, forum) per costruire profilo utile al Social Engineering (OSINT-004) |
+| reconnaissance | gather victim identity info: employee names | `T1589.003` | correlazione identita digitale tramite sherlock per mappare la presenza dell'username target su 300+ piattaforme (OSINT-004) |
+| reconnaissance | search open websites/domains: social media | `T1593.001` | enumerazione account social del target (github, reddit, forum) per costruire profilo utile al social engineering (OSINT-004) |
 
 ---
 

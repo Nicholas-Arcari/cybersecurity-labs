@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Blind XSS / Out-of-Band (OOB) Interaction
+# Blind XSS / Out-of-Band (OOB) interaction
 
 > - **Fase:** Web Attack - Blind XSS / Out-of-Band
 > - **Visibilita:** Zero lato attaccante - il payload viene iniettato alla cieca e si attiva solo quando un'altra persona (es. admin) visualizza il dato infetto
@@ -21,9 +21,9 @@ L'obiettivo è far sì che l'applicazione vulnerabile "chiami" un server esterno
 
 ---
 
-## 2 Attack Simulation
+## 2 Attack simulation
 
-#### Payload Construction
+#### Payload construction
 
 A causa delle restrizioni di lunghezza del campo di input, è stato utilizzato un payload di HTML Injection mirato a generare una richiesta di rete verso un server di ascolto (C2).
 
@@ -49,7 +49,7 @@ Il campo Referer (`http://testphp.vulnweb.com/`) conferma che l'attacco ha avuto
 
 ---
 
-## 3 Impact Analysis
+## 3 Impact analysis
 
 Sebbene questo specifico payload non esfiltri i cookie, dimostra la capacità di:
 
@@ -58,7 +58,7 @@ Sebbene questo specifico payload non esfiltri i cookie, dimostra la capacità di
 
 ---
 
-## 4 Post-Exploitation: OSINT Analysis
+## 4 Post-Exploitation: OSINT analysis
 
 Utilizzando i dati esfiltrati (in particolare l'indirizzo IP della vittima), è possibile condurre una fase di Open Source Intelligence (OSINT) per geolocalizzare e identificare l'organizzazione target.
 
@@ -76,9 +76,9 @@ L'attaccante può risalire a:
 
 ---
 
-## Analisi a Basso Livello: Meccanica dell'Out-of-Band Interaction
+## Analisi a basso livello: meccanica dell'Out-of-Band interaction
 
-### Come Funziona il Callback OOB
+### Come funziona il callback OOB
 
 Il Blind XSS sfrutta la capacita del browser di caricare risorse esterne. Quando il tag `<img>` viene renderizzato, il browser invia automaticamente una richiesta GET:
 
@@ -105,7 +105,7 @@ Browser dell'admin carica la pagina:
     |                        - Timestamp dell'interazione        |
 ```
 
-### Escalation: Da HTML Injection a Full XSS
+### Escalation: da HTML injection a full XSS
 
 Il payload `<img src=...>` usato nel lab e HTML Injection (non JavaScript). L'escalation a full XSS utilizza:
 
@@ -130,25 +130,25 @@ Il payload `<img src=...>` usato nel lab e HTML Injection (non JavaScript). L'es
 jaVasCript:/*-/*`/*\`/*'/*"/**/(/* */oNcliCk=alert() )//
 ```
 
-### XSS Hunter vs Webhook.site
+### XSS hunter vs webhook.site
 
-| Feature | Webhook.site (usato nel lab) | XSS Hunter Pro |
+| feature | webhook.site (usato nel lab) | xss hunter pro |
 | :--- | :--- | :--- |
-| Callback HTTP | Si | Si |
-| Cookie exfiltration | No (solo se inserito nel payload) | Automatico |
-| Screenshot del browser vittima | No | Si (via html2canvas) |
-| DOM capture | No | Si (intero HTML della pagina) |
-| Notifica email | Si | Si |
-| Payload auto-generato | No | Si (tag `<script src=...>` preconfigurato) |
-| Costo | Gratuito (limitato) | Gratuito (Truffle Security) |
+| callback http | si | si |
+| cookie exfiltration | no (solo se inserito nel payload) | automatico |
+| screenshot del browser vittima | no | si (via html2canvas) |
+| dom capture | no | si (intero html della pagina) |
+| notifica email | si | si |
+| payload auto-generato | no | si (tag `<script src=...>` preconfigurato) |
+| costo | gratuito (limitato) | gratuito (truffle security) |
 
 ---
 
-## Scenario Reale: Blind XSS in Sistemi di Ticketing (WEB-007)
+## Scenario reale: blind XSS in sistemi di ticketing (WEB-007)
 
 Il Blind XSS e particolarmente pericoloso nei sistemi dove l'input dell'utente viene visualizzato in un contesto diverso (pannello admin, CRM, sistema di ticketing).
 
-### Kill Chain: Blind XSS via Support Ticket
+### Kill chain: blind XSS via support ticket
 
 ```
 Fase 1: Injection nel sistema di ticketing
@@ -184,7 +184,7 @@ Fase 5: Account Takeover dell'operatore
 
 ---
 
-## Blue Team: Detection e Protezione OOB
+## Blue team: detection e protezione OOB
 
 ### Detection
 
@@ -198,7 +198,7 @@ Fase 5: Account Takeover dell'operatore
 - **Subresource Integrity (SRI):** impedisce il caricamento di script esterni non verificati
 - **Monitoring DNS/HTTP outbound:** alert su richieste verso domini noti di XSS testing (webhook.site, xss.hunter, burpcollaborator.net)
 
-### Hardening Sistemi di Ticketing
+### Hardening sistemi di ticketing
 
 - Sanitizzare l'input dei ticket con una libreria come DOMPurify prima della renderizzazione nel pannello admin
 - Visualizzare i ticket in un iframe sandboxed: `<iframe sandbox="allow-same-origin" srcdoc="...">`
@@ -207,7 +207,7 @@ Fase 5: Account Takeover dell'operatore
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'uso di webhook.site come servizio OOB ha reso tangibile il concetto di "attacco alla cieca": il payload e stato iniettato senza alcun feedback visivo (nessun popup, nessun errore), e la conferma dell'esecuzione e arrivata solo osservando il dashboard di webhook.site. Questo e esattamente il workflow di un Blind XSS reale: l'attaccante inietta il payload e aspetta ore o giorni finche qualcuno (tipicamente un admin) non visualizza il dato infetto.
 
@@ -219,11 +219,11 @@ L'analisi OSINT post-callback (Fase 4 del lab) ha dimostrato il valore del dato 
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Injection del payload OOB (`<img src="https://webhook.site/...">`) nel campo "Address" del profilo utente, che si attiva quando l'admin visualizza il profilo (WEB-007) |
-| Collection | Browser Session Hijacking | `T1185` | Il callback OOB ricevuto su webhook.site rivela il browser e l'IP dell'amministratore, aprendo la strada al targeting specifico (WEB-007) |
-| Reconnaissance | Gather Victim Identity Information | `T1589` | Analisi dei dati OOB ricevuti (IP, User-Agent, Referer) per identificare l'ISP, la geolocalizzazione e il tipo di browser dell'admin (WEB-007) |
+| initial access | exploit public-facing application | `T1190` | injection del payload oob (`<img src="https://webhook.site/...">`) nel campo "address" del profilo utente, che si attiva quando l'admin visualizza il profilo (WEB-007) |
+| collection | browser session hijacking | `T1185` | il callback oob ricevuto su webhook.site rivela il browser e l'ip dell'amministratore, aprendo la strada al targeting specifico (WEB-007) |
+| reconnaissance | gather victim identity information | `T1589` | analisi dei dati oob ricevuti (ip, user-agent, referer) per identificare l'isp, la geolocalizzazione e il tipo di browser dell'admin (WEB-007) |
 
 ---
 

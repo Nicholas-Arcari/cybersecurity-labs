@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Wazuh - Open Source XDR Platform
+# Wazuh - open source XDR platform
 
 > - **Phase:** Defense & Hardening - Endpoint Detection & Response (XDR)
 > - **Category:** Detection + Prevention - the central defensive platform of the module
@@ -9,7 +9,7 @@
 
 ---
 
-## What Wazuh Is
+## What Wazuh is
 
 Wazuh is an open source security platform that unifies in a single solution functions that traditionally required separate tools: XDR (Extended Detection and Response) and SIEM. Born as a fork of OSSEC (a historic HIDS), Wazuh extended it with a modern analysis engine based on OpenSearch (a fork of Elasticsearch), a web dashboard and a rich set of defensive features.
 
@@ -26,7 +26,7 @@ The architecture is client-server: the **agents** installed on the endpoints (Li
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 wazuh/
@@ -39,7 +39,7 @@ wazuh/
 
 ---
 
-## Recommended Path
+## Recommended path
 
 ```
 [1] installing&configuring/
@@ -59,15 +59,15 @@ wazuh/
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Component | Role | Function |
+| component | role | function |
 | :--- | :--- | :--- |
-| `Wazuh Manager` | Analysis | Decodes logs, applies rules, generates alerts, manages active response |
-| `Wazuh Indexer` | Storage | Indexing and search (OpenSearch); RAM-hungry |
-| `Wazuh Dashboard` | Visualization | Web interface, threat hunting, management |
-| `Wazuh Agent` | Collection | Telemetry and response on the endpoints |
-| `Suricata` | Network IDS | Integrated network detection (`suricata-integration/`) |
+| `Wazuh Manager` | analysis | decodes logs, applies rules, generates alerts, manages active response |
+| `Wazuh Indexer` | storage | indexing and search (opensearch); ram-hungry |
+| `Wazuh Dashboard` | visualization | web interface, threat hunting, management |
+| `Wazuh Agent` | collection | telemetry and response on the endpoints |
+| `Suricata` | network ids | integrated network detection (`suricata-integration/`) |
 
 > **Note on the architecture:** the Indexer is the most resource-hungry component (JVM/OpenSearch). As documented in `installing&configuring/`, RAM management (limiting the JVM heap) is the main challenge of a deployment on limited hardware. It is the same constraint as the ELK Stack (`../../01-siem-log-analysis/elk-stack/`), given the common OpenSearch/Elasticsearch base.
 

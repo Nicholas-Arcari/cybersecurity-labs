@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Wireshark - Packet Analysis and Session Reconstruction
+# Wireshark - packet analysis and session reconstruction
 
 > - **Phase:** Digital Forensics & Incident Response - Network Forensics (packet analysis)
 > - **Category:** Analysis - detailed analysis of the captured traffic
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Wireshark is the detailed network traffic analysis tool: where the SIEM (`../../../08-defense-hardenings/01-siem-log-analysis/`) detects and correlates and Suricata flags, Wireshark opens afterwards, to look inside the individual packets and understand exactly what they contained. It is the last mile of network analysis: the definitive confirmation of what actually passed on the wire.
 
@@ -23,7 +23,7 @@ Finding FOR-002 documents the forensic analysis of a traffic capture: the use of
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 wireshark/
@@ -33,15 +33,15 @@ wireshark/
 
 ---
 
-## Forensic Analysis of a Traffic Capture
+## Forensic analysis of a traffic capture
 
 **Finding ID:** `FOR-002` | **Severity:** `High` (reconstruction of the attack sessions from the traffic, confirmation of exfiltration/C2 and extraction of IOCs)
 
-### Operational Context
+### Operational context
 
 A raw traffic capture contains thousands of packets, largely noise. Forensic analysis is the art of isolating the signal: Wireshark's **display filters** allow narrowing the view to only the relevant conversations, and the **Follow Stream** recomposes the fragmented packets of a TCP session into their logical sequence, making the application exchange readable.
 
-### PoC - Display filter: isolate the suspicious traffic
+### PoC - display filter: isolate the suspicious traffic
 
 ```
 # Filter: traffic toward a suspicious IP identified by the SIEM
@@ -54,7 +54,7 @@ http.request.method == "POST" and http.content_length > 100000
 dns.qry.name.len > 50
 ```
 
-### PoC - Follow TCP Stream: reconstruct the session
+### PoC - follow TCP stream: reconstruct the session
 
 ```
 # Wireshark: right-click on the packet -> Follow -> TCP Stream
@@ -67,7 +67,7 @@ Authorization: Basic YWRtaW46UGFzc3cwcmQh    <-- cleartext credentials (base64) 
 # base64 decode -> admin:Passw0rd!
 ```
 
-### PoC - C2 identification (beaconing)
+### PoC - c2 identification (beaconing)
 
 ```
 # Statistics -> Conversations: identifies the beaconing (regular connections)
@@ -82,7 +82,7 @@ ip.src == 10.0.5.15 and ip.dst == 45.83.x.x and tcp.flags.syn == 1
 # regular connection at fixed intervals = command and control channel
 ```
 
-### PoC - File and IOC extraction (tshark)
+### PoC - file and IOC extraction (tshark)
 
 ```Bash
 # Automatic extraction of the transferred objects (exfiltrated files/malware)
@@ -97,7 +97,7 @@ extracted/exfil.zip      <-- exfiltrated file recovered from the traffic (FOR-00
 45.83.x.x                <-- IOC: C2/exfiltration IP
 ```
 
-### Analysis Methodology
+### Analysis methodology
 
 - **Start from the lead:** detection (SIEM/IDS) provides the starting point (an IP, a time, an alert); the display filter narrows the capture to that context instead of navigating at random
 - **Reconstruct, do not read packet by packet:** the Follow Stream recomposes the session; the analysis happens on the conversation, not on the individual frames
@@ -106,7 +106,7 @@ extracted/exfil.zip      <-- exfiltrated file recovered from the traffic (FOR-00
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The leap in understanding was moving from the raw capture to the reconstructed session. A capture of thousands of packets is unreadable packet by packet; the first `Follow TCP Stream` that recomposed a complete HTTP conversation - request, headers, credentials, response - made Wireshark suddenly useful. I understood that the forensic analyst does not read packets, they reconstruct conversations: the packet is the unit of transport, the session is the unit of meaning.
 
@@ -116,7 +116,7 @@ The most instructive limit was encryption. Much of modern traffic is TLS, and op
 
 ---
 
-## Theoretical Analysis: Traffic as a Faithful Recording of the Events
+## Theoretical analysis: traffic as a faithful recording of the events
 
 Network traffic has a unique forensic property: it is the direct and non-alterable recording of what actually happened on the wire. While logs are a second-level representation (an application decides what to record and can be tampered with), a packet capture is the very reality of the communication, captured at the lowest level. If a datum left the network, it is in the PCAP; no application anti-forensics can erase it from an already-made capture.
 
@@ -126,7 +126,7 @@ The theoretical limit is encryption, which introduces a fundamental tension. TLS
 
 ---
 
-## Real-World Scenario: The Confirmation of the Incident
+## Real-World scenario: the confirmation of the incident
 
 > This section describes how network analysis would operate in a real incident, confirming and detailing what detection flagged.
 
@@ -163,38 +163,38 @@ IOC -> SIEM rules/blocklist -> hunt for the same threat on the other hosts
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `Wireshark` | Packet analyzer | GUI | Interactive analysis, display filters, Follow Stream |
-| `tshark` | Packet analyzer | CLI | Scriptable analysis, object/field extraction |
-| `NetworkMiner` | Network forensics | GUI | Automatic extraction of files, credentials, hosts |
-| `Zeek` (Bro) | Network analysis | Framework | Structured traffic logs for large-scale analysis |
-| `tcpdump` | Packet capture | CLI | Traffic capture (upstream of the analysis) |
-| `Suricata` | IDS | Engine | Detection that triggers the analysis (`../../../08-.../`) |
+| `Wireshark` | packet analyzer | gui | interactive analysis, display filters, follow stream |
+| `tshark` | packet analyzer | cli | scriptable analysis, object/field extraction |
+| `NetworkMiner` | network forensics | gui | automatic extraction of files, credentials, hosts |
+| `Zeek` (bro) | network analysis | framework | structured traffic logs for large-scale analysis |
+| `tcpdump` | packet capture | cli | traffic capture (upstream of the analysis) |
+| `Suricata` | ids | engine | detection that triggers the analysis (`../../../08-.../`) |
 
 > **Recommended modern tool:** `Wireshark` for interactive detailed analysis, `tshark` for automation and extraction. For large captures, `Zeek` produces structured logs (connections, DNS, HTTP, files) that make the analysis scalable - complementary to Wireshark: Zeek for the big picture, Wireshark for the detail of the single stream. `NetworkMiner` for quick automatic extraction of artifacts.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
 > The table maps the attack techniques that network analysis **reconstructs/confirms** from the traffic.
 
-| Tactic (reconstructed) | Technique | MITRE ID | Role of the analysis |
+| tactic (reconstructed) | technique | mitre id | role of the analysis |
 | :--- | :--- | :--- | :--- |
-| Command and Control | Application Layer Protocol: Web Protocols | `T1071.001` | Identification of the C2 beaconing over HTTP/S (FOR-002) |
-| Command and Control | Application Layer Protocol: DNS | `T1071.004` | Detection of DNS tunnels (anomalous queries) (FOR-002) |
-| Exfiltration | Exfiltration Over C2 Channel | `T1041` | Confirmation and quantification of the exfiltration (FOR-002) |
-| Credential Access | Network Sniffing / cleartext | `T1040` | Recovery of credentials transmitted in cleartext (FOR-002) |
-| Command and Control | Non-Standard Port | `T1571` | Identification of C2 on non-standard ports |
+| command and control | application layer protocol: web protocols | `T1071.001` | identification of the c2 beaconing over http/s (FOR-002) |
+| command and control | application layer protocol: dns | `T1071.004` | detection of dns tunnels (anomalous queries) (FOR-002) |
+| exfiltration | exfiltration over c2 channel | `T1041` | confirmation and quantification of the exfiltration (FOR-002) |
+| credential access | network sniffing / cleartext | `T1040` | recovery of credentials transmitted in cleartext (FOR-002) |
+| command and control | non-standard port | `T1571` | identification of c2 on non-standard ports |
 
-| Defensive countermeasure (D3FEND) | D3FEND ID | Application |
+| defensive countermeasure (d3fend) | d3fend id | application |
 | :--- | :--- | :--- |
-| Network Traffic Analysis | `D3-NTA` | Analysis of the traffic to reconstruct the sessions |
-| Protocol Metadata Anomaly Detection | `D3-PMAD` | Detection of beaconing/tunnels from the metadata |
-| Client-Server Payload Profiling | `D3-CSPP` | Payload profiling to identify C2/exfil |
+| network traffic analysis | `D3-NTA` | analysis of the traffic to reconstruct the sessions |
+| protocol metadata anomaly detection | `D3-PMAD` | detection of beaconing/tunnels from the metadata |
+| client-server payload profiling | `D3-CSPP` | payload profiling to identify c2/exfil |
 
 ---
 

@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 05 - Social Engineering
+# 05 - Social engineering
 
 > - **Fase:** Social Engineering - Attacco al Layer 8 (fattore umano)
 > - **Visibilita:** Variabile - da Zero (pretexting research, crafting email/landing page) ad Alta (invio email phishing, consegna payload, callback C2 post-click)
@@ -127,69 +127,69 @@ Email aziendali, organigramma, tecnologie target, domini
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `GoPhish` | Phishing platform | Web UI + CLI | Standard aziendale per campagne phishing simulate con metriche complete |
-| `Evilginx` | Reverse proxy phisher | CLI | MFA bypass in tempo reale tramite reverse proxy (session hijacking) |
-| `PyPhisher` | Automated phishing | CLI - Python | Quick testing con 77 template e 4 tunnel provider (ngrok, cloudflared) |
-| `SET` | Social engineering framework | CLI - Menu interattivo | Framework multi-vettore: website clone, spear-phishing, media, PowerShell |
-| `msfvenom` | Payload generator | CLI | Generazione payload per macro VBA, HTA, PowerShell stager |
-| `dnstwist` | Domain analysis | CLI - Python | Generazione e verifica domini typosquatting confondibili |
-| `spoofcheck` | Email audit | CLI - Python | Verifica configurazione SPF/DMARC di un dominio target |
-| `Rubber Ducky` | HID attack device | Hardware + DuckyScript | Attacco fisico: iniezione keystroke automatizzata via USB |
-| `Flask` | Web framework | Python | Sviluppo credential harvester custom e tracking server |
+| `GoPhish` | phishing platform | web ui + cli | standard aziendale per campagne phishing simulate con metriche complete |
+| `Evilginx` | reverse proxy phisher | cli | mfa bypass in tempo reale tramite reverse proxy (session hijacking) |
+| `PyPhisher` | automated phishing | cli - python | quick testing con 77 template e 4 tunnel provider (ngrok, cloudflared) |
+| `SET` | social engineering framework | cli - menu interattivo | framework multi-vettore: website clone, spear-phishing, media, powershell |
+| `msfvenom` | payload generator | cli | generazione payload per macro vba, hta, powershell stager |
+| `dnstwist` | domain analysis | cli - python | generazione e verifica domini typosquatting confondibili |
+| `spoofcheck` | email audit | cli - python | verifica configurazione spf/dmarc di un dominio target |
+| `Rubber Ducky` | hid attack device | hardware + duckyscript | attacco fisico: iniezione keystroke automatizzata via usb |
+| `Flask` | web framework | python | sviluppo credential harvester custom e tracking server |
 
 > **Tool moderno consigliato:** `Evilginx 3.x` per phishing avanzato con MFA bypass - sostituisce i phishing kit tradizionali in scenari dove il target ha MFA abilitato. `dnstwist` per typosquatting detection. `GoPhish` + `Mailhog` per testing locale senza infrastruttura SMTP esterna.
 
 ---
 
-## Registro Finding - Modulo 05
+## Registro finding - modulo 05
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `SE-001` | GoPhish campaign: credential harvesting con click rate > 30% su target simulato (20 utenti) | `Alto` | `01-phishing-campaigns/gophish/` |
-| `SE-002` | Evilginx: MFA bypass via reverse proxy - session token intercettato in tempo reale, accesso senza password | `Critico` | `01-phishing-campaigns/evilginx/` |
-| `SE-003` | SET Website Attack: credential harvester via pagina login clonata, credenziali catturate in chiaro | `Alto` | `02-social-engineer-toolkit/website-attack-vectors/` |
-| `SE-004` | SET Spear-Phishing: email con allegato .hta mascherato, esecuzione stager PowerShell | `Alto` | `02-social-engineer-toolkit/spear-phishing-vectors/` |
-| `SE-005` | SET Infectious Media: payload autorun.inf su supporto USB, esecuzione al mount | `Medio` | `02-social-engineer-toolkit/infectious-media-generator/` |
-| `SE-006` | SET PowerShell Attack: reverse shell encoded Base64, bypass execution policy | `Alto` | `02-social-engineer-toolkit/powershell-attack-vectors/` |
-| `SE-007` | Macro VBA Office: documento Word con macro che esegue stager PowerShell encoded | `Alto` | `03-payload-delivery/malicious-macros/` |
-| `SE-008` | HTML Smuggling: bypass email gateway tramite blob JavaScript download, payload .exe ricostruito lato client | `Alto` | `03-payload-delivery/html-smuggling/` |
-| `SE-009` | ISO + LNK delivery: esecuzione payload senza Mark-of-the-Web, bypass SmartScreen | `Critico` | `03-payload-delivery/iso-lnk-delivery/` |
-| `SE-010` | USB Rubber Ducky: esfiltrazione credenziali WiFi salvate in < 30 secondi tramite HID attack | `Alto` | `03-payload-delivery/usb-rubber-ducky/` |
-| `SE-011` | SPF/DKIM/DMARC audit: dominio target con DMARC policy `none` - spoofing email possibile | `Medio` | `04-email-infrastructure/spf-dkim-dmarc/` |
-| `SE-012` | Domain typosquatting: 15+ domini confondibili generati, 3 non registrati e acquistabili | `Informativo` | `04-email-infrastructure/domain-typosquatting/` |
-| `SE-013` | Target profiling OSINT: dossier completo su target (ruolo, contatti, stack tech, abitudini social) | `Informativo` | `05-pretexting-methodology/target-profiling/` |
-| `SE-014` | Credential harvester Flask: pagina login clone con logging IP/User-Agent/credenziali in tempo reale | `Alto` | `06-custom-python-tools/credential-harvester/` |
-| `SE-015` | Tracking pixel: geolocalizzazione IP del destinatario al momento dell'apertura email | `Informativo` | `06-custom-python-tools/tracking-pixel/` |
+| `SE-001` | gophish campaign: credential harvesting con click rate > 30% su target simulato (20 utenti) | `Alto` | `01-phishing-campaigns/gophish/` |
+| `SE-002` | evilginx: mfa bypass via reverse proxy - session token intercettato in tempo reale, accesso senza password | `Critico` | `01-phishing-campaigns/evilginx/` |
+| `SE-003` | set website attack: credential harvester via pagina login clonata, credenziali catturate in chiaro | `Alto` | `02-social-engineer-toolkit/website-attack-vectors/` |
+| `SE-004` | set spear-phishing: email con allegato .hta mascherato, esecuzione stager powershell | `Alto` | `02-social-engineer-toolkit/spear-phishing-vectors/` |
+| `SE-005` | set infectious media: payload autorun.inf su supporto usb, esecuzione al mount | `Medio` | `02-social-engineer-toolkit/infectious-media-generator/` |
+| `SE-006` | set powershell attack: reverse shell encoded base64, bypass execution policy | `Alto` | `02-social-engineer-toolkit/powershell-attack-vectors/` |
+| `SE-007` | macro vba office: documento word con macro che esegue stager powershell encoded | `Alto` | `03-payload-delivery/malicious-macros/` |
+| `SE-008` | html smuggling: bypass email gateway tramite blob javascript download, payload .exe ricostruito lato client | `Alto` | `03-payload-delivery/html-smuggling/` |
+| `SE-009` | iso + lnk delivery: esecuzione payload senza mark-of-the-web, bypass smartscreen | `Critico` | `03-payload-delivery/iso-lnk-delivery/` |
+| `SE-010` | usb rubber ducky: esfiltrazione credenziali wifi salvate in < 30 secondi tramite hid attack | `Alto` | `03-payload-delivery/usb-rubber-ducky/` |
+| `SE-011` | spf/dkim/dmarc audit: dominio target con dmarc policy `none` - spoofing email possibile | `Medio` | `04-email-infrastructure/spf-dkim-dmarc/` |
+| `SE-012` | domain typosquatting: 15+ domini confondibili generati, 3 non registrati e acquistabili | `Informativo` | `04-email-infrastructure/domain-typosquatting/` |
+| `SE-013` | target profiling osint: dossier completo su target (ruolo, contatti, stack tech, abitudini social) | `Informativo` | `05-pretexting-methodology/target-profiling/` |
+| `SE-014` | credential harvester flask: pagina login clone con logging ip/user-agent/credenziali in tempo reale | `Alto` | `06-custom-python-tools/credential-harvester/` |
+| `SE-015` | tracking pixel: geolocalizzazione ip del destinatario al momento dell'apertura email | `Informativo` | `06-custom-python-tools/tracking-pixel/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Information: Email Addresses | `T1589.002` | SE-013 |
-| Reconnaissance | Gather Victim Org Information: Identify Roles | `T1591.004` | SE-013 |
-| Reconnaissance | Search Open Websites/Domains | `T1593` | SE-013 |
-| Resource Development | Acquire Infrastructure: Domains | `T1583.001` | SE-012 |
-| Resource Development | Develop Capabilities: Malware | `T1587.001` | SE-007, SE-008, SE-009 |
-| Resource Development | Obtain Capabilities: Tool | `T1588.002` | SE-003, SE-004, SE-005, SE-006 |
-| Resource Development | Stage Capabilities: Upload Malware | `T1608.001` | SE-001, SE-002, SE-014 |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | SE-001, SE-002, SE-003, SE-014 |
-| Initial Access | Phishing: Spearphishing Attachment | `T1566.001` | SE-004, SE-007, SE-008, SE-009 |
-| Initial Access | Phishing: Spearphishing via Service | `T1566.003` | SE-005, SE-010 |
-| Initial Access | Replication Through Removable Media | `T1091` | SE-005, SE-010 |
-| Execution | User Execution: Malicious Link | `T1204.001` | SE-001, SE-002, SE-003, SE-014 |
-| Execution | User Execution: Malicious File | `T1204.002` | SE-004, SE-007, SE-008, SE-009 |
-| Execution | Command and Scripting Interpreter: PowerShell | `T1059.001` | SE-006, SE-007 |
-| Execution | Command and Scripting Interpreter: Visual Basic | `T1059.005` | SE-007 |
-| Defense Evasion | Subvert Trust Controls: Mark-of-the-Web Bypass | `T1553.005` | SE-009 |
-| Defense Evasion | Obfuscated Files or Information: HTML Smuggling | `T1027.006` | SE-008 |
-| Credential Access | Input Capture: Web Portal Capture | `T1056.003` | SE-001, SE-003, SE-014 |
-| Credential Access | Steal Web Session Cookie | `T1539` | SE-002 |
-| Collection | Input Capture: Credential API Hooking | `T1056.004` | SE-010 |
-| Discovery | System Information Discovery | `T1082` | SE-010, SE-015 |
+| reconnaissance | gather victim identity information: email addresses | `T1589.002` | SE-013 |
+| reconnaissance | gather victim org information: identify roles | `T1591.004` | SE-013 |
+| reconnaissance | search open websites/domains | `T1593` | SE-013 |
+| resource development | acquire infrastructure: domains | `T1583.001` | SE-012 |
+| resource development | develop capabilities: malware | `T1587.001` | SE-007, SE-008, SE-009 |
+| resource development | obtain capabilities: tool | `T1588.002` | SE-003, SE-004, SE-005, SE-006 |
+| resource development | stage capabilities: upload malware | `T1608.001` | SE-001, SE-002, SE-014 |
+| initial access | phishing: spearphishing link | `T1566.002` | SE-001, SE-002, SE-003, SE-014 |
+| initial access | phishing: spearphishing attachment | `T1566.001` | SE-004, SE-007, SE-008, SE-009 |
+| initial access | phishing: spearphishing via service | `T1566.003` | SE-005, SE-010 |
+| initial access | replication through removable media | `T1091` | SE-005, SE-010 |
+| execution | user execution: malicious link | `T1204.001` | SE-001, SE-002, SE-003, SE-014 |
+| execution | user execution: malicious file | `T1204.002` | SE-004, SE-007, SE-008, SE-009 |
+| execution | command and scripting interpreter: powershell | `T1059.001` | SE-006, SE-007 |
+| execution | command and scripting interpreter: visual basic | `T1059.005` | SE-007 |
+| defense evasion | subvert trust controls: mark-of-the-web bypass | `T1553.005` | SE-009 |
+| defense evasion | obfuscated files or information: html smuggling | `T1027.006` | SE-008 |
+| credential access | input capture: web portal capture | `T1056.003` | SE-001, SE-003, SE-014 |
+| credential access | steal web session cookie | `T1539` | SE-002 |
+| collection | input capture: credential api hooking | `T1056.004` | SE-010 |
+| discovery | system information discovery | `T1082` | SE-010, SE-015 |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# XPath Injection
+# XPath injection
 
 > - **Phase:** Web Exploitation - OWASP A03:2021 Injection (XPath query built with unsanitized input)
 > - **Visibility:** Medium - anomalous queries toward the XML/XPath parser; blind extraction generates many requests with behavioral differences
@@ -11,7 +11,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 XPath Injection is the cousin of SQL Injection for applications that use **XML documents** as the data source
 and **XPath** as the query language. When an app builds an XPath expression by concatenating user input
@@ -32,9 +32,9 @@ observe whether the query breaks or changes behavior. The next decision is betwe
 authenticates), cleartext extraction (if it reflects) or blind extraction (true/false behavioral differences), as
 in [blind SQLi](<../sql-injection (SQLi)/README.en.md>).
 
-## Execution / Commands
+## Execution / commands
 
-### Phase 1 - Confirm the vulnerability
+### Phase 1 - confirm the vulnerability
 
 A typical authentication XPath query has this form:
 
@@ -45,7 +45,7 @@ A typical authentication XPath query has this form:
 You inject a quote into the username and check whether the query breaks (XPath error) or changes behavior: a sign
 that the input reaches the expression without escape.
 
-### Phase 2 - Authentication bypass
+### Phase 2 - authentication bypass
 
 As in SQLi, you introduce an always-true condition (a tautology) that makes the password irrelevant. Payloads in
 the username field:
@@ -57,7 +57,7 @@ admin' or '1'='1         <-- forces the 'admin' user
 ' or position()=1 or '   <-- selects the first user node
 ```
 
-### Phase 3 - Blind extraction of the entire document
+### Phase 3 - blind extraction of the entire document
 
 In the absence of XPath access control, you navigate the entire XML one character at a time using `substring()`,
 `string-length()`, `count()`, `name()` and the true/false behavioral differences:
@@ -90,7 +90,7 @@ document, including usernames and passwords if stored there. The real severity i
 read); it rises toward `Critical` if the XML contains credentials reusable toward more important systems. If the
 application uses precompiled XPath with variable binding (or escapes correctly), the vector is closed.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 XPath Injection is another instance of the data/instructions problem [Su & Wassermann 2006]. The theoretical
 peculiarity is the absence of an authorization model in the language: XPath is designed to navigate a document
@@ -99,7 +99,7 @@ to SQLi, where database privileges can limit the damage. The countermeasure is s
 expression by concatenation but use parameterized XPath (bound variables, a precompiled `XPathExpression` with
 `XPathVariableResolver` in Java, `lxml` with variables in Python), plus input validation.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection (WAF/SIEM).**
 - Input containing XPath metacharacters (quotes, `[`, `]`, `or`, `and`, functions like `substring`) in the
@@ -116,11 +116,11 @@ expression by concatenation but use parameterized XPath (bound variables, a prec
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > Applies to the "auth bypass / full XML extraction" outcome (severity High/Critical).
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** an application with XML/XPath-based authentication or lookup and unsanitized input.
 
@@ -146,7 +146,7 @@ reuse when the XML stores passwords.
 
 **Typical monetization vectors:** data theft and resale; access to restricted areas; credential reuse.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** XPath metacharacters in the parameters; parser errors; blind extraction patterns.
 
@@ -167,11 +167,11 @@ separating data and code (parameterization) regardless of the engine.
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `Burp Suite` | Proxy/scanner | Web - Active | Intercepts and modifies the parameters; fuzzing of XPath metacharacters |
-| `XCat` | Exploit tool | CLI - Active | Automation of the blind extraction of an XML document via XPath injection |
-| `lxml` (Python) | XML library | Secure coding | Parameterized XPath with variables for the remediation (Blue Team) |
+| `Burp Suite` | proxy/scanner | web - active | intercepts and modifies the parameters; fuzzing of xpath metacharacters |
+| `XCat` | exploit tool | cli - active | automation of the blind extraction of an xml document via xpath injection |
+| `lxml` (python) | xml library | secure coding | parameterized xpath with variables for the remediation (blue team) |
 
 ## Methodology notes
 
@@ -182,20 +182,20 @@ didactic form.
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation of the unsanitized XPath expression on an exposed application. |
-| Collection | Data from Information Repositories | `T1213` | Extraction of the entire XML document (profiles, credentials) via XPath injection. |
+| initial access | exploit public-facing application | `T1190` | exploitation of the unsanitized xpath expression on an exposed application. |
+| collection | data from information repositories | `T1213` | extraction of the entire xml document (profiles, credentials) via xpath injection. |
 
 ---
 
 ## Links to other findings
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
-| [02-web-recon](<../../02-web-recon (Enumeration)/README.en.md>) | XPath Injection | enumeration identifies the features with an XML backend |
-| [SQL Injection](<../sql-injection (SQLi)/README.en.md>) | XPath Injection | same class (injection), different query engine; XPath without access control |
-| XPath Injection | [secure-coding-lab](<../../06-secure-coding-lab (Defense)/README.en.md>) | the remediation (parameterized XPath) links to the secure coding lab |
+| [02-web-recon](<../../02-web-recon (Enumeration)/README.en.md>) | xpath injection | enumeration identifies the features with an xml backend |
+| [sql injection](<../sql-injection (SQLi)/README.en.md>) | xpath injection | same class (injection), different query engine; xpath without access control |
+| xpath injection | [secure-coding-lab](<../../06-secure-coding-lab (Defense)/README.en.md>) | the remediation (parameterized xpath) links to the secure coding lab |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Pretext Scenarios - Social Engineering Scenario Templates
+# Pretext scenarios - social engineering scenario templates
 
 > - **Phase:** Social Engineering - Pretexting Design
 > - **Visibility:** N/A - this section documents pretext design, not execution
@@ -11,13 +11,13 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 This section provides ready-to-use pretexting scenario templates for social engineering campaigns. Each template is calibrated for a specific corporate role, exploits one or more of Cialdini's principles, and includes the variables to customize with target profiling data. Templates should never be used "as-is": contextual customization is what distinguishes generic phishing (easily recognizable) from targeted phishing (nearly indistinguishable from legitimate communication).
 
 ---
 
-## Template 1: IT Department - Password Reset (Authority + Urgency)
+## Template 1: IT department - password reset (authority + urgency)
 
 **Ideal target:** any employee
 **Principle:** Authority (IT department) + Urgency (time deadline)
@@ -47,7 +47,7 @@ IT Security Team
 
 ---
 
-## Template 2: CEO Fraud - Business Email Compromise (Authority + Reciprocity)
+## Template 2: CEO fraud - business email compromise (authority + reciprocity)
 
 **Ideal target:** CFO, Finance department, Executive Assistant
 **Principle:** Authority (CEO) + Reciprocity (personal request)
@@ -76,7 +76,7 @@ Sent from iPhone
 
 ---
 
-## Template 3: Vendor/Supplier - Invoice Update (Reciprocity + Consistency)
+## Template 3: Vendor/Supplier - invoice update (reciprocity + consistency)
 
 **Ideal target:** Accounting, Procurement, Operations
 **Principle:** Reciprocity (service already used) + Consistency (known process)
@@ -104,7 +104,7 @@ Administration
 
 ---
 
-## Template 4: HR - Confidential Document (Curiosity + Social Proof)
+## Template 4: HR - confidential document (curiosity + social proof)
 
 **Ideal target:** all employees
 **Principle:** Curiosity (confidential document) + Social Proof (already shared)
@@ -133,7 +133,7 @@ Human Resources
 
 ---
 
-## Template 5: SharePoint/OneDrive - Document Sharing (Familiarity)
+## Template 5: SharePoint/OneDrive - document sharing (familiarity)
 
 **Ideal target:** any Microsoft 365 user
 **Principle:** Familiarity (standard Microsoft notification)
@@ -158,40 +158,40 @@ Microsoft SharePoint
 
 ---
 
-## Scenario Matrix by Role
+## Scenario matrix by role
 
-| Target Role | Primary Scenario | Secondary Scenario | Dominant Principle |
+| target role | primary scenario | secondary scenario | dominant principle |
 | :--- | :--- | :--- | :--- |
-| C-Level (CEO, CFO) | Confidential board document | Vendor invoice update | Authority + Exclusivity |
-| Finance / Accounting | CEO fraud (BEC) | Vendor invoice update | Authority + Urgency |
-| HR | Application to review | Confidential bonus plan | Reciprocity + Curiosity |
-| IT / Development | Security update | GitHub/Jira notification | Authority + Familiarity |
-| Sales / Marketing | Lead shared by manager | Event/webinar invitation | Reciprocity + Social Proof |
-| Operations / Production | Corporate communication | Policy update | Authority + Consistency |
+| c-level (ceo, cfo) | confidential board document | vendor invoice update | authority + exclusivity |
+| finance / accounting | ceo fraud (bec) | vendor invoice update | authority + urgency |
+| hr | application to review | confidential bonus plan | reciprocity + curiosity |
+| it / development | security update | github/jira notification | authority + familiarity |
+| sales / marketing | lead shared by manager | event/webinar invitation | reciprocity + social proof |
+| operations / production | corporate communication | policy update | authority + consistency |
 
 ---
 
-## Anti-Patterns to Avoid in Pretexts
+## Anti-Patterns to avoid in pretexts
 
-| Anti-Pattern | Problem | Correction |
+| anti-pattern | problem | correction |
 | :--- | :--- | :--- |
-| "You won a prize!" | Too generic, nobody believes it | Use specific corporate context |
-| Intentional grammatical errors | Modern filters detect them | Write in correct language |
-| Extreme urgency ("5 minutes!") | Triggers suspicion rather than compliance | Moderate urgency (24-48 hours) |
-| Long and suspicious link | Visually recognizable | URL shortener or typosquatting domain |
-| External sender for internal communication | Immediate inconsistency | Use spoofed or typosquatting domain |
-| .exe attachment | Blocked by all gateways | Use .html (smuggling), .iso, or link |
+| "you won a prize!" | too generic, nobody believes it | use specific corporate context |
+| intentional grammatical errors | modern filters detect them | write in correct language |
+| extreme urgency ("5 minutes!") | triggers suspicion rather than compliance | moderate urgency (24-48 hours) |
+| long and suspicious link | visually recognizable | url shortener or typosquatting domain |
+| external sender for internal communication | immediate inconsistency | use spoofed or typosquatting domain |
+| .exe attachment | blocked by all gateways | use .html (smuggling), .iso, or link |
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Develop Capabilities: Malware | `T1587.001` | Development of email templates and landing pages for campaign |
-| Resource Development | Establish Accounts: Social Media Accounts | `T1585.001` | Creation of fake profiles for impersonation (CEO fraud) |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | Email template with link to customized landing page |
-| Initial Access | Phishing: Spearphishing Attachment | `T1566.001` | Email template with disguised payload attachment |
+| resource development | develop capabilities: malware | `T1587.001` | development of email templates and landing pages for campaign |
+| resource development | establish accounts: social media accounts | `T1585.001` | creation of fake profiles for impersonation (ceo fraud) |
+| initial access | phishing: spearphishing link | `T1566.002` | email template with link to customized landing page |
+| initial access | phishing: spearphishing attachment | `T1566.001` | email template with disguised payload attachment |
 
 ---
 

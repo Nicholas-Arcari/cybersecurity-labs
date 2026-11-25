@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Proxmark3 - Hardware Professionale per RFID LF/HF
+# Proxmark3 - hardware professionale per RFID LF/HF
 
 > - **Fase:** Wireless Security - Advanced Physical Access (RFID Low & High Frequency)
 > - **Visibilita:** Zero verso il sistema di controllo accessi; richiede prossimita fisica al tag/lettore
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Il Proxmark3 e lo strumento professionale di riferimento per la sicurezza RFID: dove i lettori economici come l'ACR122U (`../nfc-tools/`) si limitano al MIFARE Classic HF a 13.56 MHz, il Proxmark3 copre l'intero spettro RFID - sia Low Frequency (125/134 kHz: EM4100, HID Prox, Indala) sia High Frequency (13.56 MHz: MIFARE, iCLASS, DESFire) - e aggiunge capacita che i lettori consumer non hanno: sniffing delle transazioni, emulazione di tag senza hardware fisico, e attacchi avanzati ai sistemi protetti.
 
@@ -31,7 +31,7 @@ proxmark3-client/
 
 ---
 
-## Lettura e Clonazione LF (EM4100)
+## Lettura e clonazione LF (EM4100)
 
 **ID Finding:** `WIFI-012` | **Severity:** `Alto` (badge Low Frequency letto e clonato - accesso fisico; EM4100 privo di qualsiasi autenticazione)
 
@@ -39,7 +39,7 @@ proxmark3-client/
 
 L'EM4100 e una delle tecnologie RFID piu diffuse e piu deboli: un tag read-only a 125 kHz che trasmette in loop un identificativo a 40 bit, senza cifratura ne autenticazione. Il Proxmark3 lo legge e ne scrive una copia su un tag T5577 (tag LF riscrivibile), producendo un clone in pochi secondi.
 
-### PoC - Fase 1: Identificazione e lettura LF
+### PoC - fase 1: identificazione e lettura LF
 
 ```Bash
 # Avvio del client Proxmark3
@@ -55,7 +55,7 @@ pm3
 [+] Valid EM410x ID found!
 ```
 
-### PoC - Fase 2: Clonazione su tag T5577
+### PoC - fase 2: clonazione su tag T5577
 
 ```Bash
 # Scrittura dell'ID letto su un tag T5577 riscrivibile
@@ -68,7 +68,7 @@ pm3
 [?] Hint: try `lf search` to verify
 ```
 
-### PoC - Fase 3: Emulazione (senza tag fisico)
+### PoC - fase 3: emulazione (senza tag fisico)
 
 ```Bash
 # Il Proxmark3 puo emulare direttamente il badge, senza scrivere alcun tag
@@ -90,7 +90,7 @@ L'emulazione permette di presentarsi al lettore di controllo accessi direttament
 
 ---
 
-## Sniffing delle Transazioni
+## Sniffing delle transazioni
 
 ### Contesto operativo
 
@@ -113,7 +113,7 @@ Oltre alla lettura diretta del tag, il Proxmark3 puo intercettare (sniffing) la 
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il Proxmark3 ha colmato esattamente il limite che l'ACR122U aveva mostrato in `../nfc-tools/`: la gestione del Low Frequency. Il badge EM4100 di test, invisibile all'ACR122U, e stato letto e clonato dal Proxmark3 in un'unica sessione di pochi secondi. Questo ha reso concreta una realta del controllo accessi aziendale: molte installazioni usano ancora LF, e la loro sicurezza e persino inferiore a quella del MIFARE Classic, perche manca del tutto l'autenticazione.
 
@@ -123,7 +123,7 @@ La funzione piu istruttiva e stata l'emulazione: la capacita del Proxmark3 di "d
 
 ---
 
-## Analisi Teorica: Lo Spettro di Debolezza delle Tecnologie RFID
+## Analisi teorica: lo spettro di debolezza delle tecnologie RFID
 
 Le tecnologie RFID formano uno spettro di sicurezza che va dal completamente aperto al crittograficamente robusto, e il Proxmark3, coprendo tutto lo spettro, permette di apprezzarne le differenze:
 
@@ -137,11 +137,11 @@ La progressione tecnologica riflette l'evoluzione del modello di minaccia. LF na
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Questa sezione descrive come questo finding si inserirebbe in un engagement reale, sia dal punto di vista dell'attaccante (Red Team) che del difensore (Blue Team).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** capacita di clonare o emulare badge RFID LF/HF, incluse le tecnologie che i lettori consumer non gestiscono (WIFI-012).
 
@@ -164,7 +164,7 @@ Foothold interno -> pivoting di rete (07-post-exploitation)
 
 **Impatto potenziale:** il Proxmark3 estende la capacita di clonazione a tutte le tecnologie RFID, incluse quelle piu diffuse nel controllo accessi legacy (LF). L'emulazione elimina persino la necessita di un tag fisico. In un red team di sicurezza fisica, uno strumento tascabile che clona qualsiasi badge letto (anche via sniffing a distanza dal lettore) e il grimaldello universale. Il vettore alimenta l'accesso alla rete interna e si combina con il social engineering per ottenere la prossimita necessaria.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** come per la clonazione MIFARE, il clone/emulazione e trasparente al lettore. La difesa e nell'analisi dei log e nella correlazione con altri sistemi (videosorveglianza, presenze).
 
@@ -188,14 +188,14 @@ Foothold interno -> pivoting di rete (07-post-exploitation)
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Proxmark3 RDV4` | RFID multi-tool | Hardware + client | LF+HF: lettura, clonazione, sniffing, emulazione (riferimento professionale) |
-| `Iceman firmware` | PM3 firmware | Firmware | Firmware community standard, piu comandi e tecnologie del firmware ufficiale |
-| `pm3 client` | RFID CLI | CLI | Interfaccia a comandi per tutte le operazioni RFID |
-| Tag T5577 | Hardware | - | Tag LF riscrivibile per i cloni Low Frequency |
-| `Flipper Zero` | Portable multi-tool | Hardware | LF/HF lettura ed emulazione in form factor tascabile |
-| `ACR122U` | NFC reader | Hardware | Solo HF MIFARE Classic (`../nfc-tools/`); non gestisce LF |
+| `Proxmark3 RDV4` | rfid multi-tool | hardware + client | lf+hf: lettura, clonazione, sniffing, emulazione (riferimento professionale) |
+| `Iceman firmware` | pm3 firmware | firmware | firmware community standard, piu comandi e tecnologie del firmware ufficiale |
+| `pm3 client` | rfid cli | cli | interfaccia a comandi per tutte le operazioni rfid |
+| tag T5577 | hardware | - | tag lf riscrivibile per i cloni Low frequency |
+| `Flipper Zero` | portable multi-tool | hardware | lf/hf lettura ed emulazione in form factor tascabile |
+| `ACR122U` | nfc reader | hardware | solo hf mifare classic (`../nfc-tools/`); non gestisce lf |
 
 > **Tool moderno consigliato:** il `Proxmark3 RDV4` con firmware `Iceman` e lo standard professionale per la sicurezza RFID completa. Il `Flipper Zero` e l'alternativa tascabile per gli scenari LF/HF comuni e le dimostrazioni sul campo, con un'usabilita superiore a fronte di capacita leggermente ridotte sui tag piu protetti.
 
@@ -203,13 +203,13 @@ Foothold interno -> pivoting di rete (07-post-exploitation)
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Host Information | `T1592` | Identificazione della tecnologia RFID (LF/HF) del badge tramite `lf/hf search` (WIFI-012) |
-| Credential Access | Network Sniffing | `T1040` | Sniffing della transazione tra lettore e badge (WIFI-012) |
-| Defense Evasion | Impersonation | `T1656` | Clonazione/emulazione del badge per impersonare il titolare (WIFI-012) |
-| Initial Access | Hardware Additions | `T1200` | Utilizzo del Proxmark3 (clone o emulazione) per l'accesso fisico non autorizzato (WIFI-012) |
-| Initial Access | Valid Accounts: Local Accounts | `T1078.003` | Il badge clonato/emulato equivale a una credenziale di accesso valida del titolare |
+| reconnaissance | gather victim host information | `T1592` | identificazione della tecnologia rfid (lf/hf) del badge tramite `lf/hf search` (WIFI-012) |
+| credential access | network sniffing | `T1040` | sniffing della transazione tra lettore e badge (WIFI-012) |
+| defense evasion | impersonation | `T1656` | clonazione/emulazione del badge per impersonare il titolare (WIFI-012) |
+| initial access | hardware additions | `T1200` | utilizzo del proxmark3 (clone o emulazione) per l'accesso fisico non autorizzato (WIFI-012) |
+| initial access | valid accounts: local accounts | `T1078.003` | il badge clonato/emulato equivale a una credenziale di accesso valida del titolare |
 
 ---
 

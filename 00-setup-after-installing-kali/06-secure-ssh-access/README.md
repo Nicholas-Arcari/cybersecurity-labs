@@ -57,13 +57,13 @@ Il file `/var/log/auth.log` si riempira di migliaia di tentativi di accesso fall
 
 ## Tool di riferimento
 
-| Parametro `sshd_config` | Descrizione |
+| parametro `sshd_config` | descrizione |
 | :--- | :--- |
-| `Port` | Porta di ascolto del demone SSH |
-| `PermitRootLogin no` | Blocca login diretto come root (richiede utente standard + sudo) |
-| `MaxAuthTries 3` | Massimo 3 tentativi per connessione prima del reset |
-| `AllowUsers [nome]` | Whitelist: solo gli utenti elencati possono autenticarsi |
-| `PubkeyAuthentication yes` | Abilita autenticazione con chiave pubblica/privata (piu sicura di password) |
+| `Port` | porta di ascolto del demone ssh |
+| `PermitRootLogin no` | blocca login diretto come root (richiede utente standard + sudo) |
+| `MaxAuthTries 3` | massimo 3 tentativi per connessione prima del reset |
+| `AllowUsers [nome]` | whitelist: solo gli utenti elencati possono autenticarsi |
+| `PubkeyAuthentication yes` | abilita autenticazione con chiave pubblica/privata (piu sicura di password) |
 
 ---
 

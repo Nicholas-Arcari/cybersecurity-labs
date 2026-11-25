@@ -1,6 +1,6 @@
 > **English** | [Italiano](THEORETICAL-FOUNDATIONS.md)
 
-# Theoretical Foundations - Module 03: Web Attacks
+# Theoretical foundations - module 03: web attacks
 
 > - **Level:** Academic analysis (theoretical complement to the operational READMEs of the module)
 > - **Purpose:** Formalize injection as linguistic confusion between data and code, the web attacker model, and CSRF/SSRF as instances of the confused deputy.
@@ -14,7 +14,7 @@ Web vulnerabilities are often cataloged empirically (SQLi, XSS, CSRF, SSRF). Thi
 
 ---
 
-## 1. The Adversary Model
+## 1. The adversary model
 
 The **web attacker** model formalized by [Akhawe et al. 2010] is adopted, weaker than the Dolev-Yao network attacker but more realistic for the web domain. The web attacker:
 
@@ -27,7 +27,7 @@ This restriction is what makes the web attacker interesting: many web vulnerabil
 
 ---
 
-## 2. Security Properties at Stake
+## 2. Security properties at stake
 
 - **Data/code separation:** untrusted input must never be interpreted as an instruction. It is the property violated by all injection families (SQLi, command injection, XSS as code injection in the DOM).
 - **Intention-based authorization:** a privileged action must be executed only if actually intended by the authorized principal, not merely if the request is syntactically valid. It is the property violated by the confused deputy (CSRF, SSRF).
@@ -35,7 +35,7 @@ This restriction is what makes the web attacker interesting: many web vulnerabil
 
 ---
 
-## 3. Theoretical Foundations
+## 3. Theoretical foundations
 
 ### 3.1 Injection as data/code confusion (linguistic formalization)
 
@@ -55,13 +55,13 @@ The theoretical consequence is strong: countermeasures that act on the string (e
 
 The theoretical unification is that both violate the **intention-based authorization** (section 2): the request is valid but not intended. The confused deputy shows that authentication (who presents the authority) is insufficient without the verification of intention (who wanted the action).
 
-### 3.3 Complete mediation and Same-Origin Policy
+### 3.3 Complete mediation and Same-Origin policy
 
 The Same-Origin Policy is an instance of the principle of **complete mediation** of [Saltzer & Schroeder 1975]: every access to a resource must be verified. The browser mediates every cross-origin access according to the origin (scheme, host, port) of the requesting context. CORS configuration vulnerabilities are, in this frame, loosenings of complete mediation that reopen the channel the SOP was closing.
 
 ---
 
-## 4. Quantitative Analysis
+## 4. Quantitative analysis
 
 ### 4.1 Taint propagation and information flow
 
@@ -73,13 +73,13 @@ The escaping/blacklist approach is quantitatively disadvantageous: the defender 
 
 ---
 
-## 5. Literature Review
+## 5. Literature review
 
 The formalization of injection follows [Su & Wassermann 2006], who gave it a precise linguistic characterization and a parse-tree-based detection method. The adversary model and web properties derive from [Akhawe et al. 2010], the foundational reference of the formal analysis of web security. The defense against CSRF is rigorously analyzed by [Barth et al. 2008]. The framing of CSRF/SSRF as a confused deputy goes back to [Hardy 1988]. The countermeasures as complete mediation and least privilege appeal to [Saltzer & Schroeder 1975]. The empirical catalog of the classes (OWASP Top 10) provides the complementary operational taxonomy.
 
 ---
 
-## 6. Limitations and Open Problems
+## 6. Limitations and open problems
 
 1. **Undecidability of flow analysis.** As for module 02, the exact detection of taint-to-sink flows is undecidable in the general case; the tools (SAST) remain approximations.
 
@@ -89,7 +89,7 @@ The formalization of injection follows [Su & Wassermann 2006], who gave it a pre
 
 ---
 
-## 7. Synthesis and Connection to Practice
+## 7. Synthesis and connection to practice
 
 The `WEB-` findings of the module map onto this framework: the injection families (SQLi, command injection, XSS) are instances of the data/code confusion of section 3.1, and the remediation recommended in the READMEs (prepared statements, context-aware output encoding) is the operational translation of the structural solution; CSRF and SSRF are confused deputies (section 3.2), with the defenses (tokens, SameSite, destination allowlist) as a restoration of intention-based authorization. The link to module 10 is direct and theoretically motivated: the SSRF that steals the cloud metadata service token is the same confused deputy, moved to the server. The document provides the module's secure-coding practice with the formal justification of why structural countermeasures (which eliminate the class) are superior to syntactic ones (which chase the instances).
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Container Image Scanning - CVEs in Docker Images
+# Container image scanning - CVEs in Docker images
 
 > - **Phase:** Cloud Security - Container Security (Supply Chain / Vulnerability Management)
 > - **Category:** Defensive - static analysis of the images before deployment
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 A Docker image is not an atomic artifact: it is a stack of layers that includes a base operating system, libraries, application dependencies and the code. Each of these strata can contain known vulnerabilities (CVE), and an image "pulled" from a registry - even an official one - inherits all the vulnerabilities of its components. Image scanning is the static analysis that identifies them before the image is deployed to production.
 
@@ -22,7 +22,7 @@ The value is preventive and integrates into the CI/CD pipeline: an automatic sca
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 image-scanning/
@@ -32,15 +32,15 @@ image-scanning/
 
 ---
 
-## Image Scanning with Trivy
+## Image scanning with trivy
 
 **Finding ID:** `CLOUD-005` | **Severity:** `Medium` (detection of known vulnerabilities in the images before deployment; the real severity depends on the CVEs found)
 
-### Operational Context
+### Operational context
 
 Trivy scans an image layer by layer, identifies the installed packages (OS and application) and compares them with the CVE databases. The result is a list of vulnerabilities with severity, affected version and version that fixes them - an action list for patching.
 
-### PoC - Scanning an image
+### PoC - scanning an image
 
 ```Bash
 # Complete scan of an image (OS CVEs + application dependencies)
@@ -56,7 +56,7 @@ openssl        CVE-2022-....   CRITICAL   1.1.1k      1.1.1n      OpenSSL infini
 libc6          CVE-2021-....   HIGH       2.31        2.31-13     glibc buffer overflow
 ```
 
-### PoC - Layer analysis (Dive)
+### PoC - layer analysis (dive)
 
 ```Bash
 # Dive: analyzes the layers to understand where the vulnerabilities/waste are introduced
@@ -79,7 +79,7 @@ trivy image --exit-code 1 --severity CRITICAL imagename:tag
 [!] exit code 1: CRITICAL CVEs present -> build blocked   <-- vulnerable deploy prevented (CLOUD-005)
 ```
 
-### Remediation and Operations
+### Remediation and operations
 
 - **Minimal and updated base images:** starting from small (distroless, alpine) and updated images drastically reduces the surface; many CVEs disappear by updating the base layer
 - **Patching guided by the fixed version:** Trivy indicates the version that fixes; update the dependencies to that version
@@ -88,7 +88,7 @@ trivy image --exit-code 1 --severity CRITICAL imagename:tag
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The most immediate lesson was how much vulnerability an "innocent" image carries. An image based on an outdated version of Debian, downloaded without thinking, carried dozens of CVEs inherited from the base system - none introduced by my code, all from the foundations. This made concrete the concept of supply chain: the security of a container is not just the code I put in, but everything I inherit from the underlying layers.
 
@@ -98,7 +98,7 @@ The integration into CI/CD closed the loop of preventive value. A `trivy image -
 
 ---
 
-## Theoretical Analysis: Supply Chain and Inherited Security
+## Theoretical analysis: supply chain and inherited security
 
 A container embodies the principle that security is inherited along the supply chain. The final image is the sum of components the author did not write: the base system, the system libraries, the language dependencies, the third-party packages. Each is a potential vector, and the security of the whole is no better than that of its most vulnerable component. The application code, often the only one the author focuses on, is frequently the smallest part of the surface.
 
@@ -108,32 +108,32 @@ The shift-left principle reflects an economics of correction: a CVE found at the
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `Trivy` | Vulnerability scanner | Defensive | CVE scanning of images, filesystem, IaC (standard) |
-| `Grype` | Vulnerability scanner | Defensive | Alternative to Trivy, SBOM integration (Syft) |
-| `Clair` | Vulnerability scanner | Defensive | Static scanning integrated in the registries |
-| `Dive` | Layer analysis | Analysis | Inspection of the layers, optimization and package origin |
-| `Docker Scout` | Vulnerability scanner | Defensive | Scanner integrated in Docker |
+| `Trivy` | vulnerability scanner | defensive | cve scanning of images, filesystem, iac (standard) |
+| `Grype` | vulnerability scanner | defensive | alternative to trivy, sbom integration (syft) |
+| `Clair` | vulnerability scanner | defensive | static scanning integrated in the registries |
+| `Dive` | layer analysis | analysis | inspection of the layers, optimization and package origin |
+| `Docker Scout` | vulnerability scanner | defensive | scanner integrated in docker |
 
 > **Recommended modern tool:** `Trivy` (Aqua Security) is the de facto standard: lightweight, fast, it scans images, filesystems, repositories and IaC, and integrates into every CI/CD pipeline. `Dive` as a complement to understand the origin of the problems in the layers. See also `../../Tooling/`.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic (prevented) | Technique | MITRE ID | Role of the control |
+| tactic (prevented) | technique | mitre id | role of the control |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Supply Chain Compromise | `T1195` | Detection of vulnerable components in the images (CLOUD-005) |
-| Execution | Exploitation for Client Execution | `T1203` | Prevention of the exploitation of known CVEs in containers |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Reduction of the exploitable surface in exposed containers |
+| initial access | supply chain compromise | `T1195` | detection of vulnerable components in the images (CLOUD-005) |
+| execution | exploitation for client execution | `T1203` | prevention of the exploitation of known cves in containers |
+| initial access | exploit public-facing application | `T1190` | reduction of the exploitable surface in exposed containers |
 
-| Defensive countermeasure (D3FEND) | D3FEND ID | Application |
+| defensive countermeasure (d3fend) | d3fend id | application |
 | :--- | :--- | :--- |
-| Application Vulnerability Assessment | `D3-AVA` | Scanning of the images for known vulnerabilities |
-| Software Update | `D3-SU` | Patching guided by the fixed versions indicated by Trivy |
+| application vulnerability assessment | `D3-AVA` | scanning of the images for known vulnerabilities |
+| software update | `D3-SU` | patching guided by the fixed versions indicated by trivy |
 
 ---
 

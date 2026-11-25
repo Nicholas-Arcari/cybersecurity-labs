@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# JWT Authentication Mechanism
+# JWT authentication mechanism
 
 > - **Phase:** Web Attack - API Security (JWT)
 > - **Visibility:** Low - JWT signature brute force is offline, no requests to the server during the cracking phase
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 During the analysis of the target application's authentication mechanism, a critical vulnerability was identified in the session token management (JWT - JSON Web Tokens).
 
@@ -23,7 +23,7 @@ Impact: An attacker can impersonate any user, including the administrator, gaini
 
 ---
 
-## 2 Technical Vulnerability Details
+## 2 Technical vulnerability details
 Description
 
 The application issues JWT tokens signed with the HS256 algorithm (HMAC with SHA-256). This is a symmetric algorithm, meaning the same key is used both to sign and to verify the token.
@@ -67,7 +67,7 @@ When the forged token is sent to the application, it is accepted as authentic an
 
 ---
 
-## 3 Root Cause Analysis (Vulnerable Code)
+## 3 Root cause analysis (vulnerable code)
 
 Below is the analysis of the Python code responsible for the vulnerability.
 
@@ -90,11 +90,11 @@ def create_token(user):
 
 ---
 
-## 4 Remediation (Secure Coding)
+## 4 Remediation (secure coding)
 
 To mitigate this vulnerability, two possible approaches are recommended.
 
-#### Solution A: Strong Secret (If HS256 is retained)
+#### Solution a: strong secret (if HS256 is retained)
 
 If HS256 must be used, the key must be a high-entropy random string (minimum 32-64 characters) and must never be written in the code, but loaded from environment variables.
 
@@ -114,7 +114,7 @@ def create_token(user):
     # ... same logic ...
 ```
 
-#### Solution B: Asymmetric Cryptography (RS256) - Recommended
+#### Solution b: asymmetric cryptography (RS256) - recommended
 
 The best approach for distributed systems is to use a key pair (Private for signing, Public for verifying). Even if an attacker finds the public key, they cannot create new tokens.
 
@@ -142,13 +142,13 @@ Immediate rotation of cryptographic keys and adoption of environment variables f
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Brute Force: Password Cracking | `T1110.002` | Offline brute force of the HMAC-SHA256 signature of the JWT token using `jwt_cracker.py` with a dictionary, recovering the key `secret123` (WEB-012) |
-| Defense Evasion | Use Alternate Authentication Material | `T1550` | Use of the forged JWT token with payload `{"role": "admin"}` and recalculated signature to access administrative functionality (WEB-012) |
-| Lateral Movement | Valid Accounts: Cloud Accounts | `T1078.003` | Impersonation of the admin account through a forged JWT token, gaining complete access to the application (WEB-012) |
+| credential access | brute force: password cracking | `T1110.002` | offline brute force of the hmac-sha256 signature of the jwt token using `jwt_cracker.py` with a dictionary, recovering the key `secret123` (WEB-012) |
+| defense evasion | use alternate authentication material | `T1550` | use of the forged jwt token with payload `{"role": "admin"}` and recalculated signature to access administrative functionality (WEB-012) |
+| lateral movement | valid accounts: cloud accounts | `T1078.003` | impersonation of the admin account through a forged jwt token, gaining complete access to the application (WEB-012) |
 
 ---
 

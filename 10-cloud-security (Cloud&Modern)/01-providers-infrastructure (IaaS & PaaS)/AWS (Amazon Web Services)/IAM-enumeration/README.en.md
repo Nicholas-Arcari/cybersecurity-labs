@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# AWS IAM Enumeration & Privilege Escalation
+# AWS IAM enumeration & privilege escalation
 
 > - **Phase:** Cloud Security - Identity Attack (AWS IAM)
 > - **Visibility:** Medium - API calls are recorded in CloudTrail; enumeration generates `Describe`/`List`/`Get` events visible to an attentive defender
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 In the cloud, identity is the new perimeter. There is no longer a border firewall to get past: whoever holds a valid credential is "inside", and what they can do depends entirely on the IAM (Identity and Access Management) permissions associated with that credential. Attacking cloud infrastructure is therefore, first of all, an attack on identity: obtaining a credential, understanding what it allows and turning a limited access into an administrative one.
 
@@ -23,7 +23,7 @@ The reference model is the **Shared Responsibility Model**: AWS protects the inf
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 IAM-enumeration/
@@ -33,15 +33,15 @@ IAM-enumeration/
 
 ---
 
-## Permission Enumeration and Privilege Escalation
+## Permission enumeration and privilege escalation
 
 **Finding ID:** `CLOUD-001` | **Severity:** `Critical` (an IAM privilege escalation chain leads from a limited credential to administrator of the account)
 
-### Operational Context
+### Operational context
 
 Once a credential is obtained, the first question is "who am I and what can I do?". `aws sts get-caller-identity` answers the first; the enumeration of the permissions the second. Since IAM is often configured too permissively, the analysis of the permissions frequently reveals an escalation path: a seemingly harmless permission (`iam:PassRole`, `iam:CreatePolicyVersion`, `lambda:CreateFunction`) that, combined, allows elevation to admin.
 
-### PoC - Phase 1: Identity identification
+### PoC - phase 1: identity identification
 
 ```Bash
 # Who am I? (identity associated with the compromised credentials)
@@ -56,7 +56,7 @@ aws sts get-caller-identity
 }
 ```
 
-### PoC - Phase 2: Permission enumeration
+### PoC - phase 2: permission enumeration
 
 ```Bash
 # Brute enumeration of the accessible APIs (enumerate-iam)
@@ -70,7 +70,7 @@ python3 enumerate-iam.py --access-key AKIA... --secret-key ...
 [+] s3.list_buckets                   -> ALLOWED
 ```
 
-### PoC - Phase 3: Privilege Escalation path
+### PoC - phase 3: privilege escalation path
 
 ```Bash
 # The user can create a new version of a policy attached to it:
@@ -87,7 +87,7 @@ aws iam create-policy-version \
 [+] svc-deploy now has full administrative privileges   <-- account takeover (CLOUD-001)
 ```
 
-### PoC - Automation with Pacu
+### PoC - automation with Pacu
 
 ```Bash
 # Pacu ("Metasploit for AWS") automates enumeration and privesc
@@ -111,7 +111,7 @@ pacu
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The paradigm shift compared to the on-premise modules was stark. In Linux/Windows privilege escalation (module 04) I looked for SUID, kernel exploits, misconfigured services; here the entire attack was API calls to an identity service. There was no "system" to break into, only permissions to query and chain. This made concrete the mantra "identity is the new perimeter": cloud security is, in very large part, the correctness of the IAM configuration.
 
@@ -121,7 +121,7 @@ Pacu made the attack almost trivial, but the real lesson was defensive. Running 
 
 ---
 
-## Theoretical Analysis: Identity as the Attack Surface
+## Theoretical analysis: identity as the attack surface
 
 The cloud dissolves the traditional network perimeter. On-premise, the defense is stratified geographically: perimeter firewall, segmentation, then the host. In the cloud, every service is a public API endpoint and the only access control is identity: whoever presents a valid credential is authorized for what that credential allows. There is no network "inside" and "outside"; there is only "what this identity can do". The perimeter is no longer spatial but logical, defined by the IAM policies.
 
@@ -131,11 +131,11 @@ The complexity of IAM is structurally its Achilles' heel. With hundreds of servi
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > This section describes how this finding would fit into a real engagement, from both the attacker (Red Team) and defender (Blue Team) perspectives.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** administrative privileges on the AWS account obtained via IAM privesc from a limited credential (CLOUD-001).
 
@@ -161,7 +161,7 @@ Exfiltration / destruction / resource abuse (cryptomining)
 
 **Potential impact:** administrative control of a cloud account is equivalent to on-premise Domain Admin, but with the difference that everything is accessible via API from anywhere. The attacker can exfiltrate entire datastores, create persistence that is hard to spot (an access key among thousands), and abuse the resources (cryptomining on expensive instances is a common monetization vector). In documented cloud breaches, the path credential-leak, IAM privesc, data exfiltration is the dominant pattern.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** CloudTrail records every API call. Massive enumeration (`List`/`Describe`) and the use of privesc APIs (`CreatePolicyVersion`, `AttachUserPolicy`) are detectable with GuardDuty or custom rules on the CloudTrail log.
 
@@ -183,32 +183,32 @@ Exfiltration / destruction / resource abuse (cryptomining)
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `aws-cli` | Cloud CLI | Official | Interaction with the AWS APIs, manual enumeration |
-| `enumerate-iam` | Permission enum | Offensive | Brute of the APIs accessible from a credential |
-| `Pacu` | Exploitation framework | Offensive | "Metasploit for AWS": enum, privesc, persistence |
-| `ScoutSuite` | Multi-cloud audit | Defensive | Audit of the configuration (`../../../Tooling/scoutsuite/`) |
-| `Prowler` | Security scanner | Defensive | Hundreds of checks, privesc chains (`../../../Tooling/prowler/`) |
-| `PMapper` | IAM graph analysis | Defensive | Permission graph to identify the escalation paths |
+| `aws-cli` | cloud cli | official | interaction with the aws apis, manual enumeration |
+| `enumerate-iam` | permission enum | offensive | brute of the apis accessible from a credential |
+| `Pacu` | exploitation framework | offensive | "metasploit for aws": enum, privesc, persistence |
+| `ScoutSuite` | multi-cloud audit | defensive | audit of the configuration (`../../../Tooling/scoutsuite/`) |
+| `Prowler` | security scanner | defensive | hundreds of checks, privesc chains (`../../../Tooling/prowler/`) |
+| `PMapper` | iam graph analysis | defensive | permission graph to identify the escalation paths |
 
 > **Recommended modern tool:** offensively `Pacu` for exploitation and `enumerate-iam` for quick recon. Defensively `Prowler` and `ScoutSuite` for the audit and `PMapper` for graph analysis of the IAM privesc paths. The symmetry is the point: the same paths the attacker looks for, the defender closes with these tools.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
 > Reference: MITRE ATT&CK for Cloud (IaaS).
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Discovery | Cloud Infrastructure Discovery | `T1580` | Enumeration of the resources and permissions of the account (CLOUD-001) |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | Escalation to administrative privileges via IAM (CLOUD-001) |
-| Persistence | Account Manipulation: Additional Cloud Credentials | `T1098.001` | Creation of new persistence credentials |
-| Discovery | Permission Groups Discovery: Cloud Groups | `T1069.003` | Enumeration of the IAM policies and groups |
-| Defense Evasion | Modify Cloud Compute Infrastructure | `T1578` | Modification of the IAM policies for the escalation |
+| discovery | cloud infrastructure discovery | `T1580` | enumeration of the resources and permissions of the account (CLOUD-001) |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | escalation to administrative privileges via iam (CLOUD-001) |
+| persistence | account manipulation: additional cloud credentials | `T1098.001` | creation of new persistence credentials |
+| discovery | permission groups discovery: cloud groups | `T1069.003` | enumeration of the iam policies and groups |
+| defense evasion | modify cloud compute infrastructure | `T1578` | modification of the iam policies for the escalation |
 
 ---
 

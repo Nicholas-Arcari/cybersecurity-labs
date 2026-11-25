@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 08 - Install Monitoring Tools
+# 08 - Install monitoring tools
 
 > - **Phase:** System Setup - System Health Monitoring
 > - **Priority:** Medium - essential for intensive work sessions (long scans, forensic analysis)
@@ -47,16 +47,16 @@ The system could freeze from full disk or out-of-memory during a critical analys
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Main Use Case |
+| tool | type | main use case |
 | :--- | :--- | :--- |
-| `glances` | Terminal dashboard | Real-time CPU/RAM/disk/network monitoring in a single view |
-| `htop` | Process monitor | Interactive process management with filters and signals |
-| `iostat` | Disk I/O monitor | Disk performance analysis during intensive scans |
-| `iftop` | Network monitor | Real-time per-host network traffic |
-| `Zabbix agent` | Monitoring agent | Integration with Zabbix server for centralized monitoring |
-| `Prometheus + Grafana` | Monitoring stack | Advanced dashboards with alerting for more complex environments |
+| `glances` | terminal dashboard | real-time cpu/ram/disk/network monitoring in a single view |
+| `htop` | process monitor | interactive process management with filters and signals |
+| `iostat` | disk i/o monitor | disk performance analysis during intensive scans |
+| `iftop` | network monitor | real-time per-host network traffic |
+| `Zabbix agent` | monitoring agent | integration with zabbix server for centralized monitoring |
+| `Prometheus + Grafana` | monitoring stack | advanced dashboards with alerting for more complex environments |
 
 ---
 

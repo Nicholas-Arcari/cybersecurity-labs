@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Web Recon: Tech Profiling & Fingerprinting
+# Web recon: tech profiling & fingerprinting
 
 > - **Fase:** Web Attack - Technology Fingerprinting
 > - **Visibilita:** Bassa - richieste HTTP standard simili a normale navigazione browser
@@ -21,7 +21,7 @@ Strumenti: `WhatWeb` (CLI), `Wappalyzer` (Browser Extension)
 
 ---
 
-## 1 Introduzione Teorica
+## 1 Introduzione teorica
 
 Il Fingerprinting è l'arte di capire "di cosa è fatto" un sito web analizzando le risposte del server.
 
@@ -52,19 +52,19 @@ Perché un Red Teamer vuole sapere queste cose?
         
 ---
 
-## 2 Strumenti Utilizzati
+## 2 Strumenti utilizzati
 
-### WhatWeb (Active Scanner)
+### WhatWeb (Active scanner)
 
 Strumento a riga di comando preinstallato su Kali Linux. Esegue una scansione rapida identificando CMS, piattaforme di blogging, librerie JavaScript e server web. Supporta diversi livelli di aggressività.
 
-### Wappalyzer (Passive)
+### Wappalyzer (passive)
 
 Utilizzato solitamente come estensione del browser, identifica le tecnologie analizzando passivamente la pagina caricata. Utile per una verifica visiva immediata senza inviare pacchetti di scansione sospetti.
 
 ---
 
-## 3 Esecuzione Tecnica: WhatWeb Scan
+## 3 Esecuzione tecnica: WhatWeb scan
 
 È stata eseguita una scansione dettagliata (`-v`) contro il target per estrarre le versioni software.
 
@@ -90,11 +90,11 @@ Il Tech Profiling ha confermato che il target gira su un'infrastruttura legacy (
 
 ---
 
-## 5 Scenari Speciali: Localhost & Static Sites
+## 5 Scenari speciali: localhost & static sites
 
 Il Tech Profiling assume significati diversi a seconda dell'ambiente target.
 
-#### A. Localhost / Docker (Hardening)
+#### A. localhost / Docker (hardening)
 
 Lanciando WhatWeb contro ambienti di sviluppo locali (`localhost:5173`), l'obiettivo non è l'attacco ma l'Hardening.
 
@@ -102,7 +102,7 @@ I framework moderni (es. Express.js, Flask, Spring Boot) espongono di default he
 
 Best Practice: Identificare questi leak in locale permette allo sviluppatore di disabilitarli (es. `app.disable('x-powered-by')` in Express) prima del deploy in produzione.
 
-#### B. Static Hosting (GitHub Pages)
+#### B. static hosting (GitHub pages)
 
 Analizzando siti statici come `https://nicholas-arcari.github.io`, il server web è gestito dal provider (GitHub) e quindi fuori dallo scope di attacco.
 L'attenzione si sposta sulle Librerie Client-Side.
@@ -111,9 +111,9 @@ WhatWeb e Wappalyzer sono fondamentali per rilevare versioni obsolete di libreri
 
 ---
 
-## Analisi a Basso Livello: Vettori di Fingerprinting e Information Disclosure
+## Analisi a basso livello: vettori di fingerprinting e information disclosure
 
-### Fonti di Informazione nel Response HTTP
+### Fonti di informazione nel response HTTP
 
 Ogni risposta HTTP contiene molteplici vettori di fingerprinting:
 
@@ -135,39 +135,39 @@ ETag: "5f3c8a6d-1234"                    <-- Formato rivela il web server
 </head>
 ```
 
-### Catena di CVE da Fingerprinting: PHP 5.6.40
+### Catena di CVE da fingerprinting: PHP 5.6.40
 
 Il finding WEB-002 (PHP 5.6.40) e particolarmente critico perche questa versione e in End of Life dal 31 dicembre 2018. Le CVE note includono:
 
-| CVE | CVSS | Impatto | Classe |
+| cve | cvss | impatto | classe |
 | :--- | :--- | :--- | :--- |
-| CVE-2019-11043 | 9.8 | Remote Code Execution via path_info in php-fpm | RCE |
-| CVE-2019-11041 | 7.1 | Heap buffer over-read in EXIF parsing | Information Disclosure |
-| CVE-2018-20783 | 7.5 | Buffer over-read in phar_parse_pharfile | DoS/Info Leak |
-| CVE-2016-5385 | 8.1 | HTTPoxy - HTTP_PROXY env injection | SSRF/RCE |
+| CVE-2019-11043 | 9.8 | remote code execution via path_info in php-fpm | rce |
+| CVE-2019-11041 | 7.1 | heap buffer over-read in exif parsing | information disclosure |
+| CVE-2018-20783 | 7.5 | buffer over-read in phar_parse_pharfile | dos/info leak |
+| CVE-2016-5385 | 8.1 | httpoxy - http_proxy env injection | ssrf/rce |
 
 Un attaccante che identifica PHP 5.6.40 tramite WhatWeb puo immediatamente consultare queste CVE e selezionare l'exploit appropriato.
 
-### WhatWeb: Livelli di Aggressivita e Plugin Engine
+### WhatWeb: livelli di aggressivita e plugin engine
 
 WhatWeb utilizza un sistema di plugin (1.800+) con 4 livelli di aggressivita:
 
-| Livello | Flag | Richieste | Detection | Rischio rilevamento |
+| livello | flag | richieste | detection | rischio rilevamento |
 | :--- | :--- | :--- | :--- | :--- |
-| 1 (Passive) | `-a 1` | 1 GET (solo root) | Header + body della homepage | Minimo |
-| 2 | `-a 2` | GET root + follow redirect | + header redirect + cookie | Basso |
-| 3 (Aggressive) | `-a 3` | + GET su path noti | + /robots.txt, /favicon.ico, /wp-login.php | Medio |
-| 4 (Heavy) | `-a 4` | Brute force path per ogni plugin | + test specifici per ogni tecnologia | Alto |
+| 1 (passive) | `-a 1` | 1 get (solo root) | header + body della homepage | minimo |
+| 2 | `-a 2` | get root + follow redirect | + header redirect + cookie | Basso |
+| 3 (aggressive) | `-a 3` | + get su path noti | + /robots.txt, /favicon.ico, /wp-login.php | Medio |
+| 4 (heavy) | `-a 4` | brute force path per ogni plugin | + test specifici per ogni tecnologia | Alto |
 
 Nel lab, il livello default (1) e stato sufficiente perche il target non aveva WAF e gli header HTTP rivelavano tutto. Su target protetti (come tesla.com nel lab infrastructure-intel), il livello 1 viene bloccato dal WAF e servono tecniche passive (Wappalyzer).
 
 ---
 
-## Scenario Reale: Da Information Disclosure a RCE (WEB-002)
+## Scenario reale: da information disclosure a RCE (WEB-002)
 
 Il finding WEB-002 (PHP 5.6.40 + header X-Powered-By) e il punto di partenza per una kill chain che porta a Remote Code Execution.
 
-### Kill Chain: Version Disclosure, CVE, RCE
+### Kill chain: version disclosure, CVE, RCE
 
 ```
 Fase 1: Fingerprinting (WEB-002)
@@ -201,9 +201,9 @@ Fase 5: Post-Exploitation
 
 ---
 
-## Blue Team: Hardening degli Header e Monitoring
+## Blue team: hardening degli header e monitoring
 
-### Rimozione Information Disclosure
+### Rimozione information disclosure
 
 ```Bash
 # Nginx: rimuovere versione server
@@ -232,7 +232,7 @@ server.server-header=
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il finding piu immediato e stato l'header `X-Powered-By: PHP/5.6.40`: un singolo header HTTP ha rivelato che il target esegue una versione di PHP fuori supporto da oltre 7 anni, con decine di CVE note. In un assessment reale, questo finding da solo giustifica una raccomandazione di upgrade urgente, indipendentemente dalle altre vulnerabilita.
 
@@ -244,10 +244,10 @@ La distinzione tra fingerprinting attivo e passivo e cruciale quando si opera co
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | Tech profiling con WhatWeb e Wappalyzer per identificare PHP 5.6.40, Nginx 1.19.0 e lo stack tecnologico completo di `testphp.vulnweb.com` (WEB-002) |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Analisi degli header HTTP (es. `X-Powered-By: PHP/5.6.40`) per mappare le versioni software e identificare CVE applicabili (WEB-002) |
+| reconnaissance | gather victim host info: software | `T1592.002` | tech profiling con whatweb e wappalyzer per identificare php 5.6.40, nginx 1.19.0 e lo stack tecnologico completo di `testphp.vulnweb.com` (WEB-002) |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | analisi degli header http (es. `X-Powered-By: PHP/5.6.40`) per mappare le versioni software e identificare cve applicabili (WEB-002) |
 
 ---
 

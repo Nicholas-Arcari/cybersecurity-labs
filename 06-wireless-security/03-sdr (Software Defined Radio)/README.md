@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 03 - SDR (Software Defined Radio)
+# 03 - SDR (software defined radio)
 
 > - **Fase:** Wireless Security - Attacco allo spettro RF tramite Software Defined Radio
 > - **Visibilita:** Zero in ricezione (passiva pura); Media in trasmissione (replay, injection)
@@ -73,39 +73,39 @@ Il principio conduttore e che l'assenza di cifratura al layer RF e la norma nel 
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `RTL-SDR` | SDR RX only | Hardware | Ricezione economica per analisi (non trasmette) |
-| `HackRF One` | SDR TX/RX | Hardware | Cattura e ritrasmissione full-duplex (1 MHz - 6 GHz) |
-| `GQRX` | SDR receiver | GUI | Visualizzazione waterfall, identificazione frequenze |
-| `Universal Radio Hacker` | Signal analyzer | GUI | Demodulazione e reverse engineering protocolli |
-| `rtl_433` | Protocol decoder | CLI | Decodifica automatica di 200+ dispositivi ISM |
-| `GNU Radio` | DSP framework | GUI - Flowgraph | Elaborazione del segnale personalizzata |
-| `Flipper Zero` | Portable multi-tool | Hardware | Cattura e replay sub-GHz portatile sul campo |
+| `RTL-SDR` | sdr rx only | hardware | ricezione economica per analisi (non trasmette) |
+| `HackRF One` | sdr tx/rx | hardware | cattura e ritrasmissione full-duplex (1 mhz - 6 ghz) |
+| `GQRX` | sdr receiver | gui | visualizzazione waterfall, identificazione frequenze |
+| `Universal Radio Hacker` | signal analyzer | gui | demodulazione e reverse engineering protocolli |
+| `rtl_433` | protocol decoder | cli | decodifica automatica di 200+ dispositivi ism |
+| `GNU Radio` | dsp framework | gui - flowgraph | elaborazione del segnale personalizzata |
+| `Flipper Zero` | portable multi-tool | hardware | cattura e replay sub-ghz portatile sul campo |
 
 > **Tool moderno consigliato:** `Universal Radio Hacker` per l'analisi (cattura+demod+generazione in un flusso), `HackRF One` per la flessibilita RX/TX in laboratorio, `Flipper Zero` per il recon e replay sub-GHz sul campo. Attenzione alla normativa sulle trasmissioni.
 
 ---
 
-## Registro Finding - Sezione SDR
+## Registro finding - sezione SDR
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `WIFI-008` | Telemetria RF in chiaro intercettata; segnale caratterizzato e struttura del payload rivelata | `Informativo` | `signal-analysis/` |
-| `WIFI-009` | Replay attack su telecomando a codice fisso: azionamento non autorizzato di un cancello di test | `Alto` | `replay-attacks/` |
+| `WIFI-008` | telemetria rf in chiaro intercettata; segnale caratterizzato e struttura del payload rivelata | `Informativo` | `signal-analysis/` |
+| `WIFI-009` | replay attack su telecomando a codice fisso: azionamento non autorizzato di un cancello di test | `Alto` | `replay-attacks/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Host Information | `T1592` | WIFI-008 |
-| Credential Access | Network Sniffing | `T1040` | WIFI-008, WIFI-009 |
-| Collection | Data from Information Repositories | `T1213` | WIFI-008 |
-| Collection | Adversary-in-the-Middle | `T1557` | WIFI-009 |
-| Initial Access | Hardware Additions | `T1200` | WIFI-009 |
-| Impact (ICS) | Manipulation of Control | `T0831` | WIFI-009 |
+| reconnaissance | gather victim host information | `T1592` | WIFI-008 |
+| credential access | network sniffing | `T1040` | WIFI-008, WIFI-009 |
+| collection | data from information repositories | `T1213` | WIFI-008 |
+| collection | adversary-in-the-middle | `T1557` | WIFI-009 |
+| initial access | hardware additions | `T1200` | WIFI-009 |
+| impact (ics) | manipulation of control | `T0831` | WIFI-009 |
 
 ---
 

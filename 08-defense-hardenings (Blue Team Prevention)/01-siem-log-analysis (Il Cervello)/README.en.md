@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 01 - SIEM & Log Analysis (The Brain)
+# 01 - SIEM & log analysis (the brain)
 
 > - **Phase:** Defense & Hardening - Detection & Correlation
 > - **Category:** Detection - the nerve center of the defense
@@ -25,7 +25,7 @@ The positioning in the defensive path: the SIEM receives the alerts from the too
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 01-siem-log-analysis (Il Cervello)/
@@ -37,7 +37,7 @@ The positioning in the defensive path: the SIEM receives the alerts from the too
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [INPUT] Logs from endpoints, firewalls, servers, Wazuh, Suricata
@@ -65,40 +65,40 @@ The positioning in the defensive path: the SIEM receives the alerts from the too
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `ELK Stack` | Open source SIEM | Platform | Free and flexible detection and log analysis |
-| `Splunk` | Commercial SIEM | Platform | SPL correlation and enterprise detection |
-| `Filebeat`/`Winlogbeat` | Log shipper | Agent | Log forwarding from endpoints (ELK) |
-| `Universal Forwarder` | Log shipper | Agent | Log forwarding from endpoints (Splunk) |
-| `Sysmon` | Endpoint sensor | Agent (Win) | Process telemetry for advanced detection |
+| `ELK Stack` | open source siem | platform | free and flexible detection and log analysis |
+| `Splunk` | commercial siem | platform | spl correlation and enterprise detection |
+| `Filebeat`/`Winlogbeat` | log shipper | agent | log forwarding from endpoints (elk) |
+| `Universal Forwarder` | log shipper | agent | log forwarding from endpoints (splunk) |
+| `Sysmon` | endpoint sensor | agent (win) | process telemetry for advanced detection |
 
 > **Recommended modern tool:** for learning and constrained budgets, `ELK Stack` with the Elastic Security module (native MITRE rules). For the enterprise, `Splunk ES`. In both cases, `Sysmon` on the Windows endpoints enormously enriches the correlatable telemetry.
 
 ---
 
-## Finding Registry - SIEM & Log Analysis Section
+## Finding registry - SIEM & log analysis section
 
-| ID | Description | Severity | Subfolder |
+| id | description | severity | subfolder |
 | :--- | :--- | :---: | :--- |
-| `DEF-001` | ELK Stack: log centralization and detection (SSH brute force) | `High` | `elk-stack/` |
-| `DEF-002` | Splunk: multi-source correlation via SPL (scan -> access kill chain) | `High` | `splunk/` |
+| `DEF-001` | elk stack: log centralization and detection (ssh brute force) | `High` | `elk-stack/` |
+| `DEF-002` | splunk: multi-source correlation via spl (scan -> access kill chain) | `High` | `splunk/` |
 
 ---
 
-## MITRE ATT&CK Mapping - Aggregated
+## MITRE ATT&CK mapping - aggregated
 
 > Attack techniques **detected** by the controls of the section.
 
-| Tactic (detected) | Technique | MITRE ID | Related Finding |
+| tactic (detected) | technique | mitre id | related finding |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Brute Force | `T1110` | DEF-001, DEF-002 |
-| Reconnaissance | Active Scanning | `T1595` | DEF-002 |
-| Initial Access | Valid Accounts | `T1078` | DEF-001, DEF-002 |
-| Lateral Movement | Remote Services | `T1021` | DEF-002 |
-| Defense Evasion | Indicator Removal: Clear Logs | `T1070` | DEF-001 (real-time forwarding defeats deletion) |
+| credential access | brute force | `T1110` | DEF-001, DEF-002 |
+| reconnaissance | active scanning | `T1595` | DEF-002 |
+| initial access | valid accounts | `T1078` | DEF-001, DEF-002 |
+| lateral movement | remote services | `T1021` | DEF-002 |
+| defense evasion | indicator removal: clear logs | `T1070` | DEF-001 (real-time forwarding defeats deletion) |
 
 ---
 

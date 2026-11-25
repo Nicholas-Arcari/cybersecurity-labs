@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 01 - SIEM & Log Analysis (Il Cervello)
+# 01 - SIEM & log analysis (il cervello)
 
 > - **Fase:** Defense & Hardening - Detection & Correlation
 > - **Categoria:** Detection - il centro nervoso della difesa
@@ -67,38 +67,38 @@ Il posizionamento nel percorso difensivo: il SIEM riceve gli alert dagli strumen
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `ELK Stack` | SIEM open source | Piattaforma | Detection e log analysis gratuita e flessibile |
-| `Splunk` | SIEM commerciale | Piattaforma | Correlazione SPL e detection enterprise |
-| `Filebeat`/`Winlogbeat` | Log shipper | Agent | Inoltro log da endpoint (ELK) |
-| `Universal Forwarder` | Log shipper | Agent | Inoltro log da endpoint (Splunk) |
-| `Sysmon` | Endpoint sensor | Agent (Win) | Telemetria di processo per detection avanzata |
+| `ELK Stack` | siem open source | piattaforma | detection e log analysis gratuita e flessibile |
+| `Splunk` | siem commerciale | piattaforma | correlazione spl e detection enterprise |
+| `Filebeat`/`Winlogbeat` | log shipper | agent | inoltro log da endpoint (elk) |
+| `Universal Forwarder` | log shipper | agent | inoltro log da endpoint (splunk) |
+| `Sysmon` | endpoint sensor | agent (win) | telemetria di processo per detection avanzata |
 
 > **Tool moderno consigliato:** per l'apprendimento e i budget contenuti, `ELK Stack` con il modulo Elastic Security (regole MITRE native). Per l'enterprise, `Splunk ES`. In entrambi i casi, `Sysmon` sugli endpoint Windows arricchisce enormemente la telemetria correlabile.
 
 ---
 
-## Registro Finding - Sezione SIEM & Log Analysis
+## Registro finding - sezione SIEM & log analysis
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `DEF-001` | ELK Stack: centralizzazione dei log e detection (brute force SSH) | `Alto` | `elk-stack/` |
-| `DEF-002` | Splunk: correlazione multi-sorgente via SPL (kill chain scan -> accesso) | `Alto` | `splunk/` |
+| `DEF-001` | elk stack: centralizzazione dei log e detection (brute force ssh) | `Alto` | `elk-stack/` |
+| `DEF-002` | splunk: correlazione multi-sorgente via spl (kill chain scan -> accesso) | `Alto` | `splunk/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
 > Tecniche d'attacco **rilevate** dai controlli della sezione.
 
-| Tattica (rilevata) | Tecnica | ID MITRE | Finding Correlato |
+| tattica (rilevata) | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Brute Force | `T1110` | DEF-001, DEF-002 |
-| Reconnaissance | Active Scanning | `T1595` | DEF-002 |
-| Initial Access | Valid Accounts | `T1078` | DEF-001, DEF-002 |
-| Lateral Movement | Remote Services | `T1021` | DEF-002 |
-| Defense Evasion | Indicator Removal: Clear Logs | `T1070` | DEF-001 (l'inoltro in tempo reale vanifica la cancellazione) |
+| credential access | brute force | `T1110` | DEF-001, DEF-002 |
+| reconnaissance | active scanning | `T1595` | DEF-002 |
+| initial access | valid accounts | `T1078` | DEF-001, DEF-002 |
+| lateral movement | remote services | `T1021` | DEF-002 |
+| defense evasion | indicator removal: clear logs | `T1070` | DEF-001 (l'inoltro in tempo reale vanifica la cancellazione) |
 
 ---
 

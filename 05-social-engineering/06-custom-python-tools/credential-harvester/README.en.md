@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Credential Harvester - Flask Custom Login Page
+# Credential harvester - flask custom login page
 
 > - **Phase:** Social Engineering - Custom Credential Harvesting
 > - **Visibility:** Medium - the Flask server generates HTTP logs; the landing page is visible to URL reputation scanners; the domain/IP is traceable
@@ -14,17 +14,17 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 The custom Flask credential harvester offers maximum control over capture logic compared to integrated tools (GoPhish credential harvester, SET site cloner). The main advantage is customization: conditional redirect logic (show "wrong password" error to obtain a second attempt), structured JSON logging with complete metadata, integration with any delivery framework, and the ability to add a second form to capture the MFA code (OTP phishing).
 
 ---
 
-## Credential Harvester: Flask Login Clone
+## Credential harvester: flask login clone
 
 **Finding ID:** `SE-014` | **Severity:** `High`
 
-### PoC - Phase 1: Login Page Cloning
+### PoC - phase 1: login page cloning
 
 ```Bash
 # Target page cloning with wget
@@ -35,7 +35,7 @@ wget --mirror --convert-links --page-requisites --no-parent \
 # Ctrl+S -> "Web page, complete" -> save to templates/
 ```
 
-### PoC - Phase 2: Flask Server
+### PoC - phase 2: flask server
 
 ```python
 # app.py
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=False)
 ```
 
-### PoC - Phase 3: Execution and Capture
+### PoC - phase 3: execution and capture
 
 ```Bash
 sudo python3 app.py
@@ -104,7 +104,7 @@ sudo python3 app.py
 
 ---
 
-## Lab Experience
+## Lab experience
 
 Login page cloning was the most delicate phase. The first attempt with `wget --mirror` produced a functional page but with references to external resources (CSS, JS from CDN) that generated mixed content warnings in HTTPS. The solution was to download all resources locally and update the paths in the HTML template.
 
@@ -112,7 +112,7 @@ The most critical design point was the post-capture redirect. A redirect to the 
 
 ---
 
-## Theoretical Analysis: Custom vs Framework
+## Theoretical analysis: custom vs framework
 
 The advantage of a custom tool over GoPhish is not power (GoPhish has superior metrics), but flexibility. Scenarios that require a custom harvester:
 - **MFA phishing (without Evilginx):** a second form that captures the OTP code after username+password
@@ -121,11 +121,11 @@ The advantage of a custom tool over GoPhish is not power (GoPhish has superior m
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > This section describes how this finding would fit into a real engagement.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Projected Kill Chain:**
 
@@ -142,20 +142,20 @@ Account takeover -> corporate service access
 BEC / Lateral Movement -> extended compromise
 ```
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **IOC:** login from anomalous IP; uncategorized URL visited by multiple users; user report of "wrong password" after clicking email link.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Develop Capabilities: Malware | `T1587.001` | Custom Flask credential harvester development |
-| Resource Development | Stage Capabilities: Upload Malware | `T1608.001` | Server deployment on attacker infrastructure |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | Link to Flask landing page sent via email |
-| Credential Access | Input Capture: Web Portal Capture | `T1056.003` | Username and password capture from cloned page (SE-014) |
+| resource development | develop capabilities: malware | `T1587.001` | custom flask credential harvester development |
+| resource development | stage capabilities: upload malware | `T1608.001` | server deployment on attacker infrastructure |
+| initial access | phishing: spearphishing link | `T1566.002` | link to flask landing page sent via email |
+| credential access | input capture: web portal capture | `T1056.003` | username and password capture from cloned page (SE-014) |
 
 ---
 

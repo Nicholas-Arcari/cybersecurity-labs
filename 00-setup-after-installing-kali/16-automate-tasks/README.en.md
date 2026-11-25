@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 16 - Automate Log Backup
+# 16 - Automate log backup
 
 > - **Phase:** System Setup - Log Management & Forensic Readiness
 > - **Priority:** High - logs are unrepeatable forensic evidence

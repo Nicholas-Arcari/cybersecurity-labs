@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 20 - Setup Logwatch (System Monitoring Report)
+# 20 - Setup logwatch (system monitoring report)
 
 > - **Phase:** System Setup - Log Aggregation & Security Reporting
 > - **Priority:** Medium - transforms log fatigue into actionable intelligence
@@ -70,15 +70,15 @@ Every day (or at the configured frequency) you receive a summary that includes: 
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Use Case |
+| tool | type | use case |
 | :--- | :--- | :--- |
-| `Logwatch` | Log aggregator | Daily summary report from `/var/log` |
-| `GoAccess` | Web log analyzer | Real-time Apache/Nginx log analysis with dashboard |
-| `fail2ban` | Automatic ban | Block IPs after N failed attempts (complementary to Logwatch) |
-| `logcheck` | Log alert | Lightweight Logwatch alternative, sends only anomalous lines |
-| `Splunk Free` | SIEM | Ingestion, indexing and advanced dashboards for high log volumes |
+| `Logwatch` | log aggregator | daily summary report from `/var/log` |
+| `GoAccess` | web log analyzer | real-time apache/nginx log analysis with dashboard |
+| `fail2ban` | automatic ban | block ips after n failed attempts (complementary to logwatch) |
+| `logcheck` | log alert | lightweight logwatch alternative, sends only anomalous lines |
+| `Splunk Free` | siem | ingestion, indexing and advanced dashboards for high log volumes |
 
 ---
 

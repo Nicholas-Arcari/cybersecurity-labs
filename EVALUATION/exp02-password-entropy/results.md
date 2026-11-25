@@ -1,6 +1,6 @@
 > [English](results.en.md) | **Italiano**
 
-# Risultati - Esperimento B (entropia di guessing vs Shannon)
+# Risultati - esperimento b (entropia di guessing vs shannon)
 
 Output verbatim di `guessing_entropy.py` (deterministico, riproducibile). Numeri **calcolati**
 esattamente sul modello Zipf, non stimati.

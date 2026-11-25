@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Manual SQL Injection (SQLi)
+# Manual SQL injection (SQLi)
 
 > - **Fase:** Web Attack - SQL Injection (Manual)
 > - **Visibilita:** Media - richieste HTTP con payload SQL nel parametro URL o nel corpo POST
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 Durante l'attività di Security Assessment eseguita sul target `testphp.vulnweb.com`, sono state individuate molteplici vulnerabilità critiche di tipo SQL Injection (SQLi).
 
@@ -27,9 +27,9 @@ Il livello di rischio è valutato come CRITICO poiché la compromissione è tota
 
 ---
 
-## 2 Technical Analysis
+## 2 Technical analysis
 
-#### Scenario A: Authentication Bypass (Login)
+#### Scenario a: authentication bypass (login)
 
 Il modulo di login non sanitizza correttamente l'input utente, permettendo l'iniezione di frammenti SQL che alterano la logica della query di autenticazione.
 
@@ -61,7 +61,7 @@ Evidenza:
 
 Accesso eseguito con successo alla dashboard amministrativa.
 
-#### Scenario B: UNION Based Injection (Data Extraction)
+#### Scenario b: UNION based injection (data extraction)
 
 L'endpoint `artists.php` tramite il parametro GET `artist` è vulnerabile a UNION-Based SQL Injection. Questo permette di unire i risultati della query originale con i risultati di una query iniettata dall'attaccante.
 
@@ -91,7 +91,7 @@ Scenario C: Database Dumping (The Kill Chain)
 
 Sfruttando la vulnerabilità UNION, è stata eseguita l'esfiltrazione completa dello schema del database e dei dati sensibili.
 
-#### Step 1: Enumerazione Tabelle
+#### Step 1: enumerazione tabelle
 
 Accesso alla tabella di sistema `information_schema.tables` per elencare tutte le tabelle presenti.
 
@@ -107,7 +107,7 @@ Risultato: `artists, carts, categ, featured, guestbook, pictures, products, user
 
 La tabella `users` è stata identificata come target di alto valore.
 
-#### Step 2: Enumerazione Colonne
+#### Step 2: enumerazione colonne
 
 Accesso a `information_schema.columns` per scoprire la struttura della tabella `users`.
 
@@ -121,7 +121,7 @@ http://testphp.vulnweb.com/artists.php?artist=-1 UNION SELECT 1, group_concat(co
 
 Risultato: `uname, pass, cc, address, email, name, phone`.
 
-#### Step 3: Data Exfiltration (Dump Finale)
+#### Step 3: data exfiltration (dump finale)
 
 Estrazione massiva di username e password dalla tabella users.
 
@@ -144,7 +144,7 @@ Il server restituisce le credenziali in chiaro direttamente nella pagina, dimost
 
 ---
 
-## 3 Remediation Strategy (Difesa)
+## 3 Remediation strategy (difesa)
 
 Per mitigare le vulnerabilità identificate, si raccomanda l'adozione immediata delle seguenti pratiche di Secure Coding:
 
@@ -177,9 +177,9 @@ Come misura di difesa in profondità, implementare un WAF per rilevare e bloccar
 
 ---
 
-## Analisi a Basso Livello: Meccanica della UNION Injection
+## Analisi a basso livello: meccanica della UNION injection
 
-### Come Funziona ORDER BY per Contare le Colonne
+### Come funziona ORDER BY per contare le colonne
 
 ```
 Query originale del server:
@@ -204,20 +204,20 @@ INPUT: -1 UNION SELECT 1,version(),user()
 -> Colonna 3 mostra 'acuart@localhost' (utente DB)
 ```
 
-### MySQL vs PostgreSQL vs MSSQL: Differenze Sintattiche
+### MySQL vs PostgreSQL vs MSSQL: differenze sintattiche
 
-| Operazione | MySQL | PostgreSQL | MSSQL |
+| operazione | mysql | postgresql | mssql |
 | :--- | :--- | :--- | :--- |
-| Commento | `#` o `-- -` | `--` | `--` |
-| Concatenazione | `CONCAT(a,b)` | `a \|\| b` | `a + b` |
-| Versione | `version()` | `version()` | `@@version` |
-| Current DB | `database()` | `current_database()` | `db_name()` |
-| Elenco tabelle | `information_schema.tables` | `information_schema.tables` | `information_schema.tables` |
-| Sleep | `SLEEP(5)` | `pg_sleep(5)` | `WAITFOR DELAY '0:0:5'` |
-| Stacked queries | Si (con mysqli_multi_query) | Si | Si |
-| File read | `LOAD_FILE('/etc/passwd')` | `pg_read_file()` | `OPENROWSET(BULK...)` |
+| commento | `#` o `-- -` | `--` | `--` |
+| concatenazione | `CONCAT(a,b)` | `a \|\| b` | `a + b` |
+| versione | `version()` | `version()` | `@@version` |
+| current db | `database()` | `current_database()` | `db_name()` |
+| elenco tabelle | `information_schema.tables` | `information_schema.tables` | `information_schema.tables` |
+| sleep | `SLEEP(5)` | `pg_sleep(5)` | `WAITFOR DELAY '0:0:5'` |
+| stacked queries | si (con mysqli_multi_query) | si | si |
+| file read | `LOAD_FILE('/etc/passwd')` | `pg_read_file()` | `OPENROWSET(BULK...)` |
 
-### Auth Bypass: Varianti del Payload
+### Auth bypass: varianti del payload
 
 ```sql
 -- Payload base
@@ -236,7 +236,7 @@ Dopo injection:  SELECT * FROM users WHERE user='admin' # AND pass='...'
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 La progressione da Auth Bypass (Scenario A) a UNION Injection (Scenario B) a Database Dumping (Scenario C) ha dimostrato la kill chain completa della SQL injection manuale. Ogni fase dipende dalla precedente: il bypass conferma la vulnerabilita, la UNION identifica la struttura del database, e il dump estrae i dati. Saltare una fase (ad esempio tentare il dump senza conoscere il numero di colonne) produce errori che possono allertare i sistemi di difesa.
 
@@ -248,11 +248,11 @@ Il confronto con SQLMap (WEB-011) ha evidenziato il valore dell'injection manual
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation della SQL Injection sul form di login (`admin' #`) e sul parametro `artist` di `testphp.vulnweb.com` per ottenere accesso non autorizzato (WEB-004) |
-| Discovery | Account Discovery: Local Account | `T1087.001` | Enumerazione degli utenti del database tramite `information_schema.tables` e recupero della struttura della tabella `users` (WEB-004) |
-| Collection | Data from Information Repositories | `T1213` | Dump completo della tabella `users` contenente credenziali (`test:test`), email, numeri di telefono e dati di carte di credito tramite UNION-based injection (WEB-004) |
+| initial access | exploit public-facing application | `T1190` | exploitation della sql injection sul form di login (`admin' #`) e sul parametro `artist` di `testphp.vulnweb.com` per ottenere accesso non autorizzato (WEB-004) |
+| discovery | account discovery: local account | `T1087.001` | enumerazione degli utenti del database tramite `information_schema.tables` e recupero della struttura della tabella `users` (WEB-004) |
+| collection | data from information repositories | `T1213` | dump completo della tabella `users` contenente credenziali (`test:test`), email, numeri di telefono e dati di carte di credito tramite union-based injection (WEB-004) |
 
 ---
 

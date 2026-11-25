@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Replay Attacks - Cattura e Ritrasmissione di Segnali RF
+# Replay attacks - cattura e ritrasmissione di segnali RF
 
 > - **Fase:** Wireless Security - RF Replay & Signal Injection (Software Defined Radio)
 > - **Visibilita:** Media - la cattura e passiva; la ritrasmissione emette un segnale RF sulla banda target, potenzialmente rilevabile da un ricevitore e - se su banda regolamentata - da autorita di controllo
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Il replay attack e l'attacco RF piu diretto e concettualmente semplice: si cattura il segnale trasmesso da un telecomando legittimo e lo si ritrasmette in un secondo momento per replicare l'azione originale. Non c'e reverse engineering necessario, non c'e crittografia da rompere: si registra e si riproduce, esattamente come un registratore audio.
 
@@ -33,7 +33,7 @@ replay-attacks/
 
 ---
 
-## Replay Attack su Codice Fisso
+## Replay attack su codice fisso
 
 **ID Finding:** `WIFI-009` | **Severity:** `Alto` (azionamento non autorizzato di dispositivo controllato via RF - accesso fisico a cancelli/garage)
 
@@ -41,7 +41,7 @@ replay-attacks/
 
 L'analisi precedente (`../signal-analysis/`, WIFI-008) ha confermato che il telecomando apricancello di test usa un codice fisso: azionamenti ripetuti producono sequenze identiche. Questo e il presupposto del replay. Con un HackRF (capace di trasmettere, a differenza dell'RTL-SDR) o un Flipper Zero, il segnale catturato viene ritrasmesso per replicare il comando "apri".
 
-### PoC - Fase 1: Cattura del segnale grezzo
+### PoC - fase 1: cattura del segnale grezzo
 
 ```Bash
 # Cattura IQ del burst mentre si aziona il telecomando (HackRF, 433.92 MHz)
@@ -55,7 +55,7 @@ Stop with Ctrl-C
 Exiting... (captured 8388608 samples)      <-- segnale registrato in gate_capture.iq
 ```
 
-### PoC - Fase 2: Ritrasmissione (replay)
+### PoC - fase 2: ritrasmissione (replay)
 
 ```Bash
 # Ritrasmissione del segnale catturato sulla stessa frequenza
@@ -69,7 +69,7 @@ Exiting...                                 <-- cancello azionato (WIFI-009)
 
 Il cancello di test si e aperto: il segnale ritrasmesso e indistinguibile dall'originale perche e l'originale, campione per campione.
 
-### PoC - Alternativa con Flipper Zero
+### PoC - alternativa con flipper zero
 
 ```
 Flipper Zero -> Sub-GHz -> Read (RAW)
@@ -89,7 +89,7 @@ Il Flipper Zero rende l'attacco portatile e immediato: cattura e replay in pochi
 
 ---
 
-## Perche il Rolling Code Neutralizza il Replay
+## Perche il rolling code neutralizza il replay
 
 ### Contesto operativo
 
@@ -109,7 +109,7 @@ Il ricevitore mantiene un contatore sincronizzato e accetta solo valori successi
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il passaggio dall'RTL-SDR all'HackRF e stato la lezione hardware fondamentale: l'RTL-SDR, usato per tutta l'analisi precedente, riceve soltanto. Per il replay serve un dispositivo capace di trasmettere, e questo ha richiesto l'HackRF One (o, in alternativa portatile, il Flipper Zero). E un promemoria che nel dominio RF le capacita dell'hardware definiscono rigidamente cio che e possibile.
 
@@ -119,7 +119,7 @@ Un'attenzione pratica e legale importante emersa nell'esercizio: la trasmissione
 
 ---
 
-## Analisi Teorica: Il Replay come Fallimento dell'Autenticazione Temporale
+## Analisi teorica: il replay come fallimento dell'Autenticazione temporale
 
 Il replay attack, in senso astratto, e il fallimento dell'autenticazione a garantire la "freschezza" (freshness) di un messaggio. Un sistema a codice fisso verifica solo che il messaggio sia valido (corrisponde al pattern atteso), ma non che sia recente o mai usato prima. Manca la dimensione temporale dell'autenticazione: qualsiasi copia di un messaggio valido e accettata, indipendentemente da quando e stata generata.
 
@@ -129,11 +129,11 @@ L'implementazione KeeLoq combina il contatore con la cifratura: il contatore e c
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Questa sezione descrive come questo finding si inserirebbe in un engagement reale, sia dal punto di vista dell'attaccante (Red Team) che del difensore (Blue Team).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** capacita di azionare un dispositivo di accesso fisico controllato via RF a codice fisso (WIFI-009) - cancello, garage, sbarra.
 
@@ -156,7 +156,7 @@ Drop di un implant o accesso a postazioni -> foothold interno
 
 **Impatto potenziale:** il controllo di accessi fisici via RF non protetti annulla la sicurezza perimetrale fisica. Un attaccante che ha osservato il proprietario azionare il telecomando una sola volta (anche a distanza, con un'antenna direzionale) puo replicare l'accesso a piacimento. Il vettore collega la sicurezza RF alla sicurezza fisica e all'accesso alla rete interna, analogamente al badge cloning (`../../04-rfid-nfc (Physical Access)/`).
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** i sistemi RF economici non loggano ne rilevano i replay. Sistemi piu evoluti possono rilevare anomalie (azionamenti a orari inusuali, pattern di segnale duplicati con un ricevitore di monitoraggio).
 
@@ -179,14 +179,14 @@ Drop di un implant o accesso a postazioni -> foothold interno
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `HackRF One` | SDR TX/RX | Hardware + CLI | Cattura e ritrasmissione RF full-duplex (1 MHz - 6 GHz) |
-| `hackrf_transfer` | SDR utility | CLI | Cattura (`-r`) e replay (`-t`) di segnali IQ grezzi |
-| `Universal Radio Hacker` | Signal analyzer | GUI | Cattura, analisi e generazione/ritrasmissione di segnali |
-| `Flipper Zero` | Portable multi-tool | Hardware | Cattura e replay sub-GHz portatile (codice fisso) |
-| `RTL-SDR` | SDR RX only | Hardware | Solo ricezione (analisi); non trasmette, non fa replay |
-| `rpitx` / `PortaPack` | TX platform | Hardware | Piattaforme alternative di trasmissione RF |
+| `HackRF One` | sdr tx/rx | hardware + cli | cattura e ritrasmissione rf full-duplex (1 mhz - 6 ghz) |
+| `hackrf_transfer` | sdr utility | cli | cattura (`-r`) e replay (`-t`) di segnali iq grezzi |
+| `Universal Radio Hacker` | signal analyzer | gui | cattura, analisi e generazione/ritrasmissione di segnali |
+| `Flipper Zero` | portable multi-tool | hardware | cattura e replay sub-ghz portatile (codice fisso) |
+| `RTL-SDR` | sdr rx only | hardware | solo ricezione (analisi); non trasmette, non fa replay |
+| `rpitx` / `PortaPack` | tx platform | hardware | piattaforme alternative di trasmissione rf |
 
 > **Tool moderno consigliato:** l'`HackRF One` per il lavoro di laboratorio flessibile (RX+TX su banda amplissima) e il `Flipper Zero` per il replay sub-GHz sul campo. Attenzione: il Flipper Zero blocca di default la trasmissione su alcune bande regolamentate per conformita normativa.
 
@@ -194,12 +194,12 @@ Drop di un implant o accesso a postazioni -> foothold interno
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Network Sniffing | `T1040` | Cattura del segnale RF del telecomando durante l'azionamento (WIFI-009) |
-| Collection | Adversary-in-the-Middle | `T1557` | Intercettazione del segnale ai fini della successiva ritrasmissione |
-| Initial Access | Hardware Additions | `T1200` | Utilizzo di hardware SDR/Flipper per replay e accesso fisico (WIFI-009) |
-| Impact (ICS) | Manipulation of Control | `T0831` | Ritrasmissione del segnale per azionare un dispositivo fisico (cancello) senza autorizzazione |
+| credential access | network sniffing | `T1040` | cattura del segnale rf del telecomando durante l'azionamento (WIFI-009) |
+| collection | adversary-in-the-middle | `T1557` | intercettazione del segnale ai fini della successiva ritrasmissione |
+| initial access | hardware additions | `T1200` | utilizzo di hardware sdr/flipper per replay e accesso fisico (WIFI-009) |
+| impact (ics) | manipulation of control | `T0831` | ritrasmissione del segnale per azionare un dispositivo fisico (cancello) senza autorizzazione |
 
 ---
 

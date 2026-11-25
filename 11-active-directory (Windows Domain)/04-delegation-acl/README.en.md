@@ -20,11 +20,11 @@ The foundations (delegation and the authorization model) are in
 
 ## Folder structure
 
-| Subfolder | Technique | Typical severity | Status |
+| subfolder | technique | typical severity | status |
 | :--- | :--- | :---: | :--- |
-| `rbcd/` | Resource-Based Constrained Delegation abuse | `Critical` | Written |
-| `delegation-unconstrained-constrained/` | Unconstrained and Constrained Delegation abuse | `Critical` | Written |
-| `acl-abuse/` | ACL/DACL abuse (GenericAll, WriteDACL, WriteOwner, ...) | `High` (up to `Critical`) | Written |
+| `rbcd/` | resource-based constrained delegation abuse | `Critical` | written |
+| `delegation-unconstrained-constrained/` | unconstrained and constrained delegation abuse | `Critical` | written |
+| `acl-abuse/` | acl/dacl abuse (genericall, writedacl, writeowner, ...) | `High` (up to `Critical`) | written |
 
 ## Recommended operational flow
 

@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 03 - DNS Enumeration
+# 03 - DNS enumeration
 
 > - **Fase:** Reconnaissance - DNS Enumeration
 > - **Visibilita:** Zero / Bassa - da ricerca passiva su CT logs a query DNS standard
@@ -46,7 +46,7 @@ La distinzione fondamentale con il modulo `03-web-attacks/` e la seguente:
 
 ---
 
-## `dns-recon/` - DNS Recon e Zone Transfer
+## `dns-recon/` - DNS recon e zone transfer
 
 **ID Finding:** `DNS-001` | **Severity:** `Critico`
 
@@ -58,7 +58,7 @@ Questo tipo di misconfiguration azzera completamente la "Security by Obscurity":
 
 ---
 
-## `hosts-file/` - Virtual Host Discovery tramite /etc/hosts
+## `hosts-file/` - Virtual host discovery tramite /etc/hosts
 
 **ID Finding:** `DNS-002` | **Severity:** `Medio`
 
@@ -68,7 +68,7 @@ Questa tecnica e fondamentale in ambiente CTF e penetration test interno per acc
 
 ---
 
-## `subdomain-finding/` - Passive Subdomain Enumeration
+## `subdomain-finding/` - Passive subdomain enumeration
 
 **ID Finding:** `DNS-003` | **Severity:** `Medio`
 
@@ -121,36 +121,36 @@ I sottodomini trovati qui diventano scope diretto per il modulo `03-web-attacks/
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `dig` | DNS query | CLI | Query DNS avanzate, zone transfer AXFR |
-| `host` | DNS query | CLI | Query DNS rapide, NS/MX/A records |
-| `dnsenum` | DNS query | CLI | Automazione zone transfer + brute force sottodomini |
-| `Sublist3r` | Subdomain harvesting | CLI (Python) | Aggregazione sottodomini da motori di ricerca |
-| `Assetfinder` | Subdomain harvesting | CLI (Go) | Enumerazione via Certificate Transparency |
-| `amass` | Subdomain harvesting | CLI (Go) | Standard OWASP, 50+ fonti, JSON output |
-| `ffuf` | VHost fuzzing | CLI | Brute force virtual host via header HTTP |
+| `dig` | dns query | cli | query dns avanzate, zone transfer axfr |
+| `host` | dns query | cli | query dns rapide, ns/mx/a records |
+| `dnsenum` | dns query | cli | automazione zone transfer + brute force sottodomini |
+| `Sublist3r` | subdomain harvesting | cli (python) | aggregazione sottodomini da motori di ricerca |
+| `Assetfinder` | subdomain harvesting | cli (go) | enumerazione via certificate transparency |
+| `amass` | subdomain harvesting | cli (go) | standard owasp, 50+ fonti, json output |
+| `ffuf` | vhost fuzzing | cli | brute force virtual host via header http |
 
 > **Tool moderno consigliato:** `amass enum -passive -d <DOMINIO>` (OWASP) in sostituzione di Sublist3r, attivamente mantenuto con supporto a fonti moderne (Shodan, VirusTotal, Censys, BeVigil).
 
 ---
 
-## Registro Finding
+## Registro finding
 
-| ID | Descrizione | Severity | File |
+| id | descrizione | severity | file |
 | :--- | :--- | :---: | :--- |
-| `DNS-001` | Zone Transfer riuscito su zonetransfer.me - zona DNS completa esfiltrata | `Critico` | `dns-recon/README.md` |
-| `DNS-002` | Virtual host non pubblicato accessibile via /etc/hosts manipulation | `Medio` | `hosts-file/README.md` |
+| `DNS-001` | zone transfer riuscito su zonetransfer.me - zona dns completa esfiltrata | `Critico` | `dns-recon/README.md` |
+| `DNS-002` | virtual host non pubblicato accessibile via /etc/hosts manipulation | `Medio` | `hosts-file/README.md` |
 | `DNS-003` | 500+ sottodomini di tesla.com inclusi vpn, sso, dev-app | `Medio` | `subdomain-finding/README.md` |
 
 ---
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Network Info: DNS | `T1590.002` | Zone Transfer AXFR su zonetransfer.me, estrazione completa dei record DNS (DNS-001) |
-| Reconnaissance | Search Open Technical Databases: DNS/Passive DNS | `T1596.001` | Enumerazione sottodomini da Certificate Transparency e motori di ricerca (DNS-001, DNS-003) |
+| reconnaissance | gather victim network info: dns | `T1590.002` | zone transfer axfr su zonetransfer.me, estrazione completa dei record dns (DNS-001) |
+| reconnaissance | search open technical databases: dns/passive dns | `T1596.001` | enumerazione sottodomini da certificate transparency e motori di ricerca (DNS-001, DNS-003) |
 
 ---
 

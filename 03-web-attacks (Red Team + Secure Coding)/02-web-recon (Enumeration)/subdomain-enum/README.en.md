@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Web Recon: Subdomain Enumeration
+# Web recon: subdomain enumeration
 
 > - **Phase:** Web Attack - Subdomain Enumeration
 > - **Visibility:** Low (passive enumeration from CT logs and OSINT) / Medium (active DNS brute force)
@@ -17,7 +17,7 @@ Tools: `Subfinder`, `OWASP Amass`
 
 ---
 
-## 1 Theoretical Introduction
+## 1 Theoretical introduction
 
 Subdomain Enumeration is the critical reconnaissance phase where you go from knowing only the main domain (`tesla.com`) to knowing the entire network of exposed services (`dev.tesla.com`, `vpn.tesla.com`, `api.tesla.com`).
 
@@ -28,9 +28,9 @@ Techniques are divided into:
 
 ---
 
-## 2 Tools Used
+## 2 Tools used
 
-#### Subfinder (Go)
+#### Subfinder (go)
 
 Subfinder was chosen for its speed and passive nature. It uses multiple sources (Chaos, Censys, SecurityTrails) to aggregate data without alerting the target's defense systems (IDS/IPS).
 
@@ -40,7 +40,7 @@ In more complex scenarios, Amass is used for deep mapping, including ASN analysi
 
 ---
 
-## 3 Technical Execution
+## 3 Technical execution
 
 A passive scan was performed on the `tesla.com` domain.
 
@@ -63,7 +63,7 @@ Results Analysis: The scan revealed hundreds of active subdomains. The most inte
 
 ---
 
-## 4 Deep Reconnaissance: OWASP Amass
+## 4 Deep reconnaissance: OWASP Amass
 
 To obtain a more in-depth mapping, OWASP Amass was used.
 
@@ -86,13 +86,13 @@ Added Value: Amass allowed identifying not only subdomain names, but also their 
 
 ---
 
-## 5 Related Risk: Subdomain Takeover
+## 5 Related risk: subdomain takeover
 
 Enumeration is the prerequisite for identifying Subdomain Takeovers. If a subdomain (e.g., shop.tesla.com) points via CNAME to an external service (e.g., AWS S3, GitHub Pages) that has been decommissioned, an attacker can register that account on the third-party service and take complete control of the subdomain, inheriting its Trust and cookies.
 
 ---
 
-## 6 Local Scenario: Virtual Host Fuzzing (Docker/Localhost)
+## 6 Local scenario: virtual host fuzzing (Docker/Localhost)
 
 While tools like Amass and Subfinder query public DNS, in local environments (LAN or Docker) these techniques cannot be used.
 However, it is possible to perform Virtual Host (VHost) enumeration.
@@ -107,7 +107,7 @@ gobuster vhost -u http://localhost -w common.txt --append-domain
 
 ---
 
-## 7 Case Study: Static Hosting (GitHub Pages)
+## 7 Case study: static hosting (GitHub pages)
 
 The offensive approach changes radically when the target is a static site hosted on platforms like GitHub Pages (e.g., `https://nicholas-arcari.github.io/portfolio-nicholas/`).
 
@@ -138,13 +138,13 @@ Identifying these peripheral assets is often the key to finding critical vulnera
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Wordlist Scanning | `T1595.003` | DNS brute force with OWASP Amass to discover subdomains not publicly listed through internal wordlists |
-| Reconnaissance | Gather Victim Network Info: Domain Properties | `T1590.001` | Passive subdomain enumeration of `tesla.com` through Subfinder (CT logs, VirusTotal, Censys) without direct interaction with the target |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | VHost fuzzing with Gobuster in `vhost` mode to identify hidden virtual hosts on local Docker environments |
+| reconnaissance | active scanning: wordlist scanning | `T1595.003` | dns brute force with owasp amass to discover subdomains not publicly listed through internal wordlists |
+| reconnaissance | gather victim network info: domain properties | `T1590.001` | passive subdomain enumeration of `tesla.com` through subfinder (ct logs, virustotal, censys) without direct interaction with the target |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | vhost fuzzing with gobuster in `vhost` mode to identify hidden virtual hosts on local docker environments |
 
 ---
 

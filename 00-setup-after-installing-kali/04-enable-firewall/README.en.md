@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 04 - Enable the Firewall (UFW)
+# 04 - Enable the firewall (UFW)
 
 > - **Phase:** System Setup - Network Hardening
 > - **Priority:** High - execute before connecting the system to untrusted networks
@@ -36,14 +36,14 @@ You expose potentially vulnerable services to the entire network. An attacker co
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Command | Description |
+| command | description |
 | :--- | :--- |
-| `sudo ufw status verbose` | Show active rules and firewall status |
-| `sudo ufw allow <port>/tcp` | Open a specific inbound port |
-| `sudo ufw delete allow <port>/tcp` | Remove a previously added rule |
-| `sudo ufw logging on` | Enable logging of blocked connections in `/var/log/ufw.log` |
+| `sudo ufw status verbose` | show active rules and firewall status |
+| `sudo ufw allow <port>/tcp` | open a specific inbound port |
+| `sudo ufw delete allow <port>/tcp` | remove a previously added rule |
+| `sudo ufw logging on` | enable logging of blocked connections in `/var/log/ufw.log` |
 
 ---
 

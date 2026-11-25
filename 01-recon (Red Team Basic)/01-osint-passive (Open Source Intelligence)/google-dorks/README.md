@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# OSINT Passive: Google Dorking (Google Hacking)
+# OSINT passive: Google dorking (Google hacking)
 
 > - **Fase:** Reconnaissance - Passive Information Gathering
 > - **Visibilita:** Zero - le query rimangono sui server di Google, nessun contatto diretto con il target
@@ -16,7 +16,7 @@ Strumenti: Browser Web (Google Search Engine), Google Hacking Database (GHDB).
 
 ---
 
-## 1 Introduzione Teorica
+## 1 Introduzione teorica
 
 Le Google Dorks (o Google Hacking) consistono nell'utilizzo di operatori di ricerca avanzati per interrogare l'indice di Google in modo granulare.
 
@@ -30,13 +30,13 @@ Questa tecnica di OSINT Passiva permette di individuare vulnerabilità di Sensit
 
 ---
 
-## 2 Esecuzione Tecnica
+## 2 Esecuzione tecnica
 
 **ID Finding:** `OSINT-003` | **Severity:** `Variabile (Basso / Alto)`
 
 La severity effettiva dipende da cio che si trova: file PDF con metadati generici (Basso), credenziali in chiaro o pannelli admin accessibili senza autenticazione (Alto).
 
-#### A. Ricerca di Documenti Esposti (PDF/XLSX)
+#### A. ricerca di documenti esposti (PDF/XLSX)
 
 È stata eseguita una ricerca per individuare documenti PDF indicizzati sul dominio target, potenzialmente contenenti metadati o informazioni interne.
 
@@ -46,7 +46,7 @@ Dork Eseguita:
 site:nasa.gov filetype:pdf "report"
 ```
 
-#### B. Individuazione Sottodomini e Login
+#### B. individuazione sottodomini e login
 
 È stata effettuata una ricerca per mappare i portali di accesso o aree amministrative esposte.
 
@@ -58,7 +58,7 @@ site:nasa.gov inurl:login
 
 Risultato: Sono stati identificati diversi portali di accesso (es. portali dipendenti, aree riservate) pubblicamente raggiungibili. [INSERISCI QUI LO SCREENSHOT DELLA LISTA DI URL]
 
-#### C. Directory Listing (Index of)
+#### C. Directory listing (index of)
 
 È stata verificata la presenza di server con "Directory Listing" abilitato, che espongono il contenuto delle cartelle del server web.
 
@@ -72,7 +72,7 @@ Nota: Un risultato positivo indicherebbe una misconfiguration del server web (In
 
 ---
 
-## 3 Analisi e Conclusioni
+## 3 Analisi e conclusioni
 
 L'attività di Google Dorking ha permesso di:
 - Estendere la superficie di attacco: Individuando sottodomini non linkati dalla home page principale.
@@ -85,21 +85,21 @@ Remediation: Per mitigare questo rischio, le organizzazioni dovrebbero:
 
 ---
 
-## Analisi a Basso Livello: Operatori Avanzati e Combinazioni Offensive
+## Analisi a basso livello: operatori avanzati e combinazioni offensive
 
 ### Operatori Google di secondo livello
 
 Oltre agli operatori base (`site:`, `filetype:`, `inurl:`), esistono combinazioni avanzate che amplificano drasticamente l'efficacia della ricognizione:
 
-| Operatore | Funzione | Esempio offensivo |
+| operatore | funzione | esempio offensivo |
 | :--- | :--- | :--- |
-| `intitle:"index of"` | Directory listing esposti | `intitle:"index of" site:target.com /backup/` |
-| `ext:sql \| ext:bak` | Backup database indicizzati | `site:target.com ext:sql "INSERT INTO"` |
-| `inurl:wp-config.php` | File di configurazione WordPress | `inurl:wp-config.php "DB_PASSWORD"` |
-| `filetype:env` | File .env con credenziali | `site:target.com filetype:env "DB_PASSWORD"` |
-| `"phpinfo()"` | Pagine phpinfo() esposte | `site:target.com "phpinfo()" "mysql"` |
-| `inurl:"/api/" "key"` | API key esposte | `site:target.com inurl:"/api/" "Authorization"` |
-| `cache:` | Versione cached di pagine rimosse | `cache:target.com/admin/config` |
+| `intitle:"index of"` | directory listing esposti | `intitle:"index of" site:target.com /backup/` |
+| `ext:sql \| ext:bak` | backup database indicizzati | `site:target.com ext:sql "INSERT INTO"` |
+| `inurl:wp-config.php` | file di configurazione wordpress | `inurl:wp-config.php "DB_PASSWORD"` |
+| `filetype:env` | file .env con credenziali | `site:target.com filetype:env "DB_PASSWORD"` |
+| `"phpinfo()"` | pagine phpinfo() esposte | `site:target.com "phpinfo()" "mysql"` |
+| `inurl:"/api/" "key"` | api key esposte | `site:target.com inurl:"/api/" "Authorization"` |
+| `cache:` | versione cached di pagine rimosse | `cache:target.com/admin/config` |
 
 **Combinazioni multi-operatore per scenari reali:**
 
@@ -117,7 +117,7 @@ site:target.com inurl:admin | inurl:login | inurl:dashboard -www
 site:*.target.com -www intitle:"index of" | inurl:staging | inurl:dev
 ```
 
-### Google Hacking Database (GHDB) e Automazione
+### Google hacking database (GHDB) e automazione
 
 Il GHDB (exploit-db.com/google-hacking-database) cataloga oltre 6.500 dork categorizzate. Per l'automazione su scala, tool come `pagodo` scaricano le dork dal GHDB e le eseguono in batch:
 
@@ -133,7 +133,7 @@ L'automazione richiede cautela: Google implementa rate limiting aggressivo (CAPT
 
 ---
 
-## Blue Team: Attack Surface Management e Protezione dall'Indicizzazione
+## Blue team: attack surface management e protezione dall'Indicizzazione
 
 **Monitoring proattivo:**
 - Eseguire periodicamente Google Dork sul proprio dominio: `site:dominio.it filetype:pdf | filetype:xls | filetype:env`
@@ -151,7 +151,7 @@ L'automazione richiede cautela: Google implementa rate limiting aggressivo (CAPT
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'esecuzione su nasa.gov ha dimostrato la scala del problema: un dominio di grandi dimensioni espone inevitabilmente una quantita significativa di informazioni indicizzate. La dork `site:nasa.gov filetype:pdf "report"` ha restituito migliaia di risultati - la maggior parte documenti scientifici pubblici, ma tra questi si annidano documenti con metadati interni (nomi di dipendenti, versioni software, percorsi di rete interni nel campo "Author" e "Producer" del PDF).
 
@@ -163,9 +163,9 @@ Un aspetto critico emerso dall'esercizio: la dork `intitle:"index of"` non ha pr
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Search Open Websites/Domains: Search Engines | `T1593.002` | Utilizzo di operatori Google avanzati (site:, filetype:, inurl:, intitle:) per individuare file PDF, pannelli login e directory listing esposti su nasa.gov (OSINT-003) |
+| reconnaissance | search open websites/domains: search engines | `T1593.002` | utilizzo di operatori google avanzati (site:, filetype:, inurl:, intitle:) per individuare file pdf, pannelli login e directory listing esposti su nasa.gov (OSINT-003) |
 
 ---
 

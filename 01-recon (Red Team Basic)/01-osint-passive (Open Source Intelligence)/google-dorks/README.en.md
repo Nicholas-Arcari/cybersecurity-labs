@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# OSINT Passive: Google Dorking (Google Hacking)
+# OSINT passive: Google dorking (Google hacking)
 
 > - **Phase:** Reconnaissance - Passive Information Gathering
 > - **Visibility:** Zero - queries remain on Google servers, no direct contact with the target
@@ -16,7 +16,7 @@ Tools: Web Browser (Google Search Engine), Google Hacking Database (GHDB).
 
 ---
 
-## 1 Theoretical Introduction
+## 1 Theoretical introduction
 
 Google Dorks (or Google Hacking) consist of using advanced search operators to query Google's index in a granular way.
 
@@ -30,13 +30,13 @@ This Passive OSINT technique allows identifying Sensitive Data Exposure vulnerab
 
 ---
 
-## 2 Technical Execution
+## 2 Technical execution
 
 **Finding ID:** `OSINT-003` | **Severity:** `Variable (Low / High)`
 
 The actual severity depends on what is found: PDF files with generic metadata (Low), plaintext credentials or admin panels accessible without authentication (High).
 
-#### A. Exposed Document Search (PDF/XLSX)
+#### A. exposed document search (PDF/XLSX)
 
 A search was performed to locate PDF documents indexed on the target domain, potentially containing metadata or internal information.
 
@@ -46,7 +46,7 @@ Dork Executed:
 site:nasa.gov filetype:pdf "report"
 ```
 
-#### B. Subdomain and Login Identification
+#### B. subdomain and login identification
 
 A search was performed to map exposed access portals or administrative areas.
 
@@ -58,7 +58,7 @@ site:nasa.gov inurl:login
 
 Result: Several access portals were identified (e.g., employee portals, restricted areas) publicly reachable. [INSERT SCREENSHOT OF URL LIST HERE]
 
-#### C. Directory Listing (Index of)
+#### C. Directory listing (index of)
 
 The presence of servers with "Directory Listing" enabled was verified, which expose the contents of web server folders.
 
@@ -72,7 +72,7 @@ Note: A positive result would indicate a web server misconfiguration (Informatio
 
 ---
 
-## 3 Analysis and Conclusions
+## 3 Analysis and conclusions
 
 The Google Dorking activity allowed:
 - Extending the attack surface: Identifying subdomains not linked from the main home page.
@@ -85,11 +85,11 @@ Remediation: To mitigate this risk, organizations should:
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Search Open Websites/Domains: Search Engines | `T1593.002` | Use of advanced Google operators (site:, filetype:, inurl:, intitle:) to locate exposed PDF files, login panels and directory listings on nasa.gov (OSINT-003) |
+| reconnaissance | search open websites/domains: search engines | `T1593.002` | use of advanced google operators (site:, filetype:, inurl:, intitle:) to locate exposed pdf files, login panels and directory listings on nasa.gov (OSINT-003) |
 
 ---
 

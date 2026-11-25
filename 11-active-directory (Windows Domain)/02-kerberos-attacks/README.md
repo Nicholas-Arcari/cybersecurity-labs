@@ -17,14 +17,14 @@ fondamenti formali sono in [THEORETICAL-FOUNDATIONS](<../THEORETICAL-FOUNDATIONS
 
 ## Struttura della cartella
 
-| Sottocartella | Tecnica | Severity tipica | Stato |
+| sottocartella | tecnica | severity tipica | stato |
 | :--- | :--- | :---: | :--- |
-| `kerberoasting/` | Kerberoasting (furto hash service account via TGS) | `Alto` | Scritta |
-| `as-rep-roasting/` | AS-REP Roasting (account senza pre-auth) | `Alto` | Scritta |
-| `silver-ticket/` | Silver Ticket (TGS forgiato con chiave del servizio) | `Alto` | Scritta |
-| `golden-ticket/` | Golden Ticket (TGT forgiato con chiave di krbtgt) | `Critico` | Scritta |
-| `diamond-ticket/` | Diamond Ticket (TGT reale con PAC modificato - variante stealth) | `Critico` | Scritta |
-| `sapphire-ticket/` | Sapphire Ticket (PAC autentico via S4U2self - massimo stealth) | `Critico` | Scritta |
+| `kerberoasting/` | kerberoasting (furto hash service account via tgs) | `Alto` | scritta |
+| `as-rep-roasting/` | as-rep roasting (account senza pre-auth) | `Alto` | scritta |
+| `silver-ticket/` | silver ticket (tgs forgiato con chiave del servizio) | `Alto` | scritta |
+| `golden-ticket/` | golden ticket (tgt forgiato con chiave di krbtgt) | `Critico` | scritta |
+| `diamond-ticket/` | diamond ticket (tgt reale con pac modificato - variante stealth) | `Critico` | scritta |
+| `sapphire-ticket/` | sapphire ticket (pac autentico via s4u2self - massimo stealth) | `Critico` | scritta |
 
 ## Flusso operativo consigliato
 

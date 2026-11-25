@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Terraform Scanning - Analisi Statica dell'Infrastructure as Code
+# Terraform scanning - analisi statica dell'Infrastructure as code
 
 > - **Fase:** Cloud Security - IaC Static Analysis (Defense)
 > - **Categoria:** Difensivo - analisi statica della configurazione prima del deploy
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Oggi l'infrastruttura si scrive come codice (Infrastructure as Code): un file Terraform descrive server, reti, storage e permessi, e il deploy li crea automaticamente. Questo porta enormi vantaggi (riproducibilita, versionamento, revisione) ma anche un rischio speculare: un errore nel codice diventa un errore nell'infrastruttura, replicato ovunque quel codice viene applicato. Una regola firewall sbagliata scritta una volta si deploya su ogni ambiente.
 
@@ -32,7 +32,7 @@ terraform-scanning/
 
 ---
 
-## Analisi Statica con Checkov e tfsec
+## Analisi statica con checkov e tfsec
 
 **ID Finding:** `CLOUD-010` | **Severity:** `Medio` (rilevamento preventivo di misconfigurazioni nell'IaC prima del deploy; la severita reale dipende dalle misconfig trovate)
 
@@ -40,7 +40,7 @@ terraform-scanning/
 
 Checkov e tfsec leggono il codice Terraform (senza applicarlo) e lo valutano contro centinaia di policy di sicurezza. Individuano risorse mal configurate - accessi troppo aperti, mancanza di cifratura, logging disabilitato - e indicano la riga e la correzione. E analisi statica: trova l'errore nel codice, non nell'infrastruttura deployata.
 
-### PoC - Scansione del Terraform (Checkov)
+### PoC - scansione del terraform (checkov)
 
 ```Bash
 # Checkov analizza il codice Terraform contro le policy di sicurezza
@@ -57,7 +57,7 @@ Check: CKV_AWS_18: "Ensure S3 bucket has access logging enabled"
   FAILED for resource: aws_s3_bucket.data
 ```
 
-### PoC - Il codice problematico
+### PoC - il codice problematico
 
 ```HCL
 # main.tf - ANTIPATTERN: SSH aperto al mondo
@@ -84,7 +84,7 @@ checkov -d terraform/ --hard-fail-on HIGH
 [!] exit code non-zero: misconfig HIGH presenti -> deploy bloccato   <-- infra insicura impedita (CLOUD-010)
 ```
 
-### Operativita Difensiva
+### Operativita difensiva
 
 - **Shift-left in CI/CD:** integrare Checkov/tfsec come cancello della pipeline; nessun Terraform con misconfig ad alta severita viene applicato
 - **Baseline e soft/hard fail:** definire quali check bloccano (hard-fail) e quali avvisano (soft-fail); tarare sul contesto per evitare il rumore
@@ -93,7 +93,7 @@ checkov -d terraform/ --hard-fail-on HIGH
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il valore di Checkov e stato rendere visibili errori che nel codice sembravano innocui. Un blocco `ingress` con `cidr_blocks = ["0.0.0.0/0"]` e sintatticamente corretto e funziona perfettamente - deploya un security group che espone SSH al mondo intero. Nulla nel codice segnala il pericolo; solo lo scanner, confrontandolo con la policy CKV_AWS_24, lo evidenzia. Questo ha reso concreto che la correttezza sintattica non e sicurezza: il codice giusto puo descrivere un'infrastruttura sbagliata.
 
@@ -103,7 +103,7 @@ L'integrazione in CI/CD ha completato il quadro dello shift-left, coerente con l
 
 ---
 
-## Analisi Teorica: Shift-Left e l'Infrastruttura come Codice Verificabile
+## Analisi teorica: Shift-Left e l'Infrastruttura come codice verificabile
 
 L'Infrastructure as Code ha una proprieta di sicurezza preziosa: rende l'infrastruttura verificabile prima di esistere. L'infrastruttura tradizionale si ispeziona dopo il deploy (scanning attivo, audit di configurazione); l'IaC si ispeziona come codice, prima del deploy, in modo statico. Questo anticipa il controllo al momento piu economico - prima che l'infrastruttura sia creata, quando correggere e modificare una riga - realizzando lo shift-left: spostare la sicurezza il piu a monte possibile nel ciclo di vita.
 
@@ -115,13 +115,13 @@ Questo colloca la sicurezza dentro il processo di sviluppo, non accanto ad esso.
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Checkov` | IaC scanner | Difensivo | Analisi statica Terraform/CloudFormation/K8s (standard) |
-| `tfsec` | Terraform scanner | Difensivo | Analisi statica focalizzata su Terraform |
-| `Trivy` | Multi-scanner | Difensivo | Scansione IaC + immagini + segreti (unificato) |
-| `Terrascan` | IaC scanner | Difensivo | Analisi statica con policy OPA |
-| `OPA/Conftest` | Policy engine | Difensivo | Policy custom "as code" sull'IaC |
+| `Checkov` | iac scanner | difensivo | analisi statica terraform/cloudformation/k8s (standard) |
+| `tfsec` | terraform scanner | difensivo | analisi statica focalizzata su terraform |
+| `Trivy` | multi-scanner | difensivo | scansione iac + immagini + segreti (unificato) |
+| `Terrascan` | iac scanner | difensivo | analisi statica con policy opa |
+| `OPA/Conftest` | policy engine | difensivo | policy custom "as code" sull'iac |
 
 > **Tool moderno consigliato:** `Checkov` (Bridgecrew) come standard per l'ampiezza (Terraform, CloudFormation, Kubernetes, Dockerfile), integrabile in ogni CI/CD. `tfsec` come alternativa focalizzata su Terraform. `Trivy` unifica IaC, immagini (`../../02-containers-security/image-scanning/`) e segreti in un unico scanner.
 
@@ -131,17 +131,17 @@ Questo colloca la sicurezza dentro il processo di sviluppo, non accanto ad esso.
 
 > Tecniche d'attacco **prevenute** individuando le misconfig nell'IaC prima del deploy.
 
-| Tattica (prevenuta) | Tecnica | ID MITRE | Ruolo del controllo |
+| tattica (prevenuta) | tecnica | id mitre | ruolo del controllo |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Rilevamento di servizi esposti (es. SSH a 0.0.0.0/0) (CLOUD-010) |
-| Initial Access | External Remote Services | `T1133` | Prevenzione di accessi remoti troppo aperti nell'IaC |
-| Collection | Data from Cloud Storage | `T1530` | Rilevamento di bucket pubblici/non cifrati nel codice |
-| Defense Evasion | Impair Defenses | `T1562` | Rilevamento di logging/monitoring disabilitato nell'IaC |
+| initial access | exploit public-facing application | `T1190` | rilevamento di servizi esposti (es. ssh a 0.0.0.0/0) (CLOUD-010) |
+| initial access | external remote services | `T1133` | prevenzione di accessi remoti troppo aperti nell'iac |
+| collection | data from cloud storage | `T1530` | rilevamento di bucket pubblici/non cifrati nel codice |
+| defense evasion | impair defenses | `T1562` | rilevamento di logging/monitoring disabilitato nell'iac |
 
-| Contromisura difensiva (D3FEND) | ID D3FEND | Applicazione |
+| contromisura difensiva (d3fend) | id d3fend | applicazione |
 | :--- | :--- | :--- |
-| Configuration Inventory | `D3-CI` | Analisi statica della configurazione infrastrutturale |
-| Platform Hardening | `D3-PH` | Correzione delle misconfig prima del deploy |
+| configuration inventory | `D3-CI` | analisi statica della configurazione infrastrutturale |
+| platform hardening | `D3-PH` | correzione delle misconfig prima del deploy |
 
 ---
 

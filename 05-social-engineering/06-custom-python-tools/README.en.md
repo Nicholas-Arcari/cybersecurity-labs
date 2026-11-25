@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 06 - Custom Python Tools
+# 06 - Custom python tools
 
 > - **Phase:** Social Engineering - Custom Tool Development (Python)
 > - **Visibility:** Variable - the credential harvester generates HTTP logs and DNS requests; the tracking pixel is a single HTTP GET request; the email generator is completely offline
@@ -23,7 +23,7 @@ The three documented tools cover three different phases:
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 06-custom-python-tools/
@@ -34,15 +34,15 @@ The three documented tools cover three different phases:
 
 ---
 
-## `credential-harvester/` - Flask Credential Harvester
+## `credential-harvester/` - Flask credential harvester
 
 **Finding ID:** `SE-014` | **Severity:** `High` (credentials captured in cleartext with full logging)
 
-### Operational Context
+### Operational context
 
 The custom Flask credential harvester is a minimal web application that serves a cloned login page and captures every submission with complete metadata (IP, User-Agent, Referer, timestamp). Compared to integrated tools, it offers: full customization of post-submission behavior (redirect, error message, second form for MFA), structured logging in JSON for subsequent analysis, and integration with any delivery infrastructure.
 
-### Main Code
+### Main code
 
 ```Bash
 # Project structure
@@ -85,13 +85,13 @@ if __name__ == '__main__':
 
 ---
 
-## `email-generator/` - Corporate Email Permutation Generator
+## `email-generator/` - Corporate email permutation generator
 
-### Operational Context
+### Operational context
 
 When the corporate email format is unknown, the script generates all standard permutations from first and last name. The produced list is then used for enumeration (verifying which addresses exist) or for direct targeting.
 
-### Main Code
+### Main code
 
 ```python
 # email_gen.py - Email permutation generator
@@ -142,15 +142,15 @@ rossi@target-lab.com
 
 ---
 
-## `tracking-pixel/` - IP Geolocation Tracking
+## `tracking-pixel/` - IP geolocation tracking
 
 **Finding ID:** `SE-015` | **Severity:** `Informational` (IP geolocation at the time of email opening)
 
-### Operational Context
+### Operational context
 
 The tracking pixel is a 1x1 transparent pixel image served by an attacker-controlled server. When the email client loads the image (email opening), the server logs IP, User-Agent, timestamp and approximate geolocation via GeoIP database. This technique is also used internally by GoPhish, but the custom server allows tracking independent of the phishing framework.
 
-### Main Code
+### Main code
 
 ```python
 # tracker.py - Tracking Pixel Server
@@ -196,38 +196,38 @@ if __name__ == '__main__':
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Primary Use Case |
+| tool | type | technique/access | primary use case |
 | :--- | :--- | :--- | :--- |
-| `Flask` | Web framework | Python | Backend for credential harvester and tracking pixel |
-| `Jinja2` | Template engine | Python | HTML page rendering for clone landing pages |
-| `requests` | HTTP client | Python | Testing and verification of created endpoints |
-| `GeoLite2` | GeoIP database | MaxMind | IP geolocation for tracking pixel |
-| `smtp-user-enum` | Email enum | CLI - Perl | Email existence verification via SMTP VRFY/EXPN/RCPT TO |
+| `Flask` | web framework | python | backend for credential harvester and tracking pixel |
+| `Jinja2` | template engine | python | html page rendering for clone landing pages |
+| `requests` | http client | python | testing and verification of created endpoints |
+| `GeoLite2` | geoip database | maxmind | ip geolocation for tracking pixel |
+| `smtp-user-enum` | email enum | cli - perl | email existence verification via smtp vrfy/expn/rcpt to |
 
 > **Recommended modern tool:** for verifying generated emails, `smtp-user-enum` or `EmailHarvester` with RCPT TO method. For advanced geolocation, the MaxMind GeoLite2 database (free with registration) integrated into the tracking server.
 
 ---
 
-## Finding Registry
+## Finding registry
 
-| ID | Description | Severity | CVSS | Subfolder |
+| id | description | severity | cvss | subfolder |
 | :--- | :--- | :---: | :---: | :--- |
-| `SE-014` | Flask credential harvester: clone login page with real-time IP/User-Agent/credentials logging | `High` | 7.5 | `credential-harvester/` |
-| `SE-015` | Tracking pixel: recipient IP geolocation at the time of email opening | `Informational` | 2.1 | `tracking-pixel/` |
+| `SE-014` | flask credential harvester: clone login page with real-time ip/user-agent/credentials logging | `High` | 7.5 | `credential-harvester/` |
+| `SE-015` | tracking pixel: recipient ip geolocation at the time of email opening | `Informational` | 2.1 | `tracking-pixel/` |
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Related Finding |
+| tactic | technique | mitre id | related finding |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Develop Capabilities: Malware | `T1587.001` | SE-014 |
-| Resource Development | Stage Capabilities: Upload Malware | `T1608.001` | SE-014, SE-015 |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | SE-014 |
-| Credential Access | Input Capture: Web Portal Capture | `T1056.003` | SE-014 |
-| Discovery | System Information Discovery | `T1082` | SE-015 |
+| resource development | develop capabilities: malware | `T1587.001` | SE-014 |
+| resource development | stage capabilities: upload malware | `T1608.001` | SE-014, SE-015 |
+| initial access | phishing: spearphishing link | `T1566.002` | SE-014 |
+| credential access | input capture: web portal capture | `T1056.003` | SE-014 |
+| discovery | system information discovery | `T1082` | SE-015 |
 
 ---
 

@@ -19,9 +19,9 @@ pericolose su infrastrutture legacy o aggiornate male. Vanno quindi sempre verif
 
 ## Struttura della cartella
 
-| Sottocartella | Tecnica | CVE | Severity tipica | Stato |
+| sottocartella | tecnica | cve | severity tipica | stato |
 | :--- | :--- | :--- | :---: | :--- |
-| `nopac/` | noPac (sAMAccountName spoofing) - da utente a DA | CVE-2021-42278 + CVE-2021-42287 | `Critico` | Scritta |
+| `nopac/` | nopac (samaccountname spoofing) - da utente a da | CVE-2021-42278 + CVE-2021-42287 | `Critico` | scritta |
 
 > Sotto-area estensibile: altre CVE di dominio candidate a questa sezione sono ZeroLogon (CVE-2020-1472),
 > PrintNightmare (CVE-2021-34527) e dMSA/BadSuccessor (abuso delle delegated Managed Service Account). Vanno

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 06 - Wireless Security
+# 06 - Wireless security
 
 > - **Phase:** Wireless Security - Attack on radio technologies (WiFi, Bluetooth, SDR, RFID/NFC)
 > - **Visibility:** Variable - from Zero (passive SDR reception, offline cracking) to High (deauthentication, rogue AP, RF transmission)
@@ -29,7 +29,7 @@ In the MITRE ATT&CK matrix, the module mainly covers Reconnaissance (TA0043), Cr
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 06-wireless-security/
@@ -62,7 +62,7 @@ In the MITRE ATT&CK matrix, the module mainly covers Reconnaissance (TA0043), Cr
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [INPUT] Radio hardware (WiFi monitor, BLE, SDR, RFID), target in range
@@ -95,63 +95,63 @@ In the MITRE ATT&CK matrix, the module mainly covers Reconnaissance (TA0043), Cr
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `aircrack-ng suite` | WiFi attack suite | CLI | Monitor mode, handshake, deauth, WPA2 cracking |
-| `hashcat` + `hcxdumptool` | WiFi cracking | CLI | Clientless PMKID/handshake cracking (mode 22000) |
-| `Wifite2` / `Airgeddon` | WiFi automation | CLI | Automated wireless audit + WPS |
-| `bettercap` | BLE/MITM framework | CLI | Recon and GATT enumeration, BLE manipulation |
-| `HackRF One` / `RTL-SDR` | SDR | Hardware | Capture and replay of sub-GHz RF signals |
-| `Universal Radio Hacker` | Signal analyzer | GUI | RF demodulation and reverse engineering |
-| `Proxmark3 RDV4` | RFID multi-tool | Hardware | RFID LF/HF cloning, sniffing, emulation |
-| `Flipper Zero` | Portable multi-tool | Hardware | Sub-GHz, BLE, RFID/NFC in a pocket device |
+| `aircrack-ng suite` | wifi attack suite | cli | monitor mode, handshake, deauth, wpa2 cracking |
+| `hashcat` + `hcxdumptool` | wifi cracking | cli | clientless pmkid/handshake cracking (mode 22000) |
+| `Wifite2` / `Airgeddon` | wifi automation | cli | automated wireless audit + wps |
+| `bettercap` | ble/mitm framework | cli | recon and gatt enumeration, ble manipulation |
+| `HackRF One` / `RTL-SDR` | sdr | hardware | capture and replay of sub-ghz rf signals |
+| `Universal Radio Hacker` | signal analyzer | gui | rf demodulation and reverse engineering |
+| `Proxmark3 RDV4` | rfid multi-tool | hardware | rfid lf/hf cloning, sniffing, emulation |
+| `Flipper Zero` | portable multi-tool | hardware | sub-ghz, ble, rfid/nfc in a pocket device |
 
 > **Recommended modern tool:** the combination `hcxdumptool` + `hashcat -m 22000` for WiFi, `bettercap` for BLE, `Universal Radio Hacker` + `HackRF` for RF, `Proxmark3 RDV4` (Iceman) for RFID. The `Flipper Zero` as a cross-cutting multi-tool for recon and quick field attacks.
 
 ---
 
-## Finding Registry - Module 06
+## Finding registry - module 06
 
-| ID | Description | Severity | Subfolder |
+| id | description | severity | subfolder |
 | :--- | :--- | :---: | :--- |
-| `WIFI-001` | Monitor mode + de-anonymization of hidden SSID and clients via Probe Request | `Low` | `01-wifi/recon-monitor/` |
-| `WIFI-002` | WPA2 4-way handshake captured and PSK recovered via dictionary attack | `High` | `01-wifi/cracking/` |
-| `WIFI-003` | Clientless PMKID captured and PSK recovered without connected clients | `High` | `01-wifi/cracking/` |
-| `WIFI-004` | Evil Twin with captive portal: credential harvesting + MITM position | `Critical` | `01-wifi/rogue-ap/` |
-| `WIFI-005` | WPS Pixie-Dust: WPS PIN recovered in seconds, PSK compromised regardless of robustness | `High` | `01-wifi/automated-attacks/` |
-| `WIFI-006` | GATT enumeration: control characteristic writable without authentication on IoT device | `Informational` | `02-bluetooth-ble/recon/` |
-| `WIFI-007` | Unauthorized GATT write: manipulation of the state of a test smart lock | `Medium` | `02-bluetooth-ble/spoofing/` |
-| `WIFI-008` | Cleartext RF telemetry intercepted; signal characterized and payload revealed | `Informational` | `03-sdr/signal-analysis/` |
-| `WIFI-009` | Replay attack on fixed-code remote: unauthorized actuation of a test gate | `High` | `03-sdr/replay-attacks/` |
-| `WIFI-010` | Key recovery and dump of a MIFARE Classic badge with default keys (nested mfoc) | `Medium` | `04-rfid-nfc/nfc-tools/` |
-| `WIFI-011` | Complete cloning of the MIFARE badge on magic tag, including the UID - working clone | `High` | `04-rfid-nfc/mifare-cloning/` |
-| `WIFI-012` | Reading and cloning of Low Frequency EM4100 badge (no authentication) via Proxmark3 | `High` | `04-rfid-nfc/proxmark3-client/` |
+| `WIFI-001` | monitor mode + de-anonymization of hidden ssid and clients via probe request | `Low` | `01-wifi/recon-monitor/` |
+| `WIFI-002` | wpa2 4-way handshake captured and psk recovered via dictionary attack | `High` | `01-wifi/cracking/` |
+| `WIFI-003` | clientless pmkid captured and psk recovered without connected clients | `High` | `01-wifi/cracking/` |
+| `WIFI-004` | evil twin with captive portal: credential harvesting + mitm position | `Critical` | `01-wifi/rogue-ap/` |
+| `WIFI-005` | wps pixie-dust: wps pin recovered in seconds, psk compromised regardless of robustness | `High` | `01-wifi/automated-attacks/` |
+| `WIFI-006` | gatt enumeration: control characteristic writable without authentication on iot device | `Informational` | `02-bluetooth-ble/recon/` |
+| `WIFI-007` | unauthorized gatt write: manipulation of the state of a test smart lock | `Medium` | `02-bluetooth-ble/spoofing/` |
+| `WIFI-008` | cleartext rf telemetry intercepted; signal characterized and payload revealed | `Informational` | `03-sdr/signal-analysis/` |
+| `WIFI-009` | replay attack on fixed-code remote: unauthorized actuation of a test gate | `High` | `03-sdr/replay-attacks/` |
+| `WIFI-010` | key recovery and dump of a mifare classic badge with default keys (nested mfoc) | `Medium` | `04-rfid-nfc/nfc-tools/` |
+| `WIFI-011` | complete cloning of the mifare badge on magic tag, including the uid - working clone | `High` | `04-rfid-nfc/mifare-cloning/` |
+| `WIFI-012` | reading and cloning of Low frequency em4100 badge (no authentication) via proxmark3 | `High` | `04-rfid-nfc/proxmark3-client/` |
 
 ---
 
-## MITRE ATT&CK Mapping - Aggregated
+## MITRE ATT&CK mapping - aggregated
 
-| Tactic | Technique | MITRE ID | Related Finding |
+| tactic | technique | mitre id | related finding |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning | `T1595` | WIFI-001, WIFI-006 |
-| Reconnaissance | Gather Victim Network Information | `T1590` | WIFI-001 |
-| Reconnaissance | Gather Victim Host Information | `T1592` | WIFI-006, WIFI-008, WIFI-010, WIFI-012 |
-| Credential Access | Network Sniffing | `T1040` | WIFI-001, WIFI-002, WIFI-003, WIFI-006, WIFI-008, WIFI-009, WIFI-012 |
-| Credential Access | Brute Force: Password Cracking | `T1110.002` | WIFI-002, WIFI-003 |
-| Credential Access | Brute Force | `T1110` | WIFI-005, WIFI-010 |
-| Credential Access | Adversary-in-the-Middle: Evil Twin | `T1557.004` | WIFI-004 |
-| Credential Access | Steal Application Access Token | `T1528` | WIFI-010 |
-| Collection | Adversary-in-the-Middle | `T1557` | WIFI-004, WIFI-007, WIFI-009 |
-| Collection | Data from Information Repositories | `T1213` | WIFI-008 |
-| Credential Access | Input Capture: Web Portal Capture | `T1056.003` | WIFI-004 |
-| Resource Development | Develop Capabilities | `T1587` | WIFI-011 |
-| Defense Evasion | Impersonation | `T1656` | WIFI-007, WIFI-011, WIFI-012 |
-| Impact (ICS) | Manipulation of Control | `T0831` | WIFI-007, WIFI-009 |
-| Initial Access | Hardware Additions | `T1200` | WIFI-004, WIFI-009, WIFI-010, WIFI-011, WIFI-012 |
-| Initial Access | Valid Accounts | `T1078` | WIFI-002, WIFI-003, WIFI-004, WIFI-005 |
-| Initial Access | Valid Accounts: Local Accounts | `T1078.003` | WIFI-011, WIFI-012 |
+| reconnaissance | active scanning | `T1595` | WIFI-001, WIFI-006 |
+| reconnaissance | gather victim network information | `T1590` | WIFI-001 |
+| reconnaissance | gather victim host information | `T1592` | WIFI-006, WIFI-008, WIFI-010, WIFI-012 |
+| credential access | network sniffing | `T1040` | WIFI-001, WIFI-002, WIFI-003, WIFI-006, WIFI-008, WIFI-009, WIFI-012 |
+| credential access | brute force: password cracking | `T1110.002` | WIFI-002, WIFI-003 |
+| credential access | brute force | `T1110` | WIFI-005, WIFI-010 |
+| credential access | adversary-in-the-middle: evil twin | `T1557.004` | WIFI-004 |
+| credential access | steal application access token | `T1528` | WIFI-010 |
+| collection | adversary-in-the-middle | `T1557` | WIFI-004, WIFI-007, WIFI-009 |
+| collection | data from information repositories | `T1213` | WIFI-008 |
+| credential access | input capture: web portal capture | `T1056.003` | WIFI-004 |
+| resource development | develop capabilities | `T1587` | WIFI-011 |
+| defense evasion | impersonation | `T1656` | WIFI-007, WIFI-011, WIFI-012 |
+| impact (ics) | manipulation of control | `T0831` | WIFI-007, WIFI-009 |
+| initial access | hardware additions | `T1200` | WIFI-004, WIFI-009, WIFI-010, WIFI-011, WIFI-012 |
+| initial access | valid accounts | `T1078` | WIFI-002, WIFI-003, WIFI-004, WIFI-005 |
+| initial access | valid accounts: local accounts | `T1078.003` | WIFI-011, WIFI-012 |
 
 ---
 

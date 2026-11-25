@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Infrastructure Intelligence: Passive Recon with Shodan & Censys
+# Infrastructure intelligence: passive recon with Shodan & Censys
 
 > - **Phase:** Reconnaissance - Infrastructure Intelligence
 > - **Visibility:** Zero - search on public databases pre-built by third-party scanners, no contact with the targets
@@ -15,13 +15,13 @@ Target Case Study: Exposed infrastructure in Parma (IT) Tools: `Shodan` (Web), `
 
 ---
 
-## 1 Theoretical Introduction
+## 1 Theoretical introduction
 
 Unlike active scanners (like Nmap) that send packets to targets, tools like Shodan and Censys perform constant scans of the entire IPv4 address space, archiving service responses (Banners). This allows security analysts to query a historical database to discover exposed assets, vulnerable software versions and misconfigurations in a completely passive manner, invisible to the target's IDS/IPS.
 
 ---
 
-## 2 Technical Execution: Shodan (IoT & Services)
+## 2 Technical execution: Shodan (IoT & services)
 
 **Finding ID:** `INTEL-001` | **Severity:** `High`
 
@@ -50,7 +50,7 @@ Detailed analysis of Shodan data on two specific hosts revealed extremely risky 
 
 **Finding ID:** `INTEL-002` | **Severity:** `High`
 
-#### Target A (Exposed Workstation)
+#### Target a (exposed workstation)
 
 - IP: `2.118.xx.xx` (Business ISP)
 - OS Fingerprinting: Shodan identifies the operating system as Windows 11.
@@ -69,7 +69,7 @@ Detailed analysis of Shodan data on two specific hosts revealed extremely risky 
 
 **Finding ID:** `INTEL-003` | **Severity:** `Critical`
 
-#### Target B (Critical Business Server)
+#### Target b (critical business server)
 
 This is a critical target. Looking at the domains and ports, we can understand exactly what this company does.
 
@@ -98,7 +98,7 @@ Verdict: This single PC manages Phones, Files and Remote Access. If this PC fall
 
 ---
 
-## 3 OSINT Integration: ISP Identification (Whois)
+## 3 OSINT integration: ISP identification (whois)
 
 To complete the profiling of the critical target (`87.26.xx.xx`), a Whois query was performed to identify the Internet Service Provider (ISP) and abuse contacts.
 
@@ -131,7 +131,7 @@ Analysis:
 Note on Geolocation: Although Shodan locates the IP in Parma, cross-referenced OSINT analysis on the domains (`carosello.net`) and the VAT number revealed that the company primarily operates in Liguria. This discrepancy is attributable to ISP routing and confirms the importance of manual verification of automated data.
 
 
-## 4 Technical Execution: Censys (Validation & New Findings)
+## 4 Technical execution: Censys (validation & new findings)
 
 Scenario: Cross-reference validation of the critical target identified on Shodan. The objective is to analyze TLS certificates and discover services that might have been missed in the initial analysis.
 
@@ -153,7 +153,7 @@ Results Analysis (New Discoveries): The Censys analysis enriched the intelligenc
 
 ---
 
-## 5 Ethical Handling
+## 5 Ethical handling
 
 In a real-world scenario, after identifying such a high criticality (VoIP and Data Exposure), the correct Responsible Disclosure procedure involves:
 
@@ -172,13 +172,13 @@ Infrastructure Intelligence allowed mapping a critical attack surface without se
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Search Open Technical Databases: Scan Databases | `T1596.005` | Shodan search with query `port:3389 city:"Parma"` to identify devices with exposed RDP, detecting 60+ targets with Information Disclosure of hostnames and OS (INTEL-001) |
-| Reconnaissance | Gather Victim Network Info: Network Topology | `T1590.004` | Shodan banner and Censys TLS certificate analysis to reconstruct the critical targets' infrastructure topology (INTEL-002, INTEL-003) |
-| Reconnaissance | Gather Victim Network Info: IP Addresses | `T1590.005` | IP correlation through Whois to identify ISP, connection type (consumer vs datacenter) and real geolocation of targets (INTEL-002, INTEL-003) |
+| reconnaissance | search open technical databases: scan databases | `T1596.005` | shodan search with query `port:3389 city:"Parma"` to identify devices with exposed rdp, detecting 60+ targets with information disclosure of hostnames and os (INTEL-001) |
+| reconnaissance | gather victim network info: network topology | `T1590.004` | shodan banner and censys tls certificate analysis to reconstruct the critical targets' infrastructure topology (INTEL-002, INTEL-003) |
+| reconnaissance | gather victim network info: ip addresses | `T1590.005` | ip correlation through whois to identify isp, connection type (consumer vs datacenter) and real geolocation of targets (INTEL-002, INTEL-003) |
 
 ---
 

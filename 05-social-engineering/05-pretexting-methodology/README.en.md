@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 05 - Pretexting Methodology
+# 05 - Pretexting methodology
 
 > - **Phase:** Social Engineering - Pretexting & Target Profiling (human dimension of the attack)
 > - **Visibility:** Zero (passive OSINT research) / Low (phone/email interaction with pretext)
@@ -23,7 +23,7 @@ This section documents two complementary skills:
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 05-pretexting-methodology/
@@ -33,15 +33,15 @@ This section documents two complementary skills:
 
 ---
 
-## `target-profiling/` - OSINT-Based Dossier Construction
+## `target-profiling/` - OSINT-Based dossier construction
 
 **Finding ID:** `SE-013` | **Severity:** `Informational` (complete target dossier via public sources)
 
-### Operational Context
+### Operational context
 
 Target profiling is the information-gathering phase focused on the person (not the system). The goal is to build a dossier that answers five questions: who is the target (role, responsibilities), who do they interact with (manager, colleagues, vendors), what technology stack do they use, what are their digital habits (social media, posts, comments), and what are the most effective psychological triggers (urgency, authority, fear).
 
-### Main Commands
+### Main commands
 
 ```Bash
 # OSINT email: theHarvester for corporate email collection
@@ -73,28 +73,28 @@ linkedin2username -c target-lab -s "Italy"
 
 ---
 
-## `pretext-scenarios/` - Pretexting Scenario Templates
+## `pretext-scenarios/` - Pretexting scenario templates
 
-### Operational Context
+### Operational context
 
 Pretexting templates are pre-built scenarios calibrated by corporate role and psychological principle. Each template includes: the narrative pretext, the exploited Cialdini principle, the recommended delivery vector, and the variables to customize with target profiling data.
 
 ---
 
-## The Six Cialdini Principles in Social Engineering
+## The six cialdini principles in social engineering
 
-| Principle | Definition | SE Application |
+| principle | definition | se application |
 | :--- | :--- | :--- |
-| **Authority** | We tend to obey authority figures | Email from CEO, IT, vendor |
-| **Urgency/Scarcity** | We act impulsively under time pressure | "Within 24 hours", "Account will be suspended" |
-| **Reciprocity** | We feel obligated to return a favor | "I sent you the report, can you confirm?" |
-| **Social Proof** | We follow the behavior of others | "90% of colleagues have already completed" |
-| **Commitment/Consistency** | We maintain consistency with previous actions | Follow-up to a previously accepted request |
-| **Liking** | We are influenced by people we like | Friendly tone, common interests |
+| **authority** | we tend to obey authority figures | email from ceo, it, vendor |
+| **urgency/scarcity** | we act impulsively under time pressure | "within 24 hours", "account will be suspended" |
+| **reciprocity** | we feel obligated to return a favor | "i sent you the report, can you confirm?" |
+| **social proof** | we follow the behavior of others | "90% of colleagues have already completed" |
+| **commitment/consistency** | we maintain consistency with previous actions | follow-up to a previously accepted request |
+| **liking** | we are influenced by people we like | friendly tone, common interests |
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [1] Target identification (from 01-recon OSINT)
@@ -130,38 +130,38 @@ Pretexting templates are pre-built scenarios calibrated by corporate role and ps
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Primary Use Case |
+| tool | type | technique/access | primary use case |
 | :--- | :--- | :--- | :--- |
-| `theHarvester` | OSINT email | CLI | Email and subdomain collection from public sources |
-| `linkedin2username` | Social OSINT | CLI - Python | Username generation from LinkedIn profiles |
-| `Maltego` | OSINT aggregator | GUI | Relationship visualization between entities (people, emails, domains) |
-| `SpiderFoot` | OSINT automation | Web UI | Automated OSINT collection from 200+ sources |
-| `Recon-ng` | OSINT framework | CLI | Modular reconnaissance framework with social media modules |
+| `theHarvester` | osint email | cli | email and subdomain collection from public sources |
+| `linkedin2username` | social osint | cli - python | username generation from linkedin profiles |
+| `Maltego` | osint aggregator | gui | relationship visualization between entities (people, emails, domains) |
+| `SpiderFoot` | osint automation | web ui | automated osint collection from 200+ sources |
+| `Recon-ng` | osint framework | cli | modular reconnaissance framework with social media modules |
 
 > **Recommended modern tool:** `SpiderFoot HX` (hosted) or `SpiderFoot` (self-hosted) for complete OSINT automation. `Maltego CE` for graphical relationship visualization. For LinkedIn, `linkedin2username` combined with manual search for qualitative context.
 
 ---
 
-## Finding Registry
+## Finding registry
 
-| ID | Description | Severity | CVSS | Subfolder |
+| id | description | severity | cvss | subfolder |
 | :--- | :--- | :---: | :---: | :--- |
-| `SE-013` | OSINT target profiling: complete target dossier (role, contacts, tech stack, social habits) built entirely from public sources | `Informational` | 2.1 | `target-profiling/` |
+| `SE-013` | osint target profiling: complete target dossier (role, contacts, tech stack, social habits) built entirely from public sources | `Informational` | 2.1 | `target-profiling/` |
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Related Finding |
+| tactic | technique | mitre id | related finding |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Information: Email Addresses | `T1589.002` | SE-013 |
-| Reconnaissance | Gather Victim Identity Information: Employee Names | `T1589.003` | SE-013 |
-| Reconnaissance | Gather Victim Org Information: Identify Roles | `T1591.004` | SE-013 |
-| Reconnaissance | Gather Victim Org Information: Identify Business Tempo | `T1591.003` | SE-013 |
-| Reconnaissance | Search Open Websites/Domains: Social Media | `T1593.001` | SE-013 |
-| Reconnaissance | Search Victim-Owned Websites | `T1594` | SE-013 |
+| reconnaissance | gather victim identity information: email addresses | `T1589.002` | SE-013 |
+| reconnaissance | gather victim identity information: employee names | `T1589.003` | SE-013 |
+| reconnaissance | gather victim org information: identify roles | `T1591.004` | SE-013 |
+| reconnaissance | gather victim org information: identify business tempo | `T1591.003` | SE-013 |
+| reconnaissance | search open websites/domains: social media | `T1593.001` | SE-013 |
+| reconnaissance | search victim-owned websites | `T1594` | SE-013 |
 
 ---
 

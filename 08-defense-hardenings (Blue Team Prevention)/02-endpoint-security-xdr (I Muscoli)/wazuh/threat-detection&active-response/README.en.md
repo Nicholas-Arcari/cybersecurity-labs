@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Wazuh - Threat Detection & Active Response
+# Wazuh - threat detection & Active response
 
 > - **Phase:** Defense & Hardening - Detection & Automated Response (Endpoint/XDR)
 > - **Category:** Detection + Prevention - threat detection and automated response
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 If the SIEM (`../../../01-siem-log-analysis/`) is "the brain" that sees and correlates, Wazuh is "the muscles": it does not just detect, it acts. This file documents the two capabilities that turn Wazuh from a simple sensor into an active defense system (XDR - Extended Detection and Response): threat detection on the endpoint and automated response.
 
@@ -23,7 +23,7 @@ If the SIEM (`../../../01-siem-log-analysis/`) is "the brain" that sees and corr
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 threat-detection&active-response/
@@ -33,15 +33,15 @@ threat-detection&active-response/
 
 ---
 
-## File Integrity Monitoring and Threat Detection
+## File integrity monitoring and threat detection
 
 **Finding ID:** `DEF-003` | **Severity:** `High` (detection of tampering with critical files, persistence and rootkits on the endpoint)
 
-### Operational Context
+### Operational context
 
 Wazuh's Syscheck module computes and stores the hashes (checksums), permissions and attributes of the monitored files; at regular intervals (or in real time with `<realtime>`) it recomputes and compares, generating an alert on every discrepancy. It is the direct countermeasure to persistence techniques: modifications to `/etc/passwd`, `/etc/sudoers`, `authorized_keys`, Windows Run registry keys, or system binaries.
 
-### PoC - FIM configuration (Syscheck)
+### PoC - FIM configuration (syscheck)
 
 ```XML
 <!-- /var/ossec/etc/ossec.conf on the agent (or via group from the Manager) -->
@@ -52,7 +52,7 @@ Wazuh's Syscheck module computes and stores the hashes (checksums), permissions 
 </syscheck>
 ```
 
-### PoC - Detection of an unauthorized modification
+### PoC - detection of an unauthorized modification
 
 ```Bash
 # [Attack simulation] addition of a backdoor SSH key
@@ -73,7 +73,7 @@ Attributes: size, md5, sha256 changed
 # rootcheck alerts appear in the Dashboard under rule.groups:rootcheck
 ```
 
-### Tuning and Defensive Operations
+### Tuning and defensive operations
 
 - **Targeted selection:** monitor in `realtime` only the critical paths (authentication, binaries, cron, keys); FIM on large and volatile directories generates noise
 - **Ignore list:** exclude legitimately volatile files (logs, cache, temp) to reduce false positives
@@ -82,15 +82,15 @@ Attributes: size, md5, sha256 changed
 
 ---
 
-## Active Response - Automated Containment
+## Active response - automated containment
 
 **Finding ID:** `DEF-004` | **Severity:** `High` (automated response that contains the attacker in seconds, without human intervention)
 
-### Operational Context
+### Operational context
 
 Active Response links a rule to a script executed automatically on the agent (or on the Manager) when the rule triggers. The classic use case is the firewall block of an IP that has exceeded a failed-login threshold: the same brute force detection seen in the SIEM (`../../../01-siem-log-analysis/elk-stack/`, DEF-001), but with automatic containment instead of just notification.
 
-### PoC - Active Response configuration (firewall-drop)
+### PoC - Active response configuration (firewall-drop)
 
 ```XML
 <!-- /var/ossec/etc/ossec.conf on the Manager -->
@@ -102,7 +102,7 @@ Active Response links a rule to a script executed automatically on the agent (or
 </active-response>
 ```
 
-### PoC - Automatic blocking in action
+### PoC - automatic blocking in action
 
 ```
 # [Attack] SSH brute force from IP 10.0.2.15 -> exceeds the threshold of rule 5763
@@ -123,7 +123,7 @@ DROP   all  --  10.0.2.15    0.0.0.0/0        <-- attacker contained automatical
 
 After the `timeout` (600 seconds), Wazuh automatically removes the rule, avoiding a false positive permanently blocking a legitimate IP.
 
-### Tuning and Defensive Operations
+### Tuning and defensive operations
 
 - **Timeout and non-permanence:** prefer timed blocks to contain the impact of false positives; a permanent block should be reserved for high-confidence IOCs
 - **Whitelist:** whitelist the management IPs and bastion hosts, to avoid self-blocking (a classic mistake is blocking your own administration IP)
@@ -132,7 +132,7 @@ After the `timeout` (600 seconds), Wazuh automatically removes the rule, avoidin
 
 ---
 
-## Lab Experience
+## Lab experience
 
 FIM gave the most immediate defensive satisfaction of the whole module. I had documented the persistence techniques in `07-post-exploitation` (addition of SSH keys, modification of system files); seeing them detected in real time by Wazuh - the `authorized_keys modified` alert appearing in the Dashboard at the very moment I simulated the backdoor - closed the loop between attack and defense. The same action that as an attacker guaranteed me access, as a defender betrayed me instantly.
 
@@ -142,7 +142,7 @@ The operational reflection was on the trade-off between speed and risk. Active r
 
 ---
 
-## Theoretical Analysis: Detection without Response Is Only Half the Defense
+## Theoretical analysis: detection without response is only half the defense
 
 The XDR (Extended Detection and Response) model unites two functions that were historically separate: detecting and reacting. A classic IDS detects and notifies, leaving the response to the human operator; this introduces a time window - the "dwell time" between detection and containment - during which the attacker continues undisturbed. Much of the damage is done in that window: escalation, lateral movement, exfiltration.
 
@@ -152,15 +152,15 @@ The mirror risk is that automation, devoid of judgment, also executes errors at 
 
 ---
 
-## Real-World Scenario: Detection and Response in Action
+## Real-World scenario: detection and response in action
 
 > This section describes how these defensive controls would operate in a real incident.
 
-### Attacker Perspective (what they attempt)
+### Attacker perspective (what they attempt)
 
 The attacker, having gained initial access, tries to establish persistence by adding an SSH key and then to expand with a brute force toward other internal hosts. They trust that the file modifications go unnoticed and that the brute force, if slow enough, does not exceed the thresholds.
 
-### Defender Perspective (how the controls respond)
+### Defender perspective (how the controls respond)
 
 ```
 [DEF-003] FIM detects the modification of /root/.ssh/authorized_keys in real time
@@ -186,37 +186,37 @@ SOC: correlation of FIM + brute force -> host X compromised, containment and rem
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `Wazuh Syscheck` (FIM) | File Integrity Monitoring | Module | Detection of modifications to critical files/directories |
-| `Wazuh Rootcheck` | Anomaly/rootkit detection | Module | Search for rootkits and anomalous configurations |
-| `Wazuh Active Response` | Automated response | Module | Execution of scripts (IP block, kill process) on alert |
-| `firewall-drop` | AR script | Script | Block an IP at the iptables/netsh level |
-| `Sysmon` + Wazuh | Endpoint telemetry | Agent (Win) | Detailed process telemetry for advanced detection |
-| `Suricata` + Wazuh | IDS integration | Integration | Correlated network detection (see `../suricata-integration/`) |
+| `Wazuh Syscheck` (fim) | file integrity monitoring | module | detection of modifications to critical files/directories |
+| `Wazuh Rootcheck` | anomaly/rootkit detection | module | search for rootkits and anomalous configurations |
+| `Wazuh Active Response` | automated response | module | execution of scripts (ip block, kill process) on alert |
+| `firewall-drop` | ar script | script | block an ip at the iptables/netsh level |
+| `Sysmon` + wazuh | endpoint telemetry | agent (win) | detailed process telemetry for advanced detection |
+| `Suricata` + wazuh | ids integration | integration | correlated network detection (see `../suricata-integration/`) |
 
 > **Recommended modern tool:** the `Sysmon` + Wazuh integration on Windows endpoints provides process telemetry (process creation, network connections, DLL loading) that brings endpoint detection to EDR level. For the response, evaluate the integration with SOAR to orchestrate complex actions beyond the simple IP block.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
 > The table maps the attack techniques that the controls **detect and contain**.
 
-| Tactic (countered) | Technique | MITRE ID | Role of the control |
+| tactic (countered) | technique | mitre id | role of the control |
 | :--- | :--- | :--- | :--- |
-| Persistence | Account Manipulation: SSH Authorized Keys | `T1098.004` | FIM detects the modification of authorized_keys (DEF-003) |
-| Persistence | Boot or Logon Autostart: Registry Run Keys | `T1547.001` | FIM detects modifications to Run keys on Windows (DEF-003) |
-| Defense Evasion | Rootkit | `T1014` | Rootcheck detects rootkits and anomalies (DEF-003) |
-| Credential Access | Brute Force | `T1110` | Active Response blocks the IP doing brute force (DEF-004) |
-| Impact | Account Access Removal | `T1531` | (risk) mistuned active response can self-block legitimate accounts/IPs |
+| persistence | account manipulation: ssh authorized keys | `T1098.004` | fim detects the modification of authorized_keys (DEF-003) |
+| persistence | boot or logon autostart: registry run keys | `T1547.001` | fim detects modifications to run keys on windows (DEF-003) |
+| defense evasion | rootkit | `T1014` | rootcheck detects rootkits and anomalies (DEF-003) |
+| credential access | brute force | `T1110` | active response blocks the ip doing brute force (DEF-004) |
+| impact | account access removal | `T1531` | (risk) mistuned active response can self-block legitimate accounts/ips |
 
-| Defensive countermeasure (D3FEND) | D3FEND ID | Application |
+| defensive countermeasure (d3fend) | d3fend id | application |
 | :--- | :--- | :--- |
-| File Integrity Monitoring | `D3-FIM` | Monitoring of the hashes of critical files (DEF-003) |
-| Network Traffic Filtering | `D3-NTF` | Automatic blocking of the hostile IP at the firewall level (DEF-004) |
+| file integrity monitoring | `D3-FIM` | monitoring of the hashes of critical files (DEF-003) |
+| network traffic filtering | `D3-NTF` | automatic blocking of the hostile ip at the firewall level (DEF-004) |
 
 ---
 

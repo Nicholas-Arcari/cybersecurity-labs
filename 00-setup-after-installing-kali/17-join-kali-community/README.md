@@ -11,23 +11,23 @@
 
 ## Risorse ufficiali
 
-| Risorsa | URL | Tipo |
+| risorsa | url | tipo |
 | :--- | :--- | :--- |
-| Forum ufficiale Kali | `forums.kali.org` | Forum Q&A, bug report, guide |
-| Discord Kali Linux | Invito su `kali.org/discord` | Chat real-time, canali per topic |
-| Blog ufficiale | `kali.org/blog` | Annunci nuove versioni, tool, tutorial |
-| Docs ufficiali | `kali.org/docs` | Documentazione installazione, tool, configurazione |
-| Bug tracker | `bugs.kali.org` | Segnalazione bug pacchetti Kali |
+| forum ufficiale kali | `forums.kali.org` | forum q&a, bug report, guide |
+| discord kali linux | invito su `kali.org/discord` | chat real-time, canali per topic |
+| blog ufficiale | `kali.org/blog` | annunci nuove versioni, tool, tutorial |
+| docs ufficiali | `kali.org/docs` | documentazione installazione, tool, configurazione |
+| bug tracker | `bugs.kali.org` | segnalazione bug pacchetti kali |
 
 ## Community cybersecurity piu ampie
 
-| Risorsa | URL | Tipo |
+| risorsa | url | tipo |
 | :--- | :--- | :--- |
-| r/netsec | `reddit.com/r/netsec` | News e ricerca sicurezza |
-| r/hacking | `reddit.com/r/hacking` | Tutorial, discussioni tecniche |
-| Hack The Box Discord | `discord.gg/hackthebox` | Community CTF e lab pratici |
-| TryHackMe Discord | `discord.gg/tryhackme` | Community piattaforma learning |
-| OWASP | `owasp.org` | Standard, tool, guide open source |
+| r/netsec | `reddit.com/r/netsec` | news e ricerca sicurezza |
+| r/hacking | `reddit.com/r/hacking` | tutorial, discussioni tecniche |
+| hack the box discord | `discord.gg/hackthebox` | community ctf e lab pratici |
+| tryhackme discord | `discord.gg/tryhackme` | community piattaforma learning |
+| owasp | `owasp.org` | standard, tool, guide open source |
 
 ---
 

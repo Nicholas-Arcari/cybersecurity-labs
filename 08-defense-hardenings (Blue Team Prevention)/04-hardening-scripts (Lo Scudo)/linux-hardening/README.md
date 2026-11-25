@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Linux Hardening - Riduzione della Superficie d'Attacco
+# Linux hardening - riduzione della superficie d'Attacco
 
 > - **Fase:** Defense & Hardening - System Hardening (Prevention)
 > - **Categoria:** Prevention - riduzione della superficie d'attacco e baseline di sicurezza
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 L'hardening e la difesa preventiva: mentre SIEM (`../../01-siem-log-analysis/`) e Wazuh rilevano gli attacchi in corso, l'hardening li previene riducendo cio che l'attaccante puo sfruttare. Ogni servizio non necessario disattivato, ogni permesso ristretto, ogni default insicuro corretto e una porta chiusa prima ancora che l'attaccante la trovi. E lo strato piu economico ed efficace della difesa, perche agisce sulla causa (superficie d'attacco) invece che sul sintomo (attacco in corso).
 
@@ -33,7 +33,7 @@ linux-hardening/
 
 ---
 
-## Audit e Hardening con Lynis
+## Audit e hardening con lynis
 
 **ID Finding:** `DEF-007` | **Severity:** `Alto` (riduzione strutturale della superficie d'attacco; previene intere classi di privilege escalation e lateral movement)
 
@@ -41,7 +41,7 @@ linux-hardening/
 
 Il ciclo di hardening corretto parte dalla misura, non dall'azione: prima si audita il sistema per sapere dove si e (Lynis produce un hardening index e una lista di warning), poi si interviene sulle raccomandazioni prioritarie, infine si ri-audita per verificare il miglioramento. Questo rende l'hardening oggettivo e ripetibile, non una collezione di comandi applicati a caso.
 
-### PoC - Fase 1: Audit iniziale (baseline)
+### PoC - fase 1: audit iniziale (baseline)
 
 ```Bash
 # Installazione e audit completo del sistema
@@ -60,7 +60,7 @@ sudo lynis audit system
   Suggestions: 47 hardening opportunities
 ```
 
-### PoC - Fase 2: Applicazione dell'hardening (esempi mirati)
+### PoC - fase 2: applicazione dell'hardening (esempi mirati)
 
 ```Bash
 # SSH hardening: nega login root, forza chiavi
@@ -76,7 +76,7 @@ echo "kernel.core_pattern=|/bin/false" | sudo tee -a /etc/sysctl.d/99-hardening.
 sudo sysctl --system
 ```
 
-### PoC - Fase 3: Ri-audit (misura del miglioramento)
+### PoC - fase 3: ri-audit (misura del miglioramento)
 
 ```Bash
 sudo lynis audit system
@@ -88,7 +88,7 @@ sudo lynis audit system
     # da 58 a 84: superficie d'attacco ridotta in modo misurabile
 ```
 
-### Operativita Difensiva e Cautele
+### Operativita difensiva e cautele
 
 - **Misura sempre prima e dopo:** l'hardening index rende il progresso oggettivo; senza baseline non si sa se si e migliorato
 - **Non rompere i servizi:** ogni modifica va valutata rispetto al ruolo del sistema (disabilitare un servizio "inutile" che invece serve causa un'interruzione); snapshot prima, test dopo
@@ -97,7 +97,7 @@ sudo lynis audit system
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il valore di Lynis e stato rendere l'hardening misurabile invece che aneddotico. Prima conoscevo le singole contromisure (disabilita root SSH, rimuovi SUID inutili) ma non avevo un modo per sapere "quanto" un sistema fosse sicuro. L'hardening index - da 58 a 84 nel mio ciclo di test - ha trasformato una sensazione ("ora e piu sicuro") in un dato. Questo cambia l'hardening da attivita soggettiva a processo verificabile, ed e esattamente cio che un report professionale richiede.
 
@@ -107,7 +107,7 @@ La cautela appresa e stata il rovescio dell'entusiasmo. Nel tentativo di massimi
 
 ---
 
-## Analisi Teorica: L'Hardening come Riduzione della Superficie d'Attacco
+## Analisi teorica: L'Hardening come riduzione della superficie d'Attacco
 
 La superficie d'attacco di un sistema e l'insieme di tutti i punti attraverso cui un attaccante puo tentare di interagire con esso: servizi in ascolto, account, binari privilegiati, permessi sui file, configurazioni esposte. L'hardening e l'applicazione sistematica di un principio: minimizzare questa superficie. Ogni elemento non necessario e un rischio senza beneficio; rimuoverlo elimina un potenziale vettore a costo zero funzionale.
 
@@ -117,15 +117,15 @@ Il legame con il resto della difesa e gerarchico. L'hardening e il primo strato 
 
 ---
 
-## Scenario Reale: La Prevenzione in Azione
+## Scenario reale: la prevenzione in azione
 
 > Questa sezione descrive come questo controllo difensivo opererebbe in un incidente reale.
 
-### Prospettiva Attaccante (cosa tenta)
+### Prospettiva attaccante (cosa tenta)
 
 L'attaccante, ottenuto un accesso iniziale come utente non privilegiato, cerca una via di privilege escalation: enumera i binari SUID, verifica le regole sudo, cerca cron job scrivibili e credenziali in chiaro - esattamente il playbook di `04-system-exploitation`.
 
-### Prospettiva Difensore (come il controllo risponde)
+### Prospettiva difensore (come il controllo risponde)
 
 ```
 [DEF-007] Sistema hardenizzato secondo baseline CIS (Lynis index 84)
@@ -153,14 +153,14 @@ Escalation fallita: la superficie che l'attacco richiede non esiste piu
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Lynis` | Security auditor | CLI | Audit di hardening con index numerico e raccomandazioni |
-| `CIS Benchmarks` | Baseline standard | Documento | Configurazioni di sicurezza riconosciute per OS/servizi |
-| `Bastille` | Hardening script | CLI | Hardening guidato interattivo (legacy ma didattico) |
-| `auditd` | Audit framework | Daemon | Logging degli eventi di sistema per detection e compliance |
-| `OpenSCAP` | Compliance scanner | CLI | Verifica di conformita a profili di sicurezza (SCAP) |
-| `Ansible` (hardening role) | Automation | IaC | Applicazione idempotente dell'hardening su parchi macchine |
+| `Lynis` | security auditor | cli | audit di hardening con index numerico e raccomandazioni |
+| `CIS Benchmarks` | baseline standard | documento | configurazioni di sicurezza riconosciute per os/servizi |
+| `Bastille` | hardening script | cli | hardening guidato interattivo (legacy ma didattico) |
+| `auditd` | audit framework | daemon | logging degli eventi di sistema per detection e compliance |
+| `OpenSCAP` | compliance scanner | cli | verifica di conformita a profili di sicurezza (scap) |
+| `Ansible` (hardening role) | automation | iac | applicazione idempotente dell'hardening su parchi macchine |
 
 > **Tool moderno consigliato:** `Lynis` per l'audit e la misura (l'hardening index rende il progresso oggettivo). Per l'applicazione su scala, i ruoli Ansible allineati ai `CIS Benchmarks` (es. le collection di DevSec Hardening Framework) rendono l'hardening idempotente e ripetibile. `OpenSCAP` per la verifica di compliance formale. Bastille resta didatticamente utile ma e datato.
 
@@ -170,19 +170,19 @@ Escalation fallita: la superficie che l'attacco richiede non esiste piu
 
 > La tabella mappa le tecniche d'attacco che l'hardening **previene** riducendo la superficie.
 
-| Tattica (prevenuta) | Tecnica | ID MITRE | Ruolo del controllo |
+| tattica (prevenuta) | tecnica | id mitre | ruolo del controllo |
 | :--- | :--- | :--- | :--- |
-| Privilege Escalation | Abuse Elevation Control: Sudo and Sudo Caching | `T1548.003` | Configurazione sudo minima, nessun NOPASSWD abusabile (DEF-007) |
-| Privilege Escalation | Setuid and Setgid | `T1548.001` | Rimozione dei bit SUID non necessari (DEF-007) |
-| Privilege Escalation | Scheduled Task/Job: Cron | `T1053.003` | Permessi ristretti su cron e directory (DEF-007) |
-| Persistence | Account Manipulation: SSH Authorized Keys | `T1098.004` | Disabilitazione root login, forzatura chiavi, permessi ristretti |
-| Credential Access | Unsecured Credentials: Credentials In Files | `T1552.001` | Bonifica delle credenziali in chiaro nei file di config |
+| privilege escalation | abuse elevation control: sudo and sudo caching | `T1548.003` | configurazione sudo minima, nessun nopasswd abusabile (DEF-007) |
+| privilege escalation | setuid and setgid | `T1548.001` | rimozione dei bit suid non necessari (DEF-007) |
+| privilege escalation | scheduled task/job: cron | `T1053.003` | permessi ristretti su cron e directory (DEF-007) |
+| persistence | account manipulation: ssh authorized keys | `T1098.004` | disabilitazione root login, forzatura chiavi, permessi ristretti |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | bonifica delle credenziali in chiaro nei file di config |
 
-| Contromisura difensiva (D3FEND) | ID D3FEND | Applicazione |
+| contromisura difensiva (d3fend) | id d3fend | applicazione |
 | :--- | :--- | :--- |
-| Platform Hardening | `D3-PH` | Riduzione della superficie d'attacco via baseline CIS |
-| Local Account Monitoring | `D3-LAM` | Audit e restrizione degli account e dei privilegi |
-| Executable Denylisting | `D3-EDL` | Rimozione/restrizione dei binari privilegiati abusabili |
+| platform hardening | `D3-PH` | riduzione della superficie d'attacco via baseline cis |
+| local account monitoring | `D3-LAM` | audit e restrizione degli account e dei privilegi |
+| executable denylisting | `D3-EDL` | rimozione/restrizione dei binari privilegiati abusabili |
 
 ---
 

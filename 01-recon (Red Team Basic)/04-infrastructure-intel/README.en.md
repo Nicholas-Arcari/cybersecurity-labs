@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 04 - Infrastructure Intelligence
+# 04 - Infrastructure intelligence
 
 > - **Phase:** Reconnaissance - Infrastructure Intelligence Gathering
 > - **Visibility:** Zero / Low - search on public databases, standard HTTP fingerprinting
@@ -26,7 +26,7 @@ Tech stack fingerprinting is directly connected to the `02-vulnerability-assessm
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 04-infrastructure-intel/
@@ -43,7 +43,7 @@ Tech stack fingerprinting is directly connected to the `02-vulnerability-assessm
 
 ---
 
-## `shodan-censys/` - Asset Intelligence from Public Databases
+## `shodan-censys/` - Asset intelligence from public databases
 
 **Finding ID:** `INTEL-001` | **Severity:** `High`
 **Finding ID:** `INTEL-002` | **Severity:** `High`
@@ -59,7 +59,7 @@ Cross-validation between Shodan (service and banner identification) and Censys (
 
 ---
 
-## `tech-stack/` - Tech Stack Fingerprinting
+## `tech-stack/` - Tech stack fingerprinting
 
 **Finding ID:** `INTEL-004` | **Severity:** `Informational`
 
@@ -71,7 +71,7 @@ Tech Stack Fingerprinting identifies the underlying technologies of a web applic
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [INPUT] Target domain or IP range
@@ -107,41 +107,41 @@ Tech Stack Fingerprinting identifies the underlying technologies of a web applic
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main Use Case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `Shodan` | Scan database | Web / CLI (`shodan`) | Exposed asset search by IP, port, banner, CVE |
-| `Censys` | Scan database | Web | TLS certificate analysis, Shodan validation |
-| `Whois` | OSINT | CLI | ISP, abuse contacts, real geolocation |
-| `WhatWeb` | Tech fingerprint | CLI | Web technology fingerprinting via HTTP request |
-| `Wappalyzer` | Tech fingerprint | Browser extension | Passive fingerprinting during browsing |
-| `BuiltWith` | Tech fingerprint | Web | Historical tech stack database by domain |
-| `FOFA` | Scan database | Web | Asian alternative to Shodan, useful for specific targets |
-| `Netlas.io` | Scan database | Web | Modern alternative to Shodan with advanced queries |
+| `Shodan` | scan database | web / cli (`shodan`) | exposed asset search by ip, port, banner, cve |
+| `Censys` | scan database | web | tls certificate analysis, shodan validation |
+| `Whois` | osint | cli | isp, abuse contacts, real geolocation |
+| `WhatWeb` | tech fingerprint | cli | web technology fingerprinting via http request |
+| `Wappalyzer` | tech fingerprint | browser extension | passive fingerprinting during browsing |
+| `BuiltWith` | tech fingerprint | web | historical tech stack database by domain |
+| `FOFA` | scan database | web | asian alternative to shodan, useful for specific targets |
+| `Netlas.io` | scan database | web | modern alternative to shodan with advanced queries |
 
 > **Recommended modern tool:** `Shodan CLI` (`pip install shodan`, `shodan init <API_KEY>`) - allows automating Shodan queries in scripts and integrating results into automated OSINT workflows. Example command: `shodan search "port:3389 city:Parma" --fields ip_str,port,org`.
 
 ---
 
-## Finding Registry
+## Finding registry
 
-| ID | Description | Severity | File |
+| id | description | severity | file |
 | :--- | :--- | :---: | :--- |
-| `INTEL-001` | 60+ devices with exposed RDP in Parma - hostnames and OS detected | `High` | `shodan-censys/README.md` |
-| `INTEL-002` | Workstation with RDP + Apache on non-standard port + management services on public IP | `High` | `shodan-censys/README.md` |
-| `INTEL-003` | Corporate server with VoIP (3CX) + FTP (FileZilla) + RDP on consumer ADSL | `Critical` | `shodan-censys/README.md` |
-| `INTEL-004` | tesla.com protected by Akamai WAF - fingerprinting blocked, HSTS active | `Informational` | `tech-stack/README.md` |
+| `INTEL-001` | 60+ devices with exposed rdp in parma - hostnames and os detected | `High` | `shodan-censys/README.md` |
+| `INTEL-002` | workstation with rdp + apache on non-standard port + management services on public ip | `High` | `shodan-censys/README.md` |
+| `INTEL-003` | corporate server with voip (3cx) + ftp (filezilla) + rdp on consumer adsl | `Critical` | `shodan-censys/README.md` |
+| `INTEL-004` | tesla.com protected by akamai waf - fingerprinting blocked, hsts active | `Informational` | `tech-stack/README.md` |
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Search Open Technical Databases: Scan Databases | `T1596.005` | Search for exposed assets on Shodan and Censys by IP and port, identifying public RDP, VoIP, FTP (INTEL-001, INTEL-002, INTEL-003) |
-| Reconnaissance | Gather Victim Network Info: Network Topology | `T1590.004` | Target infrastructure mapping through Shodan banner analysis and Censys TLS certificates (INTEL-001, INTEL-002, INTEL-003) |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | Tech stack fingerprinting through WhatWeb and Wappalyzer to identify CMS, web server and framework (INTEL-004) |
+| reconnaissance | search open technical databases: scan databases | `T1596.005` | search for exposed assets on shodan and censys by ip and port, identifying public rdp, voip, ftp (INTEL-001, INTEL-002, INTEL-003) |
+| reconnaissance | gather victim network info: network topology | `T1590.004` | target infrastructure mapping through shodan banner analysis and censys tls certificates (INTEL-001, INTEL-002, INTEL-003) |
+| reconnaissance | gather victim host info: software | `T1592.002` | tech stack fingerprinting through whatweb and wappalyzer to identify cms, web server and framework (INTEL-004) |
 
 ---
 

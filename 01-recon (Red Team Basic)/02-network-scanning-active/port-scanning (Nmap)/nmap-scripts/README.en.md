@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Active Scanning: Nmap Scripting Engine (NSE)
+# Active scanning: Nmap scripting engine (NSE)
 
 > - **Phase:** Reconnaissance - Active Network Scanning
 > - **Visibility:** Medium - NSE scripts generate identifiable traffic (SMB requests, NetBIOS, banner grabbing) detectable by IDS
@@ -13,7 +13,7 @@ Objective: Use of advanced scripts for service enumeration and configuration vul
 
 ---
 
-## 1 Theoretical Introduction
+## 1 Theoretical introduction
 
 The Nmap Scripting Engine (NSE) allows automating interaction with services to extract information that simple port scanning does not reveal.
 
@@ -21,7 +21,7 @@ In particular, default scripts (`-sC`) execute a battery of safe tests to identi
 
 ---
 
-## 2 Technical Execution
+## 2 Technical execution
 
 Default Scripts & Security Mode
 
@@ -35,18 +35,18 @@ sudo nmap -p 445 -sC 10.0.2.3
 
 ---
 
-## 3 Results Analysis
+## 3 Results analysis
 
 **Finding ID:** `SCAN-003` | **Severity:** `High`
 
 Two fundamental data points for the Enumeration phase emerged from the script output:
 
-#### A. Information Disclosure (NetBIOS)
+#### A. information disclosure (NetBIOS)
 
 - Data Detected: `NetBIOS name: WINDOWS-TEST`
 - Significance: Despite blocking `smb-os-discovery`, the NetBIOS service revealed the machine's hostname. This allows identifying the machine within a domain or workgroup.
 
-#### B. Configuration Vulnerability (SMB Signing)
+#### B. configuration vulnerability (SMB signing)
 
 - Data Detected: `Message signing enabled but not required`
 - Significance: The target supports digital signing of SMB packets but does not enforce it.
@@ -54,7 +54,7 @@ Two fundamental data points for the Enumeration phase emerged from the script ou
 
 ---
 
-## 4 Remediation (Blue Team)
+## 4 Remediation (blue team)
 
 To mitigate the SMB Relay risk:
 
@@ -63,12 +63,12 @@ To mitigate the SMB Relay risk:
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Discovery | Network Service Discovery | `T1046` | NSE scan with default scripts (-sC) on port 445 of target 10.0.2.3 to identify SMB configurations and exposed services (SCAN-003) |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | Enumeration of SMB2 protocol version and Message Signing configuration through smb2-security-mode script (SCAN-003) |
+| discovery | network service discovery | `T1046` | nse scan with default scripts (-sc) on port 445 of target 10.0.2.3 to identify smb configurations and exposed services (SCAN-003) |
+| reconnaissance | gather victim host info: software | `T1592.002` | enumeration of smb2 protocol version and message signing configuration through smb2-security-mode script (SCAN-003) |
 
 ---
 
@@ -78,11 +78,11 @@ To mitigate the SMB Relay risk:
 
 Finding SCAN-003 (SMB Signing not required) is the starting point of an attack chain documented in the lab:
 
-| This finding | Leads to | Module |
+| this finding | leads to | module |
 | :--- | :--- | :--- |
-| SCAN-003 - SMB Signing disabled | [VULN-001](<../../../../02-vulnerability-assessment/01-general-scanners (Infrastructure)/nessus/README.en.md>) - Confirmation via Nessus credentialed | 02-vuln-assessment |
-| SCAN-003 - NetBIOS exposure | [VULN-003](<../../../../02-vulnerability-assessment/02-protocol-specific-audit/smb-net-bios/README.en.md>) - NetBIOS Name Disclosure | 02-vuln-assessment |
-| SCAN-003 - Credentials nick/1234 | [VULN-004](<../../../../02-vulnerability-assessment/02-protocol-specific-audit/smb-net-bios/README.en.md>) - C$ access with standard credentials | 02-vuln-assessment |
-| VULN-001 + VULN-004 (chain) | [EXPLOIT-018](<../../../../04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/winpeas/README.en.md>) - Pass-the-Hash lateral movement | 04-exploitation |
+| SCAN-003 - smb signing disabled | [VULN-001](<../../../../02-vulnerability-assessment/01-general-scanners (Infrastructure)/nessus/README.en.md>) - confirmation via nessus credentialed | 02-vuln-assessment |
+| SCAN-003 - netbios exposure | [VULN-003](<../../../../02-vulnerability-assessment/02-protocol-specific-audit/smb-net-bios/README.en.md>) - netbios name disclosure | 02-vuln-assessment |
+| SCAN-003 - credentials nick/1234 | [VULN-004](<../../../../02-vulnerability-assessment/02-protocol-specific-audit/smb-net-bios/README.en.md>) - c$ access with standard credentials | 02-vuln-assessment |
+| VULN-001 + VULN-004 (chain) | [EXPLOIT-018](<../../../../04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/winpeas/README.en.md>) - pass-the-hash lateral movement | 04-exploitation |
 
 > **Note:** Enumeration activities with Nmap NSE were performed exclusively within an isolated VirtualBox lab with an authorized Windows 10 target (10.0.2.3). The documented SMB Signing misconfiguration was detected for analysis and attack surface documentation purposes.

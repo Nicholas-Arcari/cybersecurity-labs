@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Kubernetes Auditing - CIS Benchmark e Pod Security
+# Kubernetes auditing - CIS benchmark e pod security
 
 > - **Fase:** Cloud Security - Kubernetes Hardening (Defense)
 > - **Categoria:** Difensivo - audit di conformita e hardening del cluster
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 L'auditing di Kubernetes e la contromisura difensiva diretta agli attacchi documentati in `../K8s-attacks/` (CLOUD-007). Dato che la sicurezza di un cluster e la somma di molte configurazioni corrette, e che la complessita rende l'errore probabile, serve un modo sistematico per verificare la postura di sicurezza - non a mano, ma contro una baseline riconosciuta. Il **CIS Kubernetes Benchmark** e questa baseline, e **kube-bench** e lo strumento che misura la conformita del cluster ad essa.
 
@@ -40,7 +40,7 @@ K8s-auditing/
 
 kube-bench esegue i controlli del CIS Kubernetes Benchmark contro i componenti del cluster: verifica i permessi dei file di configurazione, i flag dell'API server, la sicurezza di etcd, le policy RBAC. Il report indica cosa e conforme e cosa no, con la raccomandazione di correzione per ogni FAIL.
 
-### PoC - Esecuzione dell'audit CIS
+### PoC - esecuzione dell'audit CIS
 
 ```Bash
 # kube-bench esegue i controlli CIS sul cluster (control plane + nodi)
@@ -59,7 +59,7 @@ kube-bench run --targets master,node,etcd,policies
 
 Ogni FAIL corrisponde a un'esposizione sfruttabile: la 1.2.16 (Secret non cifrati) e la 2.1 (etcd senza auth) sono esattamente i vettori di CLOUD-007. L'audit li rende visibili prima dell'attaccante.
 
-### PoC - Pod Security Standards (prevenzione dei pod pericolosi)
+### PoC - pod security standards (prevenzione dei pod pericolosi)
 
 ```YAML
 # Pod Security Admission: blocca i pod privilegiati/host-mount a livello di namespace
@@ -81,7 +81,7 @@ Error: pods "evil" is forbidden: violates PodSecurity "restricted:latest":
   privileged (container must not set securityContext.privileged=true)   <-- escape prevenuto (CLOUD-008)
 ```
 
-### Operativita Difensiva
+### Operativita difensiva
 
 - **Ciclo audit, hardening, ri-audit:** eseguire kube-bench, correggere i FAIL prioritari (etcd, cifratura Secret, anonymous auth), ri-eseguire per confermare
 - **Correzioni prioritarie:** cifratura dei Secret a riposo, TLS mutuo su etcd, disabilitazione accesso anonimo, RBAC a minimo privilegio
@@ -90,7 +90,7 @@ Error: pods "evil" is forbidden: violates PodSecurity "restricted:latest":
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il valore di kube-bench e stato tradurre la vastita di Kubernetes in una checklist azionabile. Dopo aver visto in `../K8s-attacks/` quanto sia ampia la superficie del cluster, l'idea di verificarla a mano era scoraggiante; kube-bench l'ha ridotta a un report di PASS/FAIL con le correzioni. Vedere i FAIL corrispondere esattamente ai vettori che avevo sfruttato dal lato offensivo (etcd senza auth, Secret non cifrati) ha reso concreta la simmetria: lo stesso cluster che avevo attaccato, ora lo hardenizzavo chiudendo i FAIL uno per uno.
 
@@ -100,7 +100,7 @@ La riflessione e stata sulla necessita dell'automazione. Un cluster reale cambia
 
 ---
 
-## Analisi Teorica: Baseline e Admission Control come Difesa Scalabile
+## Analisi teorica: baseline e admission control come difesa scalabile
 
 L'auditing con baseline (CIS) risolve il problema della complessita con lo stesso principio dell'hardening tradizionale (Lynis, CIS Benchmark del modulo 08): trasformare "e sicuro?" - domanda soggettiva e ingestibile su un sistema complesso - in "e conforme a questa baseline riconosciuta?" - domanda oggettiva e verificabile. La baseline incapsula la conoscenza di sicurezza condivisa in una checklist, rendendo l'hardening ripetibile e indipendente dall'esperto. Non serve sapere a memoria ogni configurazione sicura di Kubernetes; serve verificare la conformita al CIS.
 
@@ -110,7 +110,7 @@ Insieme, audit e admission coprono i due tempi della difesa: l'audit verifica lo
 
 ---
 
-## Scenario Reale: L'Hardening in Azione
+## Scenario reale: L'Hardening in azione
 
 > Prospettiva difensiva: come l'audit e l'admission control avrebbero contrastato l'attacco di CLOUD-007.
 
@@ -141,13 +141,13 @@ Attacco contenuto: nessuna via al control plane, nessun escape possibile
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `kube-bench` | CIS auditor | Difensivo | Verifica di conformita al CIS Kubernetes Benchmark |
-| `Pod Security Admission` | Admission control | Difensivo | Blocco dei pod pericolosi a livello di namespace |
-| `OPA/Gatekeeper` | Policy engine | Difensivo | Policy custom di ammissione (oltre i Pod Security Standards) |
-| `Kyverno` | Policy engine | Difensivo | Policy K8s-native, alternativa a OPA |
-| `kubescape` | Security scanner | Difensivo | Audit basato su framework (NSA/MITRE) |
+| `kube-bench` | cis auditor | difensivo | verifica di conformita al cis kubernetes benchmark |
+| `Pod Security Admission` | admission control | difensivo | blocco dei pod pericolosi a livello di namespace |
+| `OPA/Gatekeeper` | policy engine | difensivo | policy custom di ammissione (oltre i pod security standards) |
+| `Kyverno` | policy engine | difensivo | policy k8s-native, alternativa a opa |
+| `kubescape` | security scanner | difensivo | audit basato su framework (nsa/mitre) |
 
 > **Tool moderno consigliato:** `kube-bench` per l'audit CIS, i `Pod Security Standards` nativi come prima linea di admission control, e `Kyverno`/`OPA-Gatekeeper` per le policy custom. `kubescape` per un audit basato sui framework NSA/MITRE. La combinazione audit + admission copre stato presente e modifiche future.
 
@@ -157,17 +157,17 @@ Attacco contenuto: nessuna via al control plane, nessun escape possibile
 
 > Tecniche d'attacco **prevenute** dall'hardening del cluster.
 
-| Tattica (prevenuta) | Tecnica | ID MITRE | Ruolo del controllo |
+| tattica (prevenuta) | tecnica | id mitre | ruolo del controllo |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Chiusura delle esposizioni del control plane (CLOUD-008) |
-| Privilege Escalation | Escape to Host | `T1611` | Pod Security blocca i pod privilegiati (previene CLOUD-006) |
-| Credential Access | Unsecured Credentials: Container API | `T1552.007` | Cifratura Secret + auth etcd (previene CLOUD-007) |
-| Execution | Deploy Container | `T1610` | Admission control sui pod deployabili |
+| initial access | exploit public-facing application | `T1190` | chiusura delle esposizioni del control plane (CLOUD-008) |
+| privilege escalation | escape to host | `T1611` | pod security blocca i pod privilegiati (previene CLOUD-006) |
+| credential access | unsecured credentials: container api | `T1552.007` | cifratura secret + auth etcd (previene CLOUD-007) |
+| execution | deploy container | `T1610` | admission control sui pod deployabili |
 
-| Contromisura difensiva (D3FEND) | ID D3FEND | Applicazione |
+| contromisura difensiva (d3fend) | id d3fend | applicazione |
 | :--- | :--- | :--- |
-| Platform Hardening | `D3-PH` | Conformita al CIS Kubernetes Benchmark |
-| Mandatory Access Control | `D3-MAC` | Pod Security Standards / policy di ammissione |
+| platform hardening | `D3-PH` | conformita al cis kubernetes benchmark |
+| mandatory access control | `D3-MAC` | pod security standards / policy di ammissione |
 
 ---
 

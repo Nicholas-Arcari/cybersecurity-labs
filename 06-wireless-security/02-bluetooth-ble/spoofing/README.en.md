@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Bluetooth/BLE Spoofing - GATT Write and Device Impersonation
+# Bluetooth/BLE spoofing - GATT write and device impersonation
 
 > - **Phase:** Wireless Security - Manipulation & Impersonation (BLE)
 > - **Visibility:** Medium - writing to GATT characteristics is an apparently legitimate client connection; device impersonation requires cloning the advertising packets (detectable by comparing the active MACs)
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 BLE spoofing turns the recon discovery (unprotected GATT characteristics, WIFI-006) into a concrete action on the device. There are two main vectors. The first, the unauthorized GATT write, writes directly to a writable characteristic to manipulate the state of the device - in the test case, to command a smart lock. The second, device impersonation, clones the BLE identity (MAC and advertising) of a trusted device to deceive the app or the ecosystem that expects to communicate with the original.
 
@@ -23,7 +23,7 @@ This section demonstrates the most important principle of IoT security: security
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 spoofing/
@@ -33,15 +33,15 @@ spoofing/
 
 ---
 
-## Unauthorized GATT Write
+## Unauthorized GATT write
 
 **Finding ID:** `WIFI-007` | **Severity:** `Medium` (manipulation of the state of an unprotected BLE device; severity dependent on the criticality of the device: `High`/`Critical` for locks, medical devices, industrial controls)
 
-### Operational Context
+### Operational context
 
 During the GATT enumeration (WIFI-006) the characteristic `Lock Control (ffe1)`, handle `0x0015`, was identified, with `WRITE` property and no authentication requirement. The lock's application logic interprets the value `01` as an unlock command. Since the BLE layer does not require pairing for the write, an attacker can send this command directly.
 
-### PoC - Writing the unlock command
+### PoC - writing the unlock command
 
 ```Bash
 # Direct write to the characteristic with bettercap
@@ -81,9 +81,9 @@ Characteristic value/descriptor: 01        <-- Lock Status = unlocked (command e
 
 ---
 
-## Device Impersonation
+## Device impersonation
 
-### Operational Context
+### Operational context
 
 Impersonation clones the BLE identity of a trusted device (address and advertising) to deceive the ecosystem. If the mobile app or a hub identifies the trusted device only via MAC address and name (without cryptographic authentication), a clone can substitute for the original and receive commands or send falsified data.
 
@@ -97,7 +97,7 @@ Impersonation is effective only against systems that trust the BLE identity with
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The most instructive part of the exercise was the triviality of the attack once the recon was completed. With the writable handle identified during the GATT enumeration, writing the unlock command was a single `ble.write` command. There was no cryptographic bypass, no exploit: the device simply accepted writes from anyone. This made concrete an abstract concept: most IoT vulnerabilities do not require sophisticated techniques, but exploit the total absence of controls.
 
@@ -105,7 +105,7 @@ An operational observation: the difficulty was mapping the correct value to writ
 
 ---
 
-## Theoretical Analysis: Why Security Must Be Applied at the Lowest Layer
+## Theoretical analysis: why security must be applied at the lowest layer
 
 The WIFI-007 attack illustrates the failure of the "security in depth" principle when applied badly. The manufacturer implemented security at the app level (user authentication, PIN, biometrics), but left the transport layer (BLE GATT) completely open. The implicit assumption - "only our app will talk to the device" - is false: any BLE client can connect and write.
 
@@ -115,11 +115,11 @@ This links to the BLE threat model: the radio channel is intrinsically accessibl
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > This section describes how this finding would fit into a real engagement, from both the attacker (Red Team) and defender (Blue Team) perspectives.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** ability to manipulate the state of an unprotected BLE device (WIFI-007) - in the test, a smart lock.
 
@@ -142,7 +142,7 @@ Persistent internal foothold -> pivoting (07-post-exploitation)
 
 **Potential impact:** BLE devices increasingly control critical physical functions (locks, gates, medical devices, industrial controls). An unauthenticated GATT write on a lock is equivalent to a universal key; on a medical device it can have consequences for people's safety. The vector links the wireless layer to physical security (`../../04-rfid-nfc (Physical Access)/`) and to internal network access.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** most cheap BLE devices do not log connections or commands, making the attack hard to detect. Mature devices can log anomalous GATT connections (non-bonded MAC) and out-of-sequence commands.
 
@@ -164,28 +164,28 @@ Persistent internal foothold -> pivoting (07-post-exploitation)
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `bettercap` | MITM framework | CLI | `ble.write` module: writing to GATT characteristics (modern reference) |
-| `gatttool` | GATT client | CLI | Direct write/read of GATT handles (legacy but precise) |
-| `spooftooph` | BT address spoofer | CLI | Cloning of the Bluetooth address for impersonation |
-| `nRF Connect` | BLE explorer | GUI / Mobile | Interactive write test on characteristics |
-| `btlejack` | BLE hijacker | CLI | Hijacking of active BLE connections (with Micro:bit hardware) |
+| `bettercap` | mitm framework | cli | `ble.write` module: writing to gatt characteristics (modern reference) |
+| `gatttool` | gatt client | cli | direct write/read of gatt handles (legacy but precise) |
+| `spooftooph` | bt address spoofer | cli | cloning of the bluetooth address for impersonation |
+| `nRF Connect` | ble explorer | gui / mobile | interactive write test on characteristics |
+| `btlejack` | ble hijacker | cli | hijacking of active ble connections (with micro:bit hardware) |
 
 > **Recommended modern tool:** `bettercap` for GATT operations and `btlejack` (Damien Cauquil) for the hijacking of already-established BLE connections via BBC Micro:bit hardware. The [Flipper Zero](https://github.com/Nicholas-Arcari/FlipperZero-guide) with dedicated BLE apps covers some replay/impersonation scenarios in a portable way.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Impact | Manipulation of Control | `T0831` | Unauthorized write to a GATT characteristic to command a physical device (WIFI-007) |
-| Collection | Adversary-in-the-Middle | `T1557` | Impersonation of a trusted BLE device to intercept or inject commands |
-| Defense Evasion | Impersonation | `T1656` | Cloning of the BLE identity (MAC/advertising) of a legitimate device |
-| Initial Access | Hardware Additions | `T1200` | Use of the BLE control to gain physical access (lock unlock) |
+| impact | manipulation of control | `T0831` | unauthorized write to a gatt characteristic to command a physical device (WIFI-007) |
+| collection | adversary-in-the-middle | `T1557` | impersonation of a trusted ble device to intercept or inject commands |
+| defense evasion | impersonation | `T1656` | cloning of the ble identity (mac/advertising) of a legitimate device |
+| initial access | hardware additions | `T1200` | use of the ble control to gain physical access (lock unlock) |
 
 ---
 

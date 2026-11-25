@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# DNS Enumeration: Local Hosts File Manipulation
+# DNS enumeration: local hosts file manipulation
 
 > - **Phase:** Reconnaissance - DNS Enumeration
 > - **Visibility:** Zero - the modification is local to the analyst's machine, no traffic generated towards external DNS
@@ -13,7 +13,7 @@ Objective: Force local DNS resolution to access non-indexed Virtual Hosts (VHost
 
 ---
 
-## 1 Theoretical Introduction
+## 1 Theoretical introduction
 
 The `/etc/hosts` file (or `hosts` on Windows) acts as a local name resolution mechanism, with priority over external DNS servers.
 
@@ -24,11 +24,11 @@ If a subdomain (e.g., `dev.target.com`) is not registered in public DNS but is c
 
 ---
 
-## 2 Technical Execution
+## 2 Technical execution
 
 **Finding ID:** `DNS-002` | **Severity:** `Medium`
 
-#### A. Resolution Verification (Before modification)
+#### A. resolution verification (before modification)
 
 Connection attempt to the target domain before local manipulation.
 
@@ -42,7 +42,7 @@ Result: ping: portale-segreto.corp: Name or service not known
 
 Analysis: The domain does not exist in public DNS.
 
-#### B. Hosts File Injection
+#### B. hosts file injection
 
 Modification of the local configuration file to forcefully associate the domain to the target IP.
 
@@ -56,7 +56,7 @@ sudo nano /etc/hosts
 
 ![](./img/Screenshot_2026-02-07_19_34_45.jpg)
 
-#### C. Verification and Access (After modification)
+#### C. verification and access (after modification)
 
 Verification of target reachability through the spoofed domain name.
 
@@ -78,7 +78,7 @@ This technique is essential in Web Application Penetration Testing and CTF phase
 
 ---
 
-## 4 Future Developments
+## 4 Future developments
 
 To complete the SMB service analysis and simulate a more advanced attack scenario, the next planned steps are:
 
@@ -102,11 +102,11 @@ The theory (and a brief practical guide) is available at this path: `cybersecuri
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Defense Evasion | Modify Authentication Process | `T1556` | Manipulation of the /etc/hosts file to force resolution of names not registered in public DNS towards the target IP, bypassing external resolvers (DNS-002) |
+| defense evasion | modify authentication process | `T1556` | manipulation of the /etc/hosts file to force resolution of names not registered in public dns towards the target ip, bypassing external resolvers (DNS-002) |
 
 ---
 

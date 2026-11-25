@@ -38,12 +38,12 @@ Esponi servizi potenzialmente vulnerabili a tutta la rete. Un attaccante potrebb
 
 ## Tool di riferimento
 
-| Comando | Descrizione |
+| comando | descrizione |
 | :--- | :--- |
-| `sudo ufw status verbose` | Mostra regole attive e stato del firewall |
-| `sudo ufw allow <porta>/tcp` | Apre una porta specifica in ingresso |
-| `sudo ufw delete allow <porta>/tcp` | Rimuove una regola precedentemente aggiunta |
-| `sudo ufw logging on` | Abilita il logging delle connessioni bloccate in `/var/log/ufw.log` |
+| `sudo ufw status verbose` | mostra regole attive e stato del firewall |
+| `sudo ufw allow <porta>/tcp` | apre una porta specifica in ingresso |
+| `sudo ufw delete allow <porta>/tcp` | rimuove una regola precedentemente aggiunta |
+| `sudo ufw logging on` | abilita il logging delle connessioni bloccate in `/var/log/ufw.log` |
 
 ---
 

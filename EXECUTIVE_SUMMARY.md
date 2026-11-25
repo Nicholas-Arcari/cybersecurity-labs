@@ -1,6 +1,6 @@
 > [English](EXECUTIVE_SUMMARY.en.md) | **Italiano**
 
-# Penetration Test - Executive Summary
+# Penetration test - executive summary
 
 ---
 
@@ -16,7 +16,7 @@ Destinatari:      Management, CTO, CISO
 
 ---
 
-## 1. Contesto e Scope dell'Engagement
+## 1. Contesto e scope dell'Engagement
 
 ### Obiettivo
 
@@ -28,24 +28,24 @@ aziendale senza privilegi preassegnati.
 
 ### Scope
 
-| Componente | Target | Note |
+| componente | target | note |
 | :--- | :--- | :--- |
-| Infrastruttura di rete | Segmento LAN `10.0.2.0/24` e `192.168.0.0/24` | Host discovery, port scan, servizi esposti |
-| Sistema operativo server | Windows 10 Pro (`10.0.2.3` / `192.168.0.109`) | Vulnerabilita OS, servizi SMB, RDP |
-| Sistema operativo server | Ubuntu Linux (`192.168.0.x`) | Configurazioni insicure, PrivEsc |
-| Applicazioni web | Stack LAMP/XAMPP, CMS Drupal, API GraphQL | OWASP Top 10, API security |
-| Fonti OSINT | Profili pubblici, DNS, motori di ricerca | Passive reconnaissance |
+| infrastruttura di rete | segmento lan `10.0.2.0/24` e `192.168.0.0/24` | host discovery, port scan, servizi esposti |
+| sistema operativo server | windows 10 pro (`10.0.2.3` / `192.168.0.109`) | vulnerabilita os, servizi smb, rdp |
+| sistema operativo server | ubuntu linux (`192.168.0.x`) | configurazioni insicure, privesc |
+| applicazioni web | stack lamp/xampp, cms drupal, api graphql | owasp top 10, api security |
+| fonti osint | profili pubblici, dns, motori di ricerca | passive reconnaissance |
 
 ### Periodo di esecuzione
 
-| Fase | Descrizione | Durata stimata |
+| fase | descrizione | durata stimata |
 | :--- | :--- | :--- |
-| Ricognizione passiva | OSINT, DNS, Shodan | 2 giorni |
-| Ricognizione attiva | Network scan, service enumeration | 1 giorno |
-| Vulnerability Assessment | Scan credentialed, audit protocolli | 3 giorni |
-| Web Application Testing | OWASP Top 10, API, CMS | 5 giorni |
-| System Exploitation | Initial access, privilege escalation | 4 giorni |
-| Reporting | Analisi, documentazione, raccomandazioni | 3 giorni |
+| ricognizione passiva | osint, dns, shodan | 2 giorni |
+| ricognizione attiva | network scan, service enumeration | 1 giorno |
+| vulnerability assessment | scan credentialed, audit protocolli | 3 giorni |
+| web application testing | owasp top 10, api, cms | 5 giorni |
+| system exploitation | initial access, privilege escalation | 4 giorni |
+| reporting | analisi, documentazione, raccomandazioni | 3 giorni |
 
 ### Metodologia
 
@@ -57,7 +57,7 @@ autorizzati.
 
 ---
 
-## 2. Metodologia - Fasi dell'Engagement
+## 2. Metodologia - fasi dell'Engagement
 
 ```
 [RECON PASSIVA]          [RECON ATTIVA]          [ASSESSMENT]
@@ -78,37 +78,37 @@ che ha permesso l'escalation dei privilegi.
 
 ---
 
-## 3. Quadro Complessivo dei Rischi
+## 3. Quadro complessivo dei rischi
 
 ### Distribuzione finding per severity
 
-| Severity | Conteggio | % sul totale | Impatto Potenziale |
+| severity | conteggio | % sul totale | impatto potenziale |
 | :--- | :---: | :---: | :--- |
-| **Critico** | 15 | 25% | Compromissione totale, perdita dati, RCE |
-| **Alto** | 23 | 38% | Accesso non autorizzato, escalation privilegi |
-| **Medio** | 11 | 18% | Information disclosure, configurazioni deboli |
-| **Basso** | 3 | 5% | Rischi a bassa probabilita di sfruttamento |
-| **Informativo** | 8 | 14% | Osservazioni senza impatto diretto immediato |
-| **Totale** | **60** | 100% | |
+| **Critico** | 15 | 25% | compromissione totale, perdita dati, rce |
+| **Alto** | 23 | 38% | accesso non autorizzato, escalation privilegi |
+| **Medio** | 11 | 18% | information disclosure, configurazioni deboli |
+| **Basso** | 3 | 5% | rischi a bassa probabilita di sfruttamento |
+| **Informativo** | 8 | 14% | osservazioni senza impatto diretto immediato |
+| **totale** | **60** | 100% | |
 
 > **Lettura sintetica per il management:** Il 63% dei finding rilevati (38 su 60) e
 > classificato come Critico o Alto. Questo significa che oltre meta delle vulnerabilita
 > identificate e direttamente sfruttabile da un attaccante con competenze medie per
 > ottenere accesso non autorizzato, esfiltrare dati o compromettere l'infrastruttura.
 
-### Business Impact per categoria
+### Business impact per categoria
 
-| Area | Finding | Impatto Business |
+| area | finding | impatto business |
 | :--- | :--- | :--- |
-| Infrastruttura di rete | SCAN-003, VULN-001..004 | Intercettazione traffico interno, accesso a share file aziendali |
-| Applicazioni web | WEB-001..015 | Furto dati utenti, bypass autenticazione, controllo del server |
-| Sistemi operativi | EXPLOIT-001..019 | Controllo totale dei server, persistenza, lateral movement |
-| Esposizione OSINT | OSINT-001..004 | Dati dipendenti e credenziali gia circola in database di breach |
-| Configurazioni insicure | EXPLOIT-016, EXPLOIT-017 | Password di sistema in chiaro, binari modificabili |
+| infrastruttura di rete | SCAN-003, VULN-001..004 | intercettazione traffico interno, accesso a share file aziendali |
+| applicazioni web | WEB-001..015 | furto dati utenti, bypass autenticazione, controllo del server |
+| sistemi operativi | EXPLOIT-001..019 | controllo totale dei server, persistenza, lateral movement |
+| esposizione osint | OSINT-001..004 | dati dipendenti e credenziali gia circola in database di breach |
+| configurazioni insicure | EXPLOIT-016, EXPLOIT-017 | password di sistema in chiaro, binari modificabili |
 
 ---
 
-## 4. Top 5 Finding Critici
+## 4. Top 5 finding critici
 
 I cinque finding seguenti sono stati selezionati tra i 15 critici rilevati in base alla
 combinazione di facilita di sfruttamento, impatto sull'organizzazione e copertura
@@ -234,50 +234,50 @@ corrisponda al proprietario della risorsa. Stima di risoluzione: 3-7 giorni di s
 
 ---
 
-## 5. Raccomandazioni Strategiche
+## 5. Raccomandazioni strategiche
 
 Le raccomandazioni sono organizzate per orizzonte temporale e prioritizzate in base
 al rapporto tra urgenza del rischio e sforzo di implementazione.
 
-### Priorita Urgente - entro 30 giorni
+### Priorita urgente - entro 30 giorni
 
-| Priorita | Azione | Finding correlati | Sforzo |
+| priorita | azione | finding correlati | sforzo |
 | :---: | :--- | :--- | :--- |
-| 1 | Applicare tutte le patch di sicurezza Windows arretrate (in particolare MS17-010) | VULN-002, EXPLOIT-001 | Basso (operativo) |
-| 2 | Eliminare i file Unattend.xml e cambiare le credenziali Administrator | EXPLOIT-016 | Basso (<1 ora) |
-| 3 | Correggere le SQL Injection nell'applicazione web (prepared statements) | WEB-004, WEB-011 | Medio (3-5 gg) |
-| 4 | Sostituire il segreto JWT con un valore crittograficamente sicuro | WEB-012 | Basso (<2 ore) |
-| 5 | Implementare autorizzazione object-level nelle API (anti-IDOR) | WEB-014 | Medio (3-7 gg) |
-| 6 | Abilitare SMB Signing obbligatorio via Group Policy | SCAN-003, VULN-001 | Basso (GPO) |
+| 1 | applicare tutte le patch di sicurezza windows arretrate (in particolare ms17-010) | VULN-002, EXPLOIT-001 | Basso (operativo) |
+| 2 | eliminare i file unattend.xml e cambiare le credenziali administrator | EXPLOIT-016 | Basso (<1 ora) |
+| 3 | correggere le sql injection nell'applicazione web (prepared statements) | WEB-004, WEB-011 | Medio (3-5 gg) |
+| 4 | sostituire il segreto jwt con un valore crittograficamente sicuro | WEB-012 | Basso (<2 ore) |
+| 5 | implementare autorizzazione object-level nelle api (anti-idor) | WEB-014 | Medio (3-7 gg) |
+| 6 | abilitare smb signing obbligatorio via group policy | SCAN-003, VULN-001 | Basso (gpo) |
 
-### Breve Termine - entro 90 giorni
+### Breve termine - entro 90 giorni
 
-| Priorita | Azione | Finding correlati | Sforzo |
+| priorita | azione | finding correlati | sforzo |
 | :---: | :--- | :--- | :--- |
-| 7 | Implementare policy password complessa (min. 14 caratteri) e MFA su tutti i sistemi privilegiati | EXPLOIT-016..019 | Medio |
-| 8 | Rimuovere o disabilitare il protocollo SMBv1 | VULN-002 | Basso |
-| 9 | Correggere i permessi ACL sui binari di servizio (XAMPP e analoghi) | EXPLOIT-017 | Basso |
-| 10 | Sanitizzare tutti i template engine server-side (anti-SSTI) | WEB-008 | Medio |
-| 11 | Correggere la logica di controllo accesso nei moduli CMS Drupal (aggiornamento versione) | WEB-015 | Basso |
-| 12 | Disabilitare GraphQL Introspection in produzione; validare tutti i parametri | WEB-013 | Basso |
+| 7 | implementare policy password complessa (min. 14 caratteri) e mfa su tutti i sistemi privilegiati | EXPLOIT-016..019 | Medio |
+| 8 | rimuovere o disabilitare il protocollo smbv1 | VULN-002 | Basso |
+| 9 | correggere i permessi acl sui binari di servizio (xampp e analoghi) | EXPLOIT-017 | Basso |
+| 10 | sanitizzare tutti i template engine server-side (anti-ssti) | WEB-008 | Medio |
+| 11 | correggere la logica di controllo accesso nei moduli cms drupal (aggiornamento versione) | WEB-015 | Basso |
+| 12 | disabilitare graphql introspection in produzione; validare tutti i parametri | WEB-013 | Basso |
 
-### Medio Termine - entro 180 giorni
+### Medio termine - entro 180 giorni
 
-| Priorita | Azione | Note |
+| priorita | azione | note |
 | :---: | :--- | :--- |
-| 13 | Deploying un Web Application Firewall (WAF) davanti all'applicazione web | Riduce superficie di attacco per attacchi automatizzati |
-| 14 | Avviare un programma strutturato di Vulnerability Management (scan mensili automatizzati) | Previene il riacumulo di debito tecnico di sicurezza |
-| 15 | Segmentazione della rete interna (VLAN) per isolare i sistemi critici | Limita il lateral movement in caso di compromissione |
-| 16 | Formazione sviluppatori su secure coding (OWASP Top 10) | Riduce i finding web alla radice |
+| 13 | deploying un web application firewall (waf) davanti all'applicazione web | riduce superficie di attacco per attacchi automatizzati |
+| 14 | avviare un programma strutturato di vulnerability management (scan mensili automatizzati) | previene il riacumulo di debito tecnico di sicurezza |
+| 15 | segmentazione della rete interna (vlan) per isolare i sistemi critici | limita il lateral movement in caso di compromissione |
+| 16 | formazione sviluppatori su secure coding (owasp top 10) | riduce i finding web alla radice |
 
-### Lungo Termine - piano strategico
+### Lungo termine - piano strategico
 
-| Iniziativa | Descrizione |
+| iniziativa | descrizione |
 | :--- | :--- |
-| **Secure Development Lifecycle (SDL)** | Integrare security review nel processo di sviluppo: code review, SAST/DAST in CI/CD, threat modeling prima dello sviluppo di nuove feature |
-| **Penetration Test annuale** | Ripetere un'attivita di test equivalente ogni anno o dopo cambiamenti architetturali significativi, per misurare i progressi e rilevare nuovi rischi |
-| **Incident Response Plan** | Definire procedure formali di risposta agli incidenti: chi chiama chi, quali sistemi isolare, come preservare le evidenze per analisi forensi |
-| **Asset Inventory e Patch Management** | Mantenere un registro aggiornato di tutti i sistemi, con versioni software e stato delle patch; automatizzare gli aggiornamenti ove possibile |
+| **secure development lifecycle (sdl)** | integrare security review nel processo di sviluppo: code review, sast/dast in ci/cd, threat modeling prima dello sviluppo di nuove feature |
+| **penetration test annuale** | ripetere un'attivita di test equivalente ogni anno o dopo cambiamenti architetturali significativi, per misurare i progressi e rilevare nuovi rischi |
+| **incident response plan** | definire procedure formali di risposta agli incidenti: chi chiama chi, quali sistemi isolare, come preservare le evidenze per analisi forensi |
+| **asset inventory e patch management** | mantenere un registro aggiornato di tutti i sistemi, con versioni software e stato delle patch; automatizzare gli aggiornamenti ove possibile |
 
 ---
 
@@ -308,13 +308,13 @@ scanning, penetration test periodici).
 
 ### Metriche di riferimento
 
-| Indicatore | Valore attuale | Target a 6 mesi |
+| indicatore | valore attuale | target a 6 mesi |
 | :--- | :--- | :--- |
-| Finding Critici aperti | 15 | 0 |
-| Finding Alti aperti | 23 | < 5 |
-| Tempo a compromissione totale | < 3 minuti | > 30 giorni (obiettivo realistico) |
-| Sistemi con patch arretrate | Tutti i sistemi testati | 0 sistemi critici non patchati |
-| Sistemi con MFA abilitato | 0% | 100% su accessi privilegiati |
+| finding critici aperti | 15 | 0 |
+| finding alti aperti | 23 | < 5 |
+| tempo a compromissione totale | < 3 minuti | > 30 giorni (obiettivo realistico) |
+| sistemi con patch arretrate | tutti i sistemi testati | 0 sistemi critici non patchati |
+| sistemi con mfa abilitato | 0% | 100% su accessi privilegiati |
 
 ---
 

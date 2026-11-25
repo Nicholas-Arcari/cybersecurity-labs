@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 `NTDS.dit` is the Active Directory database on the Domain Controller: it contains all domain objects and,
 encrypted with the boot key present in the `SYSTEM` hive, the password hashes of all accounts. Whoever has
@@ -29,7 +29,7 @@ DC. The choice between NTDS.dit dump and DCSync is one of OPSEC and context: DCS
 remote, the dump is more direct but touches the DC. On a live DC, methods that avoid writing to disk are
 preferred (direct reading via DRSUAPI or a tool-managed shadow copy).
 
-## Execution / Commands
+## Execution / commands
 
 ### Remote dump with admin credentials (Impacket)
 
@@ -60,7 +60,7 @@ outcome to a full DCSync. Severity `Critical`. The difference from DCSync is the
 the DC or a backup) and the higher visibility. The obtained material enables Pass-the-Hash toward any
 account, offline cracking and Golden Ticket.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 The hashes in `NTDS.dit` are encrypted with the PEK (Password Encryption Key), which is in turn protected by
 the boot key derived from the `SYSTEM` hive. This is why both files are needed: `NTDS.dit` (the data) and
@@ -70,7 +70,7 @@ administrator (or whoever has their privileges). This is why protecting the DCs 
 critical as protecting the credentials themselves. See
 [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.en.md>), sec. 3.3.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection.** Access to `NTDS.dit`/`SYSTEM` or creation of a shadow copy on a DC (VSS-related Event IDs,
 access to system files); execution of dump tools; anomalous access to System State backups.
@@ -81,11 +81,11 @@ suspected compromise, consider the krbtgt reset (twice) and a domain remediation
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > Outcome equivalent to the full domain (severity Critical).
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** admin on a DC, or possession of a System State backup.
 
@@ -114,7 +114,7 @@ backup is equivalent to handing over all the domain's credentials.
 
 **Typical monetization vectors:** ransomware, exfiltration, access brokering.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** access to `NTDS.dit`/shadow copy on a DC; execution of secretsdump or equivalents; access to
 backups.
@@ -135,12 +135,12 @@ integral part of domain security, not a separate IT topic.
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `secretsdump.py` (Impacket) | Python toolkit | CLI - Active/Offline | Remote dump with admin credentials or offline from NTDS.dit + SYSTEM files |
-| `NetExec` (`nxc`) | AD/SMB toolkit | CLI - Active | `ntds` module for dumping the DIT |
-| `ntdsutil` | Native utility | CLI (on the DC) | Creating a copy of the DIT (legitimate use and abuse) |
-| `vssadmin` / VSS | Native utility | CLI (on the DC) | Creating a shadow copy to access NTDS.dit in use |
+| `secretsdump.py` (impacket) | python toolkit | cli - active/offline | remote dump with admin credentials or offline from ntds.dit + system files |
+| `NetExec` (`nxc`) | ad/smb toolkit | cli - active | `ntds` module for dumping the dit |
+| `ntdsutil` | native utility | cli (on the dc) | creating a copy of the dit (legitimate use and abuse) |
+| `vssadmin` / vss | native utility | cli (on the dc) | creating a shadow copy to access ntds.dit in use |
 
 ## Methodology notes
 
@@ -150,19 +150,19 @@ in a lab.
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Credential Access | OS Credential Dumping: NTDS | `T1003.003` | Extraction of hashes from the Domain Controller's NTDS.dit database. |
-| Credential Access | Steal or Forge Kerberos Tickets: Golden Ticket | `T1558.001` | Follow-on: use of the extracted krbtgt hash for the Golden Ticket. |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Hash | `T1550.002` | Follow-on: authentication with the extracted hashes. |
+| credential access | os credential dumping: ntds | `T1003.003` | extraction of hashes from the domain controller's ntds.dit database. |
+| credential access | steal or forge kerberos tickets: golden ticket | `T1558.001` | follow-on: use of the extracted krbtgt hash for the golden ticket. |
+| lateral movement | use alternate authentication material: pass the hash | `T1550.002` | follow-on: authentication with the extracted hashes. |
 
 ## Links to other modules
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
-| [DCSync](<../dcsync/README.en.md>) | NTDS.dit dump | two routes to the same outcome: remote and discreet (DCSync) vs direct on the DC/backup |
-| Admin on DC / backup access | NTDS.dit dump | prerequisite of privileged access or access to the System State |
-| NTDS.dit dump | [Golden Ticket](<../../02-kerberos-attacks/golden-ticket/README.en.md>) / [hashcat](<../../../04-system-exploitation/05-password-cracking/hashcat/README.en.md>) | the hashes enable persistence and offline cracking |
+| [dcsync](<../dcsync/README.en.md>) | ntds.dit dump | two routes to the same outcome: remote and discreet (dcsync) vs direct on the dc/backup |
+| admin on dc / backup access | ntds.dit dump | prerequisite of privileged access or access to the system state |
+| ntds.dit dump | [golden ticket](<../../02-kerberos-attacks/golden-ticket/README.en.md>) / [hashcat](<../../../04-system-exploitation/05-password-cracking/hashcat/README.en.md>) | the hashes enable persistence and offline cracking |
 
 ---
 

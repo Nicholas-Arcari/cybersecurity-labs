@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Web Recon: Directory Busting with Gobuster
+# Web recon: Directory busting with Gobuster
 
 > - **Phase:** Web Attack - Web Application Enumeration
 > - **Visibility:** Medium - Gobuster generates many HTTP requests in rapid sequence, detectable by WAF and IDS
@@ -21,7 +21,7 @@ Tools: `Gobuster` (v3.x), `wget`, `Feroxbuster`
 
 ---
 
-## 1 Theoretical Introduction
+## 1 Theoretical introduction
 
 Directory Busting is an Active Enumeration technique.
 
@@ -35,7 +35,7 @@ HTTP status codes reveal the presence of resources:
 
 ---
 
-## 2 Technical Execution: Setup & Scan
+## 2 Technical execution: setup & scan
 
 Since the test environment (Kali Purple) did not have the standard preinstalled wordlists, a preliminary setup phase was required to retrieve the `common.txt` attack dictionary.
 
@@ -64,7 +64,7 @@ Findings Analysis: The scan revealed several critical directories not visible fr
 
 ---
 
-## 3 Advanced Scanning: Feroxbuster (Recursive)
+## 3 Advanced scanning: feroxbuster (recursive)
 
 To deepen the analysis, Feroxbuster was used - a Rust-written tool that supports automatic recursion.
 
@@ -86,7 +86,7 @@ The Directory Busting activity was successful, revealing a much broader attack s
 
 ---
 
-## 5 Modern Scenario: Docker & REST APIs (Localhost)
+## 5 Modern scenario: Docker & REST APIs (localhost)
 
 Directory Busting techniques are not limited to traditional web servers, but are also fundamental for testing containerized microservices (Docker) and RESTful APIs under development (e.g., on `localhost:5173`).
 
@@ -117,14 +117,14 @@ Scanning local containers allows discovering Debug Endpoints (e.g., Spring Boot 
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Scanning with Gobuster and Feroxbuster on `common.txt` wordlist to identify hidden resources on `testphp.vulnweb.com` |
-| Reconnaissance | Active Scanning: Wordlist Scanning | `T1595.003` | Directory brute force with wordlist to discover `/admin`, `/CVS`, `.idea` and other unlinked paths (WEB-003) |
-| Discovery | File and Directory Discovery | `T1083` | Identification of `/CVS` directory (legacy version control) and `.idea` folder (IDE configuration) publicly exposed (WEB-003) |
-| Collection | Data from Information Repositories | `T1213` | Potential access to source code through the exposed `/CVS` directory, which could allow downloading application source files (WEB-003) |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | scanning with gobuster and feroxbuster on `common.txt` wordlist to identify hidden resources on `testphp.vulnweb.com` |
+| reconnaissance | active scanning: wordlist scanning | `T1595.003` | directory brute force with wordlist to discover `/admin`, `/CVS`, `.idea` and other unlinked paths (WEB-003) |
+| discovery | file and directory discovery | `T1083` | identification of `/CVS` directory (legacy version control) and `.idea` folder (ide configuration) publicly exposed (WEB-003) |
+| collection | data from information repositories | `T1213` | potential access to source code through the exposed `/CVS` directory, which could allow downloading application source files (WEB-003) |
 
 ---
 

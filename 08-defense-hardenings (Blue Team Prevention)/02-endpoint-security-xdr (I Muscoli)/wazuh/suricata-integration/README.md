@@ -111,7 +111,7 @@ Dovresti vedere una scritta rossa o un log relativo a `GPL ATTACK_RESPONSE`. (Pr
 
 ---
 
-## Guarda nella Dashboard
+## Guarda nella dashboard
 
 Vai sulla tua Wazuh Dashboard (`https://localhost`)
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Malicious Macros - VBA Reverse Shell via Office Document
+# Malicious macros - VBA reverse shell via office document
 
 > - **Phase:** Social Engineering - Payload Delivery via VBA Macro
 > - **Visibility:** High - VBA macros are monitored by AV/EDR, AMSI inspects PowerShell code at runtime, documents with macros trigger SIEM alerts; files with MotW trigger the default macro block on Office 2022+
@@ -14,7 +14,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 VBA (Visual Basic for Applications) macros in Microsoft Office documents represent the most widely used delivery vector in cybercrime history, dominating the threat landscape from 2015 to 2022. The principle is simple: a Word/Excel document contains VBA code that, when the user clicks "Enable Content", executes arbitrary commands on the system. In the lab, the macro generates an encoded PowerShell stager that establishes a Meterpreter reverse shell back to the attacker.
 
@@ -22,15 +22,15 @@ Microsoft introduced the default macro block for files with Mark-of-the-Web (Jul
 
 ---
 
-## VBA Macro: PowerShell Stager for Reverse Shell
+## VBA macro: PowerShell stager for reverse shell
 
 **Finding ID:** `SE-007` | **Severity:** `High`
 
-### Operational Context
+### Operational context
 
 The scenario simulates a typical attack: a Word document disguised as a corporate invoice ("Fattura_Q1_2026.docm") is sent to the target via email. Upon opening, Office displays the "Enable Content" banner. If the user clicks it, the VBA macro executes, launches a PowerShell stager in the background, and establishes a reverse TCP connection to the attacker.
 
-### PoC - Phase 1: VBA Payload Generation
+### PoC - phase 1: VBA payload generation
 
 ```Bash
 # VBA macro generation with PowerShell stager
@@ -46,7 +46,7 @@ Final size of vba-psh file: 7812 bytes                      <-- generated VBA co
 Saved as: macro_payload.vba
 ```
 
-### PoC - Phase 2: Embedding in Word Document
+### PoC - phase 2: embedding in word document
 
 ```Bash
 # The contents of macro_payload.vba must be copied into the Word VBA editor:
@@ -66,7 +66,7 @@ Sub Auto_Open()
 End Sub
 ```
 
-### PoC - Phase 3: Handler Setup and Callback
+### PoC - phase 3: handler setup and callback
 
 ```Bash
 # Metasploit handler (Kali)
@@ -99,7 +99,7 @@ Meterpreter : x64/windows
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The environment was configured with Office 2019 on a Windows 10 VM with macros enabled via local GPO to simulate a legacy corporate environment. The first attempt used the raw `vba-psh` payload from msfvenom, which was immediately detected by Windows Defender with the signature `Trojan:Script/Wacatac.B!ml`. The solution was to disable Defender to complete the PoC (in a real engagement, obfuscation with `macro_pack` or custom encoding would be used).
 
@@ -109,7 +109,7 @@ The decision to use `Auto_Open()` instead of `Document_Open()` was driven by com
 
 ---
 
-## Theoretical Analysis: Rise and Fall of VBA Macros
+## Theoretical analysis: rise and fall of VBA macros
 
 VBA macros dominated the threat landscape for a structural reason: Microsoft Office is installed on over 90% of corporate computers, and the VBA language has full access to Windows APIs through `Shell()`, `CreateObject("WScript.Shell")`, and `Declare` statements. This means that an Office document is, in effect, a container for arbitrary executable code.
 
@@ -122,11 +122,11 @@ This decision had an immediate and measurable impact: according to Proofpoint da
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > This section describes how this finding would fit into a real engagement.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** Meterpreter reverse shell as standard user `mario.rossi` (SE-007).
 
@@ -148,7 +148,7 @@ Credential Dumping -> Mimikatz/SAM dump -> NTLM hashes
 Lateral Movement -> Pass-the-Hash / PsExec to other hosts
 ```
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **IOCs to monitor:**
 - `powershell.exe` process as child of `WINWORD.EXE` (anomalous parent-child correlation)
@@ -163,17 +163,17 @@ Lateral Movement -> Pass-the-Hash / PsExec to other hosts
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Develop Capabilities: Malware | `T1587.001` | VBA macro generation with PowerShell stager via msfvenom |
-| Initial Access | Phishing: Spearphishing Attachment | `T1566.001` | Malicious Word document sent as "Fattura_Q1_2026.docm" |
-| Execution | User Execution: Malicious File | `T1204.002` | User opens document and clicks "Enable Content" (SE-007) |
-| Execution | Command and Scripting Interpreter: Visual Basic | `T1059.005` | VBA macro Auto_Open() executes the payload |
-| Execution | Command and Scripting Interpreter: PowerShell | `T1059.001` | Encoded PowerShell stager establishes reverse shell |
-| Defense Evasion | Obfuscated Files or Information | `T1027` | Base64-encoded PowerShell payload for static signature evasion |
-| Command and Control | Non-Standard Port | `T1571` | Reverse TCP Meterpreter on port 4444 |
+| resource development | develop capabilities: malware | `T1587.001` | vba macro generation with powershell stager via msfvenom |
+| initial access | phishing: spearphishing attachment | `T1566.001` | malicious word document sent as "fattura_q1_2026.docm" |
+| execution | user execution: malicious file | `T1204.002` | user opens document and clicks "enable content" (SE-007) |
+| execution | command and scripting interpreter: visual basic | `T1059.005` | vba macro auto_open() executes the payload |
+| execution | command and scripting interpreter: powershell | `T1059.001` | encoded powershell stager establishes reverse shell |
+| defense evasion | obfuscated files or information | `T1027` | base64-encoded powershell payload for static signature evasion |
+| command and control | non-standard port | `T1571` | reverse tcp meterpreter on port 4444 |
 
 ---
 

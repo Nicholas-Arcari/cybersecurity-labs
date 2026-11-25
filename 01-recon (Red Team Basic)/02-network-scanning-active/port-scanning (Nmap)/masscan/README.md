@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Active Scanning: High-Speed Port Discovery (Masscan)
+# Active scanning: High-Speed port discovery (Masscan)
 
 > - **Fase:** Reconnaissance - Active Network Scanning
 > - **Visibilita:** Alta - SYN flood verso il target, pattern di traffico anomalo facilmente rilevabile da IDS/IPS
@@ -16,7 +16,7 @@ Strumenti: `Masscan`
 
 ---
 
-## 1. Introduzione Teorica
+## 1. Introduzione teorica
 
 Masscan è uno scanner di porte TCP asincrono. A differenza degli scanner tradizionali, utilizza uno stack TCP/IP personalizzato che gli permette di inviare pacchetti (SYN packets) a una velocità limitata solo dalla larghezza di banda dell'hardware, senza attendere le risposte in modo sincrono.
 
@@ -24,11 +24,11 @@ Use Case: Questo strumento è ideale per la fase iniziale di Broad Scope Discove
 
 ---
 
-## 2 Esecuzione Tecnica
+## 2 Esecuzione tecnica
 
 **ID Finding:** `SCAN-002` | **Severity:** `Informativo`
 
-#### Fase 1: Validazione del Target (Ground Truth)
+#### Fase 1: validazione del target (ground truth)
 
 È stata lanciata una scansione con Nmap per confermare la presenza di porte aperte sull'host target e stabilire una "verità di base".
 
@@ -40,7 +40,7 @@ sudo nmap -p 445 10.0.2.0/24 --open
 
 Analisi: L'host 10.0.2.3 è attivo e la porta 445 è confermata APERTA.
 
-#### Fase 2: Test Alta Velocità (Masscan)
+#### Fase 2: test alta velocità (Masscan)
 
 Successivamente, è stato testato Masscan sullo stesso target specifico per verificare la capacità di rilevamento asincrono.
 
@@ -58,16 +58,16 @@ Analisi: Masscan ha completato la scansione senza rilevare la porta aperta (Fals
 
 ---
 
-## 3 Analisi Critica: Limitazioni in Ambiente Virtuale
+## 3 Analisi critica: limitazioni in ambiente virtuale
 
 Il test ha evidenziato una differenza sostanziale di comportamento dovuta all'architettura di rete del laboratorio (VirtualBox NAT Network).
 
-| Feature | Nmap | Masscan |
+| feature | nmap | masscan |
 | --------- | ------ | --------- |
-| Tecnologia | Sincrono / Stateful | Asincrono / Stateless |
-| | Usa le `syscall` del Kernel Linux standard | Usa Raw Sockets e bypassa il Kernel (stack custom) |
-| Gestione NAT | Ottima. Il sistema operativo gestisce il tracciamento delle connessioni e il NAT traversal | Critica. I pacchetti di risposta (SYN-ACK) spesso non vengono instradati correttamente dall'interfaccia virtuale verso il processo Masscan |
-| Risultato | Porta rilevata (open) | Falso negativo (closed/filtered) |
+| tecnologia | sincrono / stateful | asincrono / stateless |
+| | usa le `syscall` del kernel linux standard | usa raw sockets e bypassa il kernel (stack custom) |
+| gestione nat | ottima. il sistema operativo gestisce il tracciamento delle connessioni e il nat traversal | critica. i pacchetti di risposta (syn-ack) spesso non vengono instradati correttamente dall'interfaccia virtuale verso il processo masscan |
+| risultato | porta rilevata (open) | falso negativo (closed/filtered) |
 
 Lezione Appresa: In scenari reali, Masscan è imbattibile per velocità su reti fisiche dirette. Tuttavia, in ambienti virtualizzati o dietro NAT complessi, il suo stack personalizzato può perdere pacchetti di ritorno. È fondamentale eseguire sempre una Cross-Validation con Nmap quando i risultati di Masscan sono negativi su target sospetti.
 
@@ -82,9 +82,9 @@ A prescindere dal risultato tecnico nel laboratorio, l'utilizzo di Masscan in un
 
 ---
 
-## Analisi a Basso Livello: Stack TCP Stateless di Masscan
+## Analisi a basso livello: stack TCP stateless di Masscan
 
-### Architettura Asincrona
+### Architettura asincrona
 
 La differenza fondamentale tra Nmap e Masscan risiede nella gestione dello stato TCP. Nmap utilizza le syscall del kernel (`connect()`, `send()`, `recv()`) che mantengono lo stato di ogni connessione nella tabella conntrack del kernel. Masscan bypassa completamente il kernel TCP/IP: costruisce i pacchetti SYN a livello raw (libpcap) e li inietta direttamente sull'interfaccia di rete.
 
@@ -109,7 +109,7 @@ Kernel la associa alla conn         Masscan la intercetta via pcap
 
 Masscan codifica l'IP di destinazione nel sequence number del SYN in uscita (SYN cookie techinque). Quando riceve un SYN-ACK, verifica che l'acknowledgment number corrisponda al cookie atteso - questo gli permette di correlare le risposte senza mantenere stato. Questo approccio scala linearmente: 1 milione di pacchetti al secondo richiedono la stessa quantita di RAM di 100 pacchetti al secondo.
 
-### Perche il NAT di VirtualBox Rompe Masscan
+### Perche il NAT di VirtualBox rompe Masscan
 
 Il NAT engine di VirtualBox opera a livello applicativo: intercetta i pacchetti in uscita dalla VM, li de-encapsula, e li re-encapsula con l'IP dell'host. Per i pacchetti gestiti dal kernel (Nmap), il NAT engine traccia correttamente la connessione tramite conntrack. Per i pacchetti raw di Masscan, il NAT engine non ha stato associato da correlare: quando il SYN-ACK arriva dall'esterno, VirtualBox non sa a quale processo nella VM inoltrarlo e lo droppa silenziosamente.
 
@@ -117,7 +117,7 @@ La soluzione in ambiente di laboratorio: utilizzare la modalita bridge (Bridged 
 
 ---
 
-## Blue Team: Rilevamento delle Scansioni ad Alta Velocita
+## Blue team: rilevamento delle scansioni ad alta velocita
 
 **Detection:**
 - Masscan (e tool simili come ZMap) generano un volume anomalo di SYN verso porte diverse in finestra temporale ridotta. Regole IDS basate su threshold (es. Suricata: `alert tcp any any -> $HOME_NET any (msg:"Port scan - SYN flood"; flags:S; threshold: type both, track by_src, count 100, seconds 10; sid:1000001;)`) rilevano efficacemente questo pattern.
@@ -131,7 +131,7 @@ La soluzione in ambiente di laboratorio: utilizzare la modalita bridge (Bridged 
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il valore didattico principale di questo esercizio non e stato l'uso di Masscan in se, ma la comprensione del perche ha fallito. Il falso negativo in ambiente NAT ha forzato un'analisi del funzionamento interno dello stack di rete che non sarebbe emersa da un semplice "scan riuscito". La comparazione diretta con Nmap sullo stesso target (porta 445 confermata aperta) ha reso evidente che il problema non era nel target ma nel percorso di rete.
 
@@ -143,9 +143,9 @@ Un dettaglio tecnico emerso dalla documentazione di Masscan: il parametro `--rat
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Discovery | Network Service Discovery | `T1046` | Port discovery asincrono ad alta velocita con Masscan su subnet 10.0.2.0/24, documentando il comportamento in ambiente NAT virtualizzato (SCAN-002) |
+| discovery | network service discovery | `T1046` | port discovery asincrono ad alta velocita con masscan su subnet 10.0.2.0/24, documentando il comportamento in ambiente nat virtualizzato (SCAN-002) |
 
 ---
 

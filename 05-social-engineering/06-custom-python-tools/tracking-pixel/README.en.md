@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Tracking Pixel - Email Open Tracking & IP Geolocation
+# Tracking pixel - email open tracking & IP geolocation
 
 > - **Phase:** Social Engineering - Campaign Analytics (Email Open Detection)
 > - **Visibility:** Low - the tracking pixel is a single HTTP GET request for a 1x1 image; indistinguishable from loading legitimate email resources; detectable only by email clients that block external image loading by default
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 The tracking pixel is a classic legitimate email marketing technique (used by all newsletter services) applied to social engineering to measure phishing email open rates. The Flask server serves a 1x1 transparent GIF image (43 bytes) with a unique URL per recipient. When the email client loads the image, the server logs IP, User-Agent, timestamp and - with the GeoLite2 database - approximate geolocation.
 
@@ -21,11 +21,11 @@ GoPhish includes this functionality natively (variable `{{.Tracker}}`), but the 
 
 ---
 
-## Tracking Pixel: Email Open Detection
+## Tracking pixel: email open detection
 
 **Finding ID:** `SE-015` | **Severity:** `Informational`
 
-### PoC - Phase 1: Flask Server
+### PoC - phase 1: flask server
 
 ```python
 # tracker.py
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
 ```
 
-### PoC - Phase 2: Embedding in Email Template
+### PoC - phase 2: embedding in email template
 
 ```html
 <!-- Insert in the phishing email HTML template -->
@@ -65,7 +65,7 @@ if __name__ == '__main__':
      width="1" height="1" style="display:none" alt="" />
 ```
 
-### PoC - Phase 3: Result
+### PoC - phase 3: result
 
 ```Bash
 python3 tracker.py
@@ -93,7 +93,7 @@ python3 tracker.py
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The test was conducted with Outlook on a Windows 10 VM configured with default settings (image loading enabled). Tracking worked immediately: opening the email generated the HTTP GET request to the Flask server.
 
@@ -101,7 +101,7 @@ An important aspect that emerged from testing: Outlook in "preview pane" mode lo
 
 ---
 
-## Theoretical Analysis: Tracking Pixel Limitations
+## Theoretical analysis: tracking pixel limitations
 
 The tracking pixel has three main limitations:
 
@@ -115,13 +115,13 @@ Despite these limitations, the tracking pixel remains the de facto standard for 
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Stage Capabilities: Upload Malware | `T1608.001` | Tracking pixel server deployment on attacker infrastructure |
-| Discovery | System Information Discovery | `T1082` | Victim IP, User-Agent and geolocation collection (SE-015) |
-| Reconnaissance | Active Scanning: Scanning IP Blocks | `T1595.001` | Active recipient IP identification via tracking |
+| resource development | stage capabilities: upload malware | `T1608.001` | tracking pixel server deployment on attacker infrastructure |
+| discovery | system information discovery | `T1082` | victim ip, user-agent and geolocation collection (SE-015) |
+| reconnaissance | active scanning: scanning ip blocks | `T1595.001` | active recipient ip identification via tracking |
 
 ---
 

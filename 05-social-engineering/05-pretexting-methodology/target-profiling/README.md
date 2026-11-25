@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Target Profiling - OSINT-Based Dossier Construction
+# Target profiling - OSINT-Based dossier construction
 
 > - **Fase:** Social Engineering - Reconnaissance sul fattore umano
 > - **Visibilita:** Zero - tutte le informazioni sono raccolte da fonti pubbliche (LinkedIn, social media, motori di ricerca, DNS) senza interazione diretta con il target
@@ -14,17 +14,17 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Il target profiling trasforma dati OSINT grezzi (email, nomi, ruoli) in un dossier operativo che guida la personalizzazione della campagna di social engineering. La differenza tra un phishing generico (click rate 5%) e uno mirato (click rate 40%+) e interamente nella qualita del profiling: conoscere il nome del manager del target, il progetto su cui sta lavorando, o il tool che ha menzionato in un post LinkedIn permette di costruire pretesti quasi impossibili da riconoscere come fraudolenti.
 
 ---
 
-## Target Profiling: Costruzione Dossier OSINT
+## Target profiling: costruzione dossier OSINT
 
 **ID Finding:** `SE-013` | **Severity:** `Informativo`
 
-### PoC - Fase 1: Email Harvesting
+### PoC - fase 1: email harvesting
 
 ```Bash
 theHarvester -d target-lab.com -b google,linkedin,bing,crtsh -l 500
@@ -44,7 +44,7 @@ vpn.target-lab.com: 93.184.216.35                          <-- VPN esposta
 sharepoint.target-lab.com: 93.184.216.36                    <-- SharePoint esterno
 ```
 
-### PoC - Fase 2: Profiling LinkedIn
+### PoC - fase 2: profiling LinkedIn
 
 ```Bash
 # Generazione lista username da LinkedIn
@@ -58,7 +58,7 @@ Anna Verdi - IT System Administrator                        <-- IT: accesso priv
 Giovanni Ferrari - Sales Director                           <-- Sales: meno consapevole di security
 ```
 
-### PoC - Fase 3: Deep Profiling (Ricerca Manuale)
+### PoC - fase 3: deep profiling (ricerca manuale)
 
 ```
 === DOSSIER TARGET: Mario Rossi (CFO) ===
@@ -100,7 +100,7 @@ PRETESTO RACCOMANDATO:
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il profiling e stato condotto su profili fittizi creati appositamente su LinkedIn e social media di test. Il dato piu significativo e stato il tempo necessario: un dossier operativo completo per un singolo target richiede circa 30-45 minuti di ricerca manuale. In un engagement con 20 target, il profiling puo richiedere 2-3 giorni di lavoro - un investimento che si ripaga interamente nel click rate della campagna.
 
@@ -108,7 +108,7 @@ La sfida principale e stata la correlazione delle informazioni tra piattaforme d
 
 ---
 
-## Analisi Teorica: OSINT come Moltiplicatore di Forza
+## Analisi teorica: OSINT come moltiplicatore di forza
 
 Il valore del target profiling nel social engineering e quantificabile: secondo lo studio Verizon DBIR 2024, le campagne di spear-phishing mirate (basate su profiling) hanno un success rate 10x superiore rispetto al phishing generico. Il motivo e cognitivo: il cervello umano utilizza la familiarita come proxy per la fiducia. Un'email che menziona il nome del manager, il progetto corrente, o il tool utilizzato attiva circuiti di riconoscimento che bypassano l'analisi critica.
 
@@ -118,13 +118,13 @@ Il profiling OSINT opera sulla superficie informativa pubblica dell'organizzazio
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Information: Email Addresses | `T1589.002` | Raccolta email via theHarvester (SE-013) |
-| Reconnaissance | Gather Victim Identity Information: Employee Names | `T1589.003` | Enumerazione nomi e ruoli via LinkedIn (SE-013) |
-| Reconnaissance | Gather Victim Org Information: Identify Roles | `T1591.004` | Ricostruzione organigramma e catena di comando |
-| Reconnaissance | Search Open Websites/Domains: Social Media | `T1593.001` | Profiling social media per trigger psicologici |
-| Reconnaissance | Search Victim-Owned Websites | `T1594` | Analisi sito aziendale per stack tecnologico |
+| reconnaissance | gather victim identity information: email addresses | `T1589.002` | raccolta email via theharvester (SE-013) |
+| reconnaissance | gather victim identity information: employee names | `T1589.003` | enumerazione nomi e ruoli via linkedin (SE-013) |
+| reconnaissance | gather victim org information: identify roles | `T1591.004` | ricostruzione organigramma e catena di comando |
+| reconnaissance | search open websites/domains: social media | `T1593.001` | profiling social media per trigger psicologici |
+| reconnaissance | search victim-owned websites | `T1594` | analisi sito aziendale per stack tecnologico |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Denial of Service (DoS) and DDoS
+# Denial of service (DoS) and DDoS
 
 > - **Nature:** conceptual page (background knowledge). Mechanism + defense angle. No DoS attack tool.
 > - **Objective:** explain what a denial-of-service attack is, its categories, the amplification/reflection mechanism and, above all, how it is detected and mitigated.
@@ -19,11 +19,11 @@ normally **excluded** from scope: you document the defensive posture, you do not
 
 ## Categories
 
-| Category | Exhausted resource | Example mechanism | Metric |
+| category | exhausted resource | example mechanism | metric |
 | :--- | :--- | :--- | :--- |
-| **Volumetric** | Network bandwidth | UDP/ICMP flood, amplification/reflection | Gbps / Tbps |
-| **Protocol (state exhaustion)** | Connection state/tables (firewall, LB, server) | SYN flood, ACK flood, fragmentation | pps (packets/s) |
-| **Application (Layer 7)** | Application capacity (CPU, threads, DB) | HTTP flood, expensive requests, Slowloris (slow connections kept open) | rps (requests/s) |
+| **volumetric** | network bandwidth | udp/icmp flood, amplification/reflection | gbps / tbps |
+| **protocol (state exhaustion)** | connection state/tables (firewall, lb, server) | syn flood, ack flood, fragmentation | pps (packets/s) |
+| **application (layer 7)** | application capacity (cpu, threads, db) | http flood, expensive requests, slowloris (slow connections kept open) | rps (requests/s) |
 
 Application attacks are the most insidious: low volumes (hard to distinguish from legitimate traffic) but high
 cost for the server (e.g., a heavy search repeated).
@@ -51,7 +51,7 @@ credentials, see [malware taxonomy](<../malware-taxonomy/README.en.md>)) that se
 **Mirai** (2016) is the example: mass compromise of IoT cameras/routers, used for attacks beyond the Tbps (Dyn,
 OVH, Krebs).
 
-## Detection and mitigation (Blue Team)
+## Detection and mitigation (blue team)
 
 **Detection.**
 - Anomalous spikes of inbound traffic (Gbps/pps) or L7 requests (rps) versus the baseline.
@@ -70,13 +70,13 @@ OVH, Krebs).
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID |
+| tactic | technique | mitre id |
 | :--- | :--- | :--- |
-| Impact | Network Denial of Service | `T1498` |
-| Impact | Network Denial of Service: Direct Network Flood | `T1498.001` |
-| Impact | Network Denial of Service: Reflection Amplification | `T1498.002` |
-| Impact | Endpoint Denial of Service | `T1499` |
-| Impact | Endpoint Denial of Service: Application Exhaustion / Service Exhaustion Flood | `T1499.003` / `T1499.002` |
+| impact | network denial of service | `T1498` |
+| impact | network denial of service: direct network flood | `T1498.001` |
+| impact | network denial of service: reflection amplification | `T1498.002` |
+| impact | endpoint denial of service | `T1499` |
+| impact | endpoint denial of service: application exhaustion / service exhaustion flood | `T1499.003` / `T1499.002` |
 
 ## References
 
@@ -88,11 +88,11 @@ OVH, Krebs).
 
 ## Links to the operational modules
 
-| Concept | Related module | Link |
+| concept | related module | link |
 | :--- | :--- | :--- |
-| Botnet as the DDoS source | [malware taxonomy](<../malware-taxonomy/README.en.md>) | the bots (often IoT) are the engine of the volume |
-| Detection and mitigation | [08-defense-hardenings](<../../08-defense-hardenings (Blue Team Prevention)/README.en.md>) | traffic monitoring, rate limiting, network hardening |
-| Anti-spoofing filters (BCP38) | Networking / edge-router configuration | cut the amplification surface at the root (not specific to one module) |
+| botnet as the ddos source | [malware taxonomy](<../malware-taxonomy/README.en.md>) | the bots (often iot) are the engine of the volume |
+| detection and mitigation | [08-defense-hardenings](<../../08-defense-hardenings (Blue Team Prevention)/README.en.md>) | traffic monitoring, rate limiting, network hardening |
+| anti-spoofing filters (bcp38) | networking / edge-router configuration | cut the amplification surface at the root (not specific to one module) |
 
 ---
 

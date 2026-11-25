@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Denial of Service (DoS) e DDoS
+# Denial of service (DoS) e DDoS
 
 > - **Natura:** pagina concettuale (conoscenza di base). Taglio funzionamento + difesa. Nessuno strumento di attacco DoS.
 > - **Obiettivo:** spiegare cos'e un attacco di negazione del servizio, le sue categorie, il meccanismo di amplificazione/riflessione e soprattutto come si rileva e si mitiga.
@@ -20,11 +20,11 @@ l'attacco.
 
 ## Categorie
 
-| Categoria | Risorsa esaurita | Esempi di meccanismo | Metrica |
+| categoria | risorsa esaurita | esempi di meccanismo | metrica |
 | :--- | :--- | :--- | :--- |
-| **Volumetrico** | Banda di rete | Flood UDP/ICMP, amplificazione/riflessione | Gbps / Tbps |
-| **A protocollo (state exhaustion)** | Stato/tabelle di connessione (firewall, LB, server) | SYN flood, ACK flood, frammentazione | pps (packet/s) |
-| **Applicativo (Layer 7)** | Capacita dell'applicazione (CPU, thread, DB) | HTTP flood, richieste costose, Slowloris (connessioni lente tenute aperte) | rps (request/s) |
+| **volumetrico** | banda di rete | flood udp/icmp, amplificazione/riflessione | gbps / tbps |
+| **a protocollo (state exhaustion)** | stato/tabelle di connessione (firewall, lb, server) | syn flood, ack flood, frammentazione | pps (packet/s) |
+| **applicativo (layer 7)** | capacita dell'applicazione (cpu, thread, db) | http flood, richieste costose, slowloris (connessioni lente tenute aperte) | rps (request/s) |
 
 Gli attacchi applicativi sono i piu insidiosi: bassi volumi (difficili da distinguere dal traffico legittimo)
 ma ad alto costo per il server (es. una ricerca pesante ripetuta).
@@ -52,7 +52,7 @@ credenziali deboli, vedi [tassonomia malware](<../malware-taxonomy/README.md>)) 
 del C2. **Mirai** (2016) ne e l'esempio: compromise di massa di telecamere/router IoT, usati per attacchi oltre
 il Tbps (Dyn, OVH, Krebs).
 
-## Rilevamento e mitigazione (Blue Team)
+## Rilevamento e mitigazione (blue team)
 
 **Rilevamento.**
 - Picchi anomali di traffico in ingresso (Gbps/pps) o di richieste L7 (rps) rispetto alla baseline.
@@ -70,13 +70,13 @@ il Tbps (Dyn, OVH, Krebs).
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE |
+| tattica | tecnica | id mitre |
 | :--- | :--- | :--- |
-| Impact | Network Denial of Service | `T1498` |
-| Impact | Network Denial of Service: Direct Network Flood | `T1498.001` |
-| Impact | Network Denial of Service: Reflection Amplification | `T1498.002` |
-| Impact | Endpoint Denial of Service | `T1499` |
-| Impact | Endpoint Denial of Service: Application Exhaustion / Service Exhaustion Flood | `T1499.003` / `T1499.002` |
+| impact | network denial of service | `T1498` |
+| impact | network denial of service: direct network flood | `T1498.001` |
+| impact | network denial of service: reflection amplification | `T1498.002` |
+| impact | endpoint denial of service | `T1499` |
+| impact | endpoint denial of service: application exhaustion / service exhaustion flood | `T1499.003` / `T1499.002` |
 
 ## Riferimenti
 
@@ -88,11 +88,11 @@ il Tbps (Dyn, OVH, Krebs).
 
 ## Correlazioni con i moduli operativi
 
-| Concetto | Modulo correlato | Collegamento |
+| concetto | modulo correlato | collegamento |
 | :--- | :--- | :--- |
-| Botnet come sorgente del DDoS | [tassonomia malware](<../malware-taxonomy/README.md>) | i bot (spesso IoT) sono il motore del volume |
-| Rilevamento e mitigazione | [08-defense-hardenings](<../../08-defense-hardenings (Blue Team Prevention)/README.md>) | monitoraggio del traffico, rate limiting, hardening di rete |
-| Filtri anti-spoofing (BCP38) | Networking / configurazione dei router di bordo | riducono alla radice la superficie di amplificazione (non specifici di un modulo) |
+| botnet come sorgente del ddos | [tassonomia malware](<../malware-taxonomy/README.md>) | i bot (spesso iot) sono il motore del volume |
+| rilevamento e mitigazione | [08-defense-hardenings](<../../08-defense-hardenings (Blue Team Prevention)/README.md>) | monitoraggio del traffico, rate limiting, hardening di rete |
+| filtri anti-spoofing (bcp38) | networking / configurazione dei router di bordo | riducono alla radice la superficie di amplificazione (non specifici di un modulo) |
 
 ---
 

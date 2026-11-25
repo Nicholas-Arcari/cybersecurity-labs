@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# SQL Injection (SQLi)
+# SQL injection (SQLi)
 
 > - **Fase:** Web Attack - SQL Injection Testing
 > - **Visibilita:** Media - richieste HTTP con payload nel parametro URL o nel corpo POST
@@ -17,13 +17,13 @@ La causa radice e quasi sempre la stessa: **concatenazione diretta dell'input ut
 
 Le tipologie principali di SQLi e il loro meccanismo:
 
-| Tipologia | Meccanismo | Quando usarla |
+| tipologia | meccanismo | quando usarla |
 | :--- | :--- | :--- |
-| Error-based | Il database restituisce messaggi di errore con info sulla struttura | Stack tecnologico noto, messaggi verbosi |
-| UNION-based | Aggiunge risultati di query arbitrarie alla risposta normale | La query originale restituisce output visibile |
-| Boolean-based Blind | L'app risponde diversamente a condizioni vere/false | Nessun output diretto, solo comportamento binario |
-| Time-based Blind | Si usa `SLEEP(N)` per inferire informazioni dal ritardo | Nessun output, nessuna differenza di comportamento |
-| Out-of-Band | L'app esfiltra dati verso un server esterno (DNS, HTTP) | Difese perimetrali bloccano le altre tecniche |
+| error-based | il database restituisce messaggi di errore con info sulla struttura | stack tecnologico noto, messaggi verbosi |
+| union-based | aggiunge risultati di query arbitrarie alla risposta normale | la query originale restituisce output visibile |
+| boolean-based blind | l'app risponde diversamente a condizioni vere/false | nessun output diretto, solo comportamento binario |
+| time-based blind | si usa `SLEEP(N)` per inferire informazioni dal ritardo | nessun output, nessuna differenza di comportamento |
+| out-of-band | l'app esfiltra dati verso un server esterno (dns, http) | difese perimetrali bloccano le altre tecniche |
 
 ---
 
@@ -37,7 +37,7 @@ sql-injection (SQLi)/
 
 ---
 
-## `manual-payloads/` - SQL Injection Manuale
+## `manual-payloads/` - SQL injection manuale
 
 **ID Finding:** `WEB-004` | **Severity:** `Critico` | **CVSS v3.1:** 9.8
 
@@ -59,7 +59,7 @@ Il documento `manual-payloads/README.md` copre tre scenari progressivi:
 
 ---
 
-## `sql-map-data/` - SQLi Automatizzata con sqlmap
+## `sql-map-data/` - SQLi automatizzata con sqlmap
 
 **ID Finding:** `WEB-011` | **Severity:** `Critico` | **CVSS v3.1:** 9.8
 
@@ -113,13 +113,13 @@ Il finding WEB-011 presenta una violazione PCI-DSS critica: i numeri di carte di
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `sqlmap` | SQL Injection framework | CLI - Attiva | Exploitation automatizzata, dump database |
-| `Burp Suite Repeater` | Web proxy | GUI - Manuale | Test manuale iterativo di payload SQL |
-| `Burp Suite Intruder` | Web proxy | GUI - Semi-auto | Fuzzing parametri con payload list |
-| `ghauri` | SQLi tool moderno | CLI - Attiva | Alternativa a sqlmap, evasione WAF migliorata |
-| `havij` | SQLi framework | GUI - Attiva | Tool legacy (non mantenuto), evitare in prod |
+| `sqlmap` | sql injection framework | cli - attiva | exploitation automatizzata, dump database |
+| `Burp Suite Repeater` | web proxy | gui - manuale | test manuale iterativo di payload sql |
+| `Burp Suite Intruder` | web proxy | gui - semi-auto | fuzzing parametri con payload list |
+| `ghauri` | sqli tool moderno | cli - attiva | alternativa a sqlmap, evasione waf migliorata |
+| `havij` | sqli framework | gui - attiva | tool legacy (non mantenuto), evitare in prod |
 
 > **Tool moderno consigliato:** `ghauri` - alternativa moderna a sqlmap con migliori capacita di evasione WAF e supporto per tecniche di injection avanzate. Installazione: `pip3 install ghauri`.
 
@@ -127,13 +127,13 @@ Il finding WEB-011 presenta una violazione PCI-DSS critica: i numeri di carte di
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation della SQL Injection sul parametro `artist` e form di login di `testphp.vulnweb.com` (WEB-004, WEB-011) |
-| Discovery | Account Discovery: Local Account | `T1087.001` | Enumerazione degli utenti del database tramite UNION injection su `information_schema.tables` (WEB-004) |
-| Collection | Data from Information Repositories | `T1213` | Dump completo della tabella `users` con credenziali in chiaro e PAN di carte di credito (WEB-004, WEB-011) |
-| Exfiltration | Exfiltration Over Web Service | `T1567` | Salvataggio del dump del database in file CSV locale tramite sqlmap (WEB-011) |
-| Credential Access | Brute Force: Password Guessing | `T1110.001` | Utilizzo delle credenziali estratte (`test:test`) per accedere all'applicazione (WEB-004) |
+| initial access | exploit public-facing application | `T1190` | exploitation della sql injection sul parametro `artist` e form di login di `testphp.vulnweb.com` (WEB-004, WEB-011) |
+| discovery | account discovery: local account | `T1087.001` | enumerazione degli utenti del database tramite union injection su `information_schema.tables` (WEB-004) |
+| collection | data from information repositories | `T1213` | dump completo della tabella `users` con credenziali in chiaro e pan di carte di credito (WEB-004, WEB-011) |
+| exfiltration | exfiltration over web service | `T1567` | salvataggio del dump del database in file csv locale tramite sqlmap (WEB-011) |
+| credential access | brute force: password guessing | `T1110.001` | utilizzo delle credenziali estratte (`test:test`) per accedere all'applicazione (WEB-004) |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Diamond Ticket: stealth variant of the Golden Ticket
+# Diamond ticket: stealth variant of the golden ticket
 
 > - **Phase:** Persistence / Privilege Escalation (Active Directory domain)
 > - **Visibility:** Very low - unlike the Golden, a real AS-REQ/AS-REP is logged (Event ID 4768), so the typical indicators of a from-scratch forged ticket are absent
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 The Diamond Ticket is the "stealth" evolution of the [Golden Ticket](<../golden-ticket/README.en.md>). Both
 require the `krbtgt` key, but the mechanism is opposite. The Golden forges a TGT **from scratch**, offline,
@@ -36,7 +36,7 @@ the consistency of the forged PAC: modern tools (Rubeus with `/ldap` and `/opsec
 attributes read via LDAP and align the ticket options to native Windows behavior, further reducing indicators.
 As for all tickets, AES is preferred over RC4, which is itself a signal.
 
-## Execution / Commands
+## Execution / commands
 
 ```bash
 # (Windows) Rubeus: obtains a real TGT, modifies its PAC and re-injects it
@@ -68,7 +68,7 @@ an apparently normal Kerberos flow. In an assessment, finding a domain where the
 that the sole "4624 without 4768" detection is insufficient and that PAC validation or finer correlation is
 missing.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 In the Kerberos flow (see [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.en.md>), sec. 3.1-3.2) the PAC
 inside the TGT is signed with the KDC key (`krbtgt`): it is this signature that guarantees its integrity.
@@ -78,7 +78,7 @@ than a forged one: everything that makes the ticket "normal" (the real AS-REQ, t
 and only the authorization (the PAC) is forged. The theoretical lesson is that, once the `krbtgt` key is
 compromised, no signature protects anything anymore: the only remedy is rotation (a double reset).
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection.** Hard with classic rules (the AS-REQ is real). Shift detection to **PAC consistency** (service-side
 PAC validation and correlation between issued PAC and presented PAC) and to fine indicators: use of RC4 where AES
@@ -91,11 +91,11 @@ DCSync; Tiering Model; monitoring of replication access.
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > Applies to stealth domain-wide control (severity Critical).
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** possession of the `krbtgt` key (from DCSync) and of a user session/credentials.
 
@@ -123,7 +123,7 @@ The persistence survives until `krbtgt` is rotated twice.
 **Typical monetization vectors:** prolonged persistence in monitored environments; access to critical data and
 systems without alerting MDI.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** behavioral Kerberos analytics (MDI); PAC validation; correlation between the PAC issued by the KDC
 and the PAC presented; unexpected use of RC4.
@@ -144,11 +144,11 @@ indistinguishable from legitimate activity.
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `Rubeus` | .NET Kerberos tool | CLI - Active | `diamond` command with `/ldap` and `/opsec` from Windows |
-| `ticketer.py` (Impacket) | Kerberos tool | CLI - Active | Manipulation of a real TGT's PAC from Linux |
-| `Mimikatz` | Credential/ticket tool | CLI - Active | Extraction of the `krbtgt` key and ticket manipulation |
+| `Rubeus` | .net kerberos tool | cli - active | `diamond` command with `/ldap` and `/opsec` from windows |
+| `ticketer.py` (impacket) | kerberos tool | cli - active | manipulation of a real tgt's pac from linux |
+| `Mimikatz` | credential/ticket tool | cli - active | extraction of the `krbtgt` key and ticket manipulation |
 
 ## Methodology notes
 
@@ -159,19 +159,19 @@ and redacted in the report.
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Steal or Forge Kerberos Tickets: Golden Ticket | `T1558.001` | Manipulation of a real TGT with the krbtgt key (stealth variant of the Golden). |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Ticket | `T1550.003` | Use of the modified TGT to access domain services. |
-| Persistence | Account Manipulation | `T1098` | Domain-wide persistence via a ticket with an altered PAC. |
+| credential access | steal or forge kerberos tickets: golden ticket | `T1558.001` | manipulation of a real tgt with the krbtgt key (stealth variant of the golden). |
+| lateral movement | use alternate authentication material: pass the ticket | `T1550.003` | use of the modified tgt to access domain services. |
+| persistence | account manipulation | `T1098` | domain-wide persistence via a ticket with an altered pac. |
 
 ## Links to other modules
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
-| [DCSync](<../../05-credential-dumping/dcsync/README.en.md>) | Diamond Ticket | provides the krbtgt key, the prerequisite common to Golden and Diamond |
-| [Golden Ticket](<../golden-ticket/README.en.md>) | Diamond Ticket | same root of trust, but the Diamond starts from a real TGT (stealthier) |
-| Diamond Ticket | [Sapphire Ticket](<../sapphire-ticket/README.en.md>) | further evolution: authentic PAC via S4U2self rather than modified |
+| [dcsync](<../../05-credential-dumping/dcsync/README.en.md>) | diamond ticket | provides the krbtgt key, the prerequisite common to golden and diamond |
+| [golden ticket](<../golden-ticket/README.en.md>) | diamond ticket | same root of trust, but the diamond starts from a real tgt (stealthier) |
+| diamond ticket | [sapphire ticket](<../sapphire-ticket/README.en.md>) | further evolution: authentic pac via s4u2self rather than modified |
 
 ---
 

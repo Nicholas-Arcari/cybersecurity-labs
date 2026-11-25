@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Email Generator - Permutazioni Email Aziendali
+# Email generator - permutazioni email aziendali
 
 > - **Fase:** Social Engineering - Target Enumeration
 > - **Visibilita:** Zero - lo script opera completamente offline, genera permutazioni senza interazione con il target
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Quando il formato email aziendale non e noto con certezza, lo script genera tutte le permutazioni standard (mario.rossi, m.rossi, rossi.mario, mrossi, ecc.) per ogni combinazione nome/cognome. La lista prodotta viene poi utilizzata per due scopi: verifica dell'esistenza degli indirizzi (SMTP VRFY/RCPT TO, o timing attack su pagine di login) e targeting diretto nelle campagne di phishing. Lo script supporta input da file CSV per generazione batch su liste di dipendenti.
 
@@ -21,7 +21,7 @@ Quando il formato email aziendale non e noto con certezza, lo script genera tutt
 
 ## Utilizzo
 
-### Generazione Singola
+### Generazione singola
 
 ```Bash
 python3 email_gen.py Mario Rossi target-lab.com
@@ -47,7 +47,7 @@ mario@target-lab.com
 rossi@target-lab.com
 ```
 
-### Generazione Batch da CSV
+### Generazione batch da CSV
 
 ```Bash
 # Input: employees.csv
@@ -64,7 +64,7 @@ python3 email_gen.py --csv employees.csv --domain target-lab.com --output emails
 [*] Output salvato in: emails.txt
 ```
 
-### Codice Sorgente
+### Codice sorgente
 
 ```python
 #!/usr/bin/env python3
@@ -119,7 +119,7 @@ if __name__ == '__main__':
 
 ---
 
-## Verifica Email Generate
+## Verifica email generate
 
 ```Bash
 # Verifica esistenza via SMTP RCPT TO (richiede SMTP che non blocchi VRFY)
@@ -134,9 +134,9 @@ smtp-user-enum -M RCPT -U emails.txt -t mail.target-lab.com
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Information: Email Addresses | `T1589.002` | Generazione permutazioni email per enumerazione target |
+| reconnaissance | gather victim identity information: email addresses | `T1589.002` | generazione permutazioni email per enumerazione target |
 
 ---
 

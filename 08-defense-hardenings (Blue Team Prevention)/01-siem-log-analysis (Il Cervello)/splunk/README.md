@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Splunk - Correlazione e Threat Hunting con SPL
+# Splunk - correlazione e threat hunting con SPL
 
 > - **Fase:** Defense & Hardening - Detection & Correlation (SIEM commerciale)
 > - **Categoria:** Detection - correlazione multi-sorgente e threat hunting
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Splunk e il SIEM commerciale di riferimento del settore. Rispetto all'ELK Stack (`../elk-stack/`) offre molto pronto all'uso - parsing automatico, app pre-costruite, un linguaggio di ricerca (SPL) estremamente espressivo - a fronte di un costo di licenza basato sul volume di dati ingeriti al giorno.
 
@@ -40,7 +40,7 @@ splunk/
 
 ---
 
-## Detection tramite Correlazione SPL
+## Detection tramite correlazione SPL
 
 **ID Finding:** `DEF-002` | **Severity:** `Alto` (la correlazione multi-sorgente rileva attacchi invisibili alle singole sorgenti isolate)
 
@@ -48,7 +48,7 @@ splunk/
 
 Il Search Processing Language (SPL) e il linguaggio proprietario di Splunk: una pipeline di comandi (in stile Unix, concatenati con `|`) che filtra, aggrega e correla gli eventi. Costruire una libreria di query SPL per gli attacchi comuni e il lavoro difensivo centrale: ogni query codifica la "firma comportamentale" di un attacco.
 
-### PoC - Ingestione dei log (Universal Forwarder)
+### PoC - ingestione dei log (universal forwarder)
 
 ```Bash
 # Sull'endpoint: l'Universal Forwarder inoltra i log a Splunk
@@ -71,7 +71,7 @@ Active forwards:
     10.0.2.30:9997                        <-- endpoint che inoltra i log
 ```
 
-### PoC - Query SPL: detection brute force
+### PoC - query SPL: detection brute force
 
 ```
 index=* sourcetype=linux_secure "Failed password"
@@ -86,7 +86,7 @@ src_ip        user     count
 10.0.2.15     admin    31
 ```
 
-### PoC - Query SPL: detection port scanning
+### PoC - query SPL: detection port scanning
 
 ```
 index=* sourcetype=firewall action=blocked
@@ -99,7 +99,7 @@ src_ip        porte_distinte
 10.0.2.15     1024              <-- un solo IP verso 1024 porte = port scan
 ```
 
-### PoC - Query SPL: correlazione multi-sorgente (il vero valore)
+### PoC - query SPL: correlazione multi-sorgente (il vero valore)
 
 ```
 # Correla: scan di rete (firewall) SEGUITO da login riuscito (server)
@@ -116,7 +116,7 @@ src_ip        eventi
 
 Questa e la correlazione che nessuna sorgente singola puo fornire: il firewall vede lo scan, il server vede il login, ma solo Splunk vede che sono lo stesso attaccante e che il secondo evento e la conseguenza del primo.
 
-### Tuning e Operativita Difensiva
+### Tuning e operativita difensiva
 
 - **Salvare le query come Saved Searches:** ogni query di detection va salvata come alert schedulato con soglia e azione (notifica, ticket, active response)
 - **Riduzione falsi positivi:** whitelist degli scanner di vulnerabilita autorizzati e dei bastion host; tarare le soglie sull'ambiente
@@ -125,7 +125,7 @@ Questa e la correlazione che nessuna sorgente singola puo fornire: il firewall v
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 La curva di apprendimento di Splunk e stata inversa rispetto a ELK: dove ELK richiede di costruire tutto ma insegna ogni pezzo, Splunk parte subito produttivo ma nasconde la complessita. In pochi minuti, con l'Universal Forwarder configurato, i log erano ricercabili; scrivere la prima query brute force in SPL e stato immediato e intuitivo (`stats count by src_ip | where count > 10`). Questa immediatezza spiega perche Splunk domina il mercato enterprise nonostante il costo.
 
@@ -135,7 +135,7 @@ La nota strategica del laboratorio si e chiarita usando gli strumenti fianco a f
 
 ---
 
-## Analisi Teorica: La Correlazione come Ricostruzione della Kill Chain
+## Analisi teorica: la correlazione come ricostruzione della kill chain
 
 Un attacco non e un evento singolo ma una sequenza: ricognizione, accesso iniziale, escalation, movimento laterale, azione sull'obiettivo. Ogni fase genera eventi su sistemi diversi e, presa isolatamente, ogni evento e sotto la soglia dell'allarme - un port scan e "rumore di Internet", un login riuscito e "attivita normale". La correlazione ricostruisce la sequenza, e la sequenza e l'attacco.
 
@@ -145,15 +145,15 @@ Questo definisce il posto di Splunk nell'architettura difensiva: non e un sensor
 
 ---
 
-## Scenario Reale: La Detection in Azione
+## Scenario reale: la detection in azione
 
 > Questa sezione descrive come questo controllo difensivo opererebbe in un incidente reale.
 
-### Prospettiva Attaccante (cosa tenta)
+### Prospettiva attaccante (cosa tenta)
 
 L'attaccante distribuisce deliberatamente la propria attivita per restare sotto le soglie: uno scan lento, qualche tentativo di login sparso, un accesso "legittimo" a distanza di minuti. Confida che ogni sistema, guardando solo i propri log, non veda nulla di allarmante.
 
-### Prospettiva Difensore (come il controllo risponde)
+### Prospettiva difensore (come il controllo risponde)
 
 ```
 [DEF-002] Universal Forwarder -> Splunk indicizza log di firewall + server + Wazuh
@@ -181,14 +181,14 @@ Threat hunting: pivot su svc_web -> ogni sistema toccato dall'account
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Splunk Enterprise` | SIEM commerciale | Piattaforma | Indicizzazione, SPL, alerting, dashboard |
-| `Universal Forwarder` | Log shipper | Agent | Inoltro leggero dei log dagli endpoint |
-| `SPL` | Search language | Linguaggio | Query di detection e correlazione |
-| `Splunk ES` (Enterprise Security) | SIEM premium | App | Correlation searches pronte + framework MITRE |
-| `Splunk Free` | SIEM (limitato) | Piattaforma | Lab e volumi piccoli (500 MB/giorno, no auth) |
-| `Sysmon` | Endpoint sensor | Agent (Win) | Telemetria di processo dettagliata da correlare in SPL |
+| `Splunk Enterprise` | siem commerciale | piattaforma | indicizzazione, spl, alerting, dashboard |
+| `Universal Forwarder` | log shipper | agent | inoltro leggero dei log dagli endpoint |
+| `SPL` | search language | linguaggio | query di detection e correlazione |
+| `Splunk ES` (enterprise security) | siem premium | app | correlation searches pronte + framework mitre |
+| `Splunk Free` | siem (limitato) | piattaforma | lab e volumi piccoli (500 mb/giorno, no auth) |
+| `Sysmon` | endpoint sensor | agent (win) | telemetria di processo dettagliata da correlare in spl |
 
 > **Tool moderno consigliato:** per un ambiente di produzione, `Splunk Enterprise Security` (ES) fornisce correlation searches pronte all'uso mappate su MITRE ATT&CK. In un home lab, `Splunk Free` e sufficiente per imparare SPL. L'abbinamento con `Sysmon` sugli endpoint Windows fornisce la telemetria di processo che rende la correlazione molto piu ricca. Alternativa open source completa in `../elk-stack/`.
 
@@ -198,17 +198,17 @@ Threat hunting: pivot su svc_web -> ogni sistema toccato dall'account
 
 > La tabella mappa le tecniche d'attacco che il controllo **rileva** tramite correlazione SPL.
 
-| Tattica (rilevata) | Tecnica | ID MITRE | Ruolo del controllo |
+| tattica (rilevata) | tecnica | id mitre | ruolo del controllo |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Scanning IP Blocks | `T1595.001` | Query SPL: un IP verso molte porte distinte (port scan) (DEF-002) |
-| Credential Access | Brute Force | `T1110` | Query SPL: aggregazione login falliti per IP/utente (DEF-002) |
-| Initial Access | Valid Accounts | `T1078` | Correlazione scan - login riuscito (accesso ottenuto) |
-| Lateral Movement | Remote Services | `T1021` | Correlazione: stesso account su host multipli in sequenza |
+| reconnaissance | active scanning: scanning ip blocks | `T1595.001` | query spl: un ip verso molte porte distinte (port scan) (DEF-002) |
+| credential access | brute force | `T1110` | query spl: aggregazione login falliti per ip/utente (DEF-002) |
+| initial access | valid accounts | `T1078` | correlazione scan - login riuscito (accesso ottenuto) |
+| lateral movement | remote services | `T1021` | correlazione: stesso account su host multipli in sequenza |
 
-| Contromisura difensiva (D3FEND) | ID D3FEND | Applicazione |
+| contromisura difensiva (d3fend) | id d3fend | applicazione |
 | :--- | :--- | :--- |
-| Network Traffic Analysis | `D3-NTA` | Correlazione dei log di rete per rilevare scanning e accessi |
-| User Behavior Analysis | `D3-UBA` | Rilevamento di sequenze di attivita anomale per utente/IP |
+| network traffic analysis | `D3-NTA` | correlazione dei log di rete per rilevare scanning e accessi |
+| user behavior analysis | `D3-UBA` | rilevamento di sequenze di attivita anomale per utente/ip |
 
 ---
 

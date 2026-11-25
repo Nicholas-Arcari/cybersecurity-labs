@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# WPA/WPA2 Cracking - Handshake Capture e PMKID Attack
+# WPA/WPA2 cracking - handshake capture e PMKID attack
 
 > - **Fase:** Wireless Security - Credential Access (802.11 PSK recovery)
 > - **Visibilita:** Variabile - la cattura passiva dell'handshake e a bassa visibilita; il cracking offline e completamente invisibile (nessun pacchetto verso il target); la deautenticazione per forzare l'handshake e Attiva e rilevabile da un WIDS
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Il cracking WPA/WPA2-PSK e l'attacco che trasforma la ricognizione radio in accesso effettivo alla rete. A differenza del WEP (rotto crittograficamente e crackabile in minuti indipendentemente dalla password), WPA2 e crittograficamente solido: l'unico vettore e l'attacco a dizionario offline contro il materiale di autenticazione catturato. La sicurezza della rete si riduce quindi interamente alla robustezza della Pre-Shared Key.
 
@@ -33,7 +33,7 @@ cracking/
 
 ---
 
-## Attacco 1: 4-Way Handshake Capture & Crack
+## Attacco 1: 4-Way handshake capture & crack
 
 **ID Finding:** `WIFI-002` | **Severity:** `Alto` (PSK WPA2 recuperata - accesso completo alla rete come client legittimo)
 
@@ -41,7 +41,7 @@ cracking/
 
 Il 4-way handshake e lo scambio di quattro messaggi EAPOL con cui client e AP derivano e confermano le chiavi di sessione a partire dalla PSK. Catturando questo scambio si ottiene tutto il materiale necessario per un attacco a dizionario offline: non si "decifra" il traffico, si verifica offline quale password produce lo stesso MIC (Message Integrity Code) osservato nell'handshake.
 
-### PoC - Fase 1: Cattura dell'handshake
+### PoC - fase 1: cattura dell'handshake
 
 ```Bash
 # Ascolto mirato sul canale del target, salvataggio su file
@@ -60,7 +60,7 @@ sudo aireplay-ng --deauth 3 -a AA:BB:CC:DD:EE:FF -c A0:B1:C2:D3:E4:F5 wlan0mon
 
 L'indicazione `WPA handshake: AA:BB:CC:DD:EE:FF` nell'header conferma la cattura riuscita del 4-way handshake completo.
 
-### PoC - Fase 2: Cracking con aircrack-ng
+### PoC - fase 2: cracking con aircrack-ng
 
 ```Bash
 # Attacco a dizionario diretto (CPU)
@@ -79,7 +79,7 @@ sudo aircrack-ng -w /usr/share/wordlists/rockyou.txt -b AA:BB:CC:DD:EE:FF handsh
       EAPOL HMAC     : 9E C5 8A 21 7B ... 4D
 ```
 
-### PoC - Fase 3: Cracking accelerato con hashcat (GPU)
+### PoC - fase 3: cracking accelerato con hashcat (GPU)
 
 ```Bash
 # Conversione al formato hashcat 22000 (nuovo standard unificato)
@@ -105,7 +105,7 @@ Recovered........: 1/1 (100.00%) Digests
 
 ---
 
-## Attacco 2: PMKID Clientless Attack
+## Attacco 2: PMKID clientless attack
 
 **ID Finding:** `WIFI-003` | **Severity:** `Alto` (PSK recuperata senza client connessi - attacco clientless piu efficiente)
 
@@ -113,7 +113,7 @@ Recovered........: 1/1 (100.00%) Digests
 
 L'attacco PMKID (scoperto da Jens Steube di hashcat nel 2018) sfrutta un campo opzionale presente nel primo messaggio EAPOL dell'handshake, inviato dall'AP stesso. Poiche il PMKID e derivato dalla PMK (che dipende dalla PSK) ma viene trasmesso dall'AP senza bisogno di un client autenticato, e sufficiente una singola richiesta di associazione per ottenerlo. Questo elimina la necessita di attendere o forzare l'autenticazione di un client legittimo - il punto debole del metodo classico.
 
-### PoC - Cattura ed estrazione del PMKID
+### PoC - cattura ed estrazione del PMKID
 
 ```Bash
 # Cattura clientless mirata con hcxdumptool
@@ -145,7 +145,7 @@ Status...........: Cracked
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il primo ostacolo pratico e stato la cattura dell'handshake completo. Nel laboratorio, l'unico client (`A0:B1:C2:D3:E4:F5`) era gia associato e stabile: airodump-ng poteva restare in ascolto per ore senza catturare nulla, perche l'handshake avviene solo al momento dell'associazione. La deautenticazione mirata ha risolto il problema forzando la riassociazione, ma ha evidenziato una lezione operativa: il deauth genera traffico rilevabile, e in un contesto con WIDS attivo questo passaggio e il momento di massima esposizione.
 
@@ -155,7 +155,7 @@ Il fattore decisivo in entrambi i casi non e stato lo strumento ma la wordlist. 
 
 ---
 
-## Analisi Teorica: PBKDF2 e il Costo del Cracking
+## Analisi teorica: PBKDF2 e il costo del cracking
 
 WPA2-PSK deriva la Pairwise Master Key (PMK) dalla passphrase tramite PBKDF2-HMAC-SHA1 con 4096 iterazioni e l'SSID come salt: `PMK = PBKDF2(passphrase, SSID, 4096, 256)`. Le 4096 iterazioni sono una scelta di design deliberata (key stretching): rendono deliberatamente costoso il calcolo di ogni singolo candidato, rallentando l'attacco a dizionario.
 
@@ -165,11 +165,11 @@ WPA3-SAE (Dragonfly handshake) risolve alla radice il problema: sostituisce lo s
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Questa sezione descrive come questo finding si inserirebbe in un engagement reale, sia dal punto di vista dell'attaccante (Red Team) che del difensore (Blue Team).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** PSK WPA2 recuperata, accesso alla rete WiFi target come client legittimo (WIFI-002/WIFI-003).
 
@@ -195,7 +195,7 @@ Esfiltrazione dati / persistenza / ransomware deployment
 
 **Impatto potenziale:** l'accesso WiFi bypassa il perimetro fisico e il firewall di frontiera. In molte organizzazioni la rete WiFi aziendale ha visibilita diretta sui server interni: una PSK debole condivisa e nota a decine di dipendenti (ed ex dipendenti) diventa il punto di ingresso piu economico verso l'intera infrastruttura. Il collegamento diretto e con `07-post-exploitation/` (lateral movement) e `02-vulnerability-assessment/` (scansione interna).
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** un WIDS/WIPS rileva i deauth flood che precedono la cattura dell'handshake (Event: deauthentication storm). Il cracking offline e invece invisibile: non genera alcun traffico. Il primo segnale rilevabile lato difesa e l'associazione anomala di un nuovo device MAC alla rete.
 
@@ -219,15 +219,15 @@ Esfiltrazione dati / persistenza / ransomware deployment
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `airodump-ng` | Wireless sniffer | CLI | Cattura del 4-way handshake su canale mirato |
-| `aireplay-ng` | Frame injector | CLI | Deautenticazione per forzare la riassociazione e l'handshake |
-| `aircrack-ng` | WPA cracker (CPU) | CLI | Cracking a dizionario diretto su .cap (CPU-bound) |
-| `hcxdumptool` | Clientless capture | CLI | Cattura PMKID senza client connessi (attacco moderno) |
-| `hcxtools` | Format converter | CLI | Conversione .pcapng al formato hashcat 22000 |
-| `hashcat` | GPU cracker | CLI | Cracking accelerato GPU con regole (modalita 22000) |
-| `Wifite2` | Attack automator | CLI | Automazione dell'intero flusso capture+crack (vedere `../automated-attacks/`) |
+| `airodump-ng` | wireless sniffer | cli | cattura del 4-way handshake su canale mirato |
+| `aireplay-ng` | frame injector | cli | deautenticazione per forzare la riassociazione e l'handshake |
+| `aircrack-ng` | wpa cracker (cpu) | cli | cracking a dizionario diretto su .cap (cpu-bound) |
+| `hcxdumptool` | clientless capture | cli | cattura pmkid senza client connessi (attacco moderno) |
+| `hcxtools` | format converter | cli | conversione .pcapng al formato hashcat 22000 |
+| `hashcat` | gpu cracker | cli | cracking accelerato gpu con regole (modalita 22000) |
+| `Wifite2` | attack automator | cli | automazione dell'intero flusso capture+crack (vedere `../automated-attacks/`) |
 
 > **Tool moderno consigliato:** il formato `22000` di hashcat (WPA-PBKDF2-PMKID+EAPOL) ha unificato dal 2019 i vecchi formati 2500 (handshake) e 16800 (PMKID). Usare sempre `hcxpcapngtool` per la conversione e `hashcat -m 22000`: la modalita gestisce automaticamente sia PMKID che handshake nello stesso file hash.
 
@@ -235,12 +235,12 @@ Esfiltrazione dati / persistenza / ransomware deployment
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Network Sniffing | `T1040` | Cattura passiva del 4-way handshake EAPOL e del PMKID dai frame 802.11 (WIFI-002, WIFI-003) |
-| Collection | Adversary-in-the-Middle | `T1557` | Deautenticazione di un client per forzare la riassociazione e catturare l'handshake (WIFI-002) |
-| Credential Access | Brute Force: Password Cracking | `T1110.002` | Attacco a dizionario offline su handshake/PMKID con aircrack-ng e hashcat (WIFI-002, WIFI-003) |
-| Initial Access | Valid Accounts | `T1078` | Utilizzo della PSK recuperata per accedere alla rete WiFi come client legittimo |
+| credential access | network sniffing | `T1040` | cattura passiva del 4-way handshake eapol e del pmkid dai frame 802.11 (WIFI-002, WIFI-003) |
+| collection | adversary-in-the-middle | `T1557` | deautenticazione di un client per forzare la riassociazione e catturare l'handshake (WIFI-002) |
+| credential access | brute force: password cracking | `T1110.002` | attacco a dizionario offline su handshake/pmkid con aircrack-ng e hashcat (WIFI-002, WIFI-003) |
+| initial access | valid accounts | `T1078` | utilizzo della psk recuperata per accedere alla rete wifi come client legittimo |
 
 ---
 

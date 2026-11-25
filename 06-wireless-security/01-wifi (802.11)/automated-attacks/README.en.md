@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Automated Attacks - Wifite2 & Airgeddon
+# Automated attacks - wifite2 & airgeddon
 
 > - **Phase:** Wireless Security - Attack Automation & Orchestration (802.11)
 > - **Visibility:** High - the automated attacks include deauthentication, WPS PIN bruteforce and handshake capture, all detectable by a WIDS
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 The manual attacks documented in the previous sections (`recon-monitor`, `cracking`, `rogue-ap`) are didactically essential but do not scale on a real audit with dozens of networks. Wifite2 and Airgeddon automate the entire chain: scanning, prioritization of targets by signal power and vulnerability, sequential execution of all applicable attacks (handshake, PMKID, WPS Pixie-Dust, WPS PIN bruteforce), and final cracking.
 
@@ -21,7 +21,7 @@ The value of these orchestrators is not to do something that the manual tools do
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 automated-attacks/
@@ -31,15 +31,15 @@ automated-attacks/
 
 ---
 
-## Wifite2 - Automated Wireless Audit
+## Wifite2 - automated wireless audit
 
 **Finding ID:** `WIFI-005` | **Severity:** `High` (WPS Pixie-Dust: WPS PIN recovered in seconds, PSK compromised regardless of robustness)
 
-### Operational Context
+### Operational context
 
 Wifite2 is a Python wrapper around the entire aircrack-ng, hcxdumptool, reaver and bully suite. It presents a list of targets ordered by power and allows selecting the objectives; for each it automatically executes the most promising sequence of attacks, handling deauth, capture and cracking without manual intervention.
 
-### PoC - Wifite2 session
+### PoC - wifite2 session
 
 ```Bash
 # Start with targeting on WPA/WPS and use of the default wordlist
@@ -73,9 +73,9 @@ The critical aspect: the PSK `SummerBreeze2025` is not present in rockyou.txt an
 
 ---
 
-## Airgeddon - Multi-Attack Framework
+## Airgeddon - Multi-Attack framework
 
-### Operational Context
+### Operational context
 
 Where Wifite2 excels in command-line automation, Airgeddon offers a complete interactive menu that also covers the Evil Twin attacks (see `../rogue-ap/`), the legacy WEP attacks and integrated interface management. It is useful as a wireless "swiss army knife" in a single guided tool.
 
@@ -87,7 +87,7 @@ sudo airgeddon
 
 ---
 
-## Lab Experience
+## Lab experience
 
 Automation immediately showed its value: in a single session Wifite2 audited three networks, capturing a handshake on `LAB-CORP` and recovering the PSK of `LAB-WPS-AP` via WPS in less than a minute. The contrast with the manual flow (section `cracking`) is stark: what manually requires the coordination of three terminals (airodump, aireplay, aircrack) here is a single target choice.
 
@@ -97,7 +97,7 @@ A practical limit observed: the orchestrators hide the details, and when an atta
 
 ---
 
-## Theoretical Analysis: The WPS Pixie-Dust Weakness
+## Theoretical analysis: the WPS Pixie-Dust weakness
 
 WPS (Wi-Fi Protected Setup) was born to simplify the connection via an 8-digit PIN. Its first weakness (2011, Viehbock) is structural: the PIN is validated in two separate halves (first 4 digits + last 3 + 1 checksum), reducing the search space from 10^8 to about 11,000 combinations - bruteforce feasible in hours (reaver/bully attack).
 
@@ -107,28 +107,28 @@ The theoretical consequence is important: WPS introduces a parallel authenticati
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `Wifite2` | Attack automator | CLI | Automated audit: handshake, PMKID, WPS on multiple targets |
-| `Airgeddon` | Multi-attack framework | CLI - Menu | Wireless swiss army knife: DoS, handshake, Evil Twin, WPS |
-| `reaver` | WPS PIN attack | CLI | Online bruteforce of the WPS PIN (8 digits, reduced space) |
-| `bully` | WPS PIN attack | CLI | Alternative to reaver, more robust on some chipsets |
-| `hcxdumptool` | Clientless capture | CLI | PMKID capture integrated in the automated flows |
+| `Wifite2` | attack automator | cli | automated audit: handshake, pmkid, wps on multiple targets |
+| `Airgeddon` | multi-attack framework | cli - menu | wireless swiss army knife: dos, handshake, evil twin, wps |
+| `reaver` | wps pin attack | cli | online bruteforce of the wps pin (8 digits, reduced space) |
+| `bully` | wps pin attack | cli | alternative to reaver, more robust on some chipsets |
+| `hcxdumptool` | clientless capture | cli | pmkid capture integrated in the automated flows |
 
 > **Recommended modern tool:** `Wifite2` remains the standard for automation in 2024-2026 thanks to the integration of hcxdumptool for the PMKID and the support of the hashcat 22000 format. For enterprise audits on 802.1X, pair it with `eaphammer` (see `../rogue-ap/`).
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Brute Force | `T1110` | WPS PIN bruteforce (reaver/bully) and Pixie-Dust to recover the PIN and derive the PSK (WIFI-005) |
-| Credential Access | Network Sniffing | `T1040` | Automated capture of handshakes and PMKIDs on multiple targets |
-| Collection | Adversary-in-the-Middle | `T1557` | Automated deauthentication to force the handshake capture |
-| Initial Access | Valid Accounts | `T1078` | Use of the recovered PSKs to access the target networks |
+| credential access | brute force | `T1110` | wps pin bruteforce (reaver/bully) and pixie-dust to recover the pin and derive the psk (WIFI-005) |
+| credential access | network sniffing | `T1040` | automated capture of handshakes and pmkids on multiple targets |
+| collection | adversary-in-the-middle | `T1557` | automated deauthentication to force the handshake capture |
+| initial access | valid accounts | `T1078` | use of the recovered psks to access the target networks |
 
 ---
 

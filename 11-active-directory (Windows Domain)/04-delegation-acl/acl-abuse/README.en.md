@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Active Directory ACLs define who can do what on each object. Some rights, if granted to untrusted principals
 (by mistake, inheritance or overly broad administrative delegation), translate directly into escalation:
@@ -35,7 +35,7 @@ sequence (A can reset B, B has WriteDACL on C, C is in a privileged group) does.
 to choose the least noisy and most reversible action that advances the chain: often a temporary group
 addition or a password reset, to be undone at the end of the test to reduce client impact.
 
-## Execution / Commands
+## Execution / commands
 
 ### GenericAll on a user: password reset
 
@@ -73,7 +73,7 @@ a privileged group provides the group's privileges, granting replication rights 
 full domain. The real finding must be documented specifying the right exploited, the action performed and the
 result.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 ACLs are the mechanism with which AD implements discretionary access control over objects. Their security is
 a property of the whole authorization graph (property P3): a single right may be harmless, but the
@@ -83,7 +83,7 @@ replication right that enables DCSync. This is why BloodHound models these relat
 is not the single permission but the reachability in the graph. See
 [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.en.md>).
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection.** Event ID 5136 (directory object modification) on sensitive objects/attributes; 4728/4732
 (addition to a privileged group); 4724 (password reset); modifications to the domain object's DACL.
@@ -94,11 +94,11 @@ domain object's DACL (precursor to DCSync).
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > When the ACL chain ends with replication rights, the outcome is the domain (severity Critical).
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** a right over an AD object (from BloodHound), e.g., WriteDACL on a group or on the domain
 object.
@@ -124,7 +124,7 @@ DCSync -> full domain -> Golden Ticket / persistence
 
 **Typical monetization vectors:** ransomware/exfiltration downstream of the domain; access brokering.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** Event ID 5136 on the domain DACL; 4728/4724 for anomalous group additions and password resets.
 
@@ -145,13 +145,13 @@ of the single object.
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `dacledit.py` (Impacket) | AD tool | CLI - Active | Reading/writing DACLs (e.g., granting DCSync rights) |
-| `net rpc` (Samba) | AD tool | CLI - Active | Password reset and group management via RPC |
-| `PowerView` | PowerShell | CLI - Active | ACL enumeration and abuse from a Windows host |
-| `BloodHound` | Graph enum | GUI | Identification of exploitable ACL relationships |
-| `bloodyAD` | AD tool | CLI - Active | Manipulation of AD objects and attributes from Linux |
+| `dacledit.py` (impacket) | ad tool | cli - active | reading/writing dacls (e.g., granting dcsync rights) |
+| `net rpc` (samba) | ad tool | cli - active | password reset and group management via rpc |
+| `PowerView` | powershell | cli - active | acl enumeration and abuse from a windows host |
+| `BloodHound` | graph enum | gui | identification of exploitable acl relationships |
+| `bloodyAD` | ad tool | cli - active | manipulation of ad objects and attributes from linux |
 
 ## Methodology notes
 
@@ -161,19 +161,19 @@ from groups, restore ACLs) at the end of the test to avoid leaving the domain in
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Persistence | Account Manipulation | `T1098` | Modification of AD objects/attributes (password reset, group addition, DACL). |
-| Privilege Escalation | Domain or Tenant Policy Modification | `T1484` | Modification of domain-level permissions (WriteDACL on the domain object). |
-| Credential Access | OS Credential Dumping: DCSync | `T1003.006` | Outcome: self-granting of replication rights and DCSync. |
+| persistence | account manipulation | `T1098` | modification of ad objects/attributes (password reset, group addition, dacl). |
+| privilege escalation | domain or tenant policy modification | `T1484` | modification of domain-level permissions (writedacl on the domain object). |
+| credential access | os credential dumping: dcsync | `T1003.006` | outcome: self-granting of replication rights and dcsync. |
 
 ## Links to other modules
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
-| [BloodHound](<../../01-enumeration/bloodhound/README.en.md>) | ACL abuse | identifies the ACL rights and exploitable chains |
-| ACL abuse (WriteDACL on domain) | [DCSync](<../../05-credential-dumping/dcsync/README.en.md>) | self-granting replication rights enables DCSync |
-| ACL abuse (AddKeyCredentialLink) | [Shadow Credentials](<../../05-credential-dumping/shadow-credentials/README.en.md>) | writing msDS-KeyCredentialLink for certificate-based auth |
+| [bloodhound](<../../01-enumeration/bloodhound/README.en.md>) | acl abuse | identifies the acl rights and exploitable chains |
+| acl abuse (writedacl on domain) | [dcsync](<../../05-credential-dumping/dcsync/README.en.md>) | self-granting replication rights enables dcsync |
+| acl abuse (addkeycredentiallink) | [shadow credentials](<../../05-credential-dumping/shadow-credentials/README.en.md>) | writing msds-keycredentiallink for certificate-based auth |
 
 ---
 

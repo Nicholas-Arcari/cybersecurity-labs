@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Automated Vulnerability Assessment: SQL Injection & Data Exfiltration
+# Automated vulnerability assessment: SQL injection & data exfiltration
 
 > - **Phase:** Web Attack - SQL Injection (Automated)
 > - **Visibility:** High - sqlmap generates heavy HTTP traffic in short time, easily detectable by WAF and IDS
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 During the automated Security Assessment activity, a critical SQL Injection vulnerability was detected on the `artists.php` endpoint.
 
@@ -27,9 +27,9 @@ The impact is assessed as Catastrophic for the following reasons:
 
 ---
 
-## 2 Technical Execution
+## 2 Technical execution
 
-#### Phase 1: Vulnerability Scanning & Fingerprinting
+#### Phase 1: vulnerability scanning & fingerprinting
 
 In this initial phase, the tool queried the server to identify the database type and current user. 4 attack vectors were detected (Boolean-based, Error-based, Time-based, UNION query).
 
@@ -47,7 +47,7 @@ Result (Recon):
 - Current Database: `acuart`
 - Current User: `acuart@localhost` (Not DBA)
 
-#### Phase 2: Database Enumeration
+#### Phase 2: database enumeration
 
 Once the target database (`acuart`) was identified, table enumeration was performed to map the data structure and locate sensitive information.
 
@@ -63,7 +63,7 @@ Result:
 
 8 tables were identified. The `users` table was selected as the primary target for exfiltration.
 
-#### Phase 3: Data Exfiltration (The Breach)
+#### Phase 3: data exfiltration (the breach)
 
 Having confirmed the presence of the `users` table, a complete dump of columns containing credentials and personal data was performed.
 
@@ -85,19 +85,19 @@ The complete dump was saved locally at: `~/.local/share/sqlmap/output/testphp.vu
 
 ---
 
-## 3 Risk Analysis & Compliance
+## 3 Risk analysis & compliance
 
 The extracted data analysis highlights severe violations of security best practices and international regulations.
 
-| Extracted Data | Example Value | Violation / Risk |
+| extracted data | example value | violation / risk |
 | --------------- | ---------------- | ---------------------- |
-| Password | test | CRITICAL. Passwords are saved in plaintext (Cleartext). Total lack of Hashing (e.g., bcrypt, Argon2) and Salting. An attacker can immediately impersonate any user. |
-| Credit Card (CC) | 1234-5678... | CRITICAL (PCI-DSS). Storing the PAN (Primary Account Number) in plaintext is a direct violation of PCI-DSS Requirement 3.4. |
-| PII Data | Email, Phone, Address | HIGH (GDPR). Personal data exposure that can lead to identity theft and significant administrative penalties. |
+| password | test | CRITICAL. passwords are saved in plaintext (cleartext). total lack of hashing (e.g., bcrypt, argon2) and salting. an attacker can immediately impersonate any user. |
+| credit card (cc) | 1234-5678... | CRITICAL (pci-dss). storing the pan (primary account number) in plaintext is a direct violation of pci-dss requirement 3.4. |
+| pii data | email, phone, address | HIGH (gdpr). personal data exposure that can lead to identity theft and significant administrative penalties. |
 
 ---
 
-## 4 Remediation Plan
+## 4 Remediation plan
 
 To secure the infrastructure, the following immediate corrective actions are recommended:
 
@@ -117,13 +117,13 @@ To secure the infrastructure, the following immediate corrective actions are rec
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Automated exploitation with sqlmap of the `artist` parameter vulnerable to SQL Injection on `testphp.vulnweb.com` (WEB-011) |
-| Collection | Data from Information Repositories | `T1213` | Complete dump of the `acuart` database through sqlmap, including the `users` table with plaintext passwords and credit card PAN numbers (WEB-011) |
-| Exfiltration | Exfiltration Over Web Service | `T1567` | Database dump saved in local CSV format at `~/.local/share/sqlmap/output/` (WEB-011) |
+| initial access | exploit public-facing application | `T1190` | automated exploitation with sqlmap of the `artist` parameter vulnerable to sql injection on `testphp.vulnweb.com` (WEB-011) |
+| collection | data from information repositories | `T1213` | complete dump of the `acuart` database through sqlmap, including the `users` table with plaintext passwords and credit card pan numbers (WEB-011) |
+| exfiltration | exfiltration over web service | `T1567` | database dump saved in local csv format at `~/.local/share/sqlmap/output/` (WEB-011) |
 
 ---
 

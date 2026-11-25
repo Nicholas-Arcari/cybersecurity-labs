@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 03 - Change Default Passwords
+# 03 - Change default passwords
 
 > - **Phase:** System Setup - Credential Management
 > - **Priority:** Critical - execute within the first minutes after installation

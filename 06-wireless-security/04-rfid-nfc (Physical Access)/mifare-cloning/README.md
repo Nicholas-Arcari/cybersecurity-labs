@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# MIFARE Cloning - Clonazione di Badge di Accesso
+# MIFARE cloning - clonazione di badge di accesso
 
 > - **Fase:** Wireless Security - Physical Access / Badge Impersonation (NFC/RFID 13.56 MHz)
 > - **Visibilita:** Zero verso il sistema di controllo accessi - un badge clonato e indistinguibile dall'originale; l'unica traccia e nei log di accesso (un badge usato in due luoghi/tempi incompatibili)
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 La clonazione trasforma il dump di un badge (`../nfc-tools/`, WIFI-010) in un token fisico funzionante e indistinguibile dall'originale. E il passo che concretizza l'attacco: non basta leggere un badge, bisogna produrne una copia che il lettore di controllo accessi accetti come autentica.
 
@@ -33,7 +33,7 @@ mifare-cloning/
 
 ---
 
-## Clonazione su Tag Magic
+## Clonazione su tag magic
 
 **ID Finding:** `WIFI-011` | **Severity:** `Alto` (badge di accesso clonato e funzionante - impersonation fisica del titolare)
 
@@ -41,7 +41,7 @@ mifare-cloning/
 
 Il dump ottenuto in WIFI-010 (`badge_dump.mfd`) contiene l'intero contenuto del badge originale, inclusi UID e chiavi. Per creare un clone accettato anche dai sistemi che verificano l'UID, si scrive il dump su un tag magic il cui blocco 0 e modificabile.
 
-### PoC - Fase 1: Verifica del tag magic
+### PoC - fase 1: verifica del tag magic
 
 ```Bash
 # Identificazione del tag magic (accetta comandi di scrittura del blocco 0)
@@ -53,7 +53,7 @@ nfc-list
     MIFARE Classic 1K (Gen1a magic)     <-- blocco 0 scrivibile
 ```
 
-### PoC - Fase 2: Scrittura del clone
+### PoC - fase 2: scrittura del clone
 
 ```Bash
 # Scrittura dell'intero dump (incluso blocco 0/UID) sul tag magic
@@ -68,7 +68,7 @@ Writing block 0 (UID)...                          <-- UID clonato (solo su magic
 Done.                                             <-- clone completo scritto (WIFI-011)
 ```
 
-### PoC - Fase 3: Verifica del clone
+### PoC - fase 3: verifica del clone
 
 ```Bash
 # Rilettura del clone per confronto con l'originale
@@ -90,7 +90,7 @@ L'UID del clone (`a1b2c3d4`) corrisponde esattamente a quello del badge original
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il punto di svolta e stata la comprensione del ruolo dei tag magic. Il primo tentativo di clonazione su un tag MIFARE Classic standard e fallito nella scrittura del blocco 0: l'UID era immutabile, e il clone risultante aveva un UID diverso dall'originale. Il sistema di controllo accessi di test, che verificava l'UID, lo rifiutava. Il passaggio a un tag magic Gen1a - il cui blocco 0 accetta la scrittura - ha risolto il problema producendo un clone con UID identico.
 
@@ -100,7 +100,7 @@ L'osservazione conclusiva riguarda la rilevabilita: un clone e perfetto per il l
 
 ---
 
-## Analisi Teorica: UID Spoofing e il Fallimento dell'Identita come Segreto
+## Analisi teorica: UID spoofing e il fallimento dell'Identita come segreto
 
 La clonazione MIFARE illustra un errore concettuale ricorrente: usare un identificativo pubblico come se fosse un segreto di autenticazione. L'UID di un tag e progettato per l'anti-collisione (distinguere piu tag nel campo del lettore), non per l'autenticazione: e trasmesso in chiaro a ogni interrogazione e, sui tag magic, e liberamente impostabile. Un sistema che concede l'accesso basandosi sull'UID sta autenticando "qualcosa che chiunque puo leggere e chiunque puo falsificare".
 
@@ -110,11 +110,11 @@ Questo e lo stesso principio che distingue, in ambito web, un ID di sessione pre
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Questa sezione descrive come questo finding si inserirebbe in un engagement reale, sia dal punto di vista dell'attaccante (Red Team) che del difensore (Blue Team).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** badge di accesso clonato e funzionante, indistinguibile dall'originale (WIFI-011).
 
@@ -140,7 +140,7 @@ Foothold interno -> pivoting verso la rete (07-post-exploitation)
 
 **Impatto potenziale:** un badge clonato annulla il perimetro di sicurezza fisica. L'attaccante ottiene, con pochi secondi di prossimita al badge originale (via skimming o social engineering) e materiale da pochi euro, la stessa capacita di accesso del dipendente legittimo. In contesti ad alta sicurezza (data center, aree industriali), questo e spesso il punto di ingresso piu economico e silenzioso. Il vettore si integra con `05-social-engineering/` (ottenere la prossimita) e apre la fase di accesso alla rete interna.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** un badge clonato e identico all'originale per il lettore, quindi non rilevabile al momento dell'accesso. La rilevazione avviene tramite l'analisi dei log: usi impossibili (stessa card in due luoghi in tempi incompatibili) o anomali (accessi fuori orario, aree mai usate dal titolare).
 
@@ -164,14 +164,14 @@ Foothold interno -> pivoting verso la rete (07-post-exploitation)
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `nfc-mfclassic` | MIFARE writer | CLI | Scrittura del dump su tag (incluso blocco 0 su magic) |
-| `libnfc` | NFC library | CLI | Interfaccia con lettori NFC per lettura/scrittura |
-| `Mifare Classic Tool` | NFC app | Android | Clonazione da smartphone con NFC (lettura+scrittura) |
-| Tag magic Gen1a/Gen2 | Hardware | - | Tag con blocco 0 (UID) scrivibile per clone perfetto |
-| `Proxmark3` | RFID multi-tool | Hardware | Clonazione avanzata, tag protetti, LF+HF (`../proxmark3-client/`) |
-| [Flipper Zero](https://github.com/Nicholas-Arcari/FlipperZero-guide) | Portable multi-tool | Hardware | Lettura/emulazione/clonazione NFC portatile |
+| `nfc-mfclassic` | mifare writer | cli | scrittura del dump su tag (incluso blocco 0 su magic) |
+| `libnfc` | nfc library | cli | interfaccia con lettori nfc per lettura/scrittura |
+| `Mifare Classic Tool` | nfc app | android | clonazione da smartphone con nfc (lettura+scrittura) |
+| tag magic gen1a/gen2 | hardware | - | tag con blocco 0 (uid) scrivibile per clone perfetto |
+| `Proxmark3` | rfid multi-tool | hardware | clonazione avanzata, tag protetti, lf+hf (`../proxmark3-client/`) |
+| [flipper zero](https://github.com/Nicholas-Arcari/FlipperZero-guide) | portable multi-tool | hardware | lettura/emulazione/clonazione nfc portatile |
 
 > **Tool moderno consigliato:** il `Proxmark3 RDV4` e lo standard professionale per la clonazione (gestisce tag magic, protetti, LF e HF, ed emula i badge senza tag fisico). Il `Flipper Zero` offre emulazione e clonazione NFC in un dispositivo tascabile, ideale per dimostrazioni e assessment sul campo.
 
@@ -179,12 +179,12 @@ Foothold interno -> pivoting verso la rete (07-post-exploitation)
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Develop Capabilities | `T1587` | Produzione di un badge clone funzionante su tag magic (WIFI-011) |
-| Defense Evasion | Impersonation | `T1656` | Il badge clonato impersona il titolare legittimo verso il controllo accessi (WIFI-011) |
-| Initial Access | Hardware Additions | `T1200` | Utilizzo del badge clonato per ottenere accesso fisico non autorizzato (WIFI-011) |
-| Initial Access | Valid Accounts: Local Accounts | `T1078.003` | Il clone equivale a una credenziale di accesso fisico valida del titolare |
+| resource development | develop capabilities | `T1587` | produzione di un badge clone funzionante su tag magic (WIFI-011) |
+| defense evasion | impersonation | `T1656` | il badge clonato impersona il titolare legittimo verso il controllo accessi (WIFI-011) |
+| initial access | hardware additions | `T1200` | utilizzo del badge clonato per ottenere accesso fisico non autorizzato (WIFI-011) |
+| initial access | valid accounts: local accounts | `T1078.003` | il clone equivale a una credenziale di accesso fisico valida del titolare |
 
 ---
 

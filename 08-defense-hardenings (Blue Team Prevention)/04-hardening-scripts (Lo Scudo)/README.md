@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 04 - Hardening Scripts (Lo Scudo)
+# 04 - Hardening scripts (lo scudo)
 
 > - **Fase:** Defense & Hardening - System Hardening (Prevention)
 > - **Categoria:** Prevention - riduzione della superficie d'attacco
@@ -70,40 +70,40 @@ Ogni finding offensivo del percorso ha qui la sua contromisura preventiva: l'har
 
 ## Tool di riferimento
 
-| Tool | Piattaforma | Ruolo | Caso d'uso principale |
+| tool | piattaforma | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Lynis` | Linux | Auditor | Audit di hardening con index e raccomandazioni |
-| `CIS Benchmarks` | Multi | Baseline | Configurazioni di sicurezza riconosciute |
-| `Microsoft Security Baseline` | Windows | Baseline | GPO di hardening pre-configurate |
-| `Credential Guard` / `LAPS` | Windows | Contromisura | Protezione credenziali (anti Mimikatz/PtH) |
-| `OpenSCAP` / `CIS-CAT` | Multi | Compliance | Verifica di conformita ai profili di sicurezza |
-| `Ansible` (hardening role) | Multi | Automation | Hardening idempotente su parchi macchine |
+| `Lynis` | linux | auditor | audit di hardening con index e raccomandazioni |
+| `CIS Benchmarks` | multi | baseline | configurazioni di sicurezza riconosciute |
+| `Microsoft Security Baseline` | windows | baseline | gpo di hardening pre-configurate |
+| `Credential Guard` / `LAPS` | windows | contromisura | protezione credenziali (anti mimikatz/pth) |
+| `OpenSCAP` / `CIS-CAT` | multi | compliance | verifica di conformita ai profili di sicurezza |
+| `Ansible` (hardening role) | multi | automation | hardening idempotente su parchi macchine |
 
 > **Tool moderno consigliato:** `Lynis` (Linux) e `CIS-CAT` (Windows) per audit e misura; le baseline `CIS`/`Microsoft` come riferimento; `Ansible` (DevSec Hardening Framework) per l'applicazione idempotente su scala. Su Windows, `Credential Guard` e `LAPS` sono le contromisure a piu alto impatto.
 
 ---
 
-## Registro Finding - Sezione Hardening Scripts
+## Registro finding - sezione hardening scripts
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `DEF-007` | Linux hardening: audit Lynis + baseline CIS, riduzione superficie (anti privesc) | `Alto` | `linux-hardening/` |
-| `DEF-008` | Windows hardening: GPO, Credential Guard, LAPS (anti credential dumping / PtH) | `Alto` | `windows-hardening/` |
+| `DEF-007` | linux hardening: audit lynis + baseline cis, riduzione superficie (anti privesc) | `Alto` | `linux-hardening/` |
+| `DEF-008` | windows hardening: gpo, credential guard, laps (anti credential dumping / pth) | `Alto` | `windows-hardening/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
 > Tecniche d'attacco **prevenute** dall'hardening della sezione.
 
-| Tattica (prevenuta) | Tecnica | ID MITRE | Finding Correlato |
+| tattica (prevenuta) | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Privilege Escalation | Abuse Elevation Control: Sudo | `T1548.003` | DEF-007 |
-| Privilege Escalation | Setuid and Setgid | `T1548.001` | DEF-007 |
-| Credential Access | OS Credential Dumping: LSASS Memory | `T1003.001` | DEF-008 |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Hash | `T1550.002` | DEF-008 |
-| Persistence | Boot or Logon Autostart: Registry Run Keys | `T1547.001` | DEF-008 |
-| Credential Access | Unsecured Credentials: Credentials In Files | `T1552.001` | DEF-007 |
+| privilege escalation | abuse elevation control: sudo | `T1548.003` | DEF-007 |
+| privilege escalation | setuid and setgid | `T1548.001` | DEF-007 |
+| credential access | os credential dumping: lsass memory | `T1003.001` | DEF-008 |
+| lateral movement | use alternate authentication material: pass the hash | `T1550.002` | DEF-008 |
+| persistence | boot or logon autostart: registry run keys | `T1547.001` | DEF-008 |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | DEF-007 |
 
 ---
 

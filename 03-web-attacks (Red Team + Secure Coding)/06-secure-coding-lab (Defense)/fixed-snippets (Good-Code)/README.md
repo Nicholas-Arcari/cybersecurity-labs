@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# SQL Injection - Post-Remediation Verification
+# SQL injection - Post-Remediation verification
 
 > - **Fase:** Secure Coding - Post-Remediation Verification (SQL Injection)
 > - **Visibilita:** Zero - test locale su applicazione PHP con database SQLite/MySQL locale
@@ -9,7 +9,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 In precedenza, il modulo di login era vulnerabile a SQL Injection, permettendo a un attaccante di manipolare le query al database e ottenere l'accesso amministrativo senza credenziali valide.
 
@@ -17,9 +17,9 @@ In precedenza, il modulo di login era vulnerabile a SQL Injection, permettendo a
 
 ---
 
-## 2 Dettagli della Correzione (Secure Coding)
+## 2 Dettagli della correzione (secure coding)
 
-#### Prima (Vulnerabile)
+#### Prima (vulnerabile)
 
 Il codice concatenava direttamente l'input utente nella stringa SQL. Il database non poteva distinguere tra il comando legittimo e i dati malevoli.
 
@@ -31,7 +31,7 @@ $sql = "SELECT * FROM users WHERE email = '" . $_POST['email'] . "'";
 
 ![](./img/Screenshot_2026-02-18_18_27_28.jpg)
 
-#### Dopo (Sicuro - Prepared Statements)
+#### Dopo (sicuro - prepared statements)
 
 È stato adottato il pattern PDO Prepared Statements.
 
@@ -45,7 +45,7 @@ $stmt->execute(['email' => $user_email]);
 
 ---
 
-## 3 Verifica (Proof of Defense)
+## 3 Verifica (proof of defense)
 
 È stato condotto un test di penetrazione manuale contro il codice patchato per verificare la resilienza della correzione.
 
@@ -77,9 +77,9 @@ Il codice è ora conforme agli standard di sicurezza OWASP.
 
 ---
 
-## Analisi a Basso Livello: Come i Prepared Statements Bloccano l'Injection
+## Analisi a basso livello: come i prepared statements bloccano l'Injection
 
-### Meccanica della Separazione Codice/Dati
+### Meccanica della separazione Codice/Dati
 
 Il Prepared Statement invia la query e i dati al database in due fasi separate:
 
@@ -115,7 +115,7 @@ Fase 2 - Database riceve il DATO:
 -> Nessun utente trovato -> Login fallito
 ```
 
-### Proof of Defense: Cosa Cambia nel Log SQL
+### Proof of defense: cosa cambia nel log SQL
 
 ```sql
 -- Log query CON concatenazione (attacco riesce):
@@ -131,7 +131,7 @@ SELECT * FROM users WHERE email = 'admin'' OR ''1''=''1'
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il re-test del payload `admin@example.com' OR '1'='1` contro il codice patchato ha prodotto il risultato "Login Fallito" - la conferma piu diretta che il fix funziona. Il database ha trattato l'intero input (inclusi gli apici e la condizione OR) come una stringa letterale, cercando un utente con quell'indirizzo email esatto.
 
@@ -141,9 +141,9 @@ La lezione chiave e che i Prepared Statements non "puliscono" l'input: non rimuo
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione (Difensiva - Mitigazione) |
+| tattica | tecnica | id mitre | descrizione dell'azione (difensiva - mitigazione) |
 | :--- | :--- | :--- | :--- |
-| (Mitigazione) | Exploit Public-Facing Application | `T1190` | Implementazione di PDO Prepared Statements che separa la struttura SQL dai dati utente, neutralizzando completamente il vettore di SQL Injection (CWE-89) |
+| (mitigazione) | exploit public-facing application | `T1190` | implementazione di pdo prepared statements che separa la struttura sql dai dati utente, neutralizzando completamente il vettore di sql injection (cwe-89) |
 
 ---
 

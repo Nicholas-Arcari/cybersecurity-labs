@@ -1,6 +1,6 @@
 > [English](THEORETICAL-FOUNDATIONS.en.md) | **Italiano**
 
-# Fondamenti Teorici - Modulo 10: Cloud Security
+# Fondamenti teorici - modulo 10: cloud security
 
 > - **Livello:** Analisi accademica (complemento teorico ai README operativi del modulo)
 > - **Scopo:** Formalizzare l'identita come perimetro, il metadata SSRF come confused deputy, l'isolamento cloud/container come proprieta configurabile e la co-residenza come canale laterale.
@@ -20,7 +20,7 @@ L'avversario cloud opera in un ambiente dove **ogni servizio e un endpoint API p
 
 ---
 
-## 2. Proprieta di Sicurezza in Gioco
+## 2. Proprieta di sicurezza in gioco
 
 - **Least privilege sull'identita:** ogni identita (umana, managed identity, service account) deve avere i soli permessi necessari; la sua violazione trasforma un leak in account takeover.
 - **Autorizzazione basata sull'intenzione:** un componente privilegiato non deve agire per conto di un principale non autorizzato (confused deputy, sezione 3.3).
@@ -29,7 +29,7 @@ L'avversario cloud opera in un ambiente dove **ogni servizio e un endpoint API p
 
 ---
 
-## 3. Fondamenti Teorici
+## 3. Fondamenti teorici
 
 ### 3.1 Il collasso del perimetro e l'identita come controllo d'accesso
 
@@ -49,7 +49,7 @@ L'isolamento nel cloud non e una barriera fisica ma una proprieta **configurabil
 
 ---
 
-## 4. Analisi Quantitativa
+## 4. Analisi quantitativa
 
 ### 4.1 La probabilita di co-residenza
 
@@ -61,13 +61,13 @@ Il caso dei bucket S3 pubblici illustra quantitativamente il principio "rendere 
 
 ---
 
-## 5. Rassegna della Letteratura
+## 5. Rassegna della letteratura
 
 La co-residenza e i side-channel cross-VM sono dimostrati da [Ristenpart et al. 2009] e [Zhang et al. 2012], riferimenti fondativi della sicurezza dell'isolamento cloud. Il confused deputy e di [Hardy 1988]. La privilege escalation come raggiungibilita si fonda sui grafi di attacco di [Sheyner et al. 2002]. Il least privilege e i principi di progettazione sono di [Saltzer & Schroeder 1975]; la riduzione della superficie di [Manadhata & Wing 2011]. Le definizioni e i modelli di rischio normativi sono in NIST SP 800-145 (definizione di cloud), NIST SP 800-190 (container) e NIST SP 800-63B (identita). La gestione dei segreti si richiama ai principi entropici e di costo dei moduli 04 e 07.
 
 ---
 
-## 6. Limiti e Problemi Aperti
+## 6. Limiti e problemi aperti
 
 1. **Complessita IAM come superficie irriducibile.** Lo spazio delle configurazioni IAM (centinaia di servizi, migliaia di azioni, policy che si compongono) e cosi vasto che l'analisi manuale esaustiva delle vie di privesc e intrattabile; gli strumenti a grafo (PMapper) sono necessari ma soffrono dell'esplosione combinatoria dei grafi di attacco [Sheyner et al. 2002].
 
@@ -77,7 +77,7 @@ La co-residenza e i side-channel cross-VM sono dimostrati da [Ristenpart et al. 
 
 ---
 
-## 7. Sintesi e Collegamento alla Pratica
+## 7. Sintesi e collegamento alla pratica
 
 I finding `CLOUD-` del modulo istanziano questo quadro: la privilege escalation IAM (CLOUD-001) e la raggiungibilita nel grafo di permessi della sezione 3.2; il metadata SSRF e l'abuso di managed identity/service account (CLOUD-003/004) sono i confused deputy della sezione 3.3; il container escape (CLOUD-006) e l'isolamento-come-configurazione della sezione 3.4; i bucket S3 esposti (CLOUD-002) illustrano il costo del default insicuro della sezione 4.2; l'auditing e l'hardening (CLOUD-008/010) sono la rimozione di archi e la riduzione della superficie. Le contromisure documentate - least privilege, permission boundaries, Block Public Access, Workload Identity, Pod Security, shift-left - sono le realizzazioni operative dei principi qui formalizzati. Il documento chiude il percorso mostrando che il cloud non introduce principi nuovi ma porta all'estremo quelli gia incontrati: il confused deputy (modulo 03), la transitivita della fiducia (modulo 07), la riduzione della superficie (moduli 01, 08), l'eliminazione strutturale delle classi di errore (modulo 03). L'identita come perimetro e la sintesi finale: dove la posizione non conferisce piu fiducia, la sicurezza e la correttezza della configurazione degli accessi.
 

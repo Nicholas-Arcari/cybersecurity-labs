@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# API Broken Object Level Authorization (BOLA/IDOR)
+# API broken object level authorization (BOLA/IDOR)
 
 > - **Phase:** Web Attack - API Security (REST/IDOR)
 > - **Visibility:** Low - legitimate HTTP requests to an authenticated endpoint, only the resource ID changes
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 During the Security Assessment activity conducted on the target banking application's APIs, a critical IDOR (Insecure Direct Object Reference) vulnerability was identified, classified in the OWASP API Top 10 as API1:2023 - Broken Object Level Authorization.
 
@@ -25,7 +25,7 @@ Business Impact: Massive privacy violation (GDPR), financial data loss, irrepara
 
 ---
 
-## 2 Technical Vulnerability Details
+## 2 Technical vulnerability details
 Description
 
 The `/api/balance/<account_id>` endpoint accepts an integer parameter (`account_id`) in the URL to identify the resource to return.
@@ -50,7 +50,7 @@ The automated attack allowed the exfiltration of the following sensitive data in
 
 ---
 
-## 3 Root Cause Analysis (Vulnerable Code)
+## 3 Root cause analysis (vulnerable code)
 
 Analysis of the source code (`vulnerable_bank.py`) that caused the flaw.
 
@@ -69,7 +69,7 @@ def get_balance(account_id):
 
 ---
 
-## 4 Remediation (Secure Coding)
+## 4 Remediation (secure coding)
 
 To fix this vulnerability, it is necessary to implement an access control mechanism based on the logged-in user's identity (Session or JWT).
 
@@ -112,13 +112,13 @@ Immediate deployment of the proposed patch (Ownership Check) and execution of a 
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Discovery | Account Discovery | `T1087` | Enumeration of account IDs on the `/api/balance/<id>` endpoint from 998 to 1005 to map all users present in the system (WEB-014) |
-| Collection | Data from Information Repositories | `T1213` | Access to sensitive financial data (balance, name) of Bob, Charlie/CEO, and Dave/Admin without any authorization through IDOR (WEB-014) |
-| Lateral Movement | Valid Accounts | `T1078` | Use of an ordinary user's authentication token to access data from accounts with higher privileges (CEO, Admin) (WEB-014) |
+| discovery | account discovery | `T1087` | enumeration of account ids on the `/api/balance/<id>` endpoint from 998 to 1005 to map all users present in the system (WEB-014) |
+| collection | data from information repositories | `T1213` | access to sensitive financial data (balance, name) of bob, charlie/ceo, and dave/admin without any authorization through idor (WEB-014) |
+| lateral movement | valid accounts | `T1078` | use of an ordinary user's authentication token to access data from accounts with higher privileges (ceo, admin) (WEB-014) |
 
 ---
 

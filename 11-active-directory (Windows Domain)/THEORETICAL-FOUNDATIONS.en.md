@@ -1,6 +1,6 @@
 > **English** | [Italiano](THEORETICAL-FOUNDATIONS.md)
 
-# Theoretical Foundations - Active Directory and Kerberos
+# Theoretical foundations - Active Directory and Kerberos
 
 > Academic apparatus for module 11. It complements the operational READMEs (methodology, commands, MITRE)
 > by providing their formal basis. It does not replace them: it grounds them and refers back to them.
@@ -19,7 +19,7 @@ security properties, and the theoretical mechanisms behind the three techniques 
 (Kerberoasting, AD CS ESC8, DCSync), showing that each is the violation of a specific deployment
 assumption, not a break of the protocol.
 
-## 1. Adversary Model
+## 1. Adversary model
 
 We adopt a Dolev-Yao style model [Dolev & Yao 1983] adapted to the internal-network context: the adversary
 is not an unauthenticated remote attacker but an actor who has already gained a foothold in the domain.
@@ -39,7 +39,7 @@ cryptographic primitives (AES, SHA-2). The channel is assumed observable and man
 of the network position (A2). This model is consistent with the reality documented in incident reports,
 where the initial vector is almost always the compromised credential, not the zero-day [Verizon DBIR].
 
-## 2. Security Properties
+## 2. Security properties
 
 Kerberos aims to guarantee certain properties that the module's techniques violate or bypass:
 
@@ -57,7 +57,7 @@ Kerberos aims to guarantee certain properties that the module's techniques viola
   it occurs, to prevent reuse elsewhere. NTLM does not provide this binding by default (no EPA/Channel
   Binding, no SMB/LDAP signing), and this is the missing assumption that relay exploits.
 
-## 3. Theoretical Foundations
+## 3. Theoretical foundations
 
 ### 3.1 Kerberos as a trusted-third-party protocol
 
@@ -114,7 +114,7 @@ account, which is then used to authenticate via PKINIT and obtain the domain's s
 moreover, stays valid even after a password reset: hence a persistence that password-based countermeasures
 do not remove.
 
-## 4. Quantitative Analysis
+## 4. Quantitative analysis
 
 - **Kerberoasting - offline surface.** With etype 23 (RC4) the hash is an MD4 with no salt and no
   stretching: the offline attack is limited only by hardware speed and password entropy. With etype 18
@@ -133,7 +133,7 @@ Validity note: the values above (PBKDF2 iterations, gMSA bits, hashcat modes) co
 specifications and documentation, not from lab measurements. Any cracking benchmarks must be measured for
 real and labeled as such (consistently with the discipline of the `EVALUATION/` folder).
 
-## 5. Literature Review
+## 5. Literature review
 
 Kerberoasting was introduced operationally by Tim Medin [Medin 2014] at DerbyCon. The systematization of AD
 CS attacks is due to Schroeder and Christensen [Schroeder & Christensen 2021]. DCSync is the work of
@@ -144,7 +144,7 @@ protocol) and to the line of work on authentication-protocol verification starte
 repository's THEORY-ADVANCED apparatus. The reference adversary model remains that of Dolev and Yao [Dolev &
 Yao 1983].
 
-## 6. Limits and Open Problems
+## 6. Limits and open problems
 
 - The module documents methodology, not measurements: cracking times, relay success rates and replication
   latency must be quantified in a real lab before any numerical claim.
@@ -154,7 +154,7 @@ Yao 1983].
   reset) interact with each other: a formal modeling of their combined effectiveness is an open problem,
   partly addressable with the methods of the `FORMAL-MODELS/` folder.
 
-## 7. Synthesis and Link to Practice
+## 7. Synthesis and link to practice
 
 The three techniques of the module share a common structure: none breaks the cryptography, each exploits an
 unmet deployment assumption (P2 for Kerberoasting, P4 for ESC8, P3 for DCSync). This is the cross-cutting

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 02 - Network Forensics
+# 02 - Network forensics
 
 > - **Phase:** Digital Forensics & Incident Response - Network Analysis
 > - **Category:** Analysis - incident reconstruction from network traffic
@@ -24,7 +24,7 @@ The link with the rest of the defense is direct: network forensics is the last m
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 02-network-forensics/
@@ -35,7 +35,7 @@ The link with the rest of the defense is direct: network forensics is the last m
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [INPUT] Alert from the SIEM/IDS (module 08) + traffic capture (PCAP)
@@ -62,38 +62,38 @@ The link with the rest of the defense is direct: network forensics is the last m
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `Wireshark` | Packet analyzer | GUI | Detailed analysis, Follow Stream (FOR-002) |
-| `tshark` | Packet analyzer | CLI | Scriptable analysis and automatic extraction |
-| `Zeek` (Bro) | Network analysis | Framework | Structured logs for large-scale analysis |
-| `NetworkMiner` | Network forensics | GUI | Automatic extraction of files/credentials/hosts |
-| `Suricata` | IDS | Engine | Detection that triggers the analysis |
+| `Wireshark` | packet analyzer | gui | detailed analysis, follow stream (FOR-002) |
+| `tshark` | packet analyzer | cli | scriptable analysis and automatic extraction |
+| `Zeek` (bro) | network analysis | framework | structured logs for large-scale analysis |
+| `NetworkMiner` | network forensics | gui | automatic extraction of files/credentials/hosts |
+| `Suricata` | ids | engine | detection that triggers the analysis |
 
 > **Recommended modern tool:** `Zeek` for the big picture (structured logs of connections, DNS, HTTP, files) and `Wireshark`/`tshark` for the detail of the single stream. The combination covers both levels - metadata and content - of network analysis.
 
 ---
 
-## Finding Registry - Network Forensics Section
+## Finding registry - network forensics section
 
-| ID | Description | Severity | Subfolder |
+| id | description | severity | subfolder |
 | :--- | :--- | :---: | :--- |
-| `FOR-002` | Wireshark: session reconstruction, C2/exfiltration confirmation, IOC extraction from PCAP | `High` | `wireshark/` |
+| `FOR-002` | wireshark: session reconstruction, c2/exfiltration confirmation, ioc extraction from pcap | `High` | `wireshark/` |
 
 ---
 
-## MITRE ATT&CK Mapping - Aggregated
+## MITRE ATT&CK mapping - aggregated
 
 > Attack techniques **reconstructed/confirmed** by network analysis.
 
-| Tactic (reconstructed) | Technique | MITRE ID | Related Finding |
+| tactic (reconstructed) | technique | mitre id | related finding |
 | :--- | :--- | :--- | :--- |
-| Command and Control | Application Layer Protocol: Web Protocols | `T1071.001` | FOR-002 |
-| Command and Control | Application Layer Protocol: DNS | `T1071.004` | FOR-002 |
-| Exfiltration | Exfiltration Over C2 Channel | `T1041` | FOR-002 |
-| Credential Access | Network Sniffing | `T1040` | FOR-002 |
+| command and control | application layer protocol: web protocols | `T1071.001` | FOR-002 |
+| command and control | application layer protocol: dns | `T1071.004` | FOR-002 |
+| exfiltration | exfiltration over c2 channel | `T1041` | FOR-002 |
+| credential access | network sniffing | `T1040` | FOR-002 |
 
 ---
 

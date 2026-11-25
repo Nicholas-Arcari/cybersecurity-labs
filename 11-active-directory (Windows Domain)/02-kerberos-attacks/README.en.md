@@ -17,14 +17,14 @@ stealth variants Diamond and Sapphire that reduce the indicators of compromise).
 
 ## Folder structure
 
-| Subfolder | Technique | Typical severity | Status |
+| subfolder | technique | typical severity | status |
 | :--- | :--- | :---: | :--- |
-| `kerberoasting/` | Kerberoasting (service-account hash theft via TGS) | `High` | Written |
-| `as-rep-roasting/` | AS-REP Roasting (accounts without pre-auth) | `High` | Written |
-| `silver-ticket/` | Silver Ticket (TGS forged with the service key) | `High` | Written |
-| `golden-ticket/` | Golden Ticket (TGT forged with the krbtgt key) | `Critical` | Written |
-| `diamond-ticket/` | Diamond Ticket (real TGT with modified PAC - stealth variant) | `Critical` | Written |
-| `sapphire-ticket/` | Sapphire Ticket (authentic PAC via S4U2self - maximum stealth) | `Critical` | Written |
+| `kerberoasting/` | kerberoasting (service-account hash theft via tgs) | `High` | written |
+| `as-rep-roasting/` | as-rep roasting (accounts without pre-auth) | `High` | written |
+| `silver-ticket/` | silver ticket (tgs forged with the service key) | `High` | written |
+| `golden-ticket/` | golden ticket (tgt forged with the krbtgt key) | `Critical` | written |
+| `diamond-ticket/` | diamond ticket (real tgt with modified pac - stealth variant) | `Critical` | written |
+| `sapphire-ticket/` | sapphire ticket (authentic pac via s4u2self - maximum stealth) | `Critical` | written |
 
 ## Recommended operational flow
 

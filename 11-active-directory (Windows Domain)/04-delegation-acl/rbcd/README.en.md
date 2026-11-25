@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Resource-Based Constrained Delegation (RBCD) abuse
+# Resource-Based constrained delegation (RBCD) abuse
 
 > - **Phase:** Privilege Escalation / Lateral Movement (Active Directory domain)
 > - **Visibility:** Medium - requires writing an attribute on a computer object (AD modification) and S4U requests to the KDC
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Resource-Based Constrained Delegation (RBCD) moves the delegation decision from the sending service's side to
 the target resource's side: a computer specifies, in the `msDS-AllowedToActOnBehalfOfOtherIdentity`
@@ -32,9 +32,9 @@ RBCD is one of the most common paths BloodHound flags, because write access to a
 the "impersonator" (one already controlled with an SPN, or a new one created via MachineAccountQuota) and
 which privileged user to impersonate toward the target (typically a local or domain admin).
 
-## Execution / Commands
+## Execution / commands
 
-### Phase 1 - Prepare an account with an SPN (if needed)
+### Phase 1 - prepare an account with an SPN (if needed)
 
 ```bash
 # Creates a computer account by abusing the MachineAccountQuota (if > 0); provides a controlled SPN
@@ -42,7 +42,7 @@ addcomputer.py corp.local/utente:'Password123' -dc-ip 10.10.10.10 \
   -computer-name 'EVIL$' -computer-pass 'EvilPass123'
 ```
 
-### Phase 2 - Write the delegation on the target
+### Phase 2 - write the delegation on the target
 
 ```bash
 # Sets msDS-AllowedToActOnBehalfOfOtherIdentity on the target computer, delegating to EVIL$
@@ -50,7 +50,7 @@ rbcd.py corp.local/utente:'Password123' -dc-ip 10.10.10.10 -action write \
   -delegate-from 'EVIL$' -delegate-to 'TARGET$'
 ```
 
-### Phase 3 - Impersonation via S4U
+### Phase 3 - impersonation via S4U
 
 ```bash
 # Requests a TGS for the target's service impersonating 'administrator' (S4U2self + S4U2proxy)
@@ -72,7 +72,7 @@ credential dumping and lateral movement. The severity is `Critical` when the tar
 when the chain, repeated, reaches a DC). RBCD is particularly insidious because it exploits a feature designed
 for legitimate delegation scenarios.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 The S4U (Service for User) extensions allow a service to obtain tickets on behalf of a user: S4U2self obtains
 a ticket toward itself in the user's name, S4U2proxy "forwards" it toward another service. RBCD defines, on
@@ -82,7 +82,7 @@ attacker self-authorizes to impersonate anyone toward the target. Kerberos crypt
 problem is the ACL that allows writing the attribute. See
 [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.en.md>).
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection.** Modifications to the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute (Event ID 5136 on
 computer objects); creation of computer accounts by standard users (MachineAccountQuota abuse); anomalous S4U
@@ -94,11 +94,11 @@ sensitive accounts as non-delegable.
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > RBCD leads to host compromise and, when chained, to the domain (severity Critical).
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** write access to a computer object (from BloodHound) and a domain account.
 
@@ -127,7 +127,7 @@ Repetition toward a DC or DCSync -> full domain
 
 **Typical monetization vectors:** ransomware/exfiltration downstream of the domain; access brokering.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** Event ID 5136 on delegation attributes; creation of computer accounts by standard users;
 unexpected S4U.
@@ -149,13 +149,13 @@ MachineAccountQuota.
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `rbcd.py` (Impacket) | AD tool | CLI - Active | Writing/reading the RBCD delegation attribute |
-| `addcomputer.py` (Impacket) | AD tool | CLI - Active | Creating a computer account via MachineAccountQuota |
-| `getST.py` (Impacket) | Kerberos tool | CLI - Active | S4U ticket request with impersonation |
-| `Rubeus` | .NET Kerberos tool | CLI - Active | S4U and RBCD from a Windows host |
-| `BloodHound` | Graph enum | GUI | Identification of the write right on the computer object |
+| `rbcd.py` (impacket) | ad tool | cli - active | writing/reading the rbcd delegation attribute |
+| `addcomputer.py` (impacket) | ad tool | cli - active | creating a computer account via machineaccountquota |
+| `getST.py` (impacket) | kerberos tool | cli - active | s4u ticket request with impersonation |
+| `Rubeus` | .net kerberos tool | cli - active | s4u and rbcd from a windows host |
+| `BloodHound` | graph enum | gui | identification of the write right on the computer object |
 
 ## Methodology notes
 
@@ -164,19 +164,19 @@ write and the S4U impersonation outcome. Verify the MachineAccountQuota=0 counte
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Persistence | Account Manipulation | `T1098` | Writing the RBCD delegation attribute on the target computer object. |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Ticket | `T1550.003` | Use of the S4U ticket to access the target as an administrator. |
-| Credential Access | Steal or Forge Kerberos Tickets | `T1558` | Obtaining impersonation tickets via S4U. |
+| persistence | account manipulation | `T1098` | writing the rbcd delegation attribute on the target computer object. |
+| lateral movement | use alternate authentication material: pass the ticket | `T1550.003` | use of the s4u ticket to access the target as an administrator. |
+| credential access | steal or forge kerberos tickets | `T1558` | obtaining impersonation tickets via s4u. |
 
 ## Links to other modules
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
-| [BloodHound](<../../01-enumeration/bloodhound/README.en.md>) | RBCD | identifies the write right on the computer |
-| RBCD | [07-post-exploitation - credential dumping](<../../../07-post-exploitation/README.en.md>) | admin access to the host enables credential dumping |
-| RBCD | [DCSync](<../../05-credential-dumping/dcsync/README.en.md>) | the chain repeated toward a DC leads to abused replication |
+| [bloodhound](<../../01-enumeration/bloodhound/README.en.md>) | rbcd | identifies the write right on the computer |
+| rbcd | [07-post-exploitation - credential dumping](<../../../07-post-exploitation/README.en.md>) | admin access to the host enables credential dumping |
+| rbcd | [dcsync](<../../05-credential-dumping/dcsync/README.en.md>) | the chain repeated toward a dc leads to abused replication |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# noPac: from domain user to Domain Admin (CVE-2021-42278 + CVE-2021-42287)
+# noPac: from domain user to domain admin (CVE-2021-42278 + CVE-2021-42287)
 
 > - **Phase:** Privilege Escalation in the domain - exploitation of two CVEs in the Kerberos/KDC flow
 > - **Visibility:** Medium - the chain creates and renames a computer account (logged events) and generates anomalous Kerberos requests; it is noisy if the DC is monitored
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 noPac is one of the fastest, highest-impact privilege escalation chains in unpatched Active Directory. It
 combines two November 2021 vulnerabilities:
@@ -38,7 +38,7 @@ immediate; if = 0, an already-controlled computer account is required). From the
 lies in documenting whether the domain is vulnerable and with which prerequisites, not in "launching the
 exploit".
 
-## Execution / Commands
+## Execution / commands
 
 ### Preliminary check (non-invasive)
 
@@ -122,7 +122,7 @@ If `MachineAccountQuota = 0` and you do not already control a computer account, 
 Documenting which of the prerequisites is missing is part of the assessment's value: it indicates exactly which
 control is protecting the domain.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 noPac is a flaw of **consistency between identity and authorization** in the Kerberos flow. CVE-2021-42278 breaks
 the assumption that a computer account name is unique and ends in `$`; CVE-2021-42287 introduces a KDC fallback
@@ -132,7 +132,7 @@ is an example of how two "minor" validation flaws compose a critical escalation.
 structural: patching restores the missing validations; hardening (`MachineAccountQuota = 0`, restriction on
 computer-account creation) reduces the surface upstream.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection.**
 - Event ID **4741** (computer account creation) by non-administrative users.
@@ -151,11 +151,11 @@ computer-account creation) reduces the surface upstream.
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > Applies to a successful exploitation on an unpatched DC (severity Critical).
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** the credentials of a low-privilege domain user (e.g., from password spraying).
 
@@ -182,7 +182,7 @@ obtained, persistence can become long-term (see Golden/Diamond/Sapphire).
 
 **Typical monetization vectors:** domain-wide ransomware, massive exfiltration, persistence.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** events 4741/4742/4781 by non-administrative actors; creation-rename-ticket sequence; Kerberos
 anomalies on machine principals.
@@ -204,11 +204,11 @@ hardening with great return.
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `noPac.py` (sam-the-admin) | AD exploit | CLI - Active | Verification (`--scan`) and, in an authorized lab, the automated noPac chain |
-| `Impacket` (addcomputer, renameMachine, getTGT, getST, secretsdump) | AD toolkit | CLI - Active | Manual execution of the individual steps (understanding and troubleshooting) |
-| `NetExec` (`maq` module) | AD recon | CLI - Active | Check of `MachineAccountQuota` and of the domain state |
+| `noPac.py` (sam-the-admin) | ad exploit | cli - active | verification (`--scan`) and, in an authorized lab, the automated nopac chain |
+| `Impacket` (addcomputer, renamemachine, gettgt, getst, secretsdump) | ad toolkit | cli - active | manual execution of the individual steps (understanding and troubleshooting) |
+| `NetExec` (`maq` module) | ad recon | cli - active | check of `MachineAccountQuota` and of the domain state |
 
 ## Methodology notes
 
@@ -219,19 +219,19 @@ on exploitability, detection and remediation, not on reproducing the exploit.
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Privilege Escalation | Exploitation for Privilege Escalation | `T1068` | Combined exploitation of CVE-2021-42278 and CVE-2021-42287 to impersonate a DC. |
-| Persistence | Create Account: Domain Account | `T1136.002` | Creation of a computer account as the initial step of the chain. |
-| Credential Access | OS Credential Dumping: DCSync | `T1003.006` | Dump of domain credentials via the ticket in the DC context. |
+| privilege escalation | exploitation for privilege escalation | `T1068` | combined exploitation of CVE-2021-42278 and CVE-2021-42287 to impersonate a dc. |
+| persistence | create account: domain account | `T1136.002` | creation of a computer account as the initial step of the chain. |
+| credential access | os credential dumping: dcsync | `T1003.006` | dump of domain credentials via the ticket in the dc context. |
 
 ## Links to other modules
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
-| [Password spraying](<../../../07-post-exploitation/README.en.md>) / initial credentials | noPac | provides the domain user from which the chain starts |
-| noPac | [DCSync](<../../05-credential-dumping/dcsync/README.en.md>) | the obtained ticket enables the dump of domain credentials |
-| noPac (krbtgt hash) | [Golden](<../../02-kerberos-attacks/golden-ticket/README.en.md>) / [Diamond](<../../02-kerberos-attacks/diamond-ticket/README.en.md>) | the obtained krbtgt key enables domain-wide persistence |
+| [password spraying](<../../../07-post-exploitation/README.en.md>) / initial credentials | nopac | provides the domain user from which the chain starts |
+| nopac | [dcsync](<../../05-credential-dumping/dcsync/README.en.md>) | the obtained ticket enables the dump of domain credentials |
+| nopac (krbtgt hash) | [golden](<../../02-kerberos-attacks/golden-ticket/README.en.md>) / [diamond](<../../02-kerberos-attacks/diamond-ticket/README.en.md>) | the obtained krbtgt key enables domain-wide persistence |
 
 ---
 

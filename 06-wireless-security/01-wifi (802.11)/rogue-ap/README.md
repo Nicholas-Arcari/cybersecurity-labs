@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Rogue AP & Evil Twin - Credential Harvesting via Access Point Fasullo
+# Rogue AP & evil twin - credential harvesting via access point fasullo
 
 > - **Fase:** Wireless Security - Initial Access & Credential Access (Adversary-in-the-Middle)
 > - **Visibilita:** Alta - la creazione di un AP fasullo trasmette Beacon frame rilevabili; il deauth della rete legittima genera traffico anomalo; un WIPS rileva il BSSID duplicato con ESSID identico su MAC diverso
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 L'Evil Twin e l'attacco wireless che non attacca la rete, ma i suoi utenti. Invece di craccare la PSK (modulo `../cracking/`), l'attaccante crea un access point clone - stesso ESSID, segnale piu forte - e induce i client a connettersi a esso invece che all'AP legittimo. Da quella posizione di Man-in-the-Middle, l'attaccante intercetta o manipola tutto il traffico, e tramite un captive portal falsificato raccoglie direttamente le credenziali.
 
@@ -33,7 +33,7 @@ rogue-ap/
 
 ---
 
-## Evil Twin con Captive Portal
+## Evil twin con captive portal
 
 **ID Finding:** `WIFI-004` | **Severity:** `Critico` (credential harvesting + posizione Man-in-the-Middle completa sul traffico delle vittime)
 
@@ -41,7 +41,7 @@ rogue-ap/
 
 L'attacco Evil Twin classico combina tre elementi: (1) un AP fasullo con lo stesso ESSID del target, (2) un attacco di deautenticazione contro l'AP legittimo per spingere i client a cercare un'alternativa, (3) un captive portal che simula una pagina di riautenticazione e cattura le credenziali digitate. La vittima, disconnessa dalla rete reale, vede l'AP fasullo con segnale forte, si connette, e riceve una pagina "inserisci la password del WiFi per continuare".
 
-### PoC - Fase 1: Setup dell'AP fasullo
+### PoC - fase 1: setup dell'AP fasullo
 
 ```Bash
 # Configurazione hostapd-mana per l'AP clone
@@ -65,7 +65,7 @@ mana: Directed probe request for SSID 'LAB-CORP' from A0:B1:C2:D3:E4:F5   <-- cl
 mana: Responding with our BSSID
 ```
 
-### PoC - Fase 2: DHCP e DNS hijacking
+### PoC - fase 2: DHCP e DNS hijacking
 
 ```Bash
 # dnsmasq: assegna IP e reindirizza tutte le query DNS al captive portal
@@ -80,14 +80,14 @@ EOF
 sudo dnsmasq -C /tmp/dnsmasq.conf -d
 ```
 
-### PoC - Fase 3: Deautenticazione della rete legittima
+### PoC - fase 3: deautenticazione della rete legittima
 
 ```Bash
 # Spinge i client a disconnettersi dall'AP reale (su interfaccia monitor separata)
 sudo aireplay-ng --deauth 0 -a AA:BB:CC:DD:EE:FF wlan0mon
 ```
 
-### PoC - Fase 4: Cattura delle credenziali dal captive portal
+### PoC - fase 4: cattura delle credenziali dal captive portal
 
 ```
 [+] Client connesso: A0:B1:C2:D3:E4:F5 -> 10.0.0.15
@@ -109,7 +109,7 @@ Dopo la cattura, il portale valida la password contro l'handshake reale catturat
 
 ---
 
-## Automazione con Airgeddon
+## Automazione con airgeddon
 
 ### Contesto operativo
 
@@ -123,7 +123,7 @@ sudo airgeddon
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 La difficolta principale non e stata tecnica ma di "regia": affinche la vittima si connetta al rogue AP e digiti la password, la deautenticazione dell'AP legittimo deve essere aggressiva e continua (`--deauth 0`), altrimenti il client tende a riconnettersi all'AP reale che ha un segnale comparabile. Nel laboratorio, avvicinare fisicamente la scheda attaccante al client (aumentando il RSSI relativo del rogue AP) e stato piu efficace di qualsiasi parametro software: l'attacco Evil Twin e prima di tutto una questione di potenza di segnale.
 
@@ -131,7 +131,7 @@ Il secondo elemento critico e stato il realismo del captive portal. Un portale g
 
 ---
 
-## Analisi Teorica: Perche l'Autenticazione Mutua Risolve il Problema
+## Analisi teorica: perche l'Autenticazione mutua risolve il problema
 
 L'Evil Twin funziona perche in WPA2-PSK e WPA2-Enterprise con validazione del server disabilitata, l'autenticazione e unidirezionale o basata su un segreto condiviso: il client dimostra all'AP di conoscere la password, ma non verifica in modo crittograficamente forte l'identita dell'AP. Un attaccante che conosce l'ESSID puo quindi impersonare la rete.
 
@@ -141,11 +141,11 @@ WPA3-SAE aggiunge un ulteriore livello: il protocollo Dragonfly fornisce autenti
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Questa sezione descrive come questo finding si inserirebbe in un engagement reale, sia dal punto di vista dell'attaccante (Red Team) che del difensore (Blue Team).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** posizione Man-in-the-Middle sul traffico di una o piu vittime + credenziali del captive portal catturate (WIFI-004).
 
@@ -171,7 +171,7 @@ Foothold interno -> lateral movement (07-post-exploitation)
 
 **Impatto potenziale:** l'Evil Twin combina credential harvesting, MITM e delivery di malware in un unico vettore. In contesti ad alto valore (conferenze, aeroporti, sedi aziendali), un rogue AP con ESSID plausibile ("Airport_Free_WiFi", ESSID aziendale) puo compromettere decine di dispositivi in poche ore. Le credenziali catturate alimentano direttamente `05-social-engineering/` (credential reuse) e il payload serving si collega a `04-system-exploitation/`.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** un WIPS rileva la comparsa di un secondo BSSID che trasmette l'ESSID aziendale. Il pattern di deauth flood massivo verso l'AP legittimo e un secondo indicatore forte. Lato client, sistemi MDM possono rilevare la connessione a un BSSID non autorizzato.
 
@@ -195,14 +195,14 @@ Foothold interno -> lateral movement (07-post-exploitation)
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `hostapd-mana` | Rogue AP daemon | CLI | Creazione AP fasullo con KARMA (risposta a tutte le probe) |
-| `dnsmasq` | DHCP/DNS server | CLI | Assegnazione IP e DNS hijacking verso il captive portal |
-| `Airgeddon` | Evil Twin framework | CLI - Menu | Orchestrazione completa Evil Twin + captive portal multilingua |
-| `hostapd-wpe` | Enterprise rogue | CLI | Evil Twin per WPA2-Enterprise (cattura challenge/response EAP) |
-| `eaphammer` | Enterprise attack | CLI - Python | Attacco moderno a reti 802.1X con GTC downgrade e credential capture |
-| `bettercap` | MITM framework | CLI | Sniffing e injection post-associazione sul traffico delle vittime |
+| `hostapd-mana` | rogue ap daemon | cli | creazione ap fasullo con karma (risposta a tutte le probe) |
+| `dnsmasq` | dhcp/dns server | cli | assegnazione ip e dns hijacking verso il captive portal |
+| `Airgeddon` | evil twin framework | cli - menu | orchestrazione completa evil twin + captive portal multilingua |
+| `hostapd-wpe` | enterprise rogue | cli | evil twin per wpa2-enterprise (cattura challenge/response eap) |
+| `eaphammer` | enterprise attack | cli - python | attacco moderno a reti 802.1x con gtc downgrade e credential capture |
+| `bettercap` | mitm framework | cli | sniffing e injection post-associazione sul traffico delle vittime |
 
 > **Tool moderno consigliato:** `eaphammer` (Gabriel Ryan) e lo standard 2024-2026 per attaccare reti WPA2-Enterprise: automatizza l'Evil Twin con downgrade a EAP-GTC per catturare credenziali in chiaro quando la validazione del certificato lato client e assente o mal configurata.
 
@@ -210,13 +210,13 @@ Foothold interno -> lateral movement (07-post-exploitation)
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Adversary-in-the-Middle: Evil Twin | `T1557.004` | Creazione di un AP fasullo con ESSID clonato per intercettare il traffico e le credenziali dei client (WIFI-004) |
-| Collection | Adversary-in-the-Middle | `T1557` | Posizione Man-in-the-Middle sul traffico delle vittime connesse al rogue AP |
-| Credential Access | Input Capture: Web Portal Capture | `T1056.003` | Cattura delle credenziali tramite captive portal falsificato (WIFI-004) |
-| Initial Access | Hardware Additions | `T1200` | Introduzione di un dispositivo radio non autorizzato (rogue AP) nell'ambiente target |
-| Initial Access | Valid Accounts | `T1078` | Riutilizzo delle credenziali catturate per accedere ai servizi aziendali |
+| credential access | adversary-in-the-middle: evil twin | `T1557.004` | creazione di un ap fasullo con essid clonato per intercettare il traffico e le credenziali dei client (WIFI-004) |
+| collection | adversary-in-the-middle | `T1557` | posizione man-in-the-middle sul traffico delle vittime connesse al rogue ap |
+| credential access | input capture: web portal capture | `T1056.003` | cattura delle credenziali tramite captive portal falsificato (WIFI-004) |
+| initial access | hardware additions | `T1200` | introduzione di un dispositivo radio non autorizzato (rogue ap) nell'ambiente target |
+| initial access | valid accounts | `T1078` | riutilizzo delle credenziali catturate per accedere ai servizi aziendali |
 
 ---
 

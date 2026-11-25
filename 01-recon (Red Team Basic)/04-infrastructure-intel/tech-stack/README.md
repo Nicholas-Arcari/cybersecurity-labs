@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Tech Stack Fingerprinting: WhatWeb & BuiltWith
+# Tech stack fingerprinting: WhatWeb & BuiltWith
 
 > - **Fase:** Reconnaissance - Infrastructure Intelligence
 > - **Visibilita:** Bassa - richieste HTTP standard per fingerprinting, rilevabili dal WAF ma comuni nel traffico legittimo
@@ -17,7 +17,7 @@ Strumenti: `WhatWeb` (CLI), `Wappalyzer` (Browser Extension), `BuiltWith` (Web)
 
 ---
 
-## 1 Introduzione Teorica
+## 1 Introduzione teorica
 
 Il Tech Stack Fingerprinting è il processo di raccolta di "impronte digitali" dal server web. Analizzando le risposte HTTP, i cookie, e il codice sorgente HTML, è possibile determinare:
 
@@ -30,7 +30,7 @@ Per un attaccante, questa fase è cruciale per selezionare gli exploit corretti 
 
 ---
 
-## 2 Esecuzione Tecnica: WhatWeb
+## 2 Esecuzione tecnica: WhatWeb
 
 **ID Finding:** `INTEL-004` | **Severity:** `Informativo`
 
@@ -78,22 +78,22 @@ Questa fase di fingerprinting ha confermato che tesla.com utilizza una strategia
 
 ---
 
-## Analisi a Basso Livello: Vettori di Fingerprinting e WAF Detection
+## Analisi a basso livello: vettori di fingerprinting e WAF detection
 
-### Come Funziona il Fingerprinting HTTP
+### Come funziona il fingerprinting HTTP
 
 Il tech stack fingerprinting opera analizzando elementi specifici della risposta HTTP che rivelano involontariamente le tecnologie utilizzate:
 
-| Vettore | Esempio | Cosa rivela |
+| vettore | esempio | cosa rivela |
 | :--- | :--- | :--- |
-| **Header `Server:`** | `Server: Apache/2.4.51 (Ubuntu)` | Web server e versione esatta + OS |
-| **Header `X-Powered-By:`** | `X-Powered-By: PHP/7.4.3` | Linguaggio backend e versione |
-| **Cookie names** | `PHPSESSID`, `JSESSIONID`, `ASP.NET_SessionId` | PHP, Java, ASP.NET rispettivamente |
-| **HTML meta/comments** | `<meta name="generator" content="WordPress 6.2">` | CMS e versione |
-| **URL patterns** | `/wp-admin/`, `/administrator/`, `/user/login` | WordPress, Joomla, Drupal rispettivamente |
-| **Error pages** | Stack trace con nome framework | Framework + versione + path del filesystem |
-| **HTTP response headers** | `X-Drupal-Cache`, `X-Varnish`, `CF-RAY` | CMS, caching layer, CDN |
-| **TLS certificate** | Issuer, Subject, SAN entries | Hosting provider, domini associati |
+| **header `Server:`** | `Server: Apache/2.4.51 (Ubuntu)` | web server e versione esatta + os |
+| **header `X-Powered-By:`** | `X-Powered-By: PHP/7.4.3` | linguaggio backend e versione |
+| **cookie names** | `PHPSESSID`, `JSESSIONID`, `ASP.NET_SessionId` | php, java, asp.net rispettivamente |
+| **html meta/comments** | `<meta name="generator" content="WordPress 6.2">` | cms e versione |
+| **url patterns** | `/wp-admin/`, `/administrator/`, `/user/login` | wordpress, joomla, drupal rispettivamente |
+| **error pages** | stack trace con nome framework | framework + versione + path del filesystem |
+| **http response headers** | `X-Drupal-Cache`, `X-Varnish`, `CF-RAY` | cms, caching layer, cdn |
+| **tls certificate** | issuer, subject, san entries | hosting provider, domini associati |
 
 WhatWeb utilizza un database di oltre 1.800 plugin, ognuno dei quali cerca pattern specifici nella risposta HTTP. Il livello di aggressivita (`-a`) controlla la profondita dell'analisi:
 
@@ -103,7 +103,7 @@ WhatWeb utilizza un database di oltre 1.800 plugin, ognuno dei quali cerca patte
 -a 4 (heavy):     brute force di path e file per ogni plugin
 ```
 
-### Meccanica del WAF Detection
+### Meccanica del WAF detection
 
 Il blocco da parte di Akamai su tesla.com e avvenuto a livello di fingerprinting della richiesta. I WAF moderni analizzano:
 
@@ -124,7 +124,7 @@ echo "target.com" | httpx -title -tech-detect -status-code -follow-redirects
 
 ---
 
-## Blue Team: Protezione contro il Fingerprinting
+## Blue team: protezione contro il fingerprinting
 
 **Hardening:**
 - Rimuovere o offuscare gli header rivelatori: `Server:`, `X-Powered-By:`, `X-AspNet-Version:`
@@ -141,7 +141,7 @@ echo "target.com" | httpx -title -tech-detect -status-code -follow-redirects
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'aspetto piu istruttivo dell'esercizio e stato il fallimento: WhatWeb non ha potuto fingerprinting il backend di tesla.com a causa del WAF Akamai. Paradossalmente, il blocco stesso ha fornito informazioni di valore: la risposta `403 Forbidden` con header `AkamaiGHost` ha rivelato il provider CDN/WAF, che a sua volta indica il livello di maturita della sicurezza del target (enterprise con budget per difese perimetrali avanzate).
 
@@ -153,10 +153,10 @@ La lezione operativa: in un assessment, il fingerprinting attivo (WhatWeb, Nikto
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | Fingerprinting tecnologico di tesla.com con WhatWeb per identificare CMS, web server, framework e librerie client-side (INTEL-004) |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Richiesta HTTP di fingerprinting che ha rivelato la presenza di Akamai WAF come sistema di difesa perimetrale, confermando HSTS attivo (INTEL-004) |
+| reconnaissance | gather victim host info: software | `T1592.002` | fingerprinting tecnologico di tesla.com con whatweb per identificare cms, web server, framework e librerie client-side (INTEL-004) |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | richiesta http di fingerprinting che ha rivelato la presenza di akamai waf come sistema di difesa perimetrale, confermando hsts attivo (INTEL-004) |
 
 ---
 

@@ -27,7 +27,7 @@ Key concept on wordlists: WiFi PSKs often have specific patterns (8 numeric digi
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 01-wifi (802.11)/
@@ -41,7 +41,7 @@ Key concept on wordlists: WiFi PSKs often have specific patterns (8 numeric digi
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [INPUT] Monitor+injection WiFi card, target area in radio range
@@ -74,48 +74,48 @@ Key concept on wordlists: WiFi PSKs often have specific patterns (8 numeric digi
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `aircrack-ng suite` | Wireless attack suite | CLI | Monitor mode, handshake capture, deauth, cracking (essential) |
-| `Kismet` | WIDS / passive sniffer | CLI + Web | Passive discovery, hidden networks, temporal correlation |
-| `hashcat` | GPU cracker | CLI | GPU-accelerated WPA2 cracking (mode 22000) |
-| `hcxdumptool` | Clientless capture | CLI | PMKID capture without client (modern attack) |
-| `Wifite2` | Attack automator | CLI | Automation of the entire wireless audit |
-| `Airgeddon` | Multi-attack framework | CLI - Menu | Evil Twin, WPS, DoS in a single guided tool |
-| `hostapd-mana` | Rogue AP daemon | CLI | Evil Twin with KARMA for credential harvesting |
+| `aircrack-ng suite` | wireless attack suite | cli | monitor mode, handshake capture, deauth, cracking (essential) |
+| `Kismet` | wids / passive sniffer | cli + web | passive discovery, hidden networks, temporal correlation |
+| `hashcat` | gpu cracker | cli | gpu-accelerated wpa2 cracking (mode 22000) |
+| `hcxdumptool` | clientless capture | cli | pmkid capture without client (modern attack) |
+| `Wifite2` | attack automator | cli | automation of the entire wireless audit |
+| `Airgeddon` | multi-attack framework | cli - menu | evil twin, wps, dos in a single guided tool |
+| `hostapd-mana` | rogue ap daemon | cli | evil twin with karma for credential harvesting |
 
 > **Recommended modern tool:** the combination `hcxdumptool` + `hashcat -m 22000` for clientless cracking is the modern standard; `Wifite2` for automation; `eaphammer` for WPA2-Enterprise networks (802.1X).
 
 ---
 
-## Finding Registry - WiFi Section
+## Finding registry - WiFi section
 
-| ID | Description | Severity | Subfolder |
+| id | description | severity | subfolder |
 | :--- | :--- | :---: | :--- |
-| `WIFI-001` | Monitor mode + de-anonymization of hidden SSID and clients via Probe Request | `Low` | `recon-monitor/` |
-| `WIFI-002` | WPA2 4-way handshake captured and PSK recovered via dictionary attack | `High` | `cracking/` |
-| `WIFI-003` | Clientless PMKID captured and PSK recovered without connected clients | `High` | `cracking/` |
-| `WIFI-004` | Evil Twin with captive portal: credential harvesting + MITM position | `Critical` | `rogue-ap/` |
-| `WIFI-005` | WPS Pixie-Dust: WPS PIN recovered in seconds, PSK compromised regardless of robustness | `High` | `automated-attacks/` |
+| `WIFI-001` | monitor mode + de-anonymization of hidden ssid and clients via probe request | `Low` | `recon-monitor/` |
+| `WIFI-002` | wpa2 4-way handshake captured and psk recovered via dictionary attack | `High` | `cracking/` |
+| `WIFI-003` | clientless pmkid captured and psk recovered without connected clients | `High` | `cracking/` |
+| `WIFI-004` | evil twin with captive portal: credential harvesting + mitm position | `Critical` | `rogue-ap/` |
+| `WIFI-005` | wps pixie-dust: wps pin recovered in seconds, psk compromised regardless of robustness | `High` | `automated-attacks/` |
 
 ---
 
-## MITRE ATT&CK Mapping - Aggregated
+## MITRE ATT&CK mapping - aggregated
 
-| Tactic | Technique | MITRE ID | Related Finding |
+| tactic | technique | mitre id | related finding |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning | `T1595` | WIFI-001 |
-| Reconnaissance | Gather Victim Network Information | `T1590` | WIFI-001 |
-| Credential Access | Network Sniffing | `T1040` | WIFI-001, WIFI-002, WIFI-003, WIFI-005 |
-| Credential Access | Brute Force: Password Cracking | `T1110.002` | WIFI-002, WIFI-003 |
-| Credential Access | Brute Force | `T1110` | WIFI-005 |
-| Credential Access | Adversary-in-the-Middle: Evil Twin | `T1557.004` | WIFI-004 |
-| Collection | Adversary-in-the-Middle | `T1557` | WIFI-001, WIFI-002, WIFI-004, WIFI-005 |
-| Credential Access | Input Capture: Web Portal Capture | `T1056.003` | WIFI-004 |
-| Initial Access | Hardware Additions | `T1200` | WIFI-004 |
-| Initial Access | Valid Accounts | `T1078` | WIFI-002, WIFI-003, WIFI-004, WIFI-005 |
+| reconnaissance | active scanning | `T1595` | WIFI-001 |
+| reconnaissance | gather victim network information | `T1590` | WIFI-001 |
+| credential access | network sniffing | `T1040` | WIFI-001, WIFI-002, WIFI-003, WIFI-005 |
+| credential access | brute force: password cracking | `T1110.002` | WIFI-002, WIFI-003 |
+| credential access | brute force | `T1110` | WIFI-005 |
+| credential access | adversary-in-the-middle: evil twin | `T1557.004` | WIFI-004 |
+| collection | adversary-in-the-middle | `T1557` | WIFI-001, WIFI-002, WIFI-004, WIFI-005 |
+| credential access | input capture: web portal capture | `T1056.003` | WIFI-004 |
+| initial access | hardware additions | `T1200` | WIFI-004 |
+| initial access | valid accounts | `T1078` | WIFI-002, WIFI-003, WIFI-004, WIFI-005 |
 
 ---
 

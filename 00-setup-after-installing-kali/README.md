@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 00 - Setup After Installing Kali Linux
+# 00 - Setup after installing Kali Linux
 
 > - **Fase:** Pre-Operativa - System Hardening & Configuration
 > - **Contesto:** Configurazione one-time da eseguire subito dopo una nuova installazione di Kali Linux, prima di qualsiasi attivita operativa (recon, exploitation, analisi forense)
@@ -19,28 +19,28 @@ Questa cartella documenta i 20 passaggi essenziali per trasformare un'installazi
 
 ## Struttura della cartella
 
-| Step | Cartella | Obiettivo |
+| step | cartella | obiettivo |
 | :---: | :--- | :--- |
-| 01 | `01-update-your-system/` | Aggiornamento completo pacchetti e kernel |
-| 02 | `02-create-non-root-user/` | Principio del minimo privilegio: utente standard |
-| 03 | `03-change-default-password/` | Cambio credenziali di default `kali/kali` |
-| 04 | `04-enable-firewall/` | Configurazione UFW: chiusura porte non necessarie |
-| 05 | `05-install-essential-tools/` | Toolset base: htop, curl, tmux, net-tools |
-| 06 | `06-secure-ssh-access/` | Hardening SSH: porta non standard, no root login |
+| 01 | `01-update-your-system/` | aggiornamento completo pacchetti e kernel |
+| 02 | `02-create-non-root-user/` | principio del minimo privilegio: utente standard |
+| 03 | `03-change-default-password/` | cambio credenziali di default `kali/kali` |
+| 04 | `04-enable-firewall/` | configurazione ufw: chiusura porte non necessarie |
+| 05 | `05-install-essential-tools/` | toolset base: htop, curl, tmux, net-tools |
+| 06 | `06-secure-ssh-access/` | hardening ssh: porta non standard, no root login |
 | 07 | `07-enable-automatic-updates/` | `unattended-upgrades` per patch di sicurezza automatiche |
-| 08 | `08-install-monitoring-tools/` | Dashboard stato sistema (Nagios/Zabbix agent) |
-| 09 | `09-customize-desktop-environment/` | Ergonomia: XFCE/Gnome per sessioni di lavoro lunghe |
-| 10 | `10-encrypt-sensitive-data/` | LUKS/VeraCrypt per protezione dati di engagement |
-| 11 | `11-perform-vulnerability-scans/` | OpenVAS/GVM: self-assessment vulnerabilita |
-| 12 | `12-schedule-regular-maintenance/` | Cronjob per update e pulizia disco automatici |
-| 13 | `13-harden-the-kernel/` | `sysctl.conf`: protezione da DoS, spoofing, flooding |
-| 14 | `14-configure-intrusion-detection-systems/` | Suricata IDS: rilevamento attacchi in tempo reale |
-| 15 | `15-test-defensive-tools/` | Validazione empirica delle difese configurate |
-| 16 | `16-automate-tasks/` | Script backup log (tar) e sistema (rsync) |
-| 17 | `17-join-kali-community/` | Forum e Discord ufficiali Kali Linux |
-| 18 | `18-document-your-configuration/` | Documentazione modifiche (Markdown/Obsidian) |
-| 19 | `19-backup-your-system/` | Disaster recovery: rsync e Timeshift |
-| 20 | `20-setup-logwatch-system-monitoring/` | Logwatch: report giornaliero aggregato via email |
+| 08 | `08-install-monitoring-tools/` | dashboard stato sistema (nagios/zabbix agent) |
+| 09 | `09-customize-desktop-environment/` | ergonomia: xfce/gnome per sessioni di lavoro lunghe |
+| 10 | `10-encrypt-sensitive-data/` | luks/veracrypt per protezione dati di engagement |
+| 11 | `11-perform-vulnerability-scans/` | openvas/gvm: self-assessment vulnerabilita |
+| 12 | `12-schedule-regular-maintenance/` | cronjob per update e pulizia disco automatici |
+| 13 | `13-harden-the-kernel/` | `sysctl.conf`: protezione da dos, spoofing, flooding |
+| 14 | `14-configure-intrusion-detection-systems/` | suricata ids: rilevamento attacchi in tempo reale |
+| 15 | `15-test-defensive-tools/` | validazione empirica delle difese configurate |
+| 16 | `16-automate-tasks/` | script backup log (tar) e sistema (rsync) |
+| 17 | `17-join-kali-community/` | forum e discord ufficiali kali linux |
+| 18 | `18-document-your-configuration/` | documentazione modifiche (markdown/obsidian) |
+| 19 | `19-backup-your-system/` | disaster recovery: rsync e timeshift |
+| 20 | `20-setup-logwatch-system-monitoring/` | logwatch: report giornaliero aggregato via email |
 
 ---
 
@@ -82,21 +82,21 @@ Step 17: community                   -> aggiornamento professionale
 
 ## Tool di riferimento
 
-| Tool | Tipo | Step | Caso d'uso principale |
+| tool | tipo | step | caso d'uso principale |
 | :--- | :--- | :---: | :--- |
-| `apt` / `unattended-upgrades` | Package manager | 01, 07 | Aggiornamento sistema e patch automatiche |
-| `ufw` | Firewall | 04 | Gestione regole firewall (Uncomplicated Firewall) |
-| `htop` | Monitor risorse | 05 | Visualizzazione interattiva CPU, RAM, processi |
-| `tmux` | Terminal multiplexer | 05 | Sessioni multiple, persistenza anche a disconnessione |
-| `sshd_config` | Demone SSH | 06 | Hardening accesso SSH remoto |
-| `cryptsetup` (LUKS) | Disk encryption | 10 | Cifratura a blocchi per partizioni e volumi |
-| `VeraCrypt` | Disk encryption | 10 | Cifratura volumi singoli (alternativa cross-platform) |
-| `GVM` / `OpenVAS` | Vulnerability scanner | 11 | Self-assessment CVE sull'ambiente locale |
-| `sysctl` | Kernel parameters | 13 | Hardening parametri rete kernel Linux |
-| `Suricata` | IDS/IPS | 14 | Network Intrusion Detection con regole Emerging Threats |
-| `rsync` | Backup tool | 16, 19 | Sincronizzazione incrementale file e directory |
-| `Logwatch` | Log aggregator | 20 | Report giornaliero aggregato da `/var/log` |
-| `Timeshift` | Snapshot tool | 19 | Backup point-in-time del sistema (simile Time Machine) |
+| `apt` / `unattended-upgrades` | package manager | 01, 07 | aggiornamento sistema e patch automatiche |
+| `ufw` | firewall | 04 | gestione regole firewall (uncomplicated firewall) |
+| `htop` | monitor risorse | 05 | visualizzazione interattiva cpu, ram, processi |
+| `tmux` | terminal multiplexer | 05 | sessioni multiple, persistenza anche a disconnessione |
+| `sshd_config` | demone ssh | 06 | hardening accesso ssh remoto |
+| `cryptsetup` (luks) | disk encryption | 10 | cifratura a blocchi per partizioni e volumi |
+| `VeraCrypt` | disk encryption | 10 | cifratura volumi singoli (alternativa cross-platform) |
+| `GVM` / `OpenVAS` | vulnerability scanner | 11 | self-assessment cve sull'ambiente locale |
+| `sysctl` | kernel parameters | 13 | hardening parametri rete kernel linux |
+| `Suricata` | ids/ips | 14 | network intrusion detection con regole emerging threats |
+| `rsync` | backup tool | 16, 19 | sincronizzazione incrementale file e directory |
+| `Logwatch` | log aggregator | 20 | report giornaliero aggregato da `/var/log` |
+| `Timeshift` | snapshot tool | 19 | backup point-in-time del sistema (simile time machine) |
 
 ---
 

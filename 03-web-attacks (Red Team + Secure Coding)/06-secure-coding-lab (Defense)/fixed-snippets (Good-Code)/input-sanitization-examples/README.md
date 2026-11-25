@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Cross-Site Scripting (XSS) - Post-Remediation Verification
+# Cross-Site scripting (XSS) - Post-Remediation verification
 
 > - **Fase:** Secure Coding - XSS Mitigation (Output Encoding)
 > - **Visibilita:** Zero - analisi locale e test in ambiente PHP locale (`localhost:8000`)
@@ -9,7 +9,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 Durante l'analisi del codice sorgente dell'applicazione web, è stata individuata una vulnerabilità di tipo Reflected XSS nel parametro GET `name`.
 
@@ -19,7 +19,7 @@ Questa vulnerabilità permetteva a un attaccante di iniettare codice JavaScript 
 
 ---
 
-## 2 Analisi della Vulnerabilità
+## 2 Analisi della vulnerabilità
 
 Descrizione Tecnica
 
@@ -39,7 +39,7 @@ L'esecuzione del payload ha generato un popup JavaScript ("Hacked"), confermando
 
 ---
 
-## 3 Root Cause Analysis (Codice Vulnerabile)
+## 3 Root cause analysis (codice vulnerabile)
 
 Il difetto risiedeva nell'uso dell'istruzione `echo` direttamente su una variabile controllata dall'utente.
 
@@ -53,7 +53,7 @@ L'input `<script>...` viene scritto tal quale nel DOM, attivando l'esecuzione.
 
 ---
 
-## 4 Remediation (Secure Coding)
+## 4 Remediation (secure coding)
 
 Per mitigare la vulnerabilità, è stata applicata la tecnica di Context-Aware Output Encoding.
 
@@ -72,7 +72,7 @@ In PHP, questo si ottiene utilizzando la funzione `htmlspecialchars()`, che conv
 
 ---
 
-## 5 Verifica della Correzione (Verification)
+## 5 Verifica della correzione (verification)
 
 È stato rieseguito lo stesso attacco contro il blocco di codice patchato.
 
@@ -97,9 +97,9 @@ Si raccomanda di estendere questa pratica di "Output Encoding" a tutte le variab
 
 ---
 
-## Analisi a Basso Livello: Output Encoding e Context-Aware Defense
+## Analisi a basso livello: output encoding e Context-Aware defense
 
-### Come htmlspecialchars() Neutralizza il Payload
+### Come htmlspecialchars() neutralizza il payload
 
 La funzione trasforma i caratteri pericolosi in HTML entities che il browser renderizza come testo:
 
@@ -126,19 +126,19 @@ Il tag <script> NON viene interpretato come codice
 
 I framework moderni applicano l'encoding automaticamente, eliminando il rischio di dimenticanze:
 
-| Framework | Sintassi sicura (auto-escaped) | Sintassi pericolosa (raw) |
+| framework | sintassi sicura (auto-escaped) | sintassi pericolosa (raw) |
 | :--- | :--- | :--- |
-| **Twig** (PHP) | `{{ name }}` | `{{ name\|raw }}` |
-| **Blade** (Laravel) | `{{ $name }}` | `{!! $name !!}` |
-| **React** (JSX) | `<p>{name}</p>` | `dangerouslySetInnerHTML` |
-| **Jinja2** (Python) | `{{ name }}` | `{{ name\|safe }}` |
-| **Django** | `{{ name }}` | `{{ name\|safe }}` |
+| **twig** (php) | `{{ name }}` | `{{ name\|raw }}` |
+| **blade** (laravel) | `{{ $name }}` | `{!! $name !!}` |
+| **react** (jsx) | `<p>{name}</p>` | `dangerouslySetInnerHTML` |
+| **jinja2** (python) | `{{ name }}` | `{{ name\|safe }}` |
+| **django** | `{{ name }}` | `{{ name\|safe }}` |
 
 La regola: usare sempre la sintassi di default (auto-escaped). La sintassi raw deve essere giustificata e il dato deve provenire da una fonte trusted.
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il confronto visivo tra il box rosso (vulnerabile) e il box verde (sicuro) nello stesso screenshot e stato la dimostrazione piu efficace: lo stesso payload produce esecuzione di codice nel primo caso e testo innocuo nel secondo, con una sola riga di codice di differenza (`echo` vs `echo htmlspecialchars()`).
 
@@ -150,9 +150,9 @@ Il test con `<img src=x onerror=alert('XSS')>` ha verificato un vettore diverso 
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione (Difensiva - Mitigazione XSS) |
+| tattica | tecnica | id mitre | descrizione dell'azione (difensiva - mitigazione xss) |
 | :--- | :--- | :--- | :--- |
-| (Mitigazione) | Exploit Public-Facing Application | `T1190` | Implementazione di `htmlspecialchars($_GET['name'], ENT_QUOTES, 'UTF-8')` che converte i caratteri speciali (`<`, `>`, `"`, `'`) in entita HTML sicure, neutralizzando il vettore XSS Reflected (CWE-79) |
+| (mitigazione) | exploit public-facing application | `T1190` | implementazione di `htmlspecialchars($_GET['name'], ENT_QUOTES, 'UTF-8')` che converte i caratteri speciali (`<`, `>`, `"`, `'`) in entita html sicure, neutralizzando il vettore xss reflected (cwe-79) |
 
 ---
 

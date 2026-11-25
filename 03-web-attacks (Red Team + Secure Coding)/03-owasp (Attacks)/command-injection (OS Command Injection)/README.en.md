@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# OS Command Injection
+# OS command injection
 
 > - **Phase:** Web Exploitation - OWASP A03:2021 Injection (user input concatenated into a system command)
 > - **Visibility:** Medium/High - the web process spawns shell child processes (a pattern very detectable by EDR/auditd); blind variants generate outbound traffic or measurable delays
@@ -11,7 +11,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 OS Command Injection is among the highest-impact web vulnerabilities: it leads directly to **Remote Code
 Execution (RCE)** on the server. It occurs when an application builds a system command by concatenating user
@@ -32,9 +32,9 @@ distinguish the in-band case (visible output: immediate verification) from the b
 needed: a time delay or an outbound request to a controlled server). The initial verification is minimal and
 **non-destructive**: you append an innocuous command (`id`, `whoami`) after a separator and observe the output.
 
-## Execution / Commands
+## Execution / commands
 
-### Phase 1 - Confirm the vulnerability (benign command)
+### Phase 1 - confirm the vulnerability (benign command)
 
 Assuming a `host` parameter passed to a `ping` command, you append an innocuous verification command via a shell
 separator:
@@ -54,7 +54,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)   <-- 'id' executed: comma
 The execution of `id`/`whoami` confirms RCE with the privileges of the web process. Common separators are `;`,
 `|`, `&&`, `$()` and backticks; the choice depends on the context (shell, filters present).
 
-### Phase 2 - Blind variant (time-based and out-of-band)
+### Phase 2 - blind variant (time-based and out-of-band)
 
 If the output is not reflected, you confirm execution indirectly:
 
@@ -70,7 +70,7 @@ If the output is not reflected, you confirm execution indirectly:
 
 A ~10s delay or a request received on your server confirms RCE even without output in the response.
 
-### Phase 3 - From RCE to an interactive shell (lab)
+### Phase 3 - from RCE to an interactive shell (lab)
 
 Once RCE is confirmed, in the lab you obtain a shell. Bash reverse shell (listener `nc -lvnp 4444` on the
 attacker, lab IP/port):
@@ -94,7 +94,7 @@ If the web process runs with elevated privileges or if one can escalate from it 
 compromised. If the application never invokes a shell (it uses APIs that pass the arguments as an array), the
 vector is closed.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 OS Command Injection is the most direct form of the data/instructions problem [Su & Wassermann 2006]: the user
 input (data) is interpreted by the shell as a command (instruction). The root is the use of a shell to execute
@@ -103,7 +103,7 @@ APIs that pass arguments as a list (`execve`, `subprocess.run([...])` without `s
 separate arguments), so the metacharacters remain inert data. Secondarily: strict input whitelisting and the
 principle of least privilege for the web process (damage containment).
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection (EDR/auditd/SIEM).**
 - The web server process spawning shell child processes (`sh`, `bash`, `cmd`, `powershell`): a very anomalous and
@@ -120,11 +120,11 @@ principle of least privilege for the web process (damage containment).
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > Applies to the "confirmed RCE" outcome (severity Critical).
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** a parameter that ends up in a system command, with execution confirmed (Phase 1).
 
@@ -152,7 +152,7 @@ network. The natural link is with [04-system-exploitation](<../../../04-system-e
 **Typical monetization vectors:** server compromise (ransomware, cryptomining), exfiltration, pivoting toward the
 internal infrastructure.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** web server spawning a shell; metacharacters in the parameters; anomalous delays or outbound
 traffic.
@@ -175,12 +175,12 @@ arguments at the API level.
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `Burp Suite` | Proxy/scanner | Web - Active | Intercepts and modifies the parameters; injection test with benign commands |
-| `commix` | Exploit tool | CLI - Active | Automated detection and exploitation (in an authorized lab) of command injection |
-| `curl` | HTTP client | CLI - Active | Manual sending of requests with verification payloads |
-| `subprocess` (array) / `ProcessBuilder` | Safe APIs | Secure coding | Shell-free execution for the remediation (Blue Team) |
+| `Burp Suite` | proxy/scanner | web - active | intercepts and modifies the parameters; injection test with benign commands |
+| `commix` | exploit tool | cli - active | automated detection and exploitation (in an authorized lab) of command injection |
+| `curl` | http client | cli - active | manual sending of requests with verification payloads |
+| `subprocess` (array) / `ProcessBuilder` | safe apis | secure coding | shell-free execution for the remediation (blue team) |
 
 ## Methodology notes
 
@@ -191,21 +191,21 @@ are out of scope for an assessment.
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation of the unsafe concatenation of input into a system command. |
-| Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | Execution of commands on the server via a shell (Linux context). |
-| Execution | Command and Scripting Interpreter: Windows Command Shell | `T1059.003` | Execution of commands on the server via cmd (Windows context). |
+| initial access | exploit public-facing application | `T1190` | exploitation of the unsafe concatenation of input into a system command. |
+| execution | command and scripting interpreter: unix shell | `T1059.004` | execution of commands on the server via a shell (linux context). |
+| execution | command and scripting interpreter: windows command shell | `T1059.003` | execution of commands on the server via cmd (windows context). |
 
 ---
 
 ## Links to other findings
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
-| [02-web-recon](<../../02-web-recon (Enumeration)/README.en.md>) | OS Command Injection | enumeration identifies the features that invoke system commands |
-| OS Command Injection (RCE) | [04-system-exploitation](<../../../04-system-exploitation/README.en.md>) | RCE as the web user opens local privilege escalation |
-| OS Command Injection | [secure-coding-lab](<../../06-secure-coding-lab (Defense)/README.en.md>) | the remediation (no shell, APIs with array arguments) links to secure coding |
+| [02-web-recon](<../../02-web-recon (Enumeration)/README.en.md>) | os command injection | enumeration identifies the features that invoke system commands |
+| os command injection (rce) | [04-system-exploitation](<../../../04-system-exploitation/README.en.md>) | rce as the web user opens local privilege escalation |
+| os command injection | [secure-coding-lab](<../../06-secure-coding-lab (Defense)/README.en.md>) | the remediation (no shell, apis with array arguments) links to secure coding |
 
 ---
 

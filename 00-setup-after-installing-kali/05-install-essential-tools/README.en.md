@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 05 - Install Essential Tools
+# 05 - Install essential tools
 
 > - **Phase:** System Setup - Toolset Configuration
 > - **Priority:** Medium - improves daily operational efficiency
@@ -31,17 +31,17 @@ You waste valuable time on cumbersome operations, have less visibility into what
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Main Use Case |
+| tool | main use case |
 | :--- | :--- |
-| `htop` | Interactive process monitor with colors, filters and direct kill |
-| `tmux` | Terminal multiplexer: persistent sessions, split panes, detach/attach |
-| `curl` | CLI HTTP client: endpoint testing, script download, REST API interaction |
-| `net-tools` | Legacy network toolkit: `ifconfig`, `netstat`, `route` |
-| `wget` | Command-line file download with resume and recursion |
-| `git` | Version control: clone tools, scripts and exploit repositories |
-| `vim` | Advanced text editor for configuration file editing |
+| `htop` | interactive process monitor with colors, filters and direct kill |
+| `tmux` | terminal multiplexer: persistent sessions, split panes, detach/attach |
+| `curl` | cli http client: endpoint testing, script download, rest api interaction |
+| `net-tools` | legacy network toolkit: `ifconfig`, `netstat`, `route` |
+| `wget` | command-line file download with resume and recursion |
+| `git` | version control: clone tools, scripts and exploit repositories |
+| `vim` | advanced text editor for configuration file editing |
 
 ---
 

@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 02 - Web Recon (Enumeration)
+# 02 - Web recon (enumeration)
 
 > - **Fase:** Web Attack - Web Application Enumeration
 > - **Visibilita:** Variabile - Bassa (tech profiling con richieste HTTP standard) / Media (dir-busting e scanner generano molto traffico) / Bassa (subdomain enum passiva)
@@ -15,13 +15,13 @@ La web reconnaissance e una fase distinta e complementare rispetto alla network 
 
 La distinzione operativa e fondamentale:
 
-| Network Recon (`01-recon`) | Web Recon (`02-web-recon`) |
+| network recon (`01-recon`) | web recon (`02-web-recon`) |
 | :--- | :--- |
-| Porte aperte e servizi (`nmap`) | Pagine e directory nascoste (`gobuster`) |
-| Hostname e DNS | Virtual host nascosti (`gobuster vhost`) |
-| Banner di servizio (`nc`, `telnet`) | Stack tecnologico e versioni (`whatweb`) |
-| IP e ASN | Sottodomini web (`subfinder`, `amass`) |
-| Vulnerabilita di rete (`nmap NSE`) | Vulnerabilita applicative (`nikto`, `nuclei`) |
+| porte aperte e servizi (`nmap`) | pagine e directory nascoste (`gobuster`) |
+| hostname e dns | virtual host nascosti (`gobuster vhost`) |
+| banner di servizio (`nc`, `telnet`) | stack tecnologico e versioni (`whatweb`) |
+| ip e asn | sottodomini web (`subfinder`, `amass`) |
+| vulnerabilita di rete (`nmap NSE`) | vulnerabilita applicative (`nikto`, `nuclei`) |
 
 La web recon e il prerequisito per qualsiasi attacco OWASP: senza sapere che il target usa PHP 5.6 (WEB-002) o che espone `/CVS` (WEB-003), le fasi successive sarebbero condotte alla cieca.
 
@@ -41,7 +41,7 @@ Il tool moderno di riferimento per questa fase e `nuclei` (ProjectDiscovery), ch
 
 ---
 
-## `tech-profiler/` - Technology Fingerprinting
+## `tech-profiler/` - Technology fingerprinting
 
 **ID Finding:** `WEB-002` | **Severity:** `Alto` | **CVSS v3.1:** 7.5
 
@@ -59,7 +59,7 @@ Il finding WEB-002 e documentato in dettaglio in `tech-profiler/README.md`.
 
 ---
 
-## `dir-busting/` - Directory & File Enumeration
+## `dir-busting/` - Directory & file enumeration
 
 **ID Finding:** `WEB-003` | **Severity:** `Alto` | **CVSS v3.1:** 7.5
 
@@ -79,7 +79,7 @@ Il finding WEB-003 (directory CVS e `.idea` esposti) e documentato in dettaglio 
 
 ---
 
-## `subdomain-enum/` - Subdomain Enumeration
+## `subdomain-enum/` - Subdomain enumeration
 
 ### Contesto operativo
 
@@ -93,7 +93,7 @@ La lista di sottodomini prodotta diventa input diretto per la fase successiva: o
 
 ---
 
-## `vulnerability-scanners/` - Automated Web Scanning
+## `vulnerability-scanners/` - Automated web scanning
 
 ### Contesto operativo
 
@@ -101,10 +101,10 @@ I vulnerability scanner web automatizzano la ricerca di configurazioni errate e 
 
 La distinzione operativa tra i due scanner principali:
 
-| Scanner | Approccio | Velocita | Rilevamento WAF | Uso ideale |
+| scanner | approccio | velocita | rilevamento waf | uso ideale |
 | :--- | :--- | :--- | :--- | :--- |
-| `Nikto` | Signature-based (legacy) | Lento | Facile | Prima baseline, lab |
-| `Nuclei` | Template YAML (moderno) | Veloce | Difficile | Pipeline CI/CD, engagement reali |
+| `Nikto` | signature-based (legacy) | lento | facile | prima baseline, lab |
+| `Nuclei` | template yaml (moderno) | veloce | difficile | pipeline ci/cd, engagement reali |
 
 Nikto e noto per essere molto "rumoroso" (genera molte richieste anomale) e viene facilmente bloccato dai WAF in ambienti di produzione. Nuclei, basato su template YAML specifici, e piu preciso e meno rilevabile.
 
@@ -143,28 +143,28 @@ I finding WEB-002 (PHP EOL) e WEB-003 (.idea exposure) sono stati confermati anc
 
 ---
 
-## Registro Finding - Web Recon
+## Registro finding - web recon
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `WEB-002` | PHP 5.6.40 EOL + header `X-Powered-By` esposto | `Alto` | `tech-profiler/` |
-| `WEB-003` | Directory CVS e cartella `.idea` esposti pubblicamente | `Alto` | `dir-busting/` |
+| `WEB-002` | php 5.6.40 eol + header `X-Powered-By` esposto | `Alto` | `tech-profiler/` |
+| `WEB-003` | directory cvs e cartella `.idea` esposti pubblicamente | `Alto` | `dir-busting/` |
 
 ---
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `whatweb` | Tech fingerprint | CLI - Attiva | Identificazione CMS, web server, linguaggi e versioni |
-| `Wappalyzer` | Tech fingerprint | Browser Extension - Passiva | Fingerprint visivo durante navigazione |
-| `gobuster` | Dir/VHost brute force | CLI - Attiva | Directory busting e VHost fuzzing |
-| `feroxbuster` | Dir brute force | CLI - Attiva | Dir busting ricorsivo, piu veloce di gobuster |
-| `subfinder` | Subdomain enum | CLI - Passiva | Enumerazione passiva da CT logs e OSINT |
-| `amass` | Subdomain/ASN enum | CLI - Attiva | Mappatura profonda con ASN e reverse WHOIS |
-| `nikto` | Vulnerability scanner | CLI - Attiva | Baseline generale, misconfiguration server |
-| `nuclei` | Vulnerability scanner | CLI - Attiva | Template YAML, CVE-specifico, pipeline CI/CD |
-| `httpx` | HTTP prober | CLI - Attiva | Verifica rapida di quali sottodomini sono attivi |
+| `whatweb` | tech fingerprint | cli - attiva | identificazione cms, web server, linguaggi e versioni |
+| `Wappalyzer` | tech fingerprint | browser extension - passiva | fingerprint visivo durante navigazione |
+| `gobuster` | dir/vhost brute force | cli - attiva | directory busting e vhost fuzzing |
+| `feroxbuster` | dir brute force | cli - attiva | dir busting ricorsivo, piu veloce di gobuster |
+| `subfinder` | subdomain enum | cli - passiva | enumerazione passiva da ct logs e osint |
+| `amass` | subdomain/asn enum | cli - attiva | mappatura profonda con asn e reverse whois |
+| `nikto` | vulnerability scanner | cli - attiva | baseline generale, misconfiguration server |
+| `nuclei` | vulnerability scanner | cli - attiva | template yaml, cve-specifico, pipeline ci/cd |
+| `httpx` | http prober | cli - attiva | verifica rapida di quali sottodomini sono attivi |
 
 > **Tool moderno consigliato:** `nuclei` (ProjectDiscovery) - sostituisce Nikto per la maggior parte dei casi d'uso moderni. Ogni template e mappato su CVE o CWE specifici, riducendo i falsi positivi. Aggiornamento dei template: `nuclei -update-templates`.
 
@@ -172,15 +172,15 @@ I finding WEB-002 (PHP EOL) e WEB-003 (.idea exposure) sono stati confermati anc
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Scansione con Nikto e Nuclei per identificare PHP EOL, header esposti e file sensibili (WEB-002, WEB-003) |
-| Reconnaissance | Active Scanning: Wordlist Scanning | `T1595.003` | Directory busting con Gobuster/Feroxbuster su wordlist `common.txt` per enumerare risorse nascoste (WEB-003) |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | Tech profiling con WhatWeb per identificare versione PHP 5.6.40, Nginx 1.19 e stack tecnologico (WEB-002) |
-| Reconnaissance | Gather Victim Network Info: Domain Properties | `T1590.001` | Enumerazione sottodomini con Subfinder e OWASP Amass per espandere la superficie di attacco |
-| Discovery | File and Directory Discovery | `T1083` | Identificazione di directory CVS, `.idea` e `/admin` tramite dir-busting (WEB-003) |
-| Discovery | Network Service Scanning | `T1046` | Scansione automatizzata Nikto/Nuclei per identificare servizi e versioni sul target |
-| Collection | Data from Information Repositories | `T1213` | Accesso a directory di versionamento CVS esposta che potrebbe rivelare il codice sorgente (WEB-003) |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | scansione con nikto e nuclei per identificare php eol, header esposti e file sensibili (WEB-002, WEB-003) |
+| reconnaissance | active scanning: wordlist scanning | `T1595.003` | directory busting con gobuster/feroxbuster su wordlist `common.txt` per enumerare risorse nascoste (WEB-003) |
+| reconnaissance | gather victim host info: software | `T1592.002` | tech profiling con whatweb per identificare versione php 5.6.40, nginx 1.19 e stack tecnologico (WEB-002) |
+| reconnaissance | gather victim network info: domain properties | `T1590.001` | enumerazione sottodomini con subfinder e owasp amass per espandere la superficie di attacco |
+| discovery | file and directory discovery | `T1083` | identificazione di directory cvs, `.idea` e `/admin` tramite dir-busting (WEB-003) |
+| discovery | network service scanning | `T1046` | scansione automatizzata nikto/nuclei per identificare servizi e versioni sul target |
+| collection | data from information repositories | `T1213` | accesso a directory di versionamento cvs esposta che potrebbe rivelare il codice sorgente (WEB-003) |
 
 ---
 

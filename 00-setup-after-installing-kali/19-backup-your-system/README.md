@@ -41,7 +41,7 @@ rsync -av \
 echo "[$(date)] System backup completed to $BACKUP_DEST/system-$DATE/"
 ```
 
-### Opzione 2: Timeshift (snapshot grafico)
+### Opzione 2: timeshift (snapshot grafico)
 
 ```Bash
 sudo apt install timeshift
@@ -49,7 +49,7 @@ sudo timeshift --create --comments "post-setup backup"
 sudo timeshift --list    # Lista snapshot disponibili
 ```
 
-### Opzione 3: Snapshot VM (raccomandato per ambienti virtualizzati)
+### Opzione 3: snapshot VM (raccomandato per ambienti virtualizzati)
 
 Per VirtualBox: `Machine > Tools > Snapshots > Take` prima di ogni sessione rischiosa.
 
@@ -71,11 +71,11 @@ Dover formattare e reinstallare tutto da zero, perdendo giorni di configurazione
 
 ## Strategia di backup consigliata (3-2-1)
 
-| Copia | Dove | Strumento |
+| copia | dove | strumento |
 | :--- | :--- | :--- |
-| Copia 1 | Disco interno (partizione separata) | Timeshift / rsync |
-| Copia 2 | Disco esterno USB | rsync manuale |
-| Copia 3 | Cloud cifrato o NAS remoto | rsync + LUKS o Restic |
+| copia 1 | disco interno (partizione separata) | timeshift / rsync |
+| copia 2 | disco esterno usb | rsync manuale |
+| copia 3 | cloud cifrato o nas remoto | rsync + luks o restic |
 
 ---
 

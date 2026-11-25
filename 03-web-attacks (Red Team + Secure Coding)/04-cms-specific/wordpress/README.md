@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# CMS Exploitation: WordPress & WPScan
+# CMS exploitation: WordPress & WPScan
 
 > - **Fase:** Web Attack - CMS Exploitation (WordPress)
 > - **Visibilita:** Media - WPScan genera traffico HTTP strutturato, rilevabile da WAF e IDS
@@ -24,7 +24,7 @@ WPScan e lo strumento de facto per questo lavoro: un black-box scanner open-sour
 
 ---
 
-## Fase 1: Fingerprinting
+## Fase 1: fingerprinting
 
 La conferma della versione e il prerequisito per il CVE mapping. WordPress espone la versione in piu punti:
 
@@ -49,7 +49,7 @@ Il file `readme.html` e spesso lasciato accessibile per default e rivela la vers
 
 ---
 
-## Fase 2: Enumerazione con WPScan
+## Fase 2: enumerazione con WPScan
 
 ### Installazione
 
@@ -126,7 +126,7 @@ Il fatto che WordPress esponga gli username tramite l'API REST (`/?author=1`) e 
 
 ---
 
-## Fase 3: Brute Force delle Credenziali
+## Fase 3: brute force delle credenziali
 
 ```Bash
 # Brute force con lista di password (rockyou.txt o lista custom)
@@ -149,7 +149,7 @@ Output di esempio (credenziale trovata):
 
 ---
 
-## Fase 4: Post-Authentication Exploitation
+## Fase 4: Post-Authentication exploitation
 
 Ottenuto l'accesso admin, le azioni post-exploitation piu comuni:
 
@@ -193,21 +193,21 @@ cat /var/www/html/wp-config.php | grep -E "DB_NAME|DB_USER|DB_PASSWORD|DB_HOST"
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `wpscan` | WordPress scanner | CLI - Attiva | Enumerazione completa e brute force su WordPress |
-| `nuclei` | Template-based | CLI - Attiva | Template `/technologies/cms/wordpress/` per CVE specifiche |
-| `metasploit` | Exploitation framework | CLI/GUI - Attiva | Exploit automatizzati per plugin WordPress vulnerabili |
-| `burpsuite` | Web proxy | GUI - Manuale | Analisi manuale di funzionalita WordPress (IDOR, CSRF) |
-| `xmlrpc-scan` | XML-RPC tester | CLI - Attiva | Test abuso dell'endpoint `xmlrpc.php` per brute force |
+| `wpscan` | wordpress scanner | cli - attiva | enumerazione completa e brute force su wordpress |
+| `nuclei` | template-based | cli - attiva | template `/technologies/cms/wordpress/` per cve specifiche |
+| `metasploit` | exploitation framework | cli/gui - attiva | exploit automatizzati per plugin wordpress vulnerabili |
+| `burpsuite` | web proxy | gui - manuale | analisi manuale di funzionalita wordpress (idor, csrf) |
+| `xmlrpc-scan` | xml-rpc tester | cli - attiva | test abuso dell'endpoint `xmlrpc.php` per brute force |
 
 > **Nota API Token WPScan:** senza API token, WPScan non mostra le CVE specifiche per i plugin. Registrarsi gratuitamente su `wpscan.com` e aggiungere `--api-token <TOKEN>` al comando per abilitare il vulnerability database completo.
 
 ---
 
-## Analisi a Basso Livello: Architettura WordPress e Superficie di Attacco
+## Analisi a basso livello: architettura WordPress e superficie di attacco
 
-### Struttura Interna di WordPress
+### Struttura interna di WordPress
 
 WordPress memorizza la configurazione critica in due punti: il file `wp-config.php` (credenziali database, secret keys, prefisso tabelle) e la tabella `wp_options` nel database (URL del sito, tema attivo, plugin attivi, ruoli utente).
 
@@ -231,7 +231,7 @@ Endpoint esposti:
     /wp-content/debug.log    <- PHP error log (info disclosure se WP_DEBUG_LOG=true)
 ```
 
-### Password Hashing: phpass e la Cracking Window
+### Password hashing: phpass e la cracking window
 
 WordPress usa `phpass` (Portable PHP Hashing Framework) con Blowfish/bcrypt. L'hash ha il formato:
 
@@ -252,7 +252,7 @@ Cracking speed (GPU RTX 4090):
 
 Il cost factor 'B' (8192 iterazioni) rallenta il brute force ma non lo impedisce con password deboli. Un attaccante con accesso al database (SQLi o backup esposto) puo crackare password da dizionario in minuti.
 
-### XML-RPC Multicall: Brute Force Amplification
+### XML-RPC multicall: brute force amplification
 
 L'endpoint `xmlrpc.php` accetta il metodo `system.multicall` che permette di testare centinaia di credenziali in una singola richiesta HTTP, bypassando rate limiting basato su richieste/minuto:
 
@@ -275,19 +275,19 @@ POST /xmlrpc.php
 
 Detection: cercare richieste POST a `/xmlrpc.php` con body size anomalo (>10KB) e `Content-Type: text/xml`.
 
-### WPScan Detection Techniques
+### WPScan detection techniques
 
 WPScan usa tecniche diverse per la detection dei plugin, con livelli di aggressivita configurabili:
 
-| Metodo | Affidabilita | Traffico | Come funziona |
+| metodo | affidabilita | traffico | come funziona |
 | :--- | :--- | :--- | :--- |
-| Passive (default) | Bassa | Minimo | Analizza HTML, JS, CSS per riferimenti a `/wp-content/plugins/` |
-| Aggressive | Alta | Alto | Richiede direttamente `/wp-content/plugins/<nome>/readme.txt` per ogni plugin nel database |
-| Mixed (default per vp) | Media | Medio | Passive prima, poi aggressive solo sui plugin trovati |
+| passive (default) | bassa | minimo | analizza html, js, css per riferimenti a `/wp-content/plugins/` |
+| aggressive | alta | Alto | richiede direttamente `/wp-content/plugins/<nome>/readme.txt` per ogni plugin nel database |
+| mixed (default per vp) | media | Medio | passive prima, poi aggressive solo sui plugin trovati |
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 La metodologia a quattro fasi (fingerprint, enumerazione, CVE mapping, exploitation) si e dimostrata il workflow standard per ogni assessment WordPress. Il punto critico e la Fase 2: senza API token WPScan, la scansione trova i plugin ma non mostra le CVE associate, rendendo l'output significativamente meno utile. La registrazione gratuita su wpscan.com (50 richieste/giorno) e sufficiente per assessment individuali.
 
@@ -301,14 +301,14 @@ La scoperta dell'endpoint XML-RPC (`xmlrpc.php`) ha rivelato un vettore di ampli
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Scansione con WPScan per identificare plugin vulnerabili, versione WordPress e CVE associate |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | Fingerprinting della versione WordPress tramite `readme.html` e header HTTP |
-| Discovery | Account Discovery | `T1087` | Enumerazione degli username WordPress tramite l'API REST (`/?author=1`) con WPScan `--enumerate u` |
-| Credential Access | Brute Force: Password Guessing | `T1110.001` | Attacco dizionario su `/wp-login.php` con lista credenziali tramite WPScan |
-| Persistence | Server Software Component: Web Shell | `T1505.003` | Deploy di codice PHP nel Theme Editor di WordPress dopo accesso admin per mantenere la persistenza |
-| Execution | Command and Scripting Interpreter: PHP | `T1059.006` | Esecuzione di comandi di sistema tramite Web Shell PHP iniettata in `header.php` del tema |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | scansione con wpscan per identificare plugin vulnerabili, versione wordpress e cve associate |
+| reconnaissance | gather victim host info: software | `T1592.002` | fingerprinting della versione wordpress tramite `readme.html` e header http |
+| discovery | account discovery | `T1087` | enumerazione degli username wordpress tramite l'api rest (`/?author=1`) con wpscan `--enumerate u` |
+| credential access | brute force: password guessing | `T1110.001` | attacco dizionario su `/wp-login.php` con lista credenziali tramite wpscan |
+| persistence | server software component: web shell | `T1505.003` | deploy di codice php nel theme editor di wordpress dopo accesso admin per mantenere la persistenza |
+| execution | command and scripting interpreter: php | `T1059.006` | esecuzione di comandi di sistema tramite web shell php iniettata in `header.php` del tema |
 
 ---
 

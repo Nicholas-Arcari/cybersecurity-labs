@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Azure - Entra ID Enumeration and Managed Identity Abuse
+# Azure - Entra ID enumeration and managed identity abuse
 
 > - **Phase:** Cloud Security - Azure (IaaS & PaaS)
 > - **Visibility:** Medium - the activities on Entra ID and ARM are recorded in the Azure logs (Sign-in, Activity, Audit); the abuse of a managed identity via IMDS is quieter
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Azure organizes identity around **Entra ID** (the former Azure Active Directory), which makes Azure security deeply tied to the on-premise Active Directory concepts seen in module 07 - but transposed to the cloud. Whoever is familiar with AD enumeration (users, groups, roles, relationships) finds the same principles here, with BloodHound becoming AzureHound to map the attack paths in the tenant.
 
@@ -22,7 +22,7 @@ The principle remains the one common to the cloud: identity is the perimeter, an
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 Azure/
@@ -32,15 +32,15 @@ Azure/
 
 ---
 
-## Entra ID Enumeration and Managed Identity Abuse
+## Entra ID enumeration and managed identity abuse
 
 **Finding ID:** `CLOUD-003` | **Severity:** `High` (managed identity abuse to inherit privileges; enumeration of Entra ID for the attack path in the tenant)
 
-### Operational Context
+### Operational context
 
 Two vectors combine. The enumeration of Entra ID (with AzureHound) maps users, groups, roles and relationships, revealing the paths toward elevated privileges - like BloodHound for on-premise AD. The managed identity abuse starts from a compromised resource: by querying the local IMDS, one obtains a token with the permissions of the identity assigned to the resource.
 
-### PoC - Theft of the Managed Identity token (from a compromised resource)
+### PoC - theft of the managed identity token (from a compromised resource)
 
 ```Bash
 # From a compromised Azure VM: request of a token to the metadata service (IMDS)
@@ -53,7 +53,7 @@ curl -s -H "Metadata: true" \
                                               <-- managed identity token (CLOUD-003)
 ```
 
-### PoC - Use of the token and permission enumeration
+### PoC - use of the token and permission enumeration
 
 ```Bash
 # The token inherits the roles of the managed identity: enumeration of the accessible resources
@@ -84,7 +84,7 @@ azurehound -u user@tenant --tenant <id> list -o azure-data.json
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The continuity with module 07 (Active Directory) was the key to understanding. Entra ID is not a new world but the cloud transposition of AD: the same concepts of users, groups, roles and exploitable relationships, with AzureHound generating for BloodHound the same attack graphs. Whoever learned to map an AD domain finds the method here, adapted to the Microsoft Graph and ARM APIs. This made learning Azure faster than expected.
 
@@ -92,7 +92,7 @@ The managed identity abuse was the most instructive concept because it shows a g
 
 ---
 
-## Theoretical Analysis: The Trust Transferred to the Resource
+## Theoretical analysis: the trust transferred to the resource
 
 Managed identities solve a real problem (hardcoded credentials) by moving the trust from the user to the resource: it is no longer "this person with this password", but "this VM, by the fact of being this VM". It is an elegant model, but it moves the risk instead of eliminating it. The secret is no longer in the code (where it could leak), but its replacement - the identity tied to the resource - is accessible to anyone who controls the resource. One trades the risk of secret leakage for the risk of resource compromise.
 
@@ -100,11 +100,11 @@ This defines the principle of defense: if the trust is in the resource, the scop
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > Attacker and defender perspectives.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Projected kill chain:**
 
@@ -123,7 +123,7 @@ Compromise of the Entra ID tenant -> control of the entire cloud organization
 
 **Potential impact:** in Azure, the compromise of Entra ID is equivalent to control of the entire cloud organization - identities, resources, data. The path VM, managed identity, escalation in the tenant is the vector that AzureHound makes visible and that an attacker traverses. The frequent hybrid integration between Entra ID and on-premise AD can extend the compromise to the traditional infrastructure too.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **IOC:** anomalous IMDS requests from workloads; use of managed identity tokens from unexpected contexts; enumeration of Entra ID (AzureHound/Graph pattern); anomalous role assignments or sign-ins.
 
@@ -133,28 +133,28 @@ Compromise of the Entra ID tenant -> control of the entire cloud organization
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `az cli` | Cloud CLI | Official | Interaction with the Azure/ARM APIs |
-| `AzureHound` | Attack path mapping | Offensive | Graph of the attack paths in Entra ID (BloodHound) |
-| `ROADtools` | Entra ID recon | Offensive | Enumeration and analysis of Entra ID |
-| `MicroBurst` | Azure toolkit | Offensive | Service enumeration, managed identity abuse |
-| `ScoutSuite` | Multi-cloud audit | Defensive | Audit of the Azure configuration |
+| `az cli` | cloud cli | official | interaction with the azure/arm apis |
+| `AzureHound` | attack path mapping | offensive | graph of the attack paths in entra id (bloodhound) |
+| `ROADtools` | entra id recon | offensive | enumeration and analysis of entra id |
+| `MicroBurst` | azure toolkit | offensive | service enumeration, managed identity abuse |
+| `ScoutSuite` | multi-cloud audit | defensive | audit of the azure configuration |
 
 > **Recommended modern tool:** `AzureHound` + BloodHound for the attack paths (the continuity with the AD of module 07), `MicroBurst` and `ROADtools` for the enumeration. Defensively `ScoutSuite` (`../../../Tooling/scoutsuite/`) for the multi-cloud audit.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Steal Application Access Token | `T1528` | Theft of the managed identity token via IMDS (CLOUD-003) |
-| Discovery | Cloud Infrastructure Discovery | `T1580` | Enumeration of Entra ID and the resources (CLOUD-003) |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | Escalation via excessive managed identity roles |
-| Discovery | Permission Groups Discovery: Cloud Groups | `T1069.003` | Mapping of Entra ID roles and groups (AzureHound) |
+| credential access | steal application access token | `T1528` | theft of the managed identity token via imds (CLOUD-003) |
+| discovery | cloud infrastructure discovery | `T1580` | enumeration of entra id and the resources (CLOUD-003) |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | escalation via excessive managed identity roles |
+| discovery | permission groups discovery: cloud groups | `T1069.003` | mapping of entra id roles and groups (azurehound) |
 
 ---
 

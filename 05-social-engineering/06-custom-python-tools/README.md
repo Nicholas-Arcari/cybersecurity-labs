@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 06 - Custom Python Tools
+# 06 - Custom python tools
 
 > - **Fase:** Social Engineering - Custom Tool Development (Python)
 > - **Visibilita:** Variabile - il credential harvester genera log HTTP e richieste DNS; il tracking pixel e una singola richiesta HTTP GET; l'email generator e completamente offline
@@ -34,7 +34,7 @@ I tre tool documentati coprono tre fasi diverse:
 
 ---
 
-## `credential-harvester/` - Flask Credential Harvester
+## `credential-harvester/` - Flask credential harvester
 
 **ID Finding:** `SE-014` | **Severity:** `Alto` (credenziali catturate in chiaro con logging completo)
 
@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
 ---
 
-## `email-generator/` - Generatore Permutazioni Email
+## `email-generator/` - Generatore permutazioni email
 
 ### Contesto operativo
 
@@ -142,7 +142,7 @@ rossi@target-lab.com
 
 ---
 
-## `tracking-pixel/` - IP Geolocation Tracking
+## `tracking-pixel/` - IP geolocation tracking
 
 **ID Finding:** `SE-015` | **Severity:** `Informativo` (geolocalizzazione IP al momento dell'apertura email)
 
@@ -198,36 +198,36 @@ if __name__ == '__main__':
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Flask` | Web framework | Python | Backend per credential harvester e tracking pixel |
-| `Jinja2` | Template engine | Python | Rendering pagine HTML per landing page clone |
-| `requests` | HTTP client | Python | Testing e verifica degli endpoint creati |
-| `GeoLite2` | GeoIP database | MaxMind | Geolocalizzazione IP per tracking pixel |
-| `smtp-user-enum` | Email enum | CLI - Perl | Verifica esistenza email via SMTP VRFY/EXPN/RCPT TO |
+| `Flask` | web framework | python | backend per credential harvester e tracking pixel |
+| `Jinja2` | template engine | python | rendering pagine html per landing page clone |
+| `requests` | http client | python | testing e verifica degli endpoint creati |
+| `GeoLite2` | geoip database | maxmind | geolocalizzazione ip per tracking pixel |
+| `smtp-user-enum` | email enum | cli - perl | verifica esistenza email via smtp vrfy/expn/rcpt to |
 
 > **Tool moderno consigliato:** per la verifica delle email generate, `smtp-user-enum` o `EmailHarvester` con metodo RCPT TO. Per geolocalizzazione avanzata, il database GeoLite2 di MaxMind (gratuito con registrazione) integrato nel server tracking.
 
 ---
 
-## Registro Finding
+## Registro finding
 
-| ID | Descrizione | Severity | CVSS | Sottocartella |
+| id | descrizione | severity | cvss | sottocartella |
 | :--- | :--- | :---: | :---: | :--- |
-| `SE-014` | Credential harvester Flask: pagina login clone con logging IP/User-Agent/credenziali in tempo reale | `Alto` | 7.5 | `credential-harvester/` |
-| `SE-015` | Tracking pixel: geolocalizzazione IP del destinatario al momento dell'apertura email | `Informativo` | 2.1 | `tracking-pixel/` |
+| `SE-014` | credential harvester flask: pagina login clone con logging ip/user-agent/credenziali in tempo reale | `Alto` | 7.5 | `credential-harvester/` |
+| `SE-015` | tracking pixel: geolocalizzazione ip del destinatario al momento dell'apertura email | `Informativo` | 2.1 | `tracking-pixel/` |
 
 ---
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Develop Capabilities: Malware | `T1587.001` | SE-014 |
-| Resource Development | Stage Capabilities: Upload Malware | `T1608.001` | SE-014, SE-015 |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | SE-014 |
-| Credential Access | Input Capture: Web Portal Capture | `T1056.003` | SE-014 |
-| Discovery | System Information Discovery | `T1082` | SE-015 |
+| resource development | develop capabilities: malware | `T1587.001` | SE-014 |
+| resource development | stage capabilities: upload malware | `T1608.001` | SE-014, SE-015 |
+| initial access | phishing: spearphishing link | `T1566.002` | SE-014 |
+| credential access | input capture: web portal capture | `T1056.003` | SE-014 |
+| discovery | system information discovery | `T1082` | SE-015 |
 
 ---
 

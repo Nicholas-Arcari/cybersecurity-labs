@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 01 - Proxy Tools (Intercept)
+# 01 - Proxy tools (intercept)
 
 > - **Fase:** Web Attack - Proxy Setup & Traffic Interception
 > - **Visibilita:** Locale - il traffico rimane tra browser e proxy, nessun pacchetto aggiuntivo verso il target
@@ -37,7 +37,7 @@ Per il traffico HTTPS, il proxy deve generare certificati SSL falsi al volo. Il 
 
 ---
 
-## `burp-suite/` - Traffic Interception & Manipulation
+## `burp-suite/` - Traffic interception & manipulation
 
 ### Contesto operativo
 
@@ -62,7 +62,7 @@ Configurazione browser (Firefox):
 
 ---
 
-## `certificates/` - HTTPS Interception Setup
+## `certificates/` - HTTPS interception setup
 
 ### Contesto operativo
 
@@ -80,7 +80,7 @@ Senza questo passaggio, il browser mostra un errore `SEC_ERROR_UNKNOWN_ISSUER` e
 
 ---
 
-## `owasp-zap/` - DAST Scanner Automatizzato
+## `owasp-zap/` - DAST scanner automatizzato
 
 **ID Finding:** `WEB-001` | **Severity:** `Medio` | **CVSS v3.1:** 5.4
 
@@ -113,7 +113,7 @@ URL: http://testphp.vulnweb.com/listproducts.php
 Parameter: cat
 ```
 
-### Analisi del Finding WEB-001
+### Analisi del finding WEB-001
 
 Il form `guestbook.php` non implementa token CSRF. Un attaccante puo costruire una pagina web malevola che invia richieste POST al form come se provenissero dall'utente autenticato, eseguendo azioni a suo nome (post di contenuto, modifica profilo).
 
@@ -151,13 +151,13 @@ Il form `guestbook.php` non implementa token CSRF. Un attaccante puo costruire u
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Burp Suite Community` | Proxy / Interceptor | GUI + Browser Proxy | Analisi manuale, modifica richieste, Repeater |
-| `Burp Suite Professional` | Proxy / Scanner | GUI + Browser Proxy | Engagement reali, scan automatico avanzato |
-| `OWASP ZAP` | DAST Scanner | GUI + CLI | Scansione automatizzata, integrazione CI/CD |
-| `mitmproxy` | Proxy CLI | Terminale | Intercettazione leggera da riga di comando |
-| `Caido` | Proxy moderno | Web UI | Alternativa moderna a Burp, interfaccia browser-based |
+| `Burp Suite Community` | proxy / interceptor | gui + browser proxy | analisi manuale, modifica richieste, repeater |
+| `Burp Suite Professional` | proxy / scanner | gui + browser proxy | engagement reali, scan automatico avanzato |
+| `OWASP ZAP` | dast scanner | gui + cli | scansione automatizzata, integrazione ci/cd |
+| `mitmproxy` | proxy cli | terminale | intercettazione leggera da riga di comando |
+| `Caido` | proxy moderno | web ui | alternativa moderna a burp, interfaccia browser-based |
 
 > **Tool moderno consigliato:** `Caido` - alternativa a Burp Suite con interfaccia web nativa, workflow YAML-based e ottima gestione delle sessioni. Comando: installare da `https://caido.io` con il package manager dedicato.
 
@@ -165,13 +165,13 @@ Il form `guestbook.php` non implementa token CSRF. Un attaccante puo costruire u
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Collection | Man-in-the-Middle | `T1557` | Posizionamento del proxy Burp Suite tra browser e server per intercettare il traffico HTTP/HTTPS |
-| Defense Evasion | Subvert Trust Controls: Install Root Certificate | `T1553.004` | Installazione del certificato CA di Burp nel trust store del browser per abilitare l'intercettazione HTTPS senza errori |
-| Collection | Man-in-the-Middle: AiTM HTTPS Interception | `T1557.002` | Generazione di certificati SSL falsi per ogni dominio visitato, permettendo la lettura del traffico cifrato |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Scansione DAST con OWASP ZAP che genera traffico verso il target per identificare vulnerabilita (WEB-001) |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Identificazione di form privi di token CSRF (WEB-001) come vettore di attacco per Cross-Site Request Forgery |
+| collection | man-in-the-middle | `T1557` | posizionamento del proxy burp suite tra browser e server per intercettare il traffico http/https |
+| defense evasion | subvert trust controls: install root certificate | `T1553.004` | installazione del certificato ca di burp nel trust store del browser per abilitare l'intercettazione https senza errori |
+| collection | man-in-the-middle: aitm https interception | `T1557.002` | generazione di certificati ssl falsi per ogni dominio visitato, permettendo la lettura del traffico cifrato |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | scansione dast con owasp zap che genera traffico verso il target per identificare vulnerabilita (WEB-001) |
+| initial access | exploit public-facing application | `T1190` | identificazione di form privi di token csrf (WEB-001) come vettore di attacco per cross-site request forgery |
 
 ---
 

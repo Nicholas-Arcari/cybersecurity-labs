@@ -14,12 +14,12 @@ are, how a denial-of-service attack works, and the like. They are textbook pages
 frame the terminology and the mechanism, with attention to the defensive side (how it is detected and mitigated),
 consistently with the repository's dual (offensive + defensive) nature.
 
-## Folder Structure
+## Folder structure
 
-| Subfolder | Theme | Angle |
+| subfolder | theme | angle |
 | :--- | :--- | :--- |
-| `malware-taxonomy/` | Malware taxonomy: virus, worm, trojan, RAT, botnet, ransomware, rootkit, wiper, loader, spyware/keylogger | Classification + MITRE + detection |
-| `ddos/` | Denial of Service and DDoS: volumetric, protocol, application; amplification/reflection; botnets | Mechanism + mitigation (conceptual) |
+| `malware-taxonomy/` | malware taxonomy: virus, worm, trojan, rat, botnet, ransomware, rootkit, wiper, loader, spyware/keylogger | classification + mitre + detection |
+| `ddos/` | denial of service and ddos: volumetric, protocol, application; amplification/reflection; botnets | mechanism + mitigation (conceptual) |
 
 ## Scope note
 

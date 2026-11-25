@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Honeypots - Defensive Decoys and Traps
+# Honeypots - defensive decoys and traps
 
 > - **Phase:** Defense & Hardening - Deception
 > - **Category:** Deception - from the single decoy to the trap infrastructure
@@ -9,7 +9,7 @@
 
 ---
 
-## What a Honeypot Is
+## What a honeypot is
 
 A honeypot is a system, service or artifact designed to be attacked. It has no productive purpose: its only function is to attract the attacker and detect or study their activity. The principle common to all forms of honeypot is the structurally null false-positive rate: since no legitimate user has a reason to interact with a decoy, every interaction is potentially hostile.
 
@@ -23,7 +23,7 @@ The choice depends on the objective. For **early warning** - knowing immediately
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 honeypots/
@@ -35,7 +35,7 @@ honeypots/
 
 ---
 
-## Comparison by Level of Interaction
+## Comparison by level of interaction
 
 ```
                     Canary Token              T-Pot / Honeypot
@@ -51,15 +51,15 @@ Placement           anywhere (internal)       DMZ/dedicated isolated
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Interaction | Role | Main use case |
+| tool | interaction | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `Canarytokens` | Low | Passive token | Pinpoint early warning, null false positives |
-| `OpenCanary` | Low/medium | Decoy services | Lightweight honeypot for internal deployments |
-| `T-Pot` | High | Platform | Multi-service threat intelligence |
-| `Cowrie` | High | SSH/Telnet | Capture of complete attack sessions |
-| `Honeytokens` (AD) | Low | Decoy account | Detection of Active Directory attacks |
+| `Canarytokens` | Low | passive token | pinpoint early warning, null false positives |
+| `OpenCanary` | low/medium | decoy services | lightweight honeypot for internal deployments |
+| `T-Pot` | High | platform | multi-service threat intelligence |
+| `Cowrie` | High | ssh/telnet | capture of complete attack sessions |
+| `Honeytokens` (ad) | Low | decoy account | detection of active directory attacks |
 
 > **Recommended modern tool:** start with low interaction (`canarytokens.org`) for the best value/risk ratio; move to high interaction (`T-Pot`) only with adequate isolation and an explicit intelligence purpose.
 

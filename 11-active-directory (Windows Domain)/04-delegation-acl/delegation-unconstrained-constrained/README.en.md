@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Unconstrained and Constrained Delegation abuse
+# Unconstrained and constrained delegation abuse
 
 > - **Phase:** Privilege Escalation / Lateral Movement (Active Directory domain)
 > - **Visibility:** Medium - Kerberos S4U requests (constrained) or capture of TGTs in memory (unconstrained); the associated coercion generates anomalous RPC traffic
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Kerberos provides delegation so that a service (e.g., a web server) can act on behalf of the user toward
 another service (e.g., a database). Two classic forms exist, both abusable:
@@ -33,7 +33,7 @@ unconstrained is to combine host compromise with the coercion of a privileged ac
 connect, so as to capture its TGT. For constrained, you exploit S4U to impersonate a privileged user toward
 the allowed service, also considering "protocol transition" if configured.
 
-## Execution / Commands
+## Execution / commands
 
 ### Unconstrained: TGT capture + coercion
 
@@ -64,7 +64,7 @@ which DCSync and the full domain follow: severity `Critical`. In constrained, th
 allowed service, but impersonating an admin toward a critical service is serious nonetheless. In both cases
 the real finding must be measured in a lab (which identity you manage to impersonate, toward which service).
 
-### Theoretical Analysis
+### Theoretical analysis
 
 Unconstrained delegation is a dangerous design choice because the host receives the user's complete TGT
 ("unlimited" delegation): it is maximal trust, and whoever compromises the host inherits that trust.
@@ -75,7 +75,7 @@ impersonation authority the delegation represents. Coercion (T1187) is the lever
 brings the right TGT (that of a DC) onto the compromised host. See
 [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.en.md>).
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection.** Hosts with unconstrained delegation receiving connections from DCs at unexpected times/
 contexts; RPC coercion traffic; anomalous S4U requests from accounts with constrained delegation.
@@ -87,11 +87,11 @@ side).
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > In unconstrained with coercion of a DC, the outcome is the full domain (severity Critical).
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** local admin on a host with unconstrained delegation (or control of an account with
 constrained delegation).
@@ -121,7 +121,7 @@ delegation.
 
 **Typical monetization vectors:** ransomware/exfiltration downstream of the domain.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** DC connections toward hosts with unconstrained delegation; RPC coercion; anomalous S4U.
 
@@ -140,12 +140,12 @@ a configuration to eliminate, not just monitor.
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `Rubeus` | .NET Kerberos tool | CLI - Active | TGT monitoring/capture (unconstrained) and S4U (constrained) from Windows |
-| `getST.py` (Impacket) | Kerberos tool | CLI - Active | Impersonation via S4U in constrained delegation |
-| `Coercer` / `PetitPotam` | Coercion | CLI - Active | Coercion of the DC to connect to the unconstrained host |
-| `BloodHound` | Graph enum | GUI | Identification of hosts/accounts with delegation |
+| `Rubeus` | .net kerberos tool | cli - active | tgt monitoring/capture (unconstrained) and s4u (constrained) from windows |
+| `getST.py` (impacket) | kerberos tool | cli - active | impersonation via s4u in constrained delegation |
+| `Coercer` / `PetitPotam` | coercion | cli - active | coercion of the dc to connect to the unconstrained host |
+| `BloodHound` | graph enum | gui | identification of hosts/accounts with delegation |
 
 ## Methodology notes
 
@@ -155,19 +155,19 @@ unconstrained).
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Steal or Forge Kerberos Tickets | `T1558` | Capture or request of tickets to impersonate privileged accounts. |
-| Credential Access | Forced Authentication | `T1187` | Coercion of a DC to connect to the host with unconstrained delegation. |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Ticket | `T1550.003` | Use of the captured/forged tickets to authenticate. |
+| credential access | steal or forge kerberos tickets | `T1558` | capture or request of tickets to impersonate privileged accounts. |
+| credential access | forced authentication | `T1187` | coercion of a dc to connect to the host with unconstrained delegation. |
+| lateral movement | use alternate authentication material: pass the ticket | `T1550.003` | use of the captured/forged tickets to authenticate. |
 
 ## Links to other modules
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
-| [BloodHound](<../../01-enumeration/bloodhound/README.en.md>) | Delegation abuse | identifies hosts/accounts with exploitable delegation |
-| Delegation abuse | [DCSync](<../../05-credential-dumping/dcsync/README.en.md>) | capturing the DC's TGT leads to abused replication |
-| [RBCD](<../rbcd/README.en.md>) | Delegation abuse | RBCD is the third (resource-based) form of the same family |
+| [bloodhound](<../../01-enumeration/bloodhound/README.en.md>) | delegation abuse | identifies hosts/accounts with exploitable delegation |
+| delegation abuse | [dcsync](<../../05-credential-dumping/dcsync/README.en.md>) | capturing the dc's tgt leads to abused replication |
+| [rbcd](<../rbcd/README.en.md>) | delegation abuse | rbcd is the third (resource-based) form of the same family |
 
 ---
 

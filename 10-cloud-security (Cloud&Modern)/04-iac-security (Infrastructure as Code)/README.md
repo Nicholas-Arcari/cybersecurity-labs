@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 04 - IaC Security (Infrastructure as Code)
+# 04 - IaC security (infrastructure as code)
 
 > - **Fase:** Cloud Security - Infrastructure as Code
 > - **Categoria:** Difensivo - sicurezza "shift-left" dell'infrastruttura
@@ -59,36 +59,36 @@ Entrambi si integrano in CI/CD come cancelli automatici: nessun segreto entra in
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `gitleaks` / `trufflehog` | Secret scanner | Difensivo | Scoperta segreti in codice e storia git |
-| `HashiCorp Vault` | Secrets manager | Difensivo | Archivio centralizzato, segreti dinamici |
-| `Checkov` | IaC scanner | Difensivo | Analisi statica multi-piattaforma (standard) |
-| `tfsec` | Terraform scanner | Difensivo | Analisi statica focalizzata su Terraform |
-| `Trivy` | Multi-scanner | Difensivo | IaC + immagini + segreti unificati |
+| `gitleaks` / `trufflehog` | secret scanner | difensivo | scoperta segreti in codice e storia git |
+| `HashiCorp Vault` | secrets manager | difensivo | archivio centralizzato, segreti dinamici |
+| `Checkov` | iac scanner | difensivo | analisi statica multi-piattaforma (standard) |
+| `tfsec` | terraform scanner | difensivo | analisi statica focalizzata su terraform |
+| `Trivy` | multi-scanner | difensivo | iac + immagini + segreti unificati |
 
 > **Tool moderno consigliato:** `gitleaks` + `Vault` per i segreti, `Checkov`/`tfsec` per le misconfig, il tutto in CI/CD. `Trivy` come scanner unificato (IaC, immagini, segreti). Il principio comune: shift-left, controlli automatici nella pipeline.
 
 ---
 
-## Registro Finding - IaC Security
+## Registro finding - IaC security
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `CLOUD-009` | Segreti hardcoded in codice/IaC/git + gestione con Vault (segreti dinamici) | `Alto` | `secrets-management/` |
-| `CLOUD-010` | Terraform scanning: misconfigurazioni IaC individuate prima del deploy | `Medio` | `terraform-scanning/` |
+| `CLOUD-009` | segreti hardcoded in codice/iac/git + gestione con vault (segreti dinamici) | `Alto` | `secrets-management/` |
+| `CLOUD-010` | terraform scanning: misconfigurazioni iac individuate prima del deploy | `Medio` | `terraform-scanning/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Unsecured Credentials: Credentials In Files | `T1552.001` | CLOUD-009 |
-| Credential Access | Unsecured Credentials: Credentials in Repositories | `T1552.008` | CLOUD-009 |
-| Initial Access | Exploit Public-Facing Application | `T1190` | CLOUD-010 |
-| Initial Access | External Remote Services | `T1133` | CLOUD-010 |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | CLOUD-009 |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | CLOUD-009 |
+| credential access | unsecured credentials: credentials in repositories | `T1552.008` | CLOUD-009 |
+| initial access | exploit public-facing application | `T1190` | CLOUD-010 |
+| initial access | external remote services | `T1133` | CLOUD-010 |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | CLOUD-009 |
 
 ---
 

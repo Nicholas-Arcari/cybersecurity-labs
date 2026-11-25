@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Cross-Site Scripting (XSS)
+# Cross-Site scripting (XSS)
 
 > - **Phase:** Web Attack - Cross-Site Scripting (XSS)
 > - **Visibility:** Variable - Low (Reflected and Stored: standard requests) / Zero (Blind: dormant payload)
@@ -25,7 +25,7 @@ The script is permanently saved on the target server (e.g., in a database). The 
 
 - Impact: Critical (No user interaction required, affects multiple users/administrators).
 
-## 3 [XSS Hunter Payloads](./xss-hunter-payloads/) (Blind XSS)
+## 3 [XSS hunter payloads](./xss-hunter-payloads/) (blind XSS)
 
 Resources for "Blind XSS" attacks. In this scenario, the attacker injects the payload blindly (e.g., in a "Contact Us" form or in server Logs) and does not see the immediate result.
 
@@ -35,16 +35,16 @@ The payload is designed to "call home" (send a notification to the attacker) onl
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation of unsanitized inputs to inject JavaScript code into the application (WEB-005, WEB-006, WEB-007) |
-| Credential Access | Steal Web Session Cookie | `T1539` | Session cookie theft through `document.cookie` injected via XSS (WEB-005, WEB-006) |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | Distribution of malicious URLs with Reflected XSS payloads to target specific users (WEB-005) |
-| Persistence | Server Software Component: Web Shell | `T1505.003` | Persistent Stored XSS in database that executes code on every page view (WEB-006) |
-| Collection | Browser Session Hijacking | `T1185` | Victim redirect towards attacker server through Stored XSS to silently capture the cookie (WEB-007) |
-| Reconnaissance | Gather Victim Identity Information | `T1589` | Blind/OOB XSS through img tag to obtain the administrator's IP and User-Agent when viewing the profile (WEB-007) |
+| initial access | exploit public-facing application | `T1190` | exploitation of unsanitized inputs to inject javascript code into the application (WEB-005, WEB-006, WEB-007) |
+| credential access | steal web session cookie | `T1539` | session cookie theft through `document.cookie` injected via xss (WEB-005, WEB-006) |
+| initial access | phishing: spearphishing link | `T1566.002` | distribution of malicious urls with reflected xss payloads to target specific users (WEB-005) |
+| persistence | server software component: web shell | `T1505.003` | persistent stored xss in database that executes code on every page view (WEB-006) |
+| collection | browser session hijacking | `T1185` | victim redirect towards attacker server through stored xss to silently capture the cookie (WEB-007) |
+| reconnaissance | gather victim identity information | `T1589` | blind/oob xss through img tag to obtain the administrator's ip and user-agent when viewing the profile (WEB-007) |
 
 ---
 

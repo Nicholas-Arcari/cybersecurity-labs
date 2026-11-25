@@ -1,6 +1,6 @@
 > [English](LAB_SETUP.en.md) | **Italiano**
 
-# LAB_SETUP.md - Topologia e Configurazione del Laboratorio
+# LAB_SETUP.md - topologia e configurazione del laboratorio
 
 > Documento tecnico di riferimento per la riproduzione dell'ambiente di laboratorio
 > utilizzato in questo repository. Tutte le sessioni di testing sono state eseguite
@@ -26,61 +26,61 @@
 
 ## Requisiti hardware
 
-| Risorsa | Minimo | Raccomandato |
+| risorsa | minimo | raccomandato |
 | :--- | :--- | :--- |
-| RAM totale host | 8 GB | 16 GB |
-| CPU | Quad-core, VT-x abilitato | 8 core, VT-x/AMD-V |
-| Disco host | 100 GB liberi | 200 GB SSD |
-| Scheda di rete | 1x (NAT sufficiente) | 1x (Bridge richiede accesso LAN) |
+| ram totale host | 8 gb | 16 gb |
+| cpu | quad-core, vt-x abilitato | 8 core, vt-x/amd-v |
+| disco host | 100 gb liberi | 200 gb ssd |
+| scheda di rete | 1x (nat sufficiente) | 1x (bridge richiede accesso lan) |
 
 ---
 
 ## Software di virtualizzazione
 
-| Software | Versione usata | Note |
+| software | versione usata | note |
 | :--- | :--- | :--- |
-| VirtualBox | 7.0.x | Hypervisor principale, gratuito |
-| VirtualBox Extension Pack | stessa versione | Necessario per USB 3.0 e schede di rete avanzate |
-| Host OS | Qualsiasi (Linux/Windows/macOS) | Lab eseguito su host Linux |
+| virtualbox | 7.0.x | hypervisor principale, gratuito |
+| virtualbox extension pack | stessa versione | necessario per usb 3.0 e schede di rete avanzate |
+| host os | qualsiasi (linux/windows/macos) | lab eseguito su host linux |
 
 ---
 
 ## Macchine virtuali
 
-### Kali Linux (Attaccante)
+### Kali Linux (attaccante)
 
-| Parametro | Valore |
+| parametro | valore |
 | :--- | :--- |
-| OS | Kali Linux 2024.x (rolling) |
-| RAM | 4096 MB |
-| CPU | 2 vCPU |
-| Disco | 80 GB (thin provisioned) |
-| Schede di rete | 2x (Adapter 1: NAT o Bridge secondo il modulo) |
-| Snapshot pre-operativi | Raccomandati prima di ogni sessione di exploitation |
+| os | kali linux 2024.x (rolling) |
+| ram | 4096 mb |
+| cpu | 2 vcpu |
+| disco | 80 gb (thin provisioned) |
+| schede di rete | 2x (adapter 1: nat o bridge secondo il modulo) |
+| snapshot pre-operativi | raccomandati prima di ogni sessione di exploitation |
 
-### Windows 10 (Target principale)
+### Windows 10 (target principale)
 
-| Parametro | Valore |
+| parametro | valore |
 | :--- | :--- |
-| OS | Windows 10 Pro x64 (non aggiornato, vulnerabile by design) |
-| RAM | 2048 MB |
-| CPU | 2 vCPU |
-| Disco | 60 GB |
-| Configurazione sicurezza | Firewall disabilitato, UAC ridotto, SMBv1 abilitato |
-| Utenti configurati | `Administrator` (password debole), `user1`, `svc_backup` |
-| Servizi esposti | SMB (445), RDP (3389), HTTP (8080), SNMP (161 UDP) |
+| os | windows 10 pro x64 (non aggiornato, vulnerabile by design) |
+| ram | 2048 mb |
+| cpu | 2 vcpu |
+| disco | 60 gb |
+| configurazione sicurezza | firewall disabilitato, uac ridotto, smbv1 abilitato |
+| utenti configurati | `Administrator` (password debole), `user1`, `svc_backup` |
+| servizi esposti | smb (445), rdp (3389), http (8080), snmp (161 udp) |
 
-### Ubuntu Linux (Target secondario - PrivEsc Linux)
+### Ubuntu Linux (target secondario - PrivEsc Linux)
 
-| Parametro | Valore |
+| parametro | valore |
 | :--- | :--- |
-| OS | Ubuntu Server 20.04 LTS |
-| RAM | 1024 MB |
-| CPU | 1 vCPU |
-| Disco | 20 GB |
-| Configurazione sicurezza | Configurazione intenzionalmente misconfigured per PrivEsc |
-| Utenti configurati | `ubuntu` (low-privilege), `www-data` (web service) |
-| Servizi esposti | SSH (22), HTTP (80), servizi con SUID misconfigured |
+| os | ubuntu server 20.04 lts |
+| ram | 1024 mb |
+| cpu | 1 vcpu |
+| disco | 20 gb |
+| configurazione sicurezza | configurazione intenzionalmente misconfigured per privesc |
+| utenti configurati | `ubuntu` (low-privilege), `www-data` (web service) |
+| servizi esposti | ssh (22), http (80), servizi con suid misconfigured |
 
 ---
 
@@ -124,19 +124,19 @@ scenari realistici su segmento LAN.
 
 ---
 
-## Configurazione NAT (Moduli 01-02)
+## Configurazione NAT (moduli 01-02)
 
 Utilizzata per: ricognizione passiva/attiva, vulnerability assessment, fasi che
 non richiedono visibilita diretta sulla LAN reale.
 
 ### Indirizzi IP (NAT)
 
-| VM | Hostname | IP | Ruolo |
+| vm | hostname | ip | ruolo |
 | :--- | :--- | :--- | :--- |
-| Kali Linux | kali | `10.0.2.15` | Attaccante |
-| Windows 10 | WIN10-TARGET | `10.0.2.3` | Target primario |
-| Gateway VirtualBox | - | `10.0.2.1` | Default gateway |
-| DHCP VirtualBox | - | `10.0.2.2` | DHCP server |
+| kali linux | kali | `10.0.2.15` | attaccante |
+| windows 10 | win10-target | `10.0.2.3` | target primario |
+| gateway virtualbox | - | `10.0.2.1` | default gateway |
+| dhcp virtualbox | - | `10.0.2.2` | dhcp server |
 
 ### Configurazione VirtualBox (NAT)
 
@@ -146,7 +146,7 @@ VM Settings > Network > Adapter 1:
   - (Avanzate) Port Forwarding: non necessario per traffico interno
 ```
 
-### Port Forwarding opzionale (accesso da host a VM in NAT)
+### Port forwarding opzionale (accesso da host a VM in NAT)
 
 ```
 Host: 127.0.0.1:2222  -->  Guest: 10.0.2.15:22   (SSH Kali)
@@ -162,7 +162,7 @@ VM Settings > Network > Adapter 1 > Avanzate > Port Forwarding > [+]
 
 ---
 
-## Configurazione Network Bridge (Moduli 03-04)
+## Configurazione network bridge (moduli 03-04)
 
 Utilizzata per: exploitation attivo, privilege escalation, post-exploitation,
 fasi che simulano un attaccante gia sulla stessa rete del target.
@@ -171,16 +171,16 @@ fasi che simulano un attaccante gia sulla stessa rete del target.
 > Eseguire SEMPRE in ambiente di rete controllato (rete domestica isolata o VLAN dedicata).
 > Mai in rete aziendale o pubblica.
 
-### Indirizzi IP (Bridge)
+### Indirizzi IP (bridge)
 
-| VM | Hostname | IP | Ruolo |
+| vm | hostname | ip | ruolo |
 | :--- | :--- | :--- | :--- |
-| Kali Linux | kali | `192.168.0.110` | Attaccante |
-| Windows 10 | WIN10-TARGET | `192.168.0.109` | Target primario |
-| Gateway LAN | router | `192.168.0.1` | Default gateway |
-| Subnet | - | `192.168.0.0/24` | Segmento di lab |
+| kali linux | kali | `192.168.0.110` | attaccante |
+| windows 10 | win10-target | `192.168.0.109` | target primario |
+| gateway lan | router | `192.168.0.1` | default gateway |
+| subnet | - | `192.168.0.0/24` | segmento di lab |
 
-### Configurazione VirtualBox (Bridge)
+### Configurazione VirtualBox (bridge)
 
 ```
 VM Settings > Network > Adapter 1:
@@ -192,7 +192,7 @@ VM Settings > Network > Adapter 1:
 > Gli IP 192.168.0.109 e 192.168.0.110 possono variare. Assegnare IP statici
 > o verificare con `ip a` (Kali) e `ipconfig` (Windows) a inizio sessione.
 
-### Assegnazione IP statico su Kali (Bridge)
+### Assegnazione IP statico su Kali (bridge)
 
 ```Bash
 sudo ip addr add 192.168.0.110/24 dev eth0
@@ -213,18 +213,18 @@ iface eth0 inet static
 
 ## Moduli per topologia
 
-| Modulo | Topologia | IP Kali | IP Target |
+| modulo | topologia | ip kali | ip target |
 | :--- | :--- | :--- | :--- |
-| `01-recon` | NAT | 10.0.2.15 | 10.0.2.3 |
-| `02-vulnerability-assessment` | NAT | 10.0.2.15 | 10.0.2.3 |
-| `03-web-attacks` | NAT | 10.0.2.15 | 10.0.2.3 |
-| `04-system-exploitation` | Bridge | 192.168.0.110 | 192.168.0.109 |
-| `05-social-engineering` | Bridge | 192.168.0.110 | 192.168.0.109 |
-| `06-wireless-security` | Bridge | 192.168.0.110 | N/A (AP fisico) |
-| `07-post-exploitation` | Bridge | 192.168.0.110 | 192.168.0.109 |
-| `08-defense-hardenings` | NAT | 10.0.2.15 | N/A (self) |
-| `09-digital-forensics` | NAT | N/A | immagini disco locali |
-| `10-cloud-security` | Internet | N/A | endpoint cloud |
+| `01-recon` | nat | 10.0.2.15 | 10.0.2.3 |
+| `02-vulnerability-assessment` | nat | 10.0.2.15 | 10.0.2.3 |
+| `03-web-attacks` | nat | 10.0.2.15 | 10.0.2.3 |
+| `04-system-exploitation` | bridge | 192.168.0.110 | 192.168.0.109 |
+| `05-social-engineering` | bridge | 192.168.0.110 | 192.168.0.109 |
+| `06-wireless-security` | bridge | 192.168.0.110 | n/a (ap fisico) |
+| `07-post-exploitation` | bridge | 192.168.0.110 | 192.168.0.109 |
+| `08-defense-hardenings` | nat | 10.0.2.15 | n/a (self) |
+| `09-digital-forensics` | nat | n/a | immagini disco locali |
+| `10-cloud-security` | internet | n/a | endpoint cloud |
 
 ---
 
@@ -295,7 +295,7 @@ ping 10.0.2.3 -c 3
 nmap -sn 10.0.2.3
 ```
 
-### Verifica connettivita (Bridge)
+### Verifica connettivita (bridge)
 
 ```Bash
 # Da Kali
@@ -303,7 +303,7 @@ ping 192.168.0.109 -c 3
 nmap -sn 192.168.0.109
 ```
 
-### Configurazione target Windows (script PowerShell - eseguire come Administrator)
+### Configurazione target Windows (script PowerShell - eseguire come administrator)
 
 ```Bash
 # Disabilitare firewall
@@ -324,17 +324,17 @@ net localgroup "Remote Desktop Users" user1 /add
 
 ---
 
-## Target Web Containerizzati (Docker Compose)
+## Target web containerizzati (Docker compose)
 
 Per i lab del modulo 03 (Web Attacks) e in parte del modulo 02, e disponibile un `docker-compose.yml` nella root della repository che fornisce target web containerizzati. Questo e **complementare** alla topologia VirtualBox - non la sostituisce.
 
-### Cosa copre Docker Compose
+### Cosa copre Docker compose
 
-| Servizio | Porta | Modulo | Target per |
+| servizio | porta | modulo | target per |
 | :--- | :--- | :--- | :--- |
-| DVWA | `localhost:8080` | 03-web-attacks | SQLi, XSS, Command Injection, CSRF |
-| DVGA | `localhost:5013` | 03-web-attacks | GraphQL Introspection, IDOR, Batching |
-| Juice Shop | `localhost:3000` | 03-web-attacks | OWASP Top 10 completa (100+ challenge) |
+| dvwa | `localhost:8080` | 03-web-attacks | sqli, xss, command injection, csrf |
+| dvga | `localhost:5013` | 03-web-attacks | graphql introspection, idor, batching |
+| juice shop | `localhost:3000` | 03-web-attacks | owasp top 10 completa (100+ challenge) |
 
 ### Cosa richiede ancora VirtualBox
 
@@ -362,7 +362,7 @@ docker compose down -v
 
 ---
 
-## Registrazione Demo con Asciinema
+## Registrazione demo con asciinema
 
 Per registrare sessioni terminale dimostrative dei lab, si utilizza [asciinema](https://asciinema.org/). Le registrazioni sono complementari agli screenshot (PoC statici) e mostrano il flusso operativo completo.
 
@@ -402,13 +402,13 @@ Oppure in formato Markdown (compatibile GitHub):
 
 ### Lab consigliati da registrare
 
-| Lab | File | Durata target |
+| lab | file | durata target |
 | :--- | :--- | :--- |
-| Nmap 3-phase scan | `01-recon/.../nmap/` | 2-3 min |
-| SQLi manuale su DVWA | `03-web-attacks/.../sql-injection/` | 3-5 min |
-| WinPEAS enumeration | `04-system-exploitation/.../winpeas/` | 2-3 min |
-| Hashcat mask attack | `04-system-exploitation/.../hashcat/` | 1-2 min |
-| Mimikatz credential dump | `07-post-exploitation/.../mimikatz/` | 2-3 min |
+| nmap 3-phase scan | `01-recon/.../nmap/` | 2-3 min |
+| sqli manuale su dvwa | `03-web-attacks/.../sql-injection/` | 3-5 min |
+| winpeas enumeration | `04-system-exploitation/.../winpeas/` | 2-3 min |
+| hashcat mask attack | `04-system-exploitation/.../hashcat/` | 1-2 min |
+| mimikatz credential dump | `07-post-exploitation/.../mimikatz/` | 2-3 min |
 
 ---
 

@@ -16,10 +16,10 @@ mitiga), coerentemente con la doppia anima (offensiva + difensiva) del repositor
 
 ## Struttura della cartella
 
-| Sottocartella | Tema | Taglio |
+| sottocartella | tema | taglio |
 | :--- | :--- | :--- |
-| `malware-taxonomy/` | Tassonomia del malware: virus, worm, trojan, RAT, botnet, ransomware, rootkit, wiper, loader, spyware/keylogger | Classificazione + MITRE + detection |
-| `ddos/` | Denial of Service e DDoS: volumetrico, a protocollo, applicativo; amplificazione/riflessione; botnet | Funzionamento + mitigazione (concettuale) |
+| `malware-taxonomy/` | tassonomia del malware: virus, worm, trojan, rat, botnet, ransomware, rootkit, wiper, loader, spyware/keylogger | classificazione + mitre + detection |
+| `ddos/` | denial of service e ddos: volumetrico, a protocollo, applicativo; amplificazione/riflessione; botnet | funzionamento + mitigazione (concettuale) |
 
 ## Nota di perimetro
 

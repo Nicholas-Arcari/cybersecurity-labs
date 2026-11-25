@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Web Recon: Tech Profiling & Fingerprinting
+# Web recon: tech profiling & fingerprinting
 
 > - **Phase:** Web Attack - Technology Fingerprinting
 > - **Visibility:** Low - standard HTTP requests similar to normal browser navigation
@@ -21,7 +21,7 @@ Tools: `WhatWeb` (CLI), `Wappalyzer` (Browser Extension)
 
 ---
 
-## 1 Theoretical Introduction
+## 1 Theoretical introduction
 
 Fingerprinting is the art of understanding "what a website is made of" by analyzing server responses.
 
@@ -52,19 +52,19 @@ Why does a Red Teamer want to know these things?
         
 ---
 
-## 2 Tools Used
+## 2 Tools used
 
-### WhatWeb (Active Scanner)
+### WhatWeb (Active scanner)
 
 Command-line tool preinstalled on Kali Linux. Performs a quick scan identifying CMS, blogging platforms, JavaScript libraries and web servers. Supports different aggressiveness levels.
 
-### Wappalyzer (Passive)
+### Wappalyzer (passive)
 
 Usually used as a browser extension, it identifies technologies by passively analyzing the loaded page. Useful for an immediate visual verification without sending suspicious scanning packets.
 
 ---
 
-## 3 Technical Execution: WhatWeb Scan
+## 3 Technical execution: WhatWeb scan
 
 A detailed scan (`-v`) was performed against the target to extract software versions.
 
@@ -90,11 +90,11 @@ Tech Profiling confirmed that the target runs on legacy infrastructure (PHP 5.6)
 
 ---
 
-## 5 Special Scenarios: Localhost & Static Sites
+## 5 Special scenarios: localhost & static sites
 
 Tech Profiling takes on different meanings depending on the target environment.
 
-#### A. Localhost / Docker (Hardening)
+#### A. localhost / Docker (hardening)
 
 When running WhatWeb against local development environments (`localhost:5173`), the objective is not attack but Hardening.
 
@@ -102,7 +102,7 @@ Modern frameworks (e.g., Express.js, Flask, Spring Boot) expose by default heade
 
 Best Practice: Identifying these leaks locally allows the developer to disable them (e.g., `app.disable('x-powered-by')` in Express) before production deployment.
 
-#### B. Static Hosting (GitHub Pages)
+#### B. static hosting (GitHub pages)
 
 When analyzing static sites like `https://nicholas-arcari.github.io`, the web server is managed by the provider (GitHub) and therefore out of attack scope.
 Attention shifts to Client-Side Libraries.
@@ -111,12 +111,12 @@ WhatWeb and Wappalyzer are fundamental for detecting obsolete JavaScript library
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | Tech profiling with WhatWeb and Wappalyzer to identify PHP 5.6.40, Nginx 1.19.0 and the complete technology stack of `testphp.vulnweb.com` (WEB-002) |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | HTTP header analysis (e.g., `X-Powered-By: PHP/5.6.40`) to map software versions and identify applicable CVEs (WEB-002) |
+| reconnaissance | gather victim host info: software | `T1592.002` | tech profiling with whatweb and wappalyzer to identify php 5.6.40, nginx 1.19.0 and the complete technology stack of `testphp.vulnweb.com` (WEB-002) |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | http header analysis (e.g., `X-Powered-By: PHP/5.6.40`) to map software versions and identify applicable cves (WEB-002) |
 
 ---
 

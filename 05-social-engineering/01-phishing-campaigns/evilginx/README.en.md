@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Evilginx - MFA Bypass via Reverse Proxy Phishing
+# Evilginx - MFA bypass via reverse proxy phishing
 
 > - **Phase:** Social Engineering - Advanced Phishing with MFA Bypass
 > - **Visibility:** Medium - TLS traffic between victim and Evilginx proxy appears legitimate; however the phishing domain is detectable via Certificate Transparency logs, DNS monitoring, and double TLS handshake analysis
@@ -14,7 +14,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Evilginx represents the most significant evolution in the phishing landscape since 2022. While traditional phishing (GoPhish, PyPhisher) only captures username and password - making MFA an effective defense - Evilginx operates as a transparent reverse proxy between the victim and the legitimate service, intercepting session cookies issued after the completion of the entire authentication flow, including the second factor (OTP, push notification, authenticator app).
 
@@ -24,15 +24,15 @@ This technique has made traditional phishing kits obsolete for targets with MFA 
 
 ---
 
-## MFA Bypass: Session Cookie Hijacking via Reverse Proxy
+## MFA bypass: session cookie hijacking via reverse proxy
 
 **Finding ID:** `SE-002` | **Severity:** `Critical`
 
-### Operational Context
+### Operational context
 
 The lab configured Evilginx with a phishlet for Microsoft 365, using a test domain (`login.lab.local`) with a self-signed TLS certificate. The victim (Windows VM with Chrome browser) visited the phishing URL, completed login with username + password + OTP code, and the session cookie was intercepted in real time. The attacker then imported the cookie into their own browser to access the account without further authentication.
 
-### PoC - Phase 1: Installation and Base Configuration
+### PoC - phase 1: installation and base configuration
 
 ```Bash
 # Evilginx installation
@@ -56,7 +56,7 @@ config ipv4 192.168.0.110
 [inf] server external IP set to: 192.168.0.110
 ```
 
-### PoC - Phase 2: Phishlet Configuration
+### PoC - phase 2: phishlet configuration
 
 ```Bash
 # Enable Microsoft 365 phishlet
@@ -72,7 +72,7 @@ phishlets enable o365
 [inf] certificates successfully installed                           <-- TLS ready
 ```
 
-### PoC - Phase 3: Lure Creation (Phishing URL)
+### PoC - phase 3: lure creation (phishing URL)
 
 ```Bash
 # Create phishing URL
@@ -85,7 +85,7 @@ lures get-url 0
 https://login.lab.local/NeKzw3E                                   <-- URL to send to victim
 ```
 
-### PoC - Phase 4: Victim Completes MFA Login
+### PoC - phase 4: victim completes MFA login
 
 The victim receives the URL (via email, message, or any delivery channel) and visits it in the browser. The displayed page is the real Microsoft 365 portal - not a static copy, but the actual service proxied by Evilginx. The victim enters username, password, and completes the MFA challenge (OTP code from Authenticator app).
 
@@ -100,7 +100,7 @@ The victim receives the URL (via email, message, or any delivery channel) and vi
 [inf] [o365] redirecting to: https://outlook.office.com
 ```
 
-### PoC - Phase 5: Session Replay
+### PoC - phase 5: session replay
 
 ```Bash
 # View captured sessions
@@ -150,7 +150,7 @@ sessions 1
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The test environment was configured with Evilginx 3.3 in developer mode (`-developer` flag) to disable DNS checks that would have required a real public domain. The `o365` phishlet was configured for the hostname `login.lab.local`, with forced DNS resolution via `/etc/hosts` file on the victim machine.
 
@@ -162,7 +162,7 @@ A critical aspect that emerged from testing: the captured session cookie has a l
 
 ---
 
-## Theoretical Analysis: Why MFA Is Not Enough
+## Theoretical analysis: why MFA is not enough
 
 The modern web authentication model is based on an implicit assumption: the victim's browser communicates directly with the authentication service. MFA adds a second factor (OTP code, push notification, biometrics) that makes password knowledge alone insufficient. However, this model does not consider the scenario where a transparent proxy interposes itself in the communication.
 
@@ -172,11 +172,11 @@ The only truly effective countermeasure is FIDO2/WebAuthn. Unlike OTP and push n
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > This section describes how this finding would fit into a real engagement, from both the attacker (Red Team) and defender (Blue Team) perspectives.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** Azure AD session cookie captured for a user with MFA enabled (SE-002). Full access to the user's email and Microsoft 365 services.
 
@@ -205,7 +205,7 @@ Internal network -> lateral movement via AD, Domain Admin
 
 **Potential impact:** complete compromise of the user's digital identity. Session hijacking via Evilginx is particularly insidious because it bypasses the security control that most organizations consider sufficient (MFA). The attacker operates with the same permissions as the legitimate user, making detection extremely difficult without behavioral analysis (UEBA).
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **IOCs to monitor:**
 - Certificate Transparency logs: monitor certificate issuance for domains similar to your own (e.g., `login-company.com`, `company-portal.net`)
@@ -230,19 +230,19 @@ Internal network -> lateral movement via AD, Domain Admin
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Acquire Infrastructure: Domains | `T1583.001` | Registration of phishing domain for Evilginx proxy (`login.lab.local`) |
-| Resource Development | Obtain Capabilities: Tool | `T1588.002` | Use of Evilginx 3.x framework with Microsoft 365 phishlet |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | Sending Evilginx lure URL to victim (SE-002) |
-| Execution | User Execution: Malicious Link | `T1204.001` | Victim clicks the link and completes MFA login through the proxy |
-| Credential Access | Steal Web Session Cookie | `T1539` | Interception of Azure AD session cookie post-MFA authentication (SE-002) |
-| Credential Access | Adversary-in-the-Middle | `T1557` | Evilginx operates as transparent proxy between victim and Microsoft 365 service |
-| Defense Evasion | Use Alternate Authentication Material: Web Session Cookie | `T1550.004` | Replay of captured session cookie for access without password/MFA |
-| Collection | Data from Information Repositories: Sharepoint | `T1213.002` | Access to SharePoint/OneDrive documents via hijacked session |
-| Collection | Email Collection: Remote Email Collection | `T1114.002` | Reading victim's Outlook Web App mailbox |
+| resource development | acquire infrastructure: domains | `T1583.001` | registration of phishing domain for evilginx proxy (`login.lab.local`) |
+| resource development | obtain capabilities: tool | `T1588.002` | use of evilginx 3.x framework with microsoft 365 phishlet |
+| initial access | phishing: spearphishing link | `T1566.002` | sending evilginx lure url to victim (SE-002) |
+| execution | user execution: malicious link | `T1204.001` | victim clicks the link and completes mfa login through the proxy |
+| credential access | steal web session cookie | `T1539` | interception of azure ad session cookie post-mfa authentication (SE-002) |
+| credential access | adversary-in-the-middle | `T1557` | evilginx operates as transparent proxy between victim and microsoft 365 service |
+| defense evasion | use alternate authentication material: web session cookie | `T1550.004` | replay of captured session cookie for access without password/mfa |
+| collection | data from information repositories: sharepoint | `T1213.002` | access to sharepoint/onedrive documents via hijacked session |
+| collection | email collection: remote email collection | `T1114.002` | reading victim's outlook web app mailbox |
 
 ---
 

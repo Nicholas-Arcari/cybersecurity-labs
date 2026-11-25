@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 09 - Customize Desktop Environment
+# 09 - Customize desktop environment
 
 > - **Phase:** System Setup - Ergonomics & Productivity
 > - **Priority:** Low - indirect impact on work quality during long sessions
@@ -52,15 +52,15 @@ Lower productivity and higher probability of making reading errors on tool outpu
 
 ---
 
-## Recommended Customizations
+## Recommended customizations
 
-| Setting | Recommendation |
+| setting | recommendation |
 | :--- | :--- |
-| Terminal font | `Hack Nerd Font` or `JetBrains Mono` - monospace optimized for code |
-| Theme | Dark theme (e.g., `Kali-Dark`) - reduces visual fatigue in dark environments |
-| Font size | 12-14pt for standard screens, 16pt for HiDPI |
-| Workspaces | 4 workspaces: terminals, browser, GUI tools, notes |
-| Terminal opacity | 85-90% for readability while maintaining screen context |
+| terminal font | `Hack Nerd Font` or `JetBrains Mono` - monospace optimized for code |
+| theme | dark theme (e.g., `Kali-Dark`) - reduces visual fatigue in dark environments |
+| font size | 12-14pt for standard screens, 16pt for hidpi |
+| workspaces | 4 workspaces: terminals, browser, gui tools, notes |
+| terminal opacity | 85-90% for readability while maintaining screen context |
 
 ---
 

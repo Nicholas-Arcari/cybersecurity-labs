@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Source Code Review
+# Source code review
 
 > - **Phase:** Secure Coding - Static Analysis (SAST)
 > - **Visibility:** Zero - local source code analysis, no network requests toward external targets
@@ -9,7 +9,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 During the static source code review (SAST) performed on the backend modules, two critical vulnerabilities were identified related to insecure handling of user input. Both inspected scripts allow command injection (against the database or the local operating system) due to the absence of sanitization and the use of insecure functions.
 
@@ -17,7 +17,7 @@ If these snippets were deployed in a production environment, they would expose t
 
 ---
 
-## 2 Finding #1: OS Command Injection (RCE)
+## 2 Finding #1: OS command injection (RCE)
 
 - File: `python-vuln-exec.py`
 - Vulnerability: CWE-78 (Improper Neutralization of Special Elements used in an OS Command)
@@ -56,7 +56,7 @@ target_ip = input("Inserisci un IP > ")
 subprocess.run(["ping", "-c", "1", target_ip]) 
 ```
 
-#### Proof of Concept (PoC)
+#### Proof of concept (PoC)
 
 To confirm the actual exploitability of the vulnerability, the payload `8.8.8.8; cat /etc/passwd` was injected into the input requested by the script.
 
@@ -83,7 +83,7 @@ sys:x:3:3:sys:/dev:/usr/sbin/nologin
 
 ---
 
-## 3 Finding #2: SQL Injection (SQLi)
+## 3 Finding #2: SQL injection (SQLi)
 
 - File: `php-vuln-sql.php`
 - Vulnerability: CWE-89 (Improper Neutralization of Special Elements used in an SQL Command)
@@ -125,12 +125,12 @@ The vulnerability pattern found indicates a failure to adopt "Secure by Design" 
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Description (SAST - Defensive Analysis) |
+| tactic | technique | mitre id | description (sast - defensive analysis) |
 | :--- | :--- | :--- | :--- |
-| Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | CWE-78: `os.system()` with direct concatenation allows Command Injection (`8.8.8.8; cat /etc/passwd`) executing arbitrary commands as the application user |
-| Initial Access | Exploit Public-Facing Application | `T1190` | CWE-89: `$user_id` concatenation in the SQL query allows SQL Injection (`?id=1 OR 1=1`) to read other users' data or bypass authentication |
+| execution | command and scripting interpreter: unix shell | `T1059.004` | cwe-78: `os.system()` with direct concatenation allows command injection (`8.8.8.8; cat /etc/passwd`) executing arbitrary commands as the application user |
+| initial access | exploit public-facing application | `T1190` | cwe-89: `$user_id` concatenation in the sql query allows sql injection (`?id=1 OR 1=1`) to read other users' data or bypass authentication |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 11.3 - Active Directory Certificate Services (AD CS) abuse
+# 11.3 - Active Directory certificate services (AD CS) abuse
 
 > - **Phase:** Credential Access / Privilege Escalation in the domain via the certificate authority
 > - **Prerequisites:** presence of AD CS in the domain; depending on the ESC scenario, a domain account (ESC1) or a network position with coercion and relay capability (ESC8)
@@ -16,11 +16,11 @@ escalation vectors in real domains, and it was completely absent from the reposi
 
 ## Folder structure
 
-| Subfolder | Technique | Typical severity | Status |
+| subfolder | technique | typical severity | status |
 | :--- | :--- | :---: | :--- |
-| `esc8-relay-adcs/` | ESC8: NTLM relay to the AD CS Web Enrollment | `Critical` | Written |
-| `esc1-template-abuse/` | ESC1: template allowing an arbitrary SAN | `Critical` | Written |
-| `esc-enumeration/` | AD CS enumeration with Certipy/Certify | `Informational` | Written |
+| `esc8-relay-adcs/` | esc8: ntlm relay to the ad cs web enrollment | `Critical` | written |
+| `esc1-template-abuse/` | esc1: template allowing an arbitrary san | `Critical` | written |
+| `esc-enumeration/` | ad cs enumeration with certipy/certify | `Informational` | written |
 
 ## Recommended operational flow
 

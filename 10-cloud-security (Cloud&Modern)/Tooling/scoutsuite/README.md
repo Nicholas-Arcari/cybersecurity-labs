@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# ScoutSuite - Audit Multi-Cloud della Configurazione
+# ScoutSuite - audit Multi-Cloud della configurazione
 
 > - **Fase:** Cloud Security - Multi-Cloud Audit (Defense)
 > - **Categoria:** Difensivo - vista d'insieme della postura di sicurezza
@@ -56,12 +56,12 @@ scout gcp
 
 ## Tool correlati
 
-| Tool | Ruolo | Relazione |
+| tool | ruolo | relazione |
 | :--- | :--- | :--- |
-| `ScoutSuite` | Audit multi-cloud | Questo strumento (difensivo) |
-| `Prowler` | Audit/compliance | Complementare: profondita vs panoramica (`../prowler/`) |
-| `Pacu` / `AzureHound` | Exploitation | Le controparti offensive |
-| `PMapper` | IAM graph | Analisi mirata delle vie di privesc IAM |
+| `ScoutSuite` | audit multi-cloud | questo strumento (difensivo) |
+| `Prowler` | audit/compliance | complementare: profondita vs panoramica (`../prowler/`) |
+| `Pacu` / `AzureHound` | exploitation | le controparti offensive |
+| `PMapper` | iam graph | analisi mirata delle vie di privesc iam |
 
 > **Tool moderno consigliato:** usare `ScoutSuite` per la vista d'insieme rapida e `Prowler` per l'audit approfondito e la compliance. In un ambiente multi-cloud, ScoutSuite offre una postura unificata; per provider specifici, gli strumenti nativi (Security Hub AWS, Defender for Cloud Azure) completano il quadro.
 
@@ -69,16 +69,16 @@ scout gcp
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica (prevenuta) | Tecnica | ID MITRE | Ruolo del controllo |
+| tattica (prevenuta) | tecnica | id mitre | ruolo del controllo |
 | :--- | :--- | :--- | :--- |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | Rileva le configurazioni IAM a rischio |
-| Collection | Data from Cloud Storage | `T1530` | Rileva i bucket/storage esposti |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Rileva i security group troppo aperti |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | rileva le configurazioni iam a rischio |
+| collection | data from cloud storage | `T1530` | rileva i bucket/storage esposti |
+| initial access | exploit public-facing application | `T1190` | rileva i security group troppo aperti |
 
-| Contromisura difensiva (D3FEND) | ID D3FEND | Applicazione |
+| contromisura difensiva (d3fend) | id d3fend | applicazione |
 | :--- | :--- | :--- |
-| Configuration Inventory | `D3-CI` | Inventario navigabile della configurazione multi-cloud |
-| Platform Hardening | `D3-PH` | Identificazione delle misconfig da correggere |
+| configuration inventory | `D3-CI` | inventario navigabile della configurazione multi-cloud |
+| platform hardening | `D3-PH` | identificazione delle misconfig da correggere |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 19 - Backup Your System
+# 19 - Backup your system
 
 > - **Phase:** System Setup - Disaster Recovery & Business Continuity
 > - **Priority:** High - losing a configured lab system means losing weeks of work
@@ -41,7 +41,7 @@ rsync -av \
 echo "[$(date)] System backup completed to $BACKUP_DEST/system-$DATE/"
 ```
 
-### Option 2: Timeshift (graphical snapshot)
+### Option 2: timeshift (graphical snapshot)
 
 ```Bash
 sudo apt install timeshift
@@ -49,7 +49,7 @@ sudo timeshift --create --comments "post-setup backup"
 sudo timeshift --list    # List available snapshots
 ```
 
-### Option 3: VM Snapshot (recommended for virtualized environments)
+### Option 3: VM snapshot (recommended for virtualized environments)
 
 For VirtualBox: `Machine > Tools > Snapshots > Take` before every risky session.
 
@@ -69,13 +69,13 @@ Having to format and reinstall everything from scratch, losing days of configura
 
 ---
 
-## Recommended Backup Strategy (3-2-1)
+## Recommended backup strategy (3-2-1)
 
-| Copy | Where | Tool |
+| copy | where | tool |
 | :--- | :--- | :--- |
-| Copy 1 | Internal disk (separate partition) | Timeshift / rsync |
-| Copy 2 | External USB disk | Manual rsync |
-| Copy 3 | Encrypted cloud or remote NAS | rsync + LUKS or Restic |
+| copy 1 | internal disk (separate partition) | timeshift / rsync |
+| copy 2 | external usb disk | manual rsync |
+| copy 3 | encrypted cloud or remote nas | rsync + luks or restic |
 
 ---
 

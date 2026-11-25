@@ -1,6 +1,6 @@
 > [English](results.en.md) | **Italiano**
 
-# Risultati - Esperimento A (detection + base-rate)
+# Risultati - esperimento a (detection + base-rate)
 
 Output verbatim di `generate_and_evaluate.py` (seed=42, riproducibile). Numeri **misurati**,
 non stimati. Rieseguire il comando riproduce esattamente questi valori.

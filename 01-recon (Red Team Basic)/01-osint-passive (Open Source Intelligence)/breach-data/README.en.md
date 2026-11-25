@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# OSINT Passive: Breach Data Analysis
+# OSINT passive: breach data analysis
 
 > - **Phase:** Reconnaissance - Passive Information Gathering
 > - **Visibility:** Zero - no packets sent to the target, search on public third-party databases
@@ -15,7 +15,7 @@ Tools: h8mail, HaveIBeenPwned (HIBP).
 
 ---
 
-## 1 Theoretical Introduction
+## 1 Theoretical introduction
 
 Breach Data are collections of confidential information (credentials, PII) exfiltrated during cyber attacks and made public.
 
@@ -28,7 +28,7 @@ Key Concepts:
 
 ---
 
-## 2 Research Activity (Practical Exercise)
+## 2 Research activity (practical exercise)
 
 **Finding ID:** `OSINT-001` | **Severity:** `High`
 
@@ -51,7 +51,7 @@ h8mail -t <TARGET_EMAIL>
 deactivate                  # run when finished
 ```
 
-### Manual Scan with HaveIBeenPwned
+### Manual scan with HaveIBeenPwned
 
 For result validation, a manual search was performed through the official HIBP web portal, the authoritative source for data breaches.
 
@@ -61,14 +61,14 @@ For result validation, a manual search was performed through the official HIBP w
 
 ---
 
-## 3 Technical Deep Dive: Digital Footprint vs Breach
+## 3 Technical deep dive: digital footprint vs breach
 
 1. Conceptual Difference
 
-|Type|Description|Example|Tools|
+|type|description|example|tools|
 |-------|-------------|---------|--------|
-|Digital footprint|Indicates that the user exists and operates online. Does not necessarily imply a security risk, but provides information for Social Engineering|LinkedIn profile, GitHub commits, Amazon reviews|Google Dorks, Sherlock, TheHarvester|
-|Breach Data|Indicates that the user's data has been STOLEN and made illegally public. Carries an immediate critical risk|Password present in a database dump (e.g., LinkedIn 2012 leak)|h8mail, HaveIBeenPwned, Intelligence X|
+|digital footprint|indicates that the user exists and operates online. does not necessarily imply a security risk, but provides information for social engineering|linkedin profile, github commits, amazon reviews|google dorks, sherlock, theharvester|
+|breach data|indicates that the user's data has been stolen and made illegally public. carries an immediate critical risk|password present in a database dump (e.g., linkedin 2012 leak)|h8mail, haveibeenpwned, intelligence x|
 
 1. Methodological Differences
 
@@ -81,7 +81,7 @@ The discrepancy between results obtained via web and via command line (CLI) is d
 
 ---
 
-## 4 Critical Analysis: Limitations of Automated Tools
+## 4 Critical analysis: limitations of automated tools
 
 During the activity, a significant discrepancy between tool results was found:
 
@@ -95,11 +95,11 @@ Automated OSINT tools depend on the availability of external sources (APIs). A "
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Info: Credentials | `T1589.001` | Search for compromised target credentials on h8mail and HaveIBeenPwned to assess Credential Reuse risk (OSINT-001) |
+| reconnaissance | gather victim identity info: credentials | `T1589.001` | search for compromised target credentials on h8mail and haveibeenpwned to assess credential reuse risk (OSINT-001) |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 18 - Document Your Configuration
+# 18 - Document your configuration
 
 > - **Phase:** System Setup - Configuration Management & Documentation
 > - **Priority:** Medium - long-term investment for replicability and maintainability
@@ -9,9 +9,9 @@
 
 ---
 
-## Recommended Approach
+## Recommended approach
 
-### Option 1: Git repository with dotfiles
+### Option 1: git repository with dotfiles
 
 ```Bash
 mkdir ~/dotfiles && cd ~/dotfiles
@@ -27,7 +27,7 @@ git add . && git commit -m "initial dotfiles configuration"
 # Push to private GitHub for access from any machine
 ```
 
-### Option 2: Markdown notes (Obsidian)
+### Option 2: markdown notes (obsidian)
 
 ```Bash
 sudo apt install obsidian   # or flatpak install md.obsidian.Obsidian

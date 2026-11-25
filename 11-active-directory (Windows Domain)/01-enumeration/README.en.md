@@ -16,11 +16,11 @@ lets you choose the lowest-cost, lowest-noise vector. The foundations are in
 
 ## Folder structure
 
-| Subfolder | Technique | Typical severity | Status |
+| subfolder | technique | typical severity | status |
 | :--- | :--- | :---: | :--- |
-| `bloodhound/` | Collection and analysis of the domain graph (BloodHound/SharpHound) | `Informational` | Written |
-| `domain-enumeration/` | LDAP/RPC/SMB enumeration (ldapsearch, rpcclient, nxc, enum4linux-ng) | `Low` | Written |
-| `kerbrute-userenum/` | User enumeration and password spraying via Kerberos | `Variable (Low / High)` | Written |
+| `bloodhound/` | collection and analysis of the domain graph (bloodhound/sharphound) | `Informational` | written |
+| `domain-enumeration/` | ldap/rpc/smb enumeration (ldapsearch, rpcclient, nxc, enum4linux-ng) | `Low` | written |
+| `kerbrute-userenum/` | user enumeration and password spraying via kerberos | `Variable (Low / High)` | written |
 
 ## Recommended operational flow
 

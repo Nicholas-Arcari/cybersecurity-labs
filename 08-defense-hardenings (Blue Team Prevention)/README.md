@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 08 - Defense & Hardening (Blue Team Prevention)
+# 08 - Defense & hardening (blue team prevention)
 
 > - **Fase:** Difesa - Prevention, Detection & Response (Blue Team)
 > - **Categoria:** Il ribaltamento di prospettiva: dall'attacco alla difesa
@@ -25,7 +25,7 @@ La filosofia difensiva del modulo e la **difesa in profondita**: nessun singolo 
 
 Questi quattro strati coprono il ciclo difensivo completo: **prevenire** (hardening), **rilevare** (SIEM + XDR + deception), **rispondere** (active response). Un attacco che supera la prevenzione viene rilevato; uno che elude un sensore ne incontra un altro; uno che tocca un'esca si tradisce. La forza non e nel singolo strato ma nella loro somma.
 
-### Nota sul framing dei Finding difensivi
+### Nota sul framing dei finding difensivi
 
 In un modulo difensivo, il **Finding** (`DEF-NNN`) non rappresenta una vulnerabilita dell'ambiente ma un **controllo di detection/prevention/deception validato**. La **Severity** indica la criticita della minaccia che il controllo indirizza (un controllo `Alto` contrasta tecniche d'attacco ad alto impatto). Le tabelle **MITRE ATT&CK** mappano le tecniche che ogni controllo rileva, previene o osserva; dove utile, si affianca il framework **MITRE D3FEND** (contromisure difensive). Questo mantiene la struttura uniforme al resto della repository, invertendone la prospettiva.
 
@@ -96,63 +96,63 @@ In un modulo difensivo, il **Finding** (`DEF-NNN`) non rappresenta una vulnerabi
 
 ## Tool di riferimento
 
-| Tool | Strato | Ruolo | Caso d'uso principale |
+| tool | strato | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `ELK Stack` / `Splunk` | Il Cervello | SIEM | Centralizzazione, correlazione, detection |
-| `Wazuh` | I Muscoli | XDR | Detection endpoint, FIM, active response |
-| `Suricata` | I Muscoli | IDS | Detection di rete integrata in Wazuh |
-| `Canarytokens` / `T-Pot` | Le Trappole | Deception | Early warning e threat intelligence |
-| `Lynis` / `CIS-CAT` | Lo Scudo | Auditor | Misura e applicazione dell'hardening |
-| `Credential Guard` / `LAPS` | Lo Scudo | Contromisura | Protezione credenziali Windows |
+| `ELK Stack` / `Splunk` | il cervello | siem | centralizzazione, correlazione, detection |
+| `Wazuh` | i muscoli | xdr | detection endpoint, fim, active response |
+| `Suricata` | i muscoli | ids | detection di rete integrata in wazuh |
+| `Canarytokens` / `T-Pot` | le trappole | deception | early warning e threat intelligence |
+| `Lynis` / `CIS-CAT` | lo scudo | auditor | misura e applicazione dell'hardening |
+| `Credential Guard` / `LAPS` | lo scudo | contromisura | protezione credenziali windows |
 
 > **Tool moderno consigliato:** un'architettura difensiva open source completa si costruisce con `Wazuh` (XDR + SIEM leggero) o `ELK/Elastic Security` come cervello, `Suricata` per la rete, `canarytokens`/`OpenCanary` per la deception, e `Lynis`/`CIS Benchmarks` con `Ansible` per l'hardening idempotente. Questo stack copre l'intero ciclo prevenire-rilevare-rispondere senza costi di licenza.
 
 ---
 
-## Registro Finding - Modulo 08
+## Registro finding - modulo 08
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `DEF-001` | ELK Stack: centralizzazione dei log e detection (brute force SSH) | `Alto` | `01-siem/elk-stack/` |
-| `DEF-002` | Splunk: correlazione multi-sorgente via SPL (kill chain scan -> accesso) | `Alto` | `01-siem/splunk/` |
-| `DEF-003` | Wazuh FIM: rilevamento di persistenza, tampering e rootkit | `Alto` | `02-xdr/wazuh/threat-detection.../` |
-| `DEF-004` | Wazuh Active Response: contenimento automatico (blocco IP) su alert | `Alto` | `02-xdr/wazuh/threat-detection.../` |
-| `DEF-005` | Canary Tokens: tripwire digitali per early breach detection | `Medio` | `03-deception/honeypots/canary-tokens/` |
-| `DEF-006` | T-Pot: piattaforma honeypot multi-servizio, raccolta TTP/IOC | `Medio` | `03-deception/honeypots/t-pot/` |
-| `DEF-007` | Linux hardening: audit Lynis + baseline CIS (anti privilege escalation) | `Alto` | `04-hardening/linux-hardening/` |
-| `DEF-008` | Windows hardening: GPO, Credential Guard, LAPS (anti credential dumping / PtH) | `Alto` | `04-hardening/windows-hardening/` |
+| `DEF-001` | elk stack: centralizzazione dei log e detection (brute force ssh) | `Alto` | `01-siem/elk-stack/` |
+| `DEF-002` | splunk: correlazione multi-sorgente via spl (kill chain scan -> accesso) | `Alto` | `01-siem/splunk/` |
+| `DEF-003` | wazuh fim: rilevamento di persistenza, tampering e rootkit | `Alto` | `02-xdr/wazuh/threat-detection.../` |
+| `DEF-004` | wazuh active response: contenimento automatico (blocco ip) su alert | `Alto` | `02-xdr/wazuh/threat-detection.../` |
+| `DEF-005` | canary tokens: tripwire digitali per early breach detection | `Medio` | `03-deception/honeypots/canary-tokens/` |
+| `DEF-006` | t-pot: piattaforma honeypot multi-servizio, raccolta ttp/ioc | `Medio` | `03-deception/honeypots/t-pot/` |
+| `DEF-007` | linux hardening: audit lynis + baseline cis (anti privilege escalation) | `Alto` | `04-hardening/linux-hardening/` |
+| `DEF-008` | windows hardening: gpo, credential guard, laps (anti credential dumping / pth) | `Alto` | `04-hardening/windows-hardening/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
 > Il modulo difensivo mappa le tecniche d'attacco che i suoi controlli **rilevano, prevengono o osservano**. Framework complementare: MITRE D3FEND (contromisure difensive).
 
-| Tattica (contrastata) | Tecnica | ID MITRE | Finding Correlato |
+| tattica (contrastata) | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Brute Force | `T1110` | DEF-001, DEF-002, DEF-004, DEF-006 |
-| Reconnaissance | Active Scanning | `T1595` | DEF-002 |
-| Initial Access | Valid Accounts | `T1078` | DEF-001, DEF-002, DEF-006 |
-| Lateral Movement | Remote Services | `T1021` | DEF-002 |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Hash | `T1550.002` | DEF-008 |
-| Persistence | Account Manipulation: SSH Authorized Keys | `T1098.004` | DEF-003, DEF-007 |
-| Persistence | Boot or Logon Autostart: Registry Run Keys | `T1547.001` | DEF-003, DEF-008 |
-| Credential Access | OS Credential Dumping: LSASS Memory | `T1003.001` | DEF-008 |
-| Privilege Escalation | Abuse Elevation Control: Sudo | `T1548.003` | DEF-007 |
-| Privilege Escalation | Setuid and Setgid | `T1548.001` | DEF-007 |
-| Defense Evasion | Rootkit | `T1014` | DEF-003 |
-| Defense Evasion | Indicator Removal: Clear Logs | `T1070` | DEF-001 |
-| Collection | Data from Network Shared Drive | `T1039` | DEF-005 |
-| Credential Access | Unsecured Credentials: Credentials In Files | `T1552.001` | DEF-005, DEF-007 |
-| Command and Control | Ingress Tool Transfer | `T1105` | DEF-006 |
+| credential access | brute force | `T1110` | DEF-001, DEF-002, DEF-004, DEF-006 |
+| reconnaissance | active scanning | `T1595` | DEF-002 |
+| initial access | valid accounts | `T1078` | DEF-001, DEF-002, DEF-006 |
+| lateral movement | remote services | `T1021` | DEF-002 |
+| lateral movement | use alternate authentication material: pass the hash | `T1550.002` | DEF-008 |
+| persistence | account manipulation: ssh authorized keys | `T1098.004` | DEF-003, DEF-007 |
+| persistence | boot or logon autostart: registry run keys | `T1547.001` | DEF-003, DEF-008 |
+| credential access | os credential dumping: lsass memory | `T1003.001` | DEF-008 |
+| privilege escalation | abuse elevation control: sudo | `T1548.003` | DEF-007 |
+| privilege escalation | setuid and setgid | `T1548.001` | DEF-007 |
+| defense evasion | rootkit | `T1014` | DEF-003 |
+| defense evasion | indicator removal: clear logs | `T1070` | DEF-001 |
+| collection | data from network shared drive | `T1039` | DEF-005 |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | DEF-005, DEF-007 |
+| command and control | ingress tool transfer | `T1105` | DEF-006 |
 
-| Contromisura difensiva (D3FEND) | ID D3FEND | Strato |
+| contromisura difensiva (d3fend) | id d3fend | strato |
 | :--- | :--- | :--- |
-| Platform Monitoring | `D3-PM` | Il Cervello (SIEM) |
-| File Integrity Monitoring | `D3-FIM` | I Muscoli (Wazuh) |
-| Network Traffic Filtering | `D3-NTF` | I Muscoli (active response) |
-| Decoy File / Credential / Environment | `D3-DF`/`D3-DUC`/`D3-DE` | Le Trappole (deception) |
-| Platform / Credential Hardening | `D3-PH`/`D3-CH` | Lo Scudo (hardening) |
+| platform monitoring | `D3-PM` | il cervello (siem) |
+| file integrity monitoring | `D3-FIM` | i muscoli (wazuh) |
+| network traffic filtering | `D3-NTF` | i muscoli (active response) |
+| decoy file / credential / environment | `D3-DF`/`D3-DUC`/`D3-DE` | le trappole (deception) |
+| platform / credential hardening | `D3-PH`/`D3-CH` | lo scudo (hardening) |
 
 ---
 

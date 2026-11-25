@@ -1,6 +1,6 @@
 > **English** | [Italiano](THEORY-ADVANCED.md)
 
-# Advanced Theory - Provable Security, Authentication, Information Flow
+# Advanced theory - provable security, authentication, information flow
 
 > - **Level:** Graduate (rigorous theory chapter: definitions, theorems, proofs).
 > - **Purpose:** Bring the repository's theoretical apparatus to the level of a cryptography and formal-
@@ -24,12 +24,12 @@
 
 ---
 
-## Part I - Foundations of Provable Security
+## Part i - foundations of provable security
 
 Provable security defines security relative to an **adversary model** and proves it by **reduction** to a
 problem believed hard. This part fixes the language.
 
-### I.1 Computational model and negligibility
+### I.1 computational model and negligibility
 
 **Definition I.1 (negligible function).** `mu: N -> R+` is negligible if for every polynomial `p` there
 exists `N` such that `mu(n) < 1/p(n)` for all `n > N`. Written `mu(n) = negl(n)`. Intuition: it decreases
@@ -39,7 +39,7 @@ faster than the inverse of every polynomial.
 time in the security parameter `n` (typically the key length). "Asymptotic" security quantifies over all
 PPT adversaries; "concrete" security (I.7) fixes explicit resources.
 
-### I.2 Computational indistinguishability
+### I.2 computational indistinguishability
 
 **Definition I.3 (indistinguishability, [Goldwasser & Micali 1984]).** Two distribution ensembles
 `X = {X_n}` and `Y = {Y_n}` are computationally indistinguishable, `X ~c Y`, if for every PPT
@@ -52,7 +52,7 @@ Adv_{X,Y}(D) := | Pr[ D(1^n, X_n) = 1 ] - Pr[ D(1^n, Y_n) = 1 ] |  =  negl(n).
 This is the central notion: "secure" means "indistinguishable from an ideal" (a random function, an
 encryption of zeros, etc.).
 
-### I.3 Game-based definitions
+### I.3 game-based definitions
 
 Security properties are expressed as **games** between a challenger and the adversary; security is a
 bound on the advantage.
@@ -86,7 +86,7 @@ never queried. `Mac` is EUF-CMA (existential unforgeability under chosen-message
 Adv^{euf-cma}_{Mac}(A) := Pr[ A wins ]  =  negl.
 ```
 
-### I.4 The reduction method
+### I.4 the reduction method
 
 To prove that a scheme `Pi` is secure **assuming** a primitive `P` is, one argues by contraposition: from
 an adversary `A` breaking `Pi` one builds an adversary `B` breaking `P`, with related advantages. If `P`
@@ -112,7 +112,7 @@ claim. ∎
 This is the paradigm: the security of `Mac` is *reduced* to that of `F`. The same scheme underlies the use
 of HMAC (used in the 4-way handshake MIC) and the PBKDF2 key derivation.
 
-### I.5 The hybrid argument
+### I.5 the hybrid argument
 
 To go from security on *one* object to security on *many*, one uses the **hybrid argument**: a sequence of
 distributions `H_0, H_1, ..., H_q` is interposed, where `H_0` is the "all real" world and `H_q` the "all
@@ -129,7 +129,7 @@ inequality on advantages:
 It is the tool by which, e.g., single-message IND-CPA security implies multi-message security, with a loss
 linear in the number of ciphertexts.
 
-### I.6 The Random Oracle Model
+### I.6 the random oracle model
 
 **Definition I.7 (ROM, [Bellare & Rogaway 1993]).** In the Random Oracle Model, a hash function `H` is
 modeled as an oracle that, on each new input, returns an independent uniform value (consistent on
@@ -137,7 +137,7 @@ repeats). ROM proofs are efficient and expressive; the ROM is a *heuristic*: [Ca
 schemes secure in the ROM but insecure under every concrete instantiation of `H`. It is used, disclosed,
 in Part II.
 
-### I.7 Concrete security
+### I.7 concrete security
 
 **Definition I.8 ((t, q, eps)-security, [Bellare et al. 1997]).** A scheme is `(t, q, eps)`-secure if
 every adversary running in time `<= t` and making `<= q` queries has advantage `<= eps`. Concrete security
@@ -146,13 +146,13 @@ iterations). It is the register in which Part II works.
 
 ---
 
-## Part II - Concrete Security of the Offline Attack: the Guessing Theorem
+## Part II - concrete security of the offline attack: the guessing theorem
 
 We connect the Part I formalism to the offline attack on WPA2-PSK (module 06) and to the empirical
 measurement (`EVALUATION/exp02`). The result is a **tight, proven concrete-security bound** whose value
 coincides with the guessing curve computed in the experiment.
 
-### II.1 The offline guessing game
+### II.1 the offline guessing game
 
 A captured handshake yields a *verification predicate* `V(w)` that equals 1 iff the candidate passphrase
 `w` is the correct one (via MIC recomputation). We model the KDF/MIC as a random oracle `H` (Definition
@@ -163,7 +163,7 @@ passphrase `W` is drawn from a known distribution `D` over passwords, with order
 **Definition II.1 (offline guessing adversary).** `A` makes a set of distinct queries
 `Q = {w_1, ..., w_q}` to `H` and wins iff `W in Q`. The dominant resource is `q` (number of verifications).
 
-### II.2 The theorem and its proof
+### II.2 the theorem and its proof
 
 **Theorem II.1 (tight bound on offline guessing).** In the ROM, every adversary making at most `q` distinct
 queries recovers `W ~ D` with probability at most
@@ -187,7 +187,7 @@ is maximized by taking the `q` largest, so `Pr[W in Q] <= sum_{i=1}^{q} p_i = G_
 order and adaptivity of the queries do not change the tested set: the bound holds for adaptive adversaries
 too. This isolates the fact that the only lever is *which* `q` candidates to test, not *how*.
 
-### II.3 Corollaries: entropy, min-entropy, guessing entropy
+### II.3 corollaries: entropy, min-entropy, guessing entropy
 
 **Corollary II.2 (min-entropy = resistance to one query).** For `q = 1`, `G_1 = p_1 = 2^{-H_inf(D)}` where
 `H_inf(D) = -log2 p_1` is the min-entropy. The probability of success on the first attempt is exactly
@@ -200,7 +200,7 @@ optimal strategy is `G(D) = sum_{i>=1} i * p_i`. This is the mean guessing entro
 shows (consistent with [Bonneau 2012]) that the mean is tail-dominated, so `G_q` is the operational
 metric, not `G`.
 
-### II.4 Effect of key stretching: query-hardness vs time-hardness
+### II.4 effect of key stretching: query-hardness vs time-hardness
 
 PBKDF2 with `c` iterations (module 06, section 3.2) does not change `D` or `G_q`: the *probability* of
 success after `q` verifications is invariant. What changes is the **time cost** per query.
@@ -218,7 +218,7 @@ per attempt. Effective defense therefore acts on *both*: increasing `H_inf(D)` (
 which lowers `G_q`) and increasing `c` (which raises the time). Memory-hard functions (scrypt, Argon2,
 module 04) extend the argument to silicon area, not just time.
 
-### II.5 Connection with the executed experiment
+### II.5 connection with the executed experiment
 
 Theorem II.1 is not abstract: `G_q(D)` is **exactly** the guessing curve computed in `EVALUATION/exp02`
 for the Zipf distribution. The executed measurement (`G_1000 = 0.52`, i.e. 52% of accounts fall in
@@ -227,19 +227,19 @@ by construction: the bound is the curve, and the curve was computed.
 
 ---
 
-## Part III - Authentication in Protocols: Lowe's Hierarchy and KRACK
+## Part III - authentication in protocols: lowe's hierarchy and KRACK
 
 The module 06 foundations and the formal verification (`FORMAL-MODELS/`) use the word "freshness". Here it
 is placed in the formal taxonomy of authentication properties of [Lowe 1997], and it is shown precisely
 which level KRACK breaks.
 
-### III.1 Correspondence assertions
+### III.1 correspondence assertions
 
 Protocol events are annotated with `begin(A, B, d)` (principal `A` starts a session with `B` and data `d`)
 and `end(B, A, d)` (`B` completes believing it spoke with `A` about `d`). Authentication properties are
 **correspondence assertions** between these events, of increasing strength.
 
-### III.2 Lowe's hierarchy
+### III.2 lowe's hierarchy
 
 From weakest to strongest [Lowe 1997]:
 
@@ -267,7 +267,7 @@ agreement** on the installation event. The model checker's counterexample is an 
 inductive-invariant proof of the patched model is a proof of injectivity. Lowe's hierarchy provides the
 formal name of the property that modules 06 and FORMAL-MODELS treat.
 
-### III.4 Symbolic vs computational model
+### III.4 symbolic vs computational model
 
 The verification in `FORMAL-MODELS/` is in the **symbolic model** (Dolev-Yao): the primitives are perfect
 terms (a MIC is unforgeable by assumption), and one reasons about message structure and state. The
@@ -280,19 +280,19 @@ in which symbolic analysis is most suitable.
 
 ---
 
-## Part IV - Access Control and Non-Interference
+## Part IV - access control and Non-Interference
 
 Modules 08 (hardening, access control) and 10 (cloud/tenant isolation), and the covert channels of module
 07, invoke properties formalized here.
 
-### IV.1 The information-flow lattice
+### IV.1 the information-flow lattice
 
 **Definition IV.1 ([Denning 1976]).** A flow model is a tuple `(S, O, L, <=, join)` where `L` is a set of
 security classes partially ordered by `<=` forming a **lattice** (`join` and `meet` exist). A flow from an
 object of class `a` to one of class `b` is permitted iff `a <= b`. The policy is the lattice structure;
 security is the absence of flows violating `<=`.
 
-### IV.2 Bell-LaPadula and Biba
+### IV.2 Bell-LaPadula and biba
 
 **Definition IV.2 (BLP, confidentiality, [Bell & LaPadula 1976]).** With subject clearances and object
 classifications in the lattice:
@@ -309,7 +309,7 @@ It protects integrity (a high-integrity subject does not read low-integrity data
 written into high-integrity objects). It is the formal model behind log integrity (module 08) and evidence
 integrity (module 09).
 
-### IV.3 Non-interference
+### IV.3 non-interference
 
 BLP/Biba are *syntactic* properties (about operations). Non-interference is a *semantic* property (about
 observable behaviors), stronger because it also captures implicit channels.
@@ -326,7 +326,7 @@ obs_Low( run(w) )  =  obs_Low( run( purge_Low(w) ) )   for every w.
 Intuition: what `High` users do has *no* observable effect on `Low` users. The violation of this equality
 *is* a channel (explicit or covert) from `High` to `Low`.
 
-### IV.4 Applications to the modules
+### IV.4 applications to the modules
 
 - **Covert channels and exfiltration (module 07, [Lampson 1973]).** A covert channel is precisely a
   non-interference violation: a `High` activity (sensitive data) alters a `Low` observation (a timing, a

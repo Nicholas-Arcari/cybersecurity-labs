@@ -1,6 +1,6 @@
 > [English](THEORETICAL-FOUNDATIONS.en.md) | **Italiano**
 
-# Fondamenti Teorici - Active Directory e Kerberos
+# Fondamenti teorici - Active Directory e Kerberos
 
 > Apparato teorico-accademico del modulo 11. Complementa i README operativi (metodologia, comandi, MITRE)
 > fornendone le basi formali. Non li sostituisce: li fonda e vi rimanda. Citazioni: solo fonti reali e
@@ -38,7 +38,7 @@ crittografiche standard (AES, SHA-2). Il canale e assunto osservabile e manipola
 posizione di rete (A2). Questo modello e coerente con la realta documentata negli incident report, in cui
 il vettore iniziale e quasi sempre la credenziale compromessa, non lo zero-day [Verizon DBIR].
 
-## 2. Proprieta di Sicurezza
+## 2. Proprieta di sicurezza
 
 Kerberos mira a garantire alcune proprieta che le tecniche del modulo violano o aggirano:
 
@@ -56,7 +56,7 @@ Kerberos mira a garantire alcune proprieta che le tecniche del modulo violano o 
   avviene, per impedirne il riuso altrove. NTLM non fornisce questo binding per default (manca EPA/Channel
   Binding e SMB/LDAP signing), ed e questa l'assunzione mancante che il relay sfrutta.
 
-## 3. Fondamenti Teorici
+## 3. Fondamenti teorici
 
 ### 3.1 Kerberos come protocollo a terza parte fidata
 
@@ -114,7 +114,7 @@ l'account macchina del DC, con cui poi si autentica via PKINIT e ottiene i segre
 certificato, inoltre, resta valido anche dopo il reset della password: ne consegue una persistenza che le
 contromisure basate su password non eliminano.
 
-## 4. Analisi Quantitativa
+## 4. Analisi quantitativa
 
 - **Kerberoasting - superficie offline.** Con etype 23 (RC4) l'hash e un MD4 senza salt ne stretching:
   l'attacco offline e limitato solo dalla velocita dell'hardware e dall'entropia della password. Con etype
@@ -134,7 +134,7 @@ Nota di validita: i valori sopra (iterazioni PBKDF2, bit gMSA, modi hashcat) pro
 documentazione ufficiali, non da misure di laboratorio. Eventuali benchmark di cracking andranno misurati
 realmente ed etichettati come tali (coerentemente con la disciplina della cartella `EVALUATION/`).
 
-## 5. Rassegna della Letteratura
+## 5. Rassegna della letteratura
 
 Il concetto di Kerberoasting e stato introdotto operativamente da Tim Medin [Medin 2014] a DerbyCon. La
 sistematizzazione degli attacchi AD CS e dovuta a Schroeder e Christensen [Schroeder & Christensen 2021].
@@ -145,7 +145,7 @@ Needham-Schroeder [Needham & Schroeder 1978] e raffinata, sul piano delle propri
 gia citato nell'apparato THEORY-ADVANCED del repository. Il modello d'avversario di riferimento resta
 quello di Dolev e Yao [Dolev & Yao 1983].
 
-## 6. Limiti e Problemi Aperti
+## 6. Limiti e problemi aperti
 
 - Il modulo documenta metodologia, non misure: i tempi di cracking, i tassi di successo del relay e la
   latenza della replica andranno quantificati in laboratorio reale prima di qualsiasi affermazione numerica.
@@ -155,7 +155,7 @@ quello di Dolev e Yao [Dolev & Yao 1983].
   di krbtgt) interagiscono tra loro: una modellazione formale della loro efficacia combinata e un problema
   aperto, parzialmente affrontabile con i metodi della cartella `FORMAL-MODELS/`.
 
-## 7. Sintesi e Collegamento alla Pratica
+## 7. Sintesi e collegamento alla pratica
 
 Le tre tecniche del modulo condividono una struttura comune: nessuna rompe la crittografia, ciascuna
 sfrutta un'assunzione di deployment non soddisfatta (P2 per Kerberoasting, P4 per ESC8, P3 per DCSync).

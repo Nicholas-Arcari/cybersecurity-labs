@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 06 - Secure Coding Lab (Defense)
+# 06 - Secure coding lab (defense)
 
 > - **Phase:** Secure Coding - Static Analysis (SAST) and Post-Remediation Verification
 > - **Visibility:** Zero - local source code analysis, no traffic toward external targets
@@ -27,7 +27,7 @@ This defensive perspective is valued by recruiters in the field because it demon
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 06-secure-coding-lab (Defense)/
@@ -38,9 +38,9 @@ This defensive perspective is valued by recruiters in the field because it demon
 
 ---
 
-## `vulnerable-snippets/` - Vulnerable Code (SAST)
+## `vulnerable-snippets/` - Vulnerable code (SAST)
 
-### Operational Context
+### Operational context
 
 This folder contains the source code snippets analyzed during the attack phases, with annotations on the root cause and the corresponding CWE (Common Weakness Enumeration) classification.
 
@@ -59,9 +59,9 @@ The `vulnerable-snippets/README.md` document covers two static analysis findings
 
 ---
 
-## `fixed-snippets/` - Secure Code (Post-Remediation)
+## `fixed-snippets/` - Secure code (Post-Remediation)
 
-### Operational Context
+### Operational context
 
 This folder contains the secure implementations that replace the vulnerable code documented in `vulnerable-snippets/`. For each vulnerability, it includes:
 
@@ -73,9 +73,9 @@ The `fixed-snippets/README.md` document covers the SQL Injection fix using Prepa
 
 ---
 
-## `fixed-snippets/input-sanitization-examples/` - XSS Defense
+## `fixed-snippets/input-sanitization-examples/` - XSS defense
 
-### Operational Context
+### Operational context
 
 This subfolder documents the primary defense pattern against Cross-Site Scripting: Output Encoding via `htmlspecialchars()` in PHP.
 
@@ -86,9 +86,9 @@ The `input-sanitization-examples/README.md` demonstrates:
 
 ---
 
-## Applied Secure Coding Principles
+## Applied secure coding principles
 
-### 1. Input Validation (Allow-list)
+### 1. Input validation (allow-list)
 
 Never trust user input. Validate that input matches the expected format before processing it:
 
@@ -106,7 +106,7 @@ except ValueError:
     print("Error: invalid input")
 ```
 
-### 2. Parameterized Queries (Prepared Statements)
+### 2. Parameterized queries (prepared statements)
 
 Always separate the SQL command from the data:
 
@@ -119,7 +119,7 @@ $stmt = $pdo->prepare("SELECT * FROM users WHERE id = :id");
 $stmt->execute(['id' => $_GET['id']]);
 ```
 
-### 3. Output Encoding
+### 3. Output encoding
 
 Encode the output in the correct context before rendering it:
 
@@ -131,7 +131,7 @@ echo $_GET['name'];
 echo htmlspecialchars($_GET['name'], ENT_QUOTES, 'UTF-8');
 ```
 
-### 4. Subprocess Without Shell
+### 4. Subprocess without shell
 
 Avoid command execution through shell strings:
 
@@ -143,7 +143,7 @@ os.system("ping -c 1 " + user_input)
 subprocess.run(["ping", "-c", "1", user_input], shell=False)
 ```
 
-### 5. Secure Secret Management
+### 5. Secure secret management
 
 Never hardcode keys and passwords in source code:
 
@@ -160,20 +160,20 @@ if not SECRET_KEY or len(SECRET_KEY) < 32:
 
 ---
 
-## Reference SAST Tools
+## Reference SAST tools
 
-| Tool | Language | Type | Use Case |
+| tool | language | type | use case |
 | :--- | :--- | :--- | :--- |
-| `bandit` | Python | SAST CLI | Static analysis for common Python vulnerabilities (os.system, eval, pickle) |
-| `semgrep` | Multi-language | SAST CLI | Static analysis with custom rules, CI/CD integrable |
-| `SonarQube` | Multi-language | SAST Web | Enterprise platform for continuous code review |
-| `snyk` | Multi-language | SAST Web/CLI | Dependency analysis and code vulnerabilities |
-| `phpcs-security-audit` | PHP | SAST CLI | Specific rules for PHP vulnerabilities (SQLi, XSS, RCE) |
-| `eslint-plugin-security` | JavaScript | SAST CLI | Static analysis for Node.js applications |
+| `bandit` | python | sast cli | static analysis for common python vulnerabilities (os.system, eval, pickle) |
+| `semgrep` | multi-language | sast cli | static analysis with custom rules, ci/cd integrable |
+| `SonarQube` | multi-language | sast web | enterprise platform for continuous code review |
+| `snyk` | multi-language | sast web/cli | dependency analysis and code vulnerabilities |
+| `phpcs-security-audit` | php | sast cli | specific rules for php vulnerabilities (sqli, xss, rce) |
+| `eslint-plugin-security` | javascript | sast cli | static analysis for node.js applications |
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [1] Vulnerability identification (offensive modules)
@@ -206,14 +206,14 @@ if not SECRET_KEY or len(SECRET_KEY) < 32:
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Description (Defensive Action) |
+| tactic | technique | mitre id | description (defensive action) |
 | :--- | :--- | :--- | :--- |
-| (Mitigation) | Exploit Public-Facing Application | `T1190` | Implementation of Prepared Statements (PDO) to neutralize SQLi (CWE-89) |
-| (Mitigation) | Command and Scripting Interpreter: Unix Shell | `T1059.004` | Replacement of `os.system()` with `subprocess.run(list)` to neutralize OS Command Injection (CWE-78) |
-| (Mitigation) | Exploit Public-Facing Application | `T1190` | Implementation of `htmlspecialchars()` to neutralize Reflected and Stored XSS |
-| (Mitigation) | Brute Force: Password Cracking | `T1110.002` | Replacement of JWT weak secret with 64+ char random key from environment variables (WEB-012) |
+| (mitigation) | exploit public-facing application | `T1190` | implementation of prepared statements (pdo) to neutralize sqli (cwe-89) |
+| (mitigation) | command and scripting interpreter: unix shell | `T1059.004` | replacement of `os.system()` with `subprocess.run(list)` to neutralize os command injection (cwe-78) |
+| (mitigation) | exploit public-facing application | `T1190` | implementation of `htmlspecialchars()` to neutralize reflected and stored xss |
+| (mitigation) | brute force: password cracking | `T1110.002` | replacement of jwt weak secret with 64+ char random key from environment variables (WEB-012) |
 
 ---
 

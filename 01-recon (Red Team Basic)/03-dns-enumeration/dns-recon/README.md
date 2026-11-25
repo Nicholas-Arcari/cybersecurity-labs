@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Network Scanning: DNS Enumeration & Zone Transfers
+# Network scanning: DNS enumeration & zone transfers
 
 > - **Fase:** Reconnaissance - DNS Enumeration
 > - **Visibilita:** Bassa - query DNS standard verso i Name Server pubblici del target, compatibili con traffico legittimo
@@ -17,7 +17,7 @@ Strumenti: `dig`, `host`, `dnsenum`
 
 ---
 
-## 1 Introduzione Teorica
+## 1 Introduzione teorica
 
 Il DNS (Domain Name System) opera tipicamente sulla porta 53 (UDP/TCP).
 
@@ -29,11 +29,11 @@ Cos'è un Zone Transfer (AXFR)?
 
 ---
 
-## 2 Esecuzione Tecnica
+## 2 Esecuzione tecnica
 
 **ID Finding:** `DNS-001` | **Severity:** `Critico`
 
-#### A. Identificazione dei Name Server (NS)
+#### A. identificazione dei name server (NS)
 
 Prima di attaccare, bisogna sapere "chi" gestisce il DNS del target.
 
@@ -47,7 +47,7 @@ host -t ns zonetransfer.me
 
 Analisi: Identificati i server nsztm1.digi.ninja e nsztm2.digi.ninja.
 
-#### B. Esecuzione del Zone Transfer (Attack)
+#### B. esecuzione del zone transfer (attack)
 
 Utilizzando il tool dig, interroghiamo il Name Server identificato chiedendo una copia completa della zona (axfr).
 
@@ -69,7 +69,7 @@ Analisi dei Dati Estratti: Dal dump sono emersi sottodomini critici solitamente 
 - `office.zonetransfer.me` (Rete interna)
 - Commenti nei record TXT che rivelano dettagli interni.
 
-#### C. Automazione con DNSenum
+#### C. automazione con DNSenum
 
 Per velocizzare il processo, si utilizza dnsenum che combina query Google, Brute Force e Zone Transfer in un unico comando.
 
@@ -86,7 +86,7 @@ dnsenum zonetransfer.me
 
 ---
 
-## 3 Conclusioni e Remediation
+## 3 Conclusioni e remediation
 
 L'attacco ha avuto successo confermando una Critical Misconfiguration. L'esposizione completa della zona DNS annulla la "Security by Obscurity", fornendo all'attaccante la topologia completa della rete.
 
@@ -94,9 +94,9 @@ Remediation (Blue Team): Configurare il server DNS (es. BIND9 o Windows DNS) per
 
 ---
 
-## Analisi a Basso Livello: Protocollo AXFR e Struttura dei Record DNS
+## Analisi a basso livello: protocollo AXFR e struttura dei record DNS
 
-### Anatomia di una Query AXFR
+### Anatomia di una query AXFR
 
 Il Zone Transfer (AXFR, RFC 5936) opera su TCP porta 53 (a differenza delle query standard che usano UDP). Il protocollo segue una sequenza precisa:
 
@@ -117,20 +117,20 @@ Client                              Server DNS (NS autoritativo)
 
 Il primo e l'ultimo record della risposta AXFR sono sempre il SOA (Start of Authority) della zona: il client utilizza questa convenzione per determinare quando il trasferimento e completo. Ogni record nella risposta contiene il campo TTL (Time To Live), il tipo (A, MX, SRV, TXT, CNAME) e i dati associati.
 
-### Record ad Alto Valore per il Red Team
+### Record ad alto valore per il red team
 
 Non tutti i record DNS hanno lo stesso valore operativo. In un zone transfer riuscito, i record piu critici sono:
 
-| Tipo Record | Esempio dal dump | Valore per l'attaccante |
+| tipo record | esempio dal dump | valore per l'attaccante |
 | :--- | :--- | :--- |
-| **SRV** | `_kerberos._tcp.zonetransfer.me` | Rivela la presenza e posizione del Domain Controller (KDC) |
-| **MX** | `mail.zonetransfer.me` | Identifica il mail server - target per relay abuse e phishing |
-| **A** (interni) | `vpn.zonetransfer.me -> 10.x.x.x` | Mappa la rete interna senza scanning attivo |
-| **TXT** | `"v=spf1 include:..."` | Rivela policy SPF/DKIM - utile per spoofing assessment |
-| **CNAME** | `dev.zonetransfer.me -> aws.amazonaws.com` | Identifica servizi cloud - potenziale subdomain takeover |
-| **HINFO** | `CPU: INTEL-386, OS: LINUX` | Fingerprinting OS senza scanning (raro ma devastante) |
+| **srv** | `_kerberos._tcp.zonetransfer.me` | rivela la presenza e posizione del domain controller (kdc) |
+| **mx** | `mail.zonetransfer.me` | identifica il mail server - target per relay abuse e phishing |
+| **a** (interni) | `vpn.zonetransfer.me -> 10.x.x.x` | mappa la rete interna senza scanning attivo |
+| **txt** | `"v=spf1 include:..."` | rivela policy spf/dkim - utile per spoofing assessment |
+| **cname** | `dev.zonetransfer.me -> aws.amazonaws.com` | identifica servizi cloud - potenziale subdomain takeover |
+| **hinfo** | `CPU: INTEL-386, OS: LINUX` | fingerprinting os senza scanning (raro ma devastante) |
 
-### Protezione: TSIG (Transaction Signature)
+### Protezione: TSIG (transaction signature)
 
 La contromisura a livello di protocollo per gli AXFR non autorizzati e TSIG (RFC 2845). TSIG autentica le transazioni DNS tramite un HMAC-MD5 (o HMAC-SHA256) calcolato con una chiave simmetrica condivisa tra primary e secondary DNS:
 
@@ -151,11 +151,11 @@ Con TSIG abilitato, una richiesta AXFR senza la chiave corretta riceve un `REFUS
 
 ---
 
-## Scenario Reale: Proiezione in un Engagement di Penetration Testing
+## Scenario reale: proiezione in un engagement di penetration testing
 
 > Questa sezione descrive come DNS-001 si inserirebbe in un engagement reale su un'infrastruttura aziendale.
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** dominio target noto (`azienda.it`); identificazione dei Name Server autoritativi tramite query NS; tentativo di zone transfer AXFR.
 
@@ -190,7 +190,7 @@ Compromissione AD completa
 - Subdomain takeover: CNAME che puntano a servizi cloud dismessi possono essere rivendicati dall'attaccante
 - Phishing mirato: record MX + policy SPF debole = spoofing email dall'interno del dominio
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** una query AXFR genera una connessione TCP sulla porta 53 con trasferimento dati significativo (decine di KB per zone piccole, MB per zone grandi). Questo pattern e anomalo: le query DNS legittime usano UDP e trasferiscono pochi byte.
 
@@ -212,7 +212,7 @@ Compromissione AD completa
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'esercizio su zonetransfer.me ha reso tangibile la differenza tra teoria e impatto reale. La documentazione DNS descrive AXFR come un "meccanismo di replica tra server" - formulazione che minimizza il rischio. In pratica, il dump ha restituito decine di record che in un contesto aziendale avrebbero mappato l'intera infrastruttura: VPN, ambienti di sviluppo, rete interna, server di posta.
 
@@ -224,10 +224,10 @@ Un dettaglio non ovvio: il zone transfer su zonetransfer.me ha restituito anche 
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Network Info: DNS | `T1590.002` | Zone Transfer AXFR su zonetransfer.me tramite dig e dnsenum, ottenendo l'elenco completo di sottodomini e IP inclusi vpn, dev e office (DNS-001) |
-| Reconnaissance | Search Open Technical Databases: DNS/Passive DNS | `T1596.001` | Interrogazione dei Name Server pubblici del target per identificare record NS, MX e subzone trasferibili (DNS-001) |
+| reconnaissance | gather victim network info: dns | `T1590.002` | zone transfer axfr su zonetransfer.me tramite dig e dnsenum, ottenendo l'elenco completo di sottodomini e ip inclusi vpn, dev e office (DNS-001) |
+| reconnaissance | search open technical databases: dns/passive dns | `T1596.001` | interrogazione dei name server pubblici del target per identificare record ns, mx e subzone trasferibili (DNS-001) |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](REFERENCES.md)
 
-# Bibliography - Primary Literature and Standards
+# Bibliography - primary literature and standards
 
 > Annotated bibliography supporting the `THEORETICAL-FOUNDATIONS.md` documents of each module.
 > It collects the peer-reviewed scientific literature, the technical standards and the reference texts
@@ -20,7 +20,7 @@ In-text reference convention: `[Author Year]` (e.g. `[Saltzer & Schroeder 1975]`
 
 ---
 
-## A. Foundational principles and formal models
+## A. foundational principles and formal models
 
 - **[Saltzer & Schroeder 1975]** Saltzer, J. H., & Schroeder, M. D. (1975). "The Protection of Information in Computer Systems." *Proceedings of the IEEE*, 63(9), 1278-1308.
   - Source of the eight secure design principles (economy of mechanism, fail-safe defaults, least privilege, complete mediation, open design, separation of privilege, least common mechanism, psychological acceptability). Cross-cutting foundation, central to hardening (module 08) and cloud IAM (module 10).
@@ -48,7 +48,7 @@ In-text reference convention: `[Author Year]` (e.g. `[Saltzer & Schroeder 1975]`
 
 ---
 
-## B. Cryptography, authentication and passwords
+## B. cryptography, authentication and passwords
 
 - **[Diffie & Hellman 1976]** Diffie, W., & Hellman, M. (1976). "New Directions in Cryptography." *IEEE Transactions on Information Theory*, 22(6), 644-654.
   - Public-key cryptography and key exchange. Theoretical basis for TLS, SSH, WPA3-SAE (modules 02, 06).
@@ -79,7 +79,7 @@ In-text reference convention: `[Author Year]` (e.g. `[Saltzer & Schroeder 1975]`
 
 ---
 
-## C. Web security and language theory
+## C. web security and language theory
 
 - **[Su & Wassermann 2006]** Su, Z., & Wassermann, G. (2006). "The Essence of Command Injection Attacks in Web Applications." *ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages (POPL)*, 372-382.
   - Formal treatment of injection as data/code confusion at the grammar/parser level. Theoretical foundation of module 03.
@@ -95,7 +95,7 @@ In-text reference convention: `[Author Year]` (e.g. `[Saltzer & Schroeder 1975]`
 
 ---
 
-## D. Networks, intrusion detection and detection theory
+## D. networks, intrusion detection and detection theory
 
 - **[Denning 1987]** Denning, D. E. (1987). "An Intrusion-Detection Model." *IEEE Transactions on Software Engineering*, SE-13(2), 222-232.
   - Foundational model of intrusion detection. Historical basis of module 08.
@@ -114,7 +114,7 @@ In-text reference convention: `[Author Year]` (e.g. `[Saltzer & Schroeder 1975]`
 
 ---
 
-## E. Attack graphs, kill chain and adversary modeling
+## E. attack graphs, kill chain and adversary modeling
 
 - **[Phillips & Swiler 1998]** Phillips, C., & Swiler, L. P. (1998). "A Graph-Based System for Network-Vulnerability Analysis." *New Security Paradigms Workshop (NSPW)*, 71-79.
   - Introduction of attack graphs. Theoretical foundation of lateral movement and pivoting (module 07).
@@ -133,7 +133,7 @@ In-text reference convention: `[Author Year]` (e.g. `[Saltzer & Schroeder 1975]`
 
 ---
 
-## F. Wireless and RFID security
+## F. wireless and RFID security
 
 - **[Fluhrer et al. 2001]** Fluhrer, S., Mantin, I., & Shamir, A. (2001). "Weaknesses in the Key Scheduling Algorithm of RC4." *Selected Areas in Cryptography (SAC)*, LNCS 2259, 1-24.
   - Breaking of WEP via RC4 weaknesses. Historical reference for the evolution of WiFi security (module 06).
@@ -152,7 +152,7 @@ In-text reference convention: `[Author Year]` (e.g. `[Saltzer & Schroeder 1975]`
 
 ---
 
-## G. Digital forensics
+## G. digital forensics
 
 - **[Brezinski & Killalea 2002]** Brezinski, D., & Killalea, T. (2002). "Guidelines for Evidence Collection and Archiving." RFC 3227 (BCP 55).
   - Defines the order of volatility and the best practices of evidence collection. Foundation of module 09.
@@ -168,7 +168,7 @@ In-text reference convention: `[Author Year]` (e.g. `[Saltzer & Schroeder 1975]`
 
 ---
 
-## H. Cloud, virtualization and container security
+## H. cloud, virtualization and container security
 
 - **[Ristenpart et al. 2009]** Ristenpart, T., Tromer, E., Shacham, H., & Savage, S. (2009). "Hey, You, Get Off of My Cloud: Exploring Information Leakage in Third-Party Compute Clouds." *ACM CCS*, 199-212.
   - Co-residency and side-channels between VMs in the public cloud. Theoretical foundation of module 10.
@@ -181,7 +181,7 @@ In-text reference convention: `[Author Year]` (e.g. `[Saltzer & Schroeder 1975]`
 
 ---
 
-## I. Reconnaissance and attack surface
+## I. reconnaissance and attack surface
 
 - **[Manadhata & Wing 2011]** Manadhata, P. K., & Wing, J. M. (2011). "An Attack Surface Metric." *IEEE Transactions on Software Engineering*, 37(3), 371-386.
   - Quantitative formalization of the attack surface. Theoretical foundation of module 01 (reconnaissance) and hardening (module 08).
@@ -194,7 +194,7 @@ In-text reference convention: `[Author Year]` (e.g. `[Saltzer & Schroeder 1975]`
 
 ---
 
-## J. Social engineering (psychological foundations)
+## J. social engineering (psychological foundations)
 
 - **[Cialdini 1984]** Cialdini, R. B. (1984). *Influence: The Psychology of Persuasion*. Harper Business.
   - The six principles of influence (reciprocity, commitment/consistency, social proof, authority, liking, scarcity). Psychological foundation of module 05.
@@ -207,7 +207,7 @@ In-text reference convention: `[Author Year]` (e.g. `[Saltzer & Schroeder 1975]`
 
 ---
 
-## M. Exploitation, memory safety and theory of computation
+## M. exploitation, memory safety and theory of computation
 
 - **[Aleph One 1996]** Aleph One (Levy, E.). (1996). "Smashing the Stack for Fun and Profit." *Phrack Magazine*, 7(49), file 14.
   - Seminal exposition of the stack buffer overflow. Historical reference of module 04 (binary exploitation).
@@ -226,7 +226,7 @@ In-text reference convention: `[Author Year]` (e.g. `[Saltzer & Schroeder 1975]`
 
 ---
 
-## N. Provable security, formal models and semantics (graduate level)
+## N. provable security, formal models and semantics (graduate level)
 
 - **[Goldwasser & Micali 1984]** Goldwasser, S., & Micali, S. (1984). "Probabilistic Encryption." *Journal of Computer and System Sciences*, 28(2), 270-299.
   - Notion of semantic security and computational indistinguishability. Foundation of provable security (THEORY-ADVANCED, Part I).
@@ -265,7 +265,7 @@ In-text reference convention: `[Author Year]` (e.g. `[Saltzer & Schroeder 1975]`
 
 ---
 
-## K. Reference monographs
+## K. reference monographs
 
 - **[Anderson 2020]** Anderson, R. (2020). *Security Engineering: A Guide to Building Dependable Distributed Systems* (3rd ed.). Wiley.
 - **[Bishop 2018]** Bishop, M. (2018). *Computer Security: Art and Science* (2nd ed.). Addison-Wesley.
@@ -273,7 +273,7 @@ In-text reference convention: `[Author Year]` (e.g. `[Saltzer & Schroeder 1975]`
 
 ---
 
-## L. Standards and normative grey literature
+## L. standards and normative grey literature
 
 - **NIST SP 800-61 Rev. 2** - Computer Security Incident Handling Guide (modules 08, 09).
 - **NIST SP 800-63B** - Digital Identity Guidelines: Authentication and Lifecycle Management (modules 04, 07, 10).

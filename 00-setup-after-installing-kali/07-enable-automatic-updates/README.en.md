@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 07 - Enable Automatic Updates
+# 07 - Enable automatic updates
 
 > - **Phase:** System Setup - Automatic Patch Management
 > - **Priority:** Medium - complementary to step 01 for long-term maintenance

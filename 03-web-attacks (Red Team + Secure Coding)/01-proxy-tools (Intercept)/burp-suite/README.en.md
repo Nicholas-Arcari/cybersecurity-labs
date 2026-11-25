@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Proxy Tools: Burp Suite Interception & Extensions
+# Proxy tools: Burp suite interception & extensions
 
 > - **Phase:** Web Attack - Proxy Setup & Traffic Manipulation
 > - **Visibility:** Local - traffic stays between browser and proxy, no additional packets towards the target
@@ -17,7 +17,7 @@ Tools: `Burp Suite Community Edition`
 
 ---
 
-## 1 Theoretical Introduction
+## 1 Theoretical introduction
 
 A Web Proxy (like Burp Suite) is the fundamental tool for Web Application Penetration Testing. It positions itself as a "Man-in-the-Middle" (MitM) between the attacker's browser and the web server. Unlike passive sniffers (Wireshark), the Proxy allows:
 
@@ -27,7 +27,7 @@ A Web Proxy (like Burp Suite) is the fundamental tool for Web Application Penetr
 
 ---
 
-## 2 Technical Execution: Traffic Manipulation
+## 2 Technical execution: traffic manipulation
 
 The proxy listener was configured on `127.0.0.1:8080` and traffic towards the target was intercepted.
 
@@ -53,7 +53,7 @@ User-Agent manipulation allows Evasion and Access attacks:
 
 ---
 
-## 3 Advanced Configuration: BApp Store
+## 3 Advanced configuration: BApp store
 
 To prepare the environment for more complex tests, the BApp Store was explored - Burp's official extension repository. Extensions allow automating repetitive tasks or supporting specific protocols.
 
@@ -73,7 +73,7 @@ The ability to intercept and modify traffic "in transit" is the prerequisite for
 
 ---
 
-## 5 Extra, Note on Persistence and Reporting (.burp files)
+## 5 Extra, note on persistence and reporting (.burp files)
 
 During this lab the Community Edition was used, which operates exclusively in "Temporary Project" mode (in memory).
 In an enterprise context (Enterprise/Red Team) using Burp Suite Professional, the standard workflow involves continuous project saving in `.burp` format.
@@ -86,12 +86,12 @@ Importance of .burp files:
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Collection | Man-in-the-Middle | `T1557` | Positioning Burp Suite as MitM proxy between browser and `tesla.com` server to intercept HTTP/HTTPS traffic |
-| Defense Evasion | Masquerading: Masquerade File Type | `T1036.008` | Modification of the `User-Agent` header from standard browser to `Portfolio-Red-Team-Phone` to simulate a different device and potentially bypass security controls |
+| collection | man-in-the-middle | `T1557` | positioning burp suite as mitm proxy between browser and `tesla.com` server to intercept http/https traffic |
+| defense evasion | masquerading: masquerade file type | `T1036.008` | modification of the `User-Agent` header from standard browser to `Portfolio-Red-Team-Phone` to simulate a different device and potentially bypass security controls |
 
 ---
 

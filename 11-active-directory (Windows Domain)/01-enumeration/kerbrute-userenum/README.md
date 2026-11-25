@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Kerbrute sfrutta una caratteristica del pre-autenticazione Kerberos: quando si invia un AS-REQ per un
 utente, il KDC risponde in modo diverso a seconda che l'utente esista o meno, prima ancora di verificare la
@@ -34,7 +34,7 @@ finestra, distanziate. La decisione prudente e privilegiare poche password ad al
 (es. `Nomeazienda<Anno>!`, `Stagione<Anno>!`) su tutta la lista, piuttosto che molte password su pochi
 account.
 
-## Esecuzione / Comandi
+## Esecuzione / comandi
 
 ### User enumeration
 
@@ -71,7 +71,7 @@ autenticata, Kerberoasting, e la catena di escalation). Il finding reale va clas
 nessuna credenziale trovata lascia il finding a `Basso` (solo enumerazione); una credenziale valida, specie
 se di un account privilegiato, alza la severity.
 
-### Analisi Teorica
+### Analisi teorica
 
 La user enumeration sfrutta una fuga di informazione nel pre-auth Kerberos: il KDC distingue "utente
 inesistente" (KDC_ERR_C_PRINCIPAL_UNKNOWN) da "utente esistente, pre-auth richiesta"
@@ -82,7 +82,7 @@ costo per account (un tentativo) resta sotto la soglia di lockout. La difesa com
 sensate, password non prevedibili (contro lo spraying) e monitoraggio dei pattern di pre-auth (contro
 l'enumerazione).
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Rilevamento.** Molti AS-REQ per username diversi dalla stessa sorgente in breve tempo (enumerazione);
 Event ID 4768/4771 su molti account con la stessa finestra temporale (spraying); un singolo tentativo di
@@ -94,11 +94,11 @@ spraying; disabilitazione di account inutilizzati che allargano la superficie.
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Vale per l'esito "spraying riuscito" (severity Alto).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** nessuna credenziale; lista di username validi ottenuta via enumeration.
 
@@ -129,7 +129,7 @@ parte l'intera catena AD.
 **Vettori di monetizzazione tipici:** ransomware e esfiltrazione a valle del controllo di dominio; rivendita
 dell'accesso iniziale.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** pattern di spraying (un tentativo su molti account); enumerazione via AS-REQ di massa.
 
@@ -148,11 +148,11 @@ La difesa efficace e rendere le password non indovinabili (filtri e MFA), non so
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `kerbrute` | Kerberos pre-auth | CLI - Attivo | User enumeration e password spraying via Kerberos |
-| `NetExec` (`nxc`) | AD/SMB toolkit | CLI - Attivo | Password spraying su SMB/LDAP/WinRM, con controllo del lockout |
-| `kerbrute` + wordlist utenti | - | - | Liste come SecLists per username comuni e pattern aziendali |
+| `kerbrute` | kerberos pre-auth | cli - attivo | user enumeration e password spraying via kerberos |
+| `NetExec` (`nxc`) | ad/smb toolkit | cli - attivo | password spraying su smb/ldap/winrm, con controllo del lockout |
+| `kerbrute` + wordlist utenti | - | - | liste come seclists per username comuni e pattern aziendali |
 
 ## Note di metodologia
 
@@ -162,18 +162,18 @@ policy puo bloccare account e va evitato anche in lab per acquisire l'abitudine 
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Discovery | Account Discovery: Domain Account | `T1087.002` | Enumerazione di username validi via pre-auth Kerberos. |
-| Credential Access | Brute Force: Password Spraying | `T1110.003` | Tentativo di una password comune su molti account. |
+| discovery | account discovery: domain account | `T1087.002` | enumerazione di username validi via pre-auth kerberos. |
+| credential access | brute force: password spraying | `T1110.003` | tentativo di una password comune su molti account. |
 
 ## Correlazioni con altri moduli
 
-| Provenienza | Questa tecnica | Effetto |
+| provenienza | questa tecnica | effetto |
 | :--- | :--- | :--- |
 | [domain-enumeration](<../domain-enumeration/README.md>) | kerbrute spraying | la lockout policy letta qui determina il dosaggio sicuro |
-| kerbrute (credenziale ottenuta) | [BloodHound](<../bloodhound/README.md>) / modulo intero | fornisce il foothold di dominio iniziale |
-| Password spraying | [05-social-engineering](<../../../05-social-engineering/README.md>) | alternativa/complemento al phishing per l'accesso iniziale |
+| kerbrute (credenziale ottenuta) | [bloodhound](<../bloodhound/README.md>) / modulo intero | fornisce il foothold di dominio iniziale |
+| password spraying | [05-social-engineering](<../../../05-social-engineering/README.md>) | alternativa/complemento al phishing per l'accesso iniziale |
 
 ---
 

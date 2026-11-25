@@ -1,6 +1,6 @@
 > **English** | [Italiano](THEORETICAL-FOUNDATIONS.md)
 
-# Theoretical Foundations - Module 05: Social Engineering
+# Theoretical foundations - module 05: social engineering
 
 > - **Level:** Academic analysis (theoretical complement to the operational READMEs of the module)
 > - **Purpose:** Ground social engineering in dual-process cognitive theory and the principles of influence, and formalize the system-to-human authentication gap as a structural limit.
@@ -14,13 +14,13 @@ Social engineering is often dismissed as non-technical "human hacking". This doc
 
 ---
 
-## 1. The Adversary Model
+## 1. The adversary model
 
 The social engineering adversary targets not a system but a **human operator** endowed with authority (access, credentials, capability to act). Unlike the other modules, the attack channel is not a technical interface but the **cognition and trust** of the target. The adversary's capabilities are: to build a credible pretext, to impersonate an authority or a trusted context, to induce an action (click, reveal, authorize) before analytic evaluation intervenes. The target is not "irrational": it is a **bounded-rationality** agent operating under constraints of time, attention and information, exactly the conditions the attack constructs.
 
 ---
 
-## 2. Security Properties at Stake
+## 2. Security properties at stake
 
 - **Bidirectional authentication:** not only must the system authenticate the user, but the user must be able to authenticate the system/interlocutor. Phishing violates the second direction, generally weaker (section 3.3).
 - **Integrity of intention:** a privileged action must derive from an informed decision of the legitimate holder, not from a manipulation. It is the same property violated by the confused deputy (module 03), here applied to the human agent.
@@ -28,7 +28,7 @@ The social engineering adversary targets not a system but a **human operator** e
 
 ---
 
-## 3. Theoretical Foundations
+## 3. Theoretical foundations
 
 ### 3.1 Dual process and exploitation of the heuristic
 
@@ -58,7 +58,7 @@ This theoretically links module 05 to module 06: the Evil Twin (rogue AP) is the
 
 ---
 
-## 4. Quantitative Analysis
+## 4. Quantitative analysis
 
 ### 4.1 The base-rate against the user
 
@@ -70,13 +70,13 @@ A phishing campaign has almost null marginal cost per additional target, while t
 
 ---
 
-## 5. Literature Review
+## 5. Literature review
 
 The cognitive substrate of social engineering rests on the dual-process theory of [Kahneman 2011] and the principles of influence of [Cialdini 1984], both with a solid empirical basis in psychology. The empirical demonstration of the effectiveness of phishing and of the limits of human perception is by [Dhamija et al. 2006]. The framework for evaluating authentication (and implicitly its directional gap) is by [Bonneau et al. 2012]. The model of human error and layered defense is by [Reason 1990]. The base-rate argument appeals, by duality, to the analysis of [Axelsson 2000] developed in module 08.
 
 ---
 
-## 6. Limitations and Open Problems
+## 6. Limitations and open problems
 
 1. **Usable system-to-human authentication.** Designing a mechanism by which a human reliably and at low cognitive cost verifies the authenticity of a counterpart remains an open problem: the proposed solutions (security indicators, personalized images) are ignored or bypassed [Dhamija et al. 2006].
 
@@ -86,7 +86,7 @@ The cognitive substrate of social engineering rests on the dual-process theory o
 
 ---
 
-## 7. Synthesis and Connection to Practice
+## 7. Synthesis and connection to practice
 
 The `SE-` findings of the module instantiate this framework: the phishing campaigns (GoPhish), the pretexts and the payloads documented in the READMEs are applications of the principles of [Cialdini 1984] operating on System 1 [Kahneman 2011], and their effectiveness mirrors the results of [Dhamija et al. 2006]. The recommended remediation - phishing-resistant MFA, DMARC/SPF/DKIM, filters, out-of-band procedural verifications - is the operational translation of section 4.1: shift the load from human vigilance to systemic controls. The theoretical link to module 06 (Evil Twin) and to module 03 (confused deputy) unifies social engineering with the rest of the path under a single principle: where the authentication of intention and of the counterpart is missing, the attack passes - whether the confused deputy is a browser, a server or a human being.
 

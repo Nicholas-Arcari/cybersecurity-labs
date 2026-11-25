@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Replay Attacks - Capture and Retransmission of RF Signals
+# Replay attacks - capture and retransmission of RF signals
 
 > - **Phase:** Wireless Security - RF Replay & Signal Injection (Software Defined Radio)
 > - **Visibility:** Medium - the capture is passive; the retransmission emits an RF signal on the target band, potentially detectable by a receiver and - if on a regulated band - by control authorities
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 The replay attack is the most direct and conceptually simple RF attack: one captures the signal transmitted by a legitimate remote and retransmits it at a later time to replicate the original action. There is no reverse engineering necessary, there is no cryptography to break: one records and plays back, exactly like an audio recorder.
 
@@ -23,7 +23,7 @@ The only effective defense is the rolling code, which invalidates every signal a
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 replay-attacks/
@@ -33,15 +33,15 @@ replay-attacks/
 
 ---
 
-## Replay Attack on Fixed Code
+## Replay attack on fixed code
 
 **Finding ID:** `WIFI-009` | **Severity:** `High` (unauthorized actuation of an RF-controlled device - physical access to gates/garages)
 
-### Operational Context
+### Operational context
 
 The previous analysis (`../signal-analysis/`, WIFI-008) confirmed that the test gate-opener remote uses a fixed code: repeated actuations produce identical sequences. This is the premise of the replay. With a HackRF (capable of transmitting, unlike the RTL-SDR) or a Flipper Zero, the captured signal is retransmitted to replicate the "open" command.
 
-### PoC - Phase 1: Capture of the raw signal
+### PoC - phase 1: capture of the raw signal
 
 ```Bash
 # IQ capture of the burst while actuating the remote (HackRF, 433.92 MHz)
@@ -55,7 +55,7 @@ Stop with Ctrl-C
 Exiting... (captured 8388608 samples)      <-- signal recorded in gate_capture.iq
 ```
 
-### PoC - Phase 2: Retransmission (replay)
+### PoC - phase 2: retransmission (replay)
 
 ```Bash
 # Retransmission of the captured signal on the same frequency
@@ -69,7 +69,7 @@ Exiting...                                 <-- gate actuated (WIFI-009)
 
 The test gate opened: the retransmitted signal is indistinguishable from the original because it is the original, sample by sample.
 
-### PoC - Alternative with Flipper Zero
+### PoC - alternative with flipper zero
 
 ```
 Flipper Zero -> Sub-GHz -> Read (RAW)
@@ -89,9 +89,9 @@ The Flipper Zero makes the attack portable and immediate: capture and replay in 
 
 ---
 
-## Why the Rolling Code Neutralizes the Replay
+## Why the rolling code neutralizes the replay
 
-### Operational Context
+### Operational context
 
 Repeating the capture on a modern car remote (rolling code), the replay fails: the retransmitted signal is rejected by the receiver. This practically demonstrates the difference between the two models.
 
@@ -109,7 +109,7 @@ The receiver maintains a synchronized counter and accepts only subsequent never-
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The switch from the RTL-SDR to the HackRF was the fundamental hardware lesson: the RTL-SDR, used for all the previous analysis, only receives. For the replay a device capable of transmitting is needed, and this required the HackRF One (or, as a portable alternative, the Flipper Zero). It is a reminder that in the RF domain the capabilities of the hardware rigidly define what is possible.
 
@@ -119,7 +119,7 @@ An important practical and legal caution emerged in the exercise: RF transmissio
 
 ---
 
-## Theoretical Analysis: The Replay as a Failure of Temporal Authentication
+## Theoretical analysis: the replay as a failure of temporal authentication
 
 The replay attack, in an abstract sense, is the failure of authentication to guarantee the "freshness" of a message. A fixed-code system verifies only that the message is valid (it matches the expected pattern), but not that it is recent or never used before. It lacks the temporal dimension of authentication: any copy of a valid message is accepted, regardless of when it was generated.
 
@@ -129,11 +129,11 @@ The KeeLoq implementation combines the counter with encryption: the counter is e
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > This section describes how this finding would fit into a real engagement, from both the attacker (Red Team) and defender (Blue Team) perspectives.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** ability to actuate a fixed-code RF-controlled physical access device (WIFI-009) - gate, garage, barrier.
 
@@ -156,7 +156,7 @@ Drop of an implant or access to workstations -> internal foothold
 
 **Potential impact:** the control of unprotected RF physical accesses nullifies the physical perimeter security. An attacker who has observed the owner actuate the remote just once (even at a distance, with a directional antenna) can replicate the access at will. The vector links RF security to physical security and internal network access, analogously to badge cloning (`../../04-rfid-nfc (Physical Access)/`).
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** cheap RF systems do not log or detect replays. More evolved systems can detect anomalies (actuations at unusual times, duplicate signal patterns with a monitoring receiver).
 
@@ -177,29 +177,29 @@ Drop of an implant or access to workstations -> internal foothold
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `HackRF One` | SDR TX/RX | Hardware + CLI | Full-duplex RF capture and retransmission (1 MHz - 6 GHz) |
-| `hackrf_transfer` | SDR utility | CLI | Capture (`-r`) and replay (`-t`) of raw IQ signals |
-| `Universal Radio Hacker` | Signal analyzer | GUI | Capture, analysis and generation/retransmission of signals |
-| `Flipper Zero` | Portable multi-tool | Hardware | Portable sub-GHz capture and replay (fixed code) |
-| `RTL-SDR` | SDR RX only | Hardware | Reception only (analysis); does not transmit, does not replay |
-| `rpitx` / `PortaPack` | TX platform | Hardware | Alternative RF transmission platforms |
+| `HackRF One` | sdr tx/rx | hardware + cli | full-duplex rf capture and retransmission (1 mhz - 6 ghz) |
+| `hackrf_transfer` | sdr utility | cli | capture (`-r`) and replay (`-t`) of raw iq signals |
+| `Universal Radio Hacker` | signal analyzer | gui | capture, analysis and generation/retransmission of signals |
+| `Flipper Zero` | portable multi-tool | hardware | portable sub-ghz capture and replay (fixed code) |
+| `RTL-SDR` | sdr rx only | hardware | reception only (analysis); does not transmit, does not replay |
+| `rpitx` / `PortaPack` | tx platform | hardware | alternative rf transmission platforms |
 
 > **Recommended modern tool:** the `HackRF One` for flexible lab work (RX+TX on a very wide band) and the `Flipper Zero` for sub-GHz replay in the field. Caution: the Flipper Zero blocks transmission by default on some regulated bands for regulatory compliance.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Network Sniffing | `T1040` | Capture of the remote's RF signal during actuation (WIFI-009) |
-| Collection | Adversary-in-the-Middle | `T1557` | Interception of the signal for the purpose of subsequent retransmission |
-| Initial Access | Hardware Additions | `T1200` | Use of SDR/Flipper hardware for replay and physical access (WIFI-009) |
-| Impact (ICS) | Manipulation of Control | `T0831` | Retransmission of the signal to actuate a physical device (gate) without authorization |
+| credential access | network sniffing | `T1040` | capture of the remote's rf signal during actuation (WIFI-009) |
+| collection | adversary-in-the-middle | `T1557` | interception of the signal for the purpose of subsequent retransmission |
+| initial access | hardware additions | `T1200` | use of sdr/flipper hardware for replay and physical access (WIFI-009) |
+| impact (ics) | manipulation of control | `T0831` | retransmission of the signal to actuate a physical device (gate) without authorization |
 
 ---
 

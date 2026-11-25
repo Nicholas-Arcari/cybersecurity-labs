@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# AD CS ESC8: NTLM relay to Web Enrollment and domain compromise
+# AD CS ESC8: NTLM relay to web enrollment and domain compromise
 
 > - **Phase:** Credential Access / Privilege Escalation (Active Directory domain)
 > - **Visibility:** Medium-High - coercion generates anomalous RPC traffic toward the attacker; certificate issuance leaves a trace in the CA database (a request from an unexpected principal)
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 ESC8 is one of the Active Directory Certificate Services misconfigurations catalogued in the "Certified
 Pre-Owned" research (Schroeder & Christensen 2021). It combines two independent weaknesses: the AD CS Web
@@ -37,12 +37,12 @@ The main operational decision is which victim to coerce and which template to re
 highest-impact option (it leads directly to the domain secrets), but any privileged machine account can be
 useful. The template choice (e.g., one allowing Client Authentication) depends on what the CA exposes.
 
-## Execution / Commands
+## Execution / commands
 
 The base scenario requires three components in sequence: a relay listener pointed at the CA, a coercion
 trigger, and finally the use of the obtained certificate.
 
-### Phase 1 - Relay to the AD CS endpoint
+### Phase 1 - relay to the AD CS endpoint
 
 ```bash
 # ntlmrelayx listening: relays the received authentication to the CA Web Enrollment,
@@ -50,7 +50,7 @@ trigger, and finally the use of the obtained certificate.
 ntlmrelayx.py -t http://ca01.corp.local/certsrv/certfnsh.asp -smb2support --adcs --template DomainController
 ```
 
-### Phase 2 - Coercing the authentication
+### Phase 2 - coercing the authentication
 
 ```bash
 # Induces the Domain Controller to authenticate to the attacker's host (which is the relay).
@@ -67,7 +67,7 @@ Illustrative output (ntlmrelayx side, representative):
 MIIR...[TRUNCATED]...==
 ```
 
-### Phase 3 - Using the certificate (PKINIT)
+### Phase 3 - using the certificate (PKINIT)
 
 ```bash
 # Kerberos authentication with the obtained certificate: returns a TGT for the victim account,
@@ -93,7 +93,7 @@ PKINIT independently of the password, so it survives its reset. Second, a DC's m
 definition, replication rights: from here DCSync is immediate. The severity is `Critical` because the
 practical outcome, in the DC scenario, is total domain compromise from a network position without privileges.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 ESC8 is the composition of two violations (see
 [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.en.md>), sections 3.4 and 2). The first is the
@@ -109,7 +109,7 @@ because it leads directly to replication rights. In environments where Web Enrol
 with Channel Binding (EPA) enabled, the relay fails: and this is exactly the countermeasure theoretically
 foreseen by property P4.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection (SOC/SIEM).**
 
@@ -130,11 +130,11 @@ foreseen by property P4.
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > How ESC8 would fit into a real engagement, from the attacker's and the defender's perspective.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** internal network position; AD CS with HTTP Web Enrollment identified; no privileged
 credentials.
@@ -166,7 +166,7 @@ persistence is particularly insidious because it survives password resets.
 **Typical monetization vectors:** enterprise ransomware downstream of domain control; massive data
 exfiltration with domain privileges; access brokering of the obtained Domain Admin access.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** certificate requests for privileged machine accounts from unexpected channels; spikes of RPC
 coercion; NTLM authentications toward `/certsrv` from illegitimate sources.
@@ -189,14 +189,14 @@ authentication to the channel and confining the certificate-issuance authority.
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `Certipy` | AD CS toolkit | CLI - Active | AD CS enumeration, ESC identification, PKINIT authentication with a certificate |
-| `ntlmrelayx.py` (Impacket) | Relay toolkit | CLI - Active | Relay of NTLM authentication to the CA Web Enrollment (`--adcs`) |
-| `Coercer` | Coercion toolkit | CLI - Active | Multi-protocol coercion of authentication (MS-EFSRPC, MS-RPRN, ...) |
-| `PetitPotam` | Coercion PoC | CLI - Active | Coercion via MS-EFSRPC, classic vector paired with ESC8 |
-| `Certify` | .NET AD CS tool | CLI - Active | AD CS enumeration and abuse from a Windows host |
-| `Rubeus` | .NET Kerberos tool | CLI - Active | Use of the certificate to request a TGT (PKINIT) from Windows |
+| `Certipy` | ad cs toolkit | cli - active | ad cs enumeration, esc identification, pkinit authentication with a certificate |
+| `ntlmrelayx.py` (impacket) | relay toolkit | cli - active | relay of ntlm authentication to the ca web enrollment (`--adcs`) |
+| `Coercer` | coercion toolkit | cli - active | multi-protocol coercion of authentication (ms-efsrpc, ms-rprn, ...) |
+| `PetitPotam` | coercion poc | cli - active | coercion via ms-efsrpc, classic vector paired with esc8 |
+| `Certify` | .net ad cs tool | cli - active | ad cs enumeration and abuse from a windows host |
+| `Rubeus` | .net kerberos tool | cli - active | use of the certificate to request a tgt (pkinit) from windows |
 
 ---
 
@@ -210,22 +210,22 @@ determine the failure or success of the relay. Once observed, these outcomes bec
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Steal or Forge Authentication Certificates | `T1649` | Obtaining an authentication certificate on behalf of a privileged account via AD CS. |
-| Credential Access | Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay | `T1557.001` | Relay of the coerced NTLM authentication to the Web Enrollment endpoint. |
-| Credential Access | Forced Authentication | `T1187` | Coercion of the Domain Controller to authenticate to the relay host (MS-EFSRPC/MS-RPRN). |
-| Credential Access | OS Credential Dumping: DCSync | `T1003.006` | Follow-on: use of the DC's credentials for abused replication. |
+| credential access | steal or forge authentication certificates | `T1649` | obtaining an authentication certificate on behalf of a privileged account via ad cs. |
+| credential access | adversary-in-the-middle: llmnr/nbt-ns poisoning and smb relay | `T1557.001` | relay of the coerced ntlm authentication to the web enrollment endpoint. |
+| credential access | forced authentication | `T1187` | coercion of the domain controller to authenticate to the relay host (ms-efsrpc/ms-rprn). |
+| credential access | os credential dumping: dcsync | `T1003.006` | follow-on: use of the dc's credentials for abused replication. |
 
 ---
 
 ## Links to other modules
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
-| Internal network position / recon ([01-recon](<../../../01-recon (Red Team Basic)/README.en.md>)) | ESC8 | identification of the AD CS endpoint and the DCs to coerce |
-| ESC8 | [DCSync](<../../05-credential-dumping/dcsync/README.en.md>) | the obtained DC credentials enable abused replication |
-| ESC8 | generic NTLM relay (module 07 / network techniques) | same relay primitive applied to a high-value target (the CA) |
+| internal network position / recon ([01-recon](<../../../01-recon (Red Team Basic)/README.en.md>)) | esc8 | identification of the ad cs endpoint and the dcs to coerce |
+| esc8 | [dcsync](<../../05-credential-dumping/dcsync/README.en.md>) | the obtained dc credentials enable abused replication |
+| esc8 | generic ntlm relay (module 07 / network techniques) | same relay primitive applied to a high-value target (the ca) |
 
 ---
 

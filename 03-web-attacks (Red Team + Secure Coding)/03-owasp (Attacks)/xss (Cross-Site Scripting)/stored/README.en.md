@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Vulnerability Assessment: Stored Cross-Site Scripting (XSS)
+# Vulnerability assessment: stored Cross-Site scripting (XSS)
 
 > - **Phase:** Web Attack - XSS Stored
 > - **Visibility:** Low - the payload is inserted once and then affects all page visitors without further requests from the attacker
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 During the analysis of the application `testphp.vulnweb.com`, a critical Stored Cross-Site Scripting (XSS) vulnerability was identified.
 
@@ -25,9 +25,9 @@ The impact is critical since the attack does not require the victim to click on 
 
 ---
 
-## 2 Technical Analysis
+## 2 Technical analysis
 
-#### Scenario: Profile Persistence Injection
+#### Scenario: profile persistence injection
 
 The registration module allows entry of personal data. It was verified that the "Address" field accepts and saves HTML tags and JavaScript.
 
@@ -55,7 +55,7 @@ The popup confirms that the JavaScript code was persisted and executed from the 
 
 ---
 
-## 3 Remediation Plan
+## 3 Remediation plan
 
 Stored XSS mitigation requires rigorous interventions both on input and output.
 
@@ -77,13 +77,13 @@ Stored XSS mitigation requires rigorous interventions both on input and output.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Injection of XSS payload in the "Address" field of the registration form on `testphp.vulnweb.com`, persisted in database without sanitization (WEB-006) |
-| Persistence | Server Software Component: Web Shell | `T1505.003` | The Stored XSS payload is equivalent to a persistent server-side malicious component that executes automatically every time the page is viewed (WEB-006) |
-| Credential Access | Steal Web Session Cookie | `T1539` | The Stored XSS payload is the vector for stealing the administrator's session cookie when viewing the infected profile, without requiring attacker interaction (WEB-006) |
+| initial access | exploit public-facing application | `T1190` | injection of xss payload in the "address" field of the registration form on `testphp.vulnweb.com`, persisted in database without sanitization (WEB-006) |
+| persistence | server software component: web shell | `T1505.003` | the stored xss payload is equivalent to a persistent server-side malicious component that executes automatically every time the page is viewed (WEB-006) |
+| credential access | steal web session cookie | `T1539` | the stored xss payload is the vector for stealing the administrator's session cookie when viewing the infected profile, without requiring attacker interaction (WEB-006) |
 
 ---
 

@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# AD CS ESC8: NTLM relay verso il Web Enrollment e compromissione del dominio
+# AD CS ESC8: NTLM relay verso il web enrollment e compromissione del dominio
 
 > - **Fase:** Credential Access / Privilege Escalation (dominio Active Directory)
 > - **Visibilita:** Media-Alta - la coercizione genera traffico RPC anomalo verso l'attaccante; l'emissione del certificato lascia traccia nel database della CA (richiesta da un principal inatteso)
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 ESC8 e una delle misconfigurazioni di Active Directory Certificate Services catalogate nella ricerca
 "Certified Pre-Owned" (Schroeder, Christensen 2021). Combina due debolezze indipendenti: l'endpoint di Web
@@ -41,12 +41,12 @@ l'opzione a piu alto impatto (porta direttamente ai segreti del dominio), ma qua
 privilegiato puo essere utile. La scelta del template (es. uno che consenta Client Authentication) dipende
 da cosa la CA espone.
 
-## Esecuzione / Comandi
+## Esecuzione / comandi
 
 Lo scenario base richiede tre componenti in sequenza: un listener di relay puntato alla CA, un trigger di
 coercizione, e infine l'uso del certificato ottenuto.
 
-### Fase 1 - Relay verso l'endpoint AD CS
+### Fase 1 - relay verso l'endpoint AD CS
 
 ```bash
 # ntlmrelayx in ascolto: rilancia l'autenticazione ricevuta verso il Web Enrollment della CA,
@@ -54,7 +54,7 @@ coercizione, e infine l'uso del certificato ottenuto.
 ntlmrelayx.py -t http://ca01.corp.local/certsrv/certfnsh.asp -smb2support --adcs --template DomainController
 ```
 
-### Fase 2 - Coercizione dell'autenticazione
+### Fase 2 - coercizione dell'autenticazione
 
 ```bash
 # Induce il Domain Controller ad autenticarsi verso l'host dell'attaccante (che e il relay).
@@ -71,7 +71,7 @@ Output illustrativo (lato ntlmrelayx, rappresentativo):
 MIIR...[TRONCATO]...==
 ```
 
-### Fase 3 - Uso del certificato (PKINIT)
+### Fase 3 - uso del certificato (PKINIT)
 
 ```bash
 # Autenticazione Kerberos con il certificato ottenuto: restituisce un TGT per l'account vittima,
@@ -98,7 +98,7 @@ Secondo, l'account macchina di un DC ha, per definizione, i diritti di replica: 
 immediato. La severity e `Critico` perche l'esito pratico, nello scenario DC, e la compromissione totale
 del dominio a partire da una posizione di rete senza privilegi.
 
-### Analisi Teorica
+### Analisi teorica
 
 ESC8 e la composizione di due violazioni (vedi [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.md>),
 sezioni 3.4 e 2). La prima e la violazione della proprieta P4 (binding dell'autenticazione al canale): NTLM
@@ -113,7 +113,7 @@ perche porta direttamente ai diritti di replica. In ambienti in cui il Web Enrol
 con Channel Binding (EPA) attivo, il relay fallisce: ed e esattamente la contromisura teoricamente prevista
 dalla proprieta P4.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Rilevamento (SOC/SIEM).**
 
@@ -135,11 +135,11 @@ dalla proprieta P4.
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Come ESC8 si inserirebbe in un engagement reale, dal punto di vista dell'attaccante e del difensore.
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** posizione di rete interna; AD CS con Web Enrollment HTTP individuato; nessuna
 credenziale privilegiata.
@@ -173,7 +173,7 @@ persistenza basata su certificato e particolarmente insidiosa perche sopravvive 
 - Esfiltrazione massiva di dati con privilegi di dominio.
 - Access brokering dell'accesso Domain Admin ottenuto.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** richieste di certificato per account macchina privilegiati da canali inattesi; picchi di
 coercizione RPC; autenticazioni NTLM verso `/certsrv` da origini non legittime.
@@ -198,14 +198,14 @@ l'autenticazione al canale e confinare l'autorita di emissione dei certificati.
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Certipy` | AD CS toolkit | CLI - Attivo | Enumerazione AD CS, identificazione ESC, autenticazione PKINIT con certificato |
-| `ntlmrelayx.py` (Impacket) | Relay toolkit | CLI - Attivo | Relay dell'autenticazione NTLM verso il Web Enrollment della CA (`--adcs`) |
-| `Coercer` | Coercion toolkit | CLI - Attivo | Coercizione multi-protocollo dell'autenticazione (MS-EFSRPC, MS-RPRN, ...) |
-| `PetitPotam` | Coercion PoC | CLI - Attivo | Coercizione via MS-EFSRPC, vettore classico abbinato a ESC8 |
-| `Certify` | .NET AD CS tool | CLI - Attivo | Enumerazione e abuso AD CS da host Windows |
-| `Rubeus` | .NET Kerberos tool | CLI - Attivo | Uso del certificato per richiedere TGT (PKINIT) da Windows |
+| `Certipy` | ad cs toolkit | cli - attivo | enumerazione ad cs, identificazione esc, autenticazione pkinit con certificato |
+| `ntlmrelayx.py` (impacket) | relay toolkit | cli - attivo | relay dell'autenticazione ntlm verso il web enrollment della ca (`--adcs`) |
+| `Coercer` | coercion toolkit | cli - attivo | coercizione multi-protocollo dell'autenticazione (ms-efsrpc, ms-rprn, ...) |
+| `PetitPotam` | coercion poc | cli - attivo | coercizione via ms-efsrpc, vettore classico abbinato a esc8 |
+| `Certify` | .net ad cs tool | cli - attivo | enumerazione e abuso ad cs da host windows |
+| `Rubeus` | .net kerberos tool | cli - attivo | uso del certificato per richiedere tgt (pkinit) da windows |
 
 ---
 
@@ -219,22 +219,22 @@ finding reale (`AD-NNN`).
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Steal or Forge Authentication Certificates | `T1649` | Ottenimento di un certificato di autenticazione per conto di un account privilegiato tramite AD CS. |
-| Credential Access | Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay | `T1557.001` | Relay dell'autenticazione NTLM coercita verso l'endpoint di Web Enrollment. |
-| Credential Access | Forced Authentication | `T1187` | Coercizione del Domain Controller ad autenticarsi verso l'host di relay (MS-EFSRPC/MS-RPRN). |
-| Credential Access | OS Credential Dumping: DCSync | `T1003.006` | Follow-on: uso delle credenziali del DC per la replica abusata. |
+| credential access | steal or forge authentication certificates | `T1649` | ottenimento di un certificato di autenticazione per conto di un account privilegiato tramite ad cs. |
+| credential access | adversary-in-the-middle: llmnr/nbt-ns poisoning and smb relay | `T1557.001` | relay dell'autenticazione ntlm coercita verso l'endpoint di web enrollment. |
+| credential access | forced authentication | `T1187` | coercizione del domain controller ad autenticarsi verso l'host di relay (ms-efsrpc/ms-rprn). |
+| credential access | os credential dumping: dcsync | `T1003.006` | follow-on: uso delle credenziali del dc per la replica abusata. |
 
 ---
 
 ## Correlazioni con altri moduli
 
-| Provenienza | Questa tecnica | Effetto |
+| provenienza | questa tecnica | effetto |
 | :--- | :--- | :--- |
-| Posizione di rete interna / recon ([01-recon](<../../../01-recon (Red Team Basic)/README.md>)) | ESC8 | individuazione dell'endpoint AD CS e dei DC da coercere |
-| ESC8 | [DCSync](<../../05-credential-dumping/dcsync/README.md>) | le credenziali del DC ottenute abilitano la replica abusata |
-| ESC8 | NTLM relay generico (modulo 07 / tecniche di rete) | stessa primitiva di relay applicata a un target ad alto valore (la CA) |
+| posizione di rete interna / recon ([01-recon](<../../../01-recon (Red Team Basic)/README.md>)) | esc8 | individuazione dell'endpoint ad cs e dei dc da coercere |
+| esc8 | [dcsync](<../../05-credential-dumping/dcsync/README.md>) | le credenziali del dc ottenute abilitano la replica abusata |
+| esc8 | ntlm relay generico (modulo 07 / tecniche di rete) | stessa primitiva di relay applicata a un target ad alto valore (la ca) |
 
 ---
 

@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Tracking Pixel - Email Open Tracking & IP Geolocation
+# Tracking pixel - email open tracking & IP geolocation
 
 > - **Fase:** Social Engineering - Campaign Analytics (Email Open Detection)
 > - **Visibilita:** Bassa - il tracking pixel e una singola richiesta HTTP GET per un'immagine 1x1; indistinguibile dal caricamento di risorse email legittime; rilevabile solo da client email che bloccano il caricamento immagini esterne di default
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Il tracking pixel e una tecnica classica di email marketing legittimo (utilizzata da tutti i servizi di newsletter) applicata al social engineering per misurare l'apertura delle email di phishing. Il server Flask serve un'immagine GIF trasparente di 1x1 pixel (43 byte) con un URL unico per destinatario. Quando il client email carica l'immagine, il server logga IP, User-Agent, timestamp e - con il database GeoLite2 - la geolocalizzazione approssimativa.
 
@@ -21,11 +21,11 @@ GoPhish include questa funzionalita nativamente (variabile `{{.Tracker}}`), ma i
 
 ---
 
-## Tracking Pixel: Email Open Detection
+## Tracking pixel: email open detection
 
 **ID Finding:** `SE-015` | **Severity:** `Informativo`
 
-### PoC - Fase 1: Server Flask
+### PoC - fase 1: server flask
 
 ```python
 # tracker.py
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
 ```
 
-### PoC - Fase 2: Embedding nel Template Email
+### PoC - fase 2: embedding nel template email
 
 ```html
 <!-- Inserire nel template HTML della email di phishing -->
@@ -65,7 +65,7 @@ if __name__ == '__main__':
      width="1" height="1" style="display:none" alt="" />
 ```
 
-### PoC - Fase 3: Risultato
+### PoC - fase 3: risultato
 
 ```Bash
 python3 tracker.py
@@ -93,7 +93,7 @@ python3 tracker.py
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il test e stato condotto con Outlook su Windows 10 VM configurato con impostazioni di default (caricamento immagini abilitato). Il tracking ha funzionato immediatamente: l'apertura dell'email ha generato la richiesta HTTP GET verso il server Flask.
 
@@ -101,7 +101,7 @@ Un aspetto importante emerso dal test: Outlook in modalita "preview pane" carica
 
 ---
 
-## Analisi Teorica: Limiti del Tracking Pixel
+## Analisi teorica: limiti del tracking pixel
 
 Il tracking pixel ha tre limitazioni principali:
 
@@ -117,11 +117,11 @@ Nonostante queste limitazioni, il tracking pixel resta lo standard de facto per 
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Stage Capabilities: Upload Malware | `T1608.001` | Deploy del server tracking pixel su infrastruttura attaccante |
-| Discovery | System Information Discovery | `T1082` | Raccolta IP, User-Agent e geolocalizzazione della vittima (SE-015) |
-| Reconnaissance | Active Scanning: Scanning IP Blocks | `T1595.001` | Identificazione IP attivi dei destinatari tramite tracking |
+| resource development | stage capabilities: upload malware | `T1608.001` | deploy del server tracking pixel su infrastruttura attaccante |
+| discovery | system information discovery | `T1082` | raccolta ip, user-agent e geolocalizzazione della vittima (SE-015) |
+| reconnaissance | active scanning: scanning ip blocks | `T1595.001` | identificazione ip attivi dei destinatari tramite tracking |
 
 ---
 

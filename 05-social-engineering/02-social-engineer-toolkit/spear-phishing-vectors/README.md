@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# SET Spear-Phishing Attack Vectors: Email con Payload .hta
+# SET Spear-Phishing attack vectors: email con payload .hta
 
 > - **Fase:** Social Engineering - Spear-Phishing Attack Vectors - Payload Delivery via Email
 > - **Visibilita:** Alta - l'email transita attraverso il gateway di posta (potenziale detection); l'apertura del file .hta triggera Windows Defender/EDR; la connessione reverse shell genera traffico anomalo in uscita
@@ -14,7 +14,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Lo spear-phishing con payload allegato e il vettore di Initial Access piu documentato nei report di threat intelligence (Mandiant M-Trends, CrowdStrike Global Threat Report). A differenza del phishing generico, lo spear-phishing e mirato a un individuo specifico con un pretesto credibile costruito sulla base di informazioni OSINT.
 
@@ -24,7 +24,7 @@ Il formato .hta (HTML Application) e stato scelto come vettore per la sua capaci
 
 ---
 
-## Finding SE-004: Spear-Phishing con Payload .hta e Reverse Shell
+## Finding SE-004: Spear-Phishing con payload .hta e reverse shell
 
 **ID Finding:** `SE-004` | **Severity:** `Alto` | **CVSS:** 8.1
 
@@ -32,7 +32,7 @@ Un attaccante puo inviare un'email mirata con allegato .hta che, una volta apert
 
 **Scenario PoC:** L'analista invia un'email all'utente target con allegato un file .hta mascherato da documento aziendale. L'apertura dell'allegato stabilisce una reverse shell Meterpreter verso la macchina attaccante.
 
-### PoC - Fase 1: Setup del Listener Metasploit
+### PoC - fase 1: setup del listener Metasploit
 
 Prima di inviare l'email, si configura il listener sulla macchina attaccante per ricevere la reverse shell.
 
@@ -50,7 +50,7 @@ exploit -j
 [*] Started reverse TCP handler on 192.168.0.110:4444               <--
 ```
 
-### PoC - Fase 2: Configurazione SET per Spear-Phishing
+### PoC - fase 2: configurazione SET per Spear-Phishing
 
 SET viene avviato e configurato per generare il payload, comporre l'email e inviarla tramite SMTP.
 
@@ -98,7 +98,7 @@ set:phishing> 14
 [*] File stored at /root/.set/report.hta                             <--
 ```
 
-### PoC - Fase 3: Composizione e Invio dell'Email
+### PoC - fase 3: composizione e invio dell'Email
 
 SET richiede i dettagli per la composizione dell'email.
 
@@ -123,7 +123,7 @@ set:phishing> 2
 [*] SET has finished sending the emails.                                  <--
 ```
 
-### PoC - Fase 4: Vittima Apre l'Allegato e Callback Reverse Shell
+### PoC - fase 4: vittima apre l'Allegato e callback reverse shell
 
 Sulla VM Windows, l'utente riceve l'email e apre l'allegato `report.hta`. Windows esegue il file tramite `mshta.exe`, che lancia lo stager PowerShell codificato nel file HTA. Lo stager scarica ed esegue in memoria il secondo stadio (Meterpreter), stabilendo la connessione reverse.
 
@@ -146,7 +146,7 @@ La reverse shell e attiva con i privilegi dell'utente `m.rossi`. Da questo punto
 
 ---
 
-## Impatto e Remediation (Blue Team)
+## Impatto e remediation (blue team)
 
 L'esecuzione di un payload via email spear-phishing fornisce all'attaccante una shell interattiva sul sistema della vittima. L'impatto dipende dai privilegi dell'utente compromesso, ma anche un account non privilegiato consente raccolta dati, keylogging e pivot verso altri sistemi.
 
@@ -160,7 +160,7 @@ L'esecuzione di un payload via email spear-phishing fornisce all'attaccante una 
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'ambiente e stato configurato con un mail server di test (hMailServer sulla VM Windows o MailHog su Kali) per simulare il relay SMTP senza dipendere da servizi esterni. La configurazione iniziale ha richiesto attenzione: SET necessita di un SMTP relay funzionante sulla porta 25, e molti ISP bloccano questa porta in uscita.
 
@@ -174,7 +174,7 @@ La reverse shell Meterpreter si e stabilita con successo dopo l'apertura dell'al
 
 ---
 
-## Analisi Teorica: Anatomia di un Attacco Spear-Phishing
+## Analisi teorica: anatomia di un attacco Spear-Phishing
 
 Lo spear-phishing si distingue dal phishing massivo per tre caratteristiche fondamentali:
 
@@ -192,11 +192,11 @@ Nella kill chain, lo spear-phishing copre tre fasi consecutive: Weaponization (c
 
 ---
 
-## Scenario Reale: Campagna Spear-Phishing Mirata
+## Scenario reale: campagna Spear-Phishing mirata
 
 > Questa sezione descrive come SE-004 si inserirebbe in un engagement reale contro un'organizzazione target.
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** OSINT completata; lista email dipendenti e organigramma aziendale ottenuti; identificato il target primario (utente con accesso a sistemi critici); SMTP relay disponibile o dominio look-alike configurato con SPF valido.
 
@@ -223,7 +223,7 @@ Lateral Movement -> Privilege Escalation -> Domain Compromise
 
 **Impatto potenziale:** la reverse shell fornisce accesso interattivo al sistema della vittima. Se l'utente ha privilegi elevati o accesso a dati sensibili (file share, database, email), l'impatto e immediato. Anche da un account non privilegiato, l'attaccante puo eseguire privilege escalation locale (EXPLOIT-013..019) e poi muoversi lateralmente.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** monitoraggio email gateway per allegati con estensioni pericolose; alert su process creation chains anomale (mshta.exe che genera powershell.exe); monitoraggio connessioni outbound da processi non-browser verso IP non categorizzati.
 
@@ -245,12 +245,12 @@ Lateral Movement -> Privilege Escalation -> Domain Compromise
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Obtain Capabilities: Tool | `T1588.002` | Utilizzo di SET e msfvenom per generazione del payload .hta e composizione dell'email spear-phishing. |
-| Initial Access | Phishing: Spearphishing Attachment | `T1566.001` | Email mirata con allegato .hta inviata al target tramite SMTP relay. |
-| Execution | User Execution: Malicious File | `T1204.002` | La vittima apre l'allegato .hta, attivando l'esecuzione del payload tramite mshta.exe. |
-| Execution | Command and Scripting Interpreter: PowerShell | `T1059.001` | Lo stager PowerShell encoded Base64 esegue il download e l'iniezione in memoria del secondo stadio (Meterpreter). |
+| resource development | obtain capabilities: tool | `T1588.002` | utilizzo di set e msfvenom per generazione del payload .hta e composizione dell'email spear-phishing. |
+| initial access | phishing: spearphishing attachment | `T1566.001` | email mirata con allegato .hta inviata al target tramite smtp relay. |
+| execution | user execution: malicious file | `T1204.002` | la vittima apre l'allegato .hta, attivando l'esecuzione del payload tramite mshta.exe. |
+| execution | command and scripting interpreter: powershell | `T1059.001` | lo stager powershell encoded base64 esegue il download e l'iniezione in memoria del secondo stadio (meterpreter). |
 
 ---
 

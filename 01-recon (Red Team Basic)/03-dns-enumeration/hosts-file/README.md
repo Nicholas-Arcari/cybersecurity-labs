@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# DNS Enumeration: Local Hosts File Manipulation
+# DNS enumeration: local hosts file manipulation
 
 > - **Fase:** Reconnaissance - DNS Enumeration
 > - **Visibilita:** Zero - la modifica e locale alla macchina dell'analista, nessun traffico generato verso DNS esterni
@@ -13,7 +13,7 @@ Obiettivo: Forzare la risoluzione DNS locale per accedere a Virtual Hosts (VHost
 
 ---
 
-## 1 Introduzione Teorica
+## 1 Introduzione teorica
 
 Il file `/etc/hosts` (o `hosts` su Windows) funge da meccanismo di risoluzione dei nomi locale, con priorità rispetto ai server DNS esterni.
 
@@ -24,11 +24,11 @@ Se un sottodominio (es. `dev.target.com`) non è registrato nel DNS pubblico ma 
 
 ---
 
-## 2 Esecuzione Tecnica
+## 2 Esecuzione tecnica
 
 **ID Finding:** `DNS-002` | **Severity:** `Medio`
 
-#### A. Verifica della Risoluzione (Prima della modifica)
+#### A. verifica della risoluzione (prima della modifica)
 
 Tentativo di connessione al dominio target prima della manipolazione locale.
 
@@ -42,7 +42,7 @@ Risultato: ping: portale-segreto.corp: Name or service not known
 
 Analisi: Il dominio non esiste nei DNS pubblici.
 
-#### B. Hosts File Injection
+#### B. hosts file injection
 
 Modifica del file di configurazione locale per associare forzatamente il dominio all'IP del target.
 
@@ -56,7 +56,7 @@ sudo nano /etc/hosts
 
 ![](./img/Screenshot_2026-02-07_19_34_45.jpg)
 
-#### C. Verifica e Accesso (Dopo la modifica)
+#### C. verifica e accesso (dopo la modifica)
 
 Verifica della raggiungibilità del target tramite il nome a dominio spoofato.
 
@@ -102,9 +102,9 @@ La teoria (e una breve guida pratica) è presente in questo path: `cybersecurity
 
 ---
 
-## Analisi a Basso Livello: Virtual Host Resolution e HTTP Host Header
+## Analisi a basso livello: virtual host resolution e HTTP host header
 
-### Ordine di Risoluzione DNS nel Sistema Operativo
+### Ordine di risoluzione DNS nel sistema operativo
 
 Quando un'applicazione (browser, curl, nmap) richiede la risoluzione di un nome, il sistema operativo segue un ordine di precedenza definito in `/etc/nsswitch.conf`:
 
@@ -120,7 +120,7 @@ hosts: files dns myhostname
 
 La modifica del file `/etc/hosts` sfrutta questo ordine: inserendo un mapping `IP nome`, il resolver locale restituisce l'IP senza mai contattare il DNS esterno. Questo rende la tecnica completamente invisibile a qualsiasi monitoraggio di rete - nessuna query DNS viene generata.
 
-### HTTP Host Header e Virtual Host Routing
+### HTTP host header e virtual host routing
 
 Il meccanismo che rende questa tecnica operativamente utile e il Virtual Host routing nei web server. Apache e Nginx utilizzano l'header `Host:` della richiesta HTTP per selezionare quale configurazione servire:
 
@@ -144,7 +144,7 @@ Connection: keep-alive            per selezionare il VirtualHost
 
 Senza la manipolazione dell'Host header (ottenuta tramite /etc/hosts), il browser invierebbe una richiesta con l'IP numerico, e il web server risponderebbe con il VHost di default - tipicamente il sito pubblico, non l'applicazione interna nascosta.
 
-### VHost Discovery Automatizzata
+### VHost discovery automatizzata
 
 La scoperta sistematica di Virtual Host nascosti si effettua tramite fuzzing dell'Host header con tool dedicati:
 
@@ -162,7 +162,7 @@ Il principio: se la risposta HTTP per `Host: admin.target.com` differisce (dimen
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'esercizio ha reso tangibile un concetto che nella teoria appare banale: la separazione tra risoluzione DNS e routing HTTP. Prima della modifica di `/etc/hosts`, il ping verso `portale-segreto.corp` falliva con "Name or service not known" - il resolver non aveva modo di tradurre il nome in IP. Dopo l'aggiunta della riga nel file hosts, lo stesso comando ha ricevuto risposta immediata. Il punto chiave: il server target non e cambiato in alcun modo - e cambiato solo il modo in cui la macchina dell'analista interpreta il nome.
 
@@ -172,9 +172,9 @@ Questa tecnica e onnipresente in due contesti operativi: CTF (dove le sfide web 
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Defense Evasion | Modify Authentication Process | `T1556` | Manipolazione del file /etc/hosts per forzare la risoluzione di nomi non registrati nel DNS pubblico verso l'IP del target, bypassando i resolver esterni (DNS-002) |
+| defense evasion | modify authentication process | `T1556` | manipolazione del file /etc/hosts per forzare la risoluzione di nomi non registrati nel dns pubblico verso l'ip del target, bypassando i resolver esterni (DNS-002) |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 03 - SDR (Software Defined Radio)
+# 03 - SDR (software defined radio)
 
 > - **Phase:** Wireless Security - Attack on the RF spectrum via Software Defined Radio
 > - **Visibility:** Zero in reception (pure passive); Medium in transmission (replay, injection)
@@ -27,7 +27,7 @@ The guiding principle is that the absence of encryption at the RF layer is the n
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 03-sdr (Software Defined Radio)/
@@ -40,7 +40,7 @@ The guiding principle is that the absence of encryption at the RF layer is the n
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [INPUT] SDR (RTL-SDR/HackRF), target RF device in range
@@ -71,41 +71,41 @@ The guiding principle is that the absence of encryption at the RF layer is the n
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `RTL-SDR` | SDR RX only | Hardware | Cheap reception for analysis (does not transmit) |
-| `HackRF One` | SDR TX/RX | Hardware | Full-duplex capture and retransmission (1 MHz - 6 GHz) |
-| `GQRX` | SDR receiver | GUI | Waterfall visualization, frequency identification |
-| `Universal Radio Hacker` | Signal analyzer | GUI | Demodulation and protocol reverse engineering |
-| `rtl_433` | Protocol decoder | CLI | Automatic decoding of 200+ ISM devices |
-| `GNU Radio` | DSP framework | GUI - Flowgraph | Custom signal processing |
-| `Flipper Zero` | Portable multi-tool | Hardware | Portable sub-GHz capture and replay in the field |
+| `RTL-SDR` | sdr rx only | hardware | cheap reception for analysis (does not transmit) |
+| `HackRF One` | sdr tx/rx | hardware | full-duplex capture and retransmission (1 mhz - 6 ghz) |
+| `GQRX` | sdr receiver | gui | waterfall visualization, frequency identification |
+| `Universal Radio Hacker` | signal analyzer | gui | demodulation and protocol reverse engineering |
+| `rtl_433` | protocol decoder | cli | automatic decoding of 200+ ism devices |
+| `GNU Radio` | dsp framework | gui - flowgraph | custom signal processing |
+| `Flipper Zero` | portable multi-tool | hardware | portable sub-ghz capture and replay in the field |
 
 > **Recommended modern tool:** `Universal Radio Hacker` for analysis (capture+demod+generation in one flow), `HackRF One` for RX/TX flexibility in the lab, `Flipper Zero` for sub-GHz recon and replay in the field. Pay attention to the regulations on transmissions.
 
 ---
 
-## Finding Registry - SDR Section
+## Finding registry - SDR section
 
-| ID | Description | Severity | Subfolder |
+| id | description | severity | subfolder |
 | :--- | :--- | :---: | :--- |
-| `WIFI-008` | Cleartext RF telemetry intercepted; signal characterized and payload structure revealed | `Informational` | `signal-analysis/` |
-| `WIFI-009` | Replay attack on fixed-code remote: unauthorized actuation of a test gate | `High` | `replay-attacks/` |
+| `WIFI-008` | cleartext rf telemetry intercepted; signal characterized and payload structure revealed | `Informational` | `signal-analysis/` |
+| `WIFI-009` | replay attack on fixed-code remote: unauthorized actuation of a test gate | `High` | `replay-attacks/` |
 
 ---
 
-## MITRE ATT&CK Mapping - Aggregated
+## MITRE ATT&CK mapping - aggregated
 
-| Tactic | Technique | MITRE ID | Related Finding |
+| tactic | technique | mitre id | related finding |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Host Information | `T1592` | WIFI-008 |
-| Credential Access | Network Sniffing | `T1040` | WIFI-008, WIFI-009 |
-| Collection | Data from Information Repositories | `T1213` | WIFI-008 |
-| Collection | Adversary-in-the-Middle | `T1557` | WIFI-009 |
-| Initial Access | Hardware Additions | `T1200` | WIFI-009 |
-| Impact (ICS) | Manipulation of Control | `T0831` | WIFI-009 |
+| reconnaissance | gather victim host information | `T1592` | WIFI-008 |
+| credential access | network sniffing | `T1040` | WIFI-008, WIFI-009 |
+| collection | data from information repositories | `T1213` | WIFI-008 |
+| collection | adversary-in-the-middle | `T1557` | WIFI-009 |
+| initial access | hardware additions | `T1200` | WIFI-009 |
+| impact (ics) | manipulation of control | `T0831` | WIFI-009 |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# OSINT Passive: User Enumeration & Identity Correlation
+# OSINT passive: user enumeration & identity correlation
 
 > - **Phase:** Reconnaissance - Passive Information Gathering
 > - **Visibility:** Zero - the tool sends HTTP requests to public platforms, not to the target directly
@@ -15,7 +15,7 @@ Tools: `Sherlock`
 
 ---
 
-## 1 Theoretical Introduction
+## 1 Theoretical introduction
 
 Passive User Enumeration exploits users' tendency to reuse the same handle (username) across multiple services.
 Through automated tools, it is possible to query hundreds of social platforms, forums and technical services to verify the existence of a profile.
@@ -26,11 +26,11 @@ Red Team Utility:
 
 ---
 
-## 2 Technical Execution
+## 2 Technical execution
 
 **Finding ID:** `OSINT-004` | **Severity:** `Low`
 
-### Search with Sherlock
+### Search with sherlock
 The `Sherlock` tool was used to scan over 300 websites searching for the target username.
 
 ```Bash
@@ -43,7 +43,7 @@ sherlock <USERNAME>
 
 ---
 
-## 3 False Positive Analysis
+## 3 False positive analysis
 
 During the analysis, it is essential to manually verify the links.
 
@@ -59,12 +59,12 @@ The target's digital footprint is [High / Medium / Low]. The consistent use of t
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Info: Employee Names | `T1589.003` | Digital identity correlation through Sherlock to map the target username presence across 300+ platforms (OSINT-004) |
-| Reconnaissance | Search Open Websites/Domains: Social Media | `T1593.001` | Target social account enumeration (GitHub, Reddit, forums) to build a profile useful for Social Engineering (OSINT-004) |
+| reconnaissance | gather victim identity info: employee names | `T1589.003` | digital identity correlation through sherlock to map the target username presence across 300+ platforms (OSINT-004) |
+| reconnaissance | search open websites/domains: social media | `T1593.001` | target social account enumeration (github, reddit, forums) to build a profile useful for social engineering (OSINT-004) |
 
 ---
 

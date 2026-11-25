@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# XXE - XML External Entity Injection
+# XXE - XML external entity injection
 
 > - **Fase:** Web Exploitation - OWASP A05:2021 Security Misconfiguration / Injection (parsing XML non sicuro)
 > - **Visibilita:** Media - richieste XML anomale verso l'endpoint; le varianti out-of-band generano traffico in uscita dal server verso l'attaccante
@@ -11,7 +11,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 XXE sfrutta una funzionalita legittima ma pericolosa dello standard XML: le entita esterne, che permettono a
 un documento di includere contenuto da una fonte esterna (un file, una URL). Se l'applicazione passa l'input
@@ -34,9 +34,9 @@ operativa e capire se la risposta riflette il contenuto parsato (in-band, piu se
 variante out-of-band con un server esterno controllato). Prima si testa con un'entita innocua per confermare
 che il parser le risolva, poi si punta a file o servizi sensibili.
 
-## Esecuzione / Comandi
+## Esecuzione / comandi
 
-### Fase 1 - Conferma che il parser risolva le entita
+### Fase 1 - conferma che il parser risolva le entita
 
 Si invia un XML con un'entita interna e si verifica se viene espansa nella risposta:
 
@@ -48,7 +48,7 @@ Si invia un XML con un'entita interna e si verifica se viene espansa nella rispo
 
 Se la risposta contiene `XXE-OK`, il parser espande le entita: il target e candidato a XXE.
 
-### Fase 2 - Lettura di file locali (in-band)
+### Fase 2 - lettura di file locali (in-band)
 
 Entita esterna che punta a un file del server (forma didattica canonica OWASP):
 
@@ -86,7 +86,7 @@ credenziali IAM temporanee. La severity reale, in lab, va da `Alto` (lettura fil
 (SSRF a metadata cloud con credenziali, o RCE in scenari specifici). Un parser che non espande le entita
 (test di Fase 1 negativo) chiude il vettore.
 
-### Analisi Teorica
+### Analisi teorica
 
 XXE nasce dalla combinazione di due proprieta dello standard XML (DTD): la capacita di definire entita e la
 capacita di risolverle da fonti esterne (`SYSTEM`). Il problema e che molti parser, per retrocompatibilita,
@@ -96,7 +96,7 @@ contromisura e strutturale e definitiva: disabilitare la risoluzione di DTD/enti
 (secure-by-default), perche la quasi totalita delle applicazioni non ne ha bisogno. Collega al tema generale
 dell'injection [Su & Wassermann 2006]: fidarsi dell'input come se fosse codice.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Rilevamento (WAF/SIEM).**
 - Richieste contenenti `<!DOCTYPE`, `<!ENTITY`, o riferimenti `SYSTEM`/`PUBLIC` nel corpo XML.
@@ -113,11 +113,11 @@ dell'injection [Su & Wassermann 2006]: fidarsi dell'input come se fosse codice.
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Vale per l'esito "lettura file sensibili / SSRF a metadata" (severity Alto/Critico).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** endpoint che processa XML con parser vulnerabile (confermato in Fase 1).
 
@@ -147,7 +147,7 @@ XML. Nel caso SSRF-metadata, l'impatto si estende all'account cloud.
 **Vettori di monetizzazione tipici:** esfiltrazione e rivendita dei dati; abuso delle credenziali cloud per
 cryptomining o ulteriore compromissione.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** payload XML con DOCTYPE/ENTITY; traffico in uscita anomalo dal web server; accesso a file
 sensibili o ai metadata.
@@ -171,12 +171,12 @@ delle entita esterne.
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Burp Suite` | Proxy/scanner | Web - Attivo | Intercetta e modifica richieste XML; estensioni per XXE e collaboratore OOB |
-| `curl` | HTTP client | CLI - Attivo | Invio manuale di payload XML all'endpoint |
-| `XXEinjector` | Exploit tool | CLI - Attivo | Automazione di XXE, incluse varianti out-of-band |
-| `defusedxml` | Libreria Python | Secure coding | Parser XML sicuro per la remediation (Blue Team) |
+| `Burp Suite` | proxy/scanner | web - attivo | intercetta e modifica richieste xml; estensioni per xxe e collaboratore oob |
+| `curl` | http client | cli - attivo | invio manuale di payload xml all'endpoint |
+| `XXEinjector` | exploit tool | cli - attivo | automazione di xxe, incluse varianti out-of-band |
+| `defusedxml` | libreria python | secure coding | parser xml sicuro per la remediation (blue team) |
 
 ## Note di metodologia
 
@@ -186,21 +186,21 @@ output reali, mai fabbricati. I payload mostrati sono nella forma didattica OWAS
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Sfruttamento del parser XML vulnerabile su un endpoint esposto. |
-| Discovery | File and Directory Discovery | `T1083` | Lettura di file locali del server tramite entita esterna. |
-| Credential Access | Unsecured Credentials: Credentials in Files | `T1552.001` | Estrazione di credenziali da file di configurazione letti via XXE. |
+| initial access | exploit public-facing application | `T1190` | sfruttamento del parser xml vulnerabile su un endpoint esposto. |
+| discovery | file and directory discovery | `T1083` | lettura di file locali del server tramite entita esterna. |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | estrazione di credenziali da file di configurazione letti via xxe. |
 
 ---
 
 ## Correlazioni con altri finding
 
-| Provenienza | Questa tecnica | Effetto |
+| provenienza | questa tecnica | effetto |
 | :--- | :--- | :--- |
-| [02-web-recon](../../02-web-recon (Enumeration)/README.md) | XXE | l'enumerazione individua endpoint XML/SOAP e funzionalita di upload |
-| XXE (SSRF a metadata) | [10-cloud-security](../../../10-cloud-security (Cloud&Modern)/README.md) | le credenziali IAM ottenute aprono all'escalation nel cloud |
-| XXE | [secure-coding-lab](../../06-secure-coding-lab (Defense)/README.md) | la remediation (parser sicuro) si collega al laboratorio di secure coding |
+| [02-web-recon](../../02-web-recon (Enumeration)/README.md) | xxe | l'enumerazione individua endpoint xml/soap e funzionalita di upload |
+| xxe (ssrf a metadata) | [10-cloud-security](../../../10-cloud-security (Cloud&Modern)/README.md) | le credenziali iam ottenute aprono all'escalation nel cloud |
+| xxe | [secure-coding-lab](../../06-secure-coding-lab (Defense)/README.md) | la remediation (parser sicuro) si collega al laboratorio di secure coding |
 
 ---
 

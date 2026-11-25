@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# AWS S3 Bucket Attacks - Exposed Storage and Misconfigurations
+# AWS s3 bucket attacks - exposed storage and misconfigurations
 
 > - **Phase:** Cloud Security - Data Access (AWS S3)
 > - **Visibility:** Low/Medium - access to a public bucket does not require authentication and may leave no traces on the attacker's side; authenticated accesses are in CloudTrail if data event logging is enabled
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Amazon S3 (Simple Storage Service) is AWS's object storage service, and its misconfigurations are among the most common and most serious causes of cloud data breaches. The recurring problem is simple: buckets configured as public or with too-permissive ACLs, which expose to anyone - often without any authentication - data that should be private. Backups, database dumps, internal documents, credentials: the breach news is full of "exposed S3 bucket".
 
@@ -20,7 +20,7 @@ Finding CLOUD-002 documents two scenarios: the discovery and access to a public 
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 S3-buckets-attacks/
@@ -30,15 +30,15 @@ S3-buckets-attacks/
 
 ---
 
-## Discovery and Access to Misconfigured Buckets
+## Discovery and access to misconfigured buckets
 
 **Finding ID:** `CLOUD-002` | **Severity:** `High` (unauthorized access to exposed storage; exfiltration of data or tampering of content)
 
-### Operational Context
+### Operational context
 
 S3 buckets have globally unique and often predictable names (`companyname-backup`, `companyname-assets`, `companyname-logs`). This makes them enumerable: an attacker generates plausible names and checks which ones exist and which are accessible. A public bucket requires no credential.
 
-### PoC - Enumeration and anonymous access
+### PoC - enumeration and anonymous access
 
 ```Bash
 # Verify a bucket via anonymous HTTP
@@ -54,7 +54,7 @@ aws s3 ls s3://companyname-backup --no-sign-request
 2026-05-10 02:14:24    950000  backup_config.tar.gz
 ```
 
-### PoC - Data exfiltration
+### PoC - data exfiltration
 
 ```Bash
 # Download of the entire public bucket
@@ -66,7 +66,7 @@ download: s3://companyname-backup/db_dump_2026.sql -> loot/db_dump_2026.sql
 [+] 3 files, 5.1 MB exfiltrated without authentication   <-- data breach (CLOUD-002)
 ```
 
-### PoC - Writable ACL (more serious scenario)
+### PoC - writable ACL (more serious scenario)
 
 ```Bash
 # Write test: if the bucket is world-writable, one can upload/overwrite
@@ -79,7 +79,7 @@ upload: ./poc.txt -> s3://companyname-assets/poc.txt
 [!] Write successful: if the bucket serves web content -> defacement/malware injection
 ```
 
-### PoC - Automation of the discovery
+### PoC - automation of the discovery
 
 ```Bash
 # cloud_enum and s3scanner look for buckets with permutations of the target name
@@ -95,7 +95,7 @@ python3 cloud_enum.py -k companyname      # (see ../../../Tooling/cloud-enum/)
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The strongest lesson was the triviality of the attack compared to the gravity of the result. There was no exploit, no bypass: a bucket configured as public is simply accessible to anyone who knows its name, with an `aws s3 ls` command. The disproportion between effort (minimal) and impact (an exfiltrated database dump) explains why exposed buckets remain one of the top causes of breaches: they do not require a sophisticated attacker, only an attentive one.
 
@@ -105,7 +105,7 @@ The case of the writable ACL was the most instructive in terms of impact. A publ
 
 ---
 
-## Theoretical Analysis: The Secure Default and the Configuration Error
+## Theoretical analysis: the secure default and the configuration error
 
 S3 buckets are private by default: AWS made the starting configuration secure. Yet breaches from exposed buckets abound, which reveals a truth about configuration security: the risk is not the default, but the deviation from the default. Someone, to make something work quickly ("make it public so the app can read it"), disables the protection and does not restore it. The misconfiguration is a human act, not a technical flaw.
 
@@ -115,11 +115,11 @@ The structural countermeasure - "Block Public Access" at the account level - ref
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > Attacker and defender perspectives in a real engagement.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** access to an exposed S3 bucket containing sensitive data (CLOUD-002).
 
@@ -140,7 +140,7 @@ Complete data breach / escalation in the account
 
 **Potential impact:** an exposed bucket is often the entry point to broader compromises, because it frequently contains other credentials (config files, `.env`, keys). The direct data breach (customer data, PII) is already serious in itself - with legal (GDPR) and reputational consequences - but the pivot toward other credentials found in the bucket links this finding to CLOUD-001 (IAM) and to a compromise of the entire account.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** AWS Config and GuardDuty flag the public buckets; data event logging on CloudTrail traces the accesses to the objects (without it, an anonymous access can be invisible).
 
@@ -159,28 +159,28 @@ Complete data breach / escalation in the account
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `aws-cli` | Cloud CLI | Official | Access and enumeration of the buckets |
-| `cloud_enum` | Bucket enum | Offensive | Discovery of buckets via name permutations |
-| `s3scanner` | S3 scanner | Offensive | Mass testing of bucket existence and permissions |
-| `Prowler` | Security scanner | Defensive | Detection of public buckets and misconfig |
-| `AWS Config` | Compliance | Defensive | Continuous monitoring of bucket conformity |
+| `aws-cli` | cloud cli | official | access and enumeration of the buckets |
+| `cloud_enum` | bucket enum | offensive | discovery of buckets via name permutations |
+| `s3scanner` | s3 scanner | offensive | mass testing of bucket existence and permissions |
+| `Prowler` | security scanner | defensive | detection of public buckets and misconfig |
+| `AWS Config` | compliance | defensive | continuous monitoring of bucket conformity |
 
 > **Recommended modern tool:** offensively `cloud_enum` (`../../../Tooling/cloud-enum/`) for multi-cloud bucket discovery. Defensively, `Prowler` and `AWS Config` for continuous detection, but the decisive countermeasure remains "S3 Block Public Access" at the account level.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Collection | Data from Cloud Storage | `T1530` | Access and exfiltration of data from an exposed S3 bucket (CLOUD-002) |
-| Discovery | Cloud Storage Object Discovery | `T1619` | Enumeration of the objects in the bucket |
-| Reconnaissance | Search Open Websites/Domains | `T1593` | Discovery of the bucket names via OSINT/permutation |
-| Impact | Data Manipulation | `T1565` | Write/tampering on a bucket with a writable ACL |
+| collection | data from cloud storage | `T1530` | access and exfiltration of data from an exposed s3 bucket (CLOUD-002) |
+| discovery | cloud storage object discovery | `T1619` | enumeration of the objects in the bucket |
+| reconnaissance | search open websites/domains | `T1593` | discovery of the bucket names via osint/permutation |
+| impact | data manipulation | `T1565` | write/tampering on a bucket with a writable acl |
 
 ---
 

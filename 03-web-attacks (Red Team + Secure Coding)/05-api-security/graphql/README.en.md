@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 During the Red Teaming activity conducted on the DVGA application, multiple critical vulnerabilities were identified in the GraphQL API management.
 
@@ -23,11 +23,11 @@ This vulnerability chain led to total server compromise (Remote Code Execution),
 
 ---
 
-## 2 Methodology and Test Phases (Attack Narrative)
+## 2 Methodology and test phases (attack narrative)
 
 The steps taken to compromise the system are described chronologically below.
 
-#### Phase 1: Reconnaissance & Introspection (Information Disclosure)
+#### Phase 1: reconnaissance & introspection (information disclosure)
 
 Objective: Map the available functionalities in the API.
 
@@ -43,7 +43,7 @@ Objective: Map the available functionalities in the API.
 
     Finding: Critical undocumented queries identified: `systemDebug`, `systemDiagnostics`, `systemUpdate`.
 
-#### Phase 2: Access Control Bypass & Data Discovery
+#### Phase 2: access control bypass & data discovery
 
 Objective: Test access to public and private data.
 
@@ -51,7 +51,7 @@ Objective: Test access to public and private data.
 - Information Disclosure: Sensitive data contained in public messages was extracted (e.g., phone numbers in `555-555-1337`).
 - The object structure was identified, confirming that messages are linked to an `Owner` object with a `name` field (not `username`, as initially hypothesized thanks to the server's verbose error suggestions).
 
-#### Phase 3: Vulnerability Scanning - Command Injection (RCE)
+#### Phase 3: vulnerability scanning - command injection (RCE)
 
 Objective: Verify whether the discovered system functions (`systemDebug`) were vulnerable to injection.
 
@@ -89,7 +89,7 @@ Result: `uid=1000(dvga) gid=1000(dvga)`. The attacker now has the ability to exe
 
 ![](./img/Screenshot_2026-02-18_15_20_14.jpg)
 
-#### Phase 4: Post-Exploitation & Data Exfiltration
+#### Phase 4: Post-Exploitation & data exfiltration
 
 Objective: Escalate privileges and exfiltrate credentials.
 
@@ -125,7 +125,7 @@ Critical Result: Cleartext administrative credentials extracted.
 
 ![](./img/Screenshot_2026-02-18_15_30_38.jpg)
 
-#### Phase 5: Account Takeover
+#### Phase 5: account takeover
 
 Objective: Obtain persistent access.
 
@@ -137,11 +137,11 @@ Objective: Obtain persistent access.
 
 ---
 
-## 3. Root Cause Analysis (Secure Coding)
+## 3. Root cause analysis (secure coding)
 
 Analysis of the vulnerable code and proposed fix.
 
-#### Identified Vulnerable Code (Python)
+#### Identified vulnerable code (python)
 
 The server uses insecure functions to interact with the operating system, concatenating unsanitized user input.
 
@@ -184,16 +184,16 @@ def resolve_system_debug(root, info, arg):
 
 ---
 
-## 4 Other Detected Vulnerabilities
+## 4 Other detected vulnerabilities
 
 In addition to the main RCE, the following ancillary issues were identified that facilitated the attack:
 
-| Vulnerability | Level | Description |
+| vulnerability | level | description |
 | --------------- | -------- | ------------- |
-| Introspection Enabled | Medium | The API allows downloading the complete schema (`_ _schema`), revealing hidden functions such as `systemDebug` |
-| Verbose Error Messages | Low | The server returns full Python stack traces on errors (Debug Mode active), helping the attacker understand the underlying technology |
-| Cleartext Passwords | Critical | Passwords in the `dvga.db` database are stored in cleartext, violating every security standard (GDPR, ISO 27001). They should have been hashed (e.g., `bcrypt`) |
-| Lack of Rate Limiting | Medium | No API request limits were detected, allowing brute-force or DoS attempts |
+| introspection enabled | Medium | the api allows downloading the complete schema (`_ _schema`), revealing hidden functions such as `systemDebug` |
+| verbose error messages | Low | the server returns full python stack traces on errors (debug mode active), helping the attacker understand the underlying technology |
+| cleartext passwords | Critical | passwords in the `dvga.db` database are stored in cleartext, violating every security standard (gdpr, iso 27001). they should have been hashed (e.g., `bcrypt`) |
+| lack of rate limiting | Medium | no api request limits were detected, allowing brute-force or dos attempts |
 
 ---
 
@@ -203,14 +203,14 @@ The DVGA system presents severe security gaps that allow an unauthenticated exte
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Wordlist Scanning | `T1595.003` | GraphQL Introspection via curl (`__schema`) to map all available queries, including the undocumented `systemDebug`, `systemDiagnostics` (WEB-013) |
-| Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | Command Injection through the `arg` parameter of the `systemDebug` query: payload `; id` confirmed RCE as user `dvga` (WEB-013) |
-| Collection | Data from Information Repositories | `T1213` | Exfiltration of the `config.py` file (secret keys, DB path) and the SQLite database `dvga.db` through RCE, obtaining admin credentials `admin:changeme` (WEB-013) |
-| Lateral Movement | Valid Accounts: Cloud Accounts | `T1078.003` | Use of exfiltrated credentials to invoke the `login` mutation and obtain a valid admin JWT token (WEB-013) |
+| reconnaissance | active scanning: wordlist scanning | `T1595.003` | graphql introspection via curl (`__schema`) to map all available queries, including the undocumented `systemDebug`, `systemDiagnostics` (WEB-013) |
+| execution | command and scripting interpreter: unix shell | `T1059.004` | command injection through the `arg` parameter of the `systemDebug` query: payload `; id` confirmed rce as user `dvga` (WEB-013) |
+| collection | data from information repositories | `T1213` | exfiltration of the `config.py` file (secret keys, db path) and the sqlite database `dvga.db` through rce, obtaining admin credentials `admin:changeme` (WEB-013) |
+| lateral movement | valid accounts: cloud accounts | `T1078.003` | use of exfiltrated credentials to invoke the `login` mutation and obtain a valid admin jwt token (WEB-013) |
 
 ---
 

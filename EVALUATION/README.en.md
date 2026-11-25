@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Empirical Evaluation - Reproducible Quantitative Measurements
+# Empirical evaluation - reproducible quantitative measurements
 
 > - **Level:** Experimental evaluation (complement to the `THEORETICAL-FOUNDATIONS.md`)
 > - **Purpose:** Close the last gap toward the academic research level: move from a quantitative analysis *derived from the literature* to measurements *obtained by running reproducible experiments*.
@@ -35,7 +35,7 @@ construction (the code is here, it re-runs).
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 EVALUATION/
@@ -54,7 +54,7 @@ EVALUATION/
 
 ## Experiments and measured results (headline)
 
-### Experiment A - Detection engineering and base-rate fallacy (module 08)
+### Experiment a - detection engineering and base-rate fallacy (module 08)
 
 An SSH brute-force detector (threshold rule) evaluated on a labeled dataset of 1,000,000 observation
 windows. **Measured results:**
@@ -71,7 +71,7 @@ Thesis tested: the difficulty of detection is determined by the base rate, not b
 detector (module 08 foundations, section 3.1). It quantitatively justifies correlation (section 4.1)
 and deception (section 3.2). Detail: [exp01-detection-base-rate/results.en.md](exp01-detection-base-rate/results.en.md).
 
-### Experiment B - Shannon entropy vs guessing metrics (modules 04, 06)
+### Experiment b - shannon entropy vs guessing metrics (modules 04, 06)
 
 Comparison between nominal entropy and attacker-relevant metrics on a Zipf password distribution.
 **Measured results:**

@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 Durante l'attività di Red Teaming condotta sull'applicazione DVGA, sono state identificate molteplici vulnerabilità critiche nella gestione delle API GraphQL.
 
@@ -23,11 +23,11 @@ Questa catena di vulnerabilità ha portato alla totale compromissione del server
 
 ---
 
-## 2 Metodologia e Fasi del Test (Attack Narrative)
+## 2 Metodologia e fasi del test (attack narrative)
 
 Di seguito vengono descritti cronologicamente i passaggi eseguiti per compromettere il sistema.
 
-#### Fase 1: Reconnaissance & Introspection (Information Disclosure)
+#### Fase 1: reconnaissance & introspection (information disclosure)
 
 Obiettivo: Mappare le funzionalità disponibili nell'API.
 
@@ -43,7 +43,7 @@ Obiettivo: Mappare le funzionalità disponibili nell'API.
 
     Finding: Individuate query critiche non documentate: `systemDebug`, `systemDiagnostics`, `systemUpdate`.
 
-#### Fase 2: Access Control Bypass & Data Discovery
+#### Fase 2: access control bypass & data discovery
 
 Obiettivo: Testare l'accesso ai dati pubblici e privati.
 
@@ -51,7 +51,7 @@ Obiettivo: Testare l'accesso ai dati pubblici e privati.
 - Information Disclosure: Sono stati estratti dati sensibili contenuti nei messaggi pubblici (es. numeri di telefono in `555-555-1337`).
 - È stata identificata la struttura degli oggetti, confermando che i messaggi sono collegati a un oggetto `Owner` con campo `name` (e non `username`, come inizialmente ipotizzato grazie ai suggerimenti di errore verbose del server).
 
-#### Fase 3: Vulnerability Scanning - Command Injection (RCE)
+#### Fase 3: vulnerability scanning - command injection (RCE)
 
 Obiettivo: Verificare se le funzioni di sistema scoperte (`systemDebug`) fossero vulnerabili a iniezione.
 
@@ -89,7 +89,7 @@ Risultato: `uid=1000(dvga) gid=1000(dvga)`. L'attaccante ha ora la capacità di 
 
 ![](./img/Screenshot_2026-02-18_15_20_14.jpg)
 
-#### Fase 4: Post-Exploitation & Data Exfiltration
+#### Fase 4: Post-Exploitation & data exfiltration
 
 Obiettivo: Escalare i privilegi ed esfiltrare credenziali.
 
@@ -125,7 +125,7 @@ Risultato Critico: Estratte credenziali amministrative in chiaro.
 
 ![](./img/Screenshot_2026-02-18_15_30_38.jpg)
 
-#### Fase 5: Account Takeover
+#### Fase 5: account takeover
 
 Obiettivo: Ottenere accesso persistente.
 
@@ -137,11 +137,11 @@ Obiettivo: Ottenere accesso persistente.
 
 ---
 
-## 3. Root Cause Analysis (Secure Coding)
+## 3. Root cause analysis (secure coding)
 
 Analisi del codice vulnerabile e correzione proposta.
 
-#### Codice Vulnerabile Identificato (Python)
+#### Codice vulnerabile identificato (python)
 
 Il server utilizza funzioni insicure per interagire con il sistema operativo, concatenando input utente non sanificato.
 
@@ -184,16 +184,16 @@ def resolve_system_debug(root, info, arg):
 
 ---
 
-## 4 Altre Vulnerabilità Rilevate
+## 4 Altre vulnerabilità rilevate
 
 Oltre alla RCE principale, sono state riscontrate le seguenti criticità accessorie che hanno facilitato l'attacco:
 
-| Vulnerabilità | Livello | Descrizione |
+| vulnerabilità | livello | descrizione |
 | --------------- | -------- | ------------- |
-| Introspection Enabled | Medio | L'API permette di scaricare lo schema completo (`_ _schema`), rivelando funzioni nascoste come `systemDebug` |
-| Verbose Error Messages | Basso | Il server restituisce stack trace Python completi in caso di errore (Debug Mode attivo), aiutando l'attaccante a capire la tecnologia sottostante |
-| Cleartext Passwords | Critico | Le password nel database `dvga.db` sono salvate in chiaro, violando ogni standard di sicurezza (GDPR, ISO 27001). Avrebbero dovuto essere hashate (es. `bcrypt`) |
-| Lack of Rate Limiting | Medio | Non sono stati rilevati limiti alle richieste API, permettendo brute-force o DoS |
+| introspection enabled | Medio | l'api permette di scaricare lo schema completo (`_ _schema`), rivelando funzioni nascoste come `systemDebug` |
+| verbose error messages | Basso | il server restituisce stack trace python completi in caso di errore (debug mode attivo), aiutando l'attaccante a capire la tecnologia sottostante |
+| cleartext passwords | Critico | le password nel database `dvga.db` sono salvate in chiaro, violando ogni standard di sicurezza (gdpr, iso 27001). avrebbero dovuto essere hashate (es. `bcrypt`) |
+| lack of rate limiting | Medio | non sono stati rilevati limiti alle richieste api, permettendo brute-force o dos |
 
 ---
 
@@ -203,9 +203,9 @@ Il sistema DVGA presenta gravi lacune di sicurezza che permettono a un attaccant
 
 ---
 
-## Analisi a Basso Livello: GraphQL Internals e Superficie di Attacco
+## Analisi a basso livello: GraphQL internals e superficie di attacco
 
-### Differenze Architetturali: REST vs GraphQL
+### Differenze architetturali: REST vs GraphQL
 
 ```
 REST API:
@@ -227,7 +227,7 @@ Implicazioni di sicurezza:
 - Nested queries: possibile causare DoS con query profondamente nidificate
 ```
 
-### Introspection Query: La Mappa dell'Attaccante
+### Introspection query: la mappa dell'Attaccante
 
 La query di introspection e l'equivalente GraphQL di un'enumerazione completa dell'API:
 
@@ -255,22 +255,22 @@ La query di introspection e l'equivalente GraphQL di un'enumerazione completa de
 # - Argomenti accettati (arg: String, id: Int)
 ```
 
-### OWASP GraphQL Security Top 10
+### OWASP GraphQL security top 10
 
-| # | Vulnerabilita | Presente in DVGA | Impatto |
+| # | vulnerabilita | presente in dvga | impatto |
 | :--- | :--- | :--- | :--- |
-| 1 | Introspection enabled | Si | Schema disclosure completo |
-| 2 | DoS via nested queries | Da verificare | Resource exhaustion |
-| 3 | Injection (SQL, OS, SSTI) | Si (Command Injection) | RCE |
-| 4 | Broken Authorization (BOLA) | Si (accesso a dati altrui) | Data breach |
-| 5 | Information Disclosure | Si (errori verbose, debug mode) | Stack trace, path |
-| 6 | Batching attacks (brute force) | Si (nessun rate limit) | Credential stuffing |
-| 7 | Missing rate limiting | Si | DoS, brute force |
-| 8 | Alias-based batching | Da verificare | Bypass rate limit |
-| 9 | Unrestricted field access | Si (tutti i campi accessibili) | PII exposure |
-| 10 | Server-side request forgery | Da verificare | Internal network access |
+| 1 | introspection enabled | si | schema disclosure completo |
+| 2 | dos via nested queries | da verificare | resource exhaustion |
+| 3 | injection (sql, os, ssti) | si (command injection) | rce |
+| 4 | broken authorization (bola) | si (accesso a dati altrui) | data breach |
+| 5 | information disclosure | si (errori verbose, debug mode) | stack trace, path |
+| 6 | batching attacks (brute force) | si (nessun rate limit) | credential stuffing |
+| 7 | missing rate limiting | si | dos, brute force |
+| 8 | alias-based batching | da verificare | bypass rate limit |
+| 9 | unrestricted field access | si (tutti i campi accessibili) | pii exposure |
+| 10 | server-side request forgery | da verificare | internal network access |
 
-### Hardening GraphQL in Produzione
+### Hardening GraphQL in produzione
 
 ```python
 # Disabilitare introspection in produzione (graphene-django)
@@ -293,7 +293,7 @@ schema = Schema(query=Query, mutation=Mutation)
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il bypass del blocco GraphiQL tramite curl e stato il primo passo critico: il server bloccava l'interfaccia grafica (header `User-Agent` o `Referer` check) ma accettava le stesse query via richiesta HTTP diretta. Questo dimostra una difesa superficiale: bloccare l'IDE grafico non impedisce l'accesso all'API, che resta raggiungibile da qualsiasi client HTTP.
 
@@ -305,12 +305,12 @@ Il bypass dell'encoding binario con `strings dvga.db` al posto di `cat dvga.db` 
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Wordlist Scanning | `T1595.003` | GraphQL Introspection via curl (`__schema`) per mappare tutte le query disponibili, incluse le non documentate `systemDebug`, `systemDiagnostics` (WEB-013) |
-| Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | Command Injection tramite il parametro `arg` della query `systemDebug`: payload `; id` ha confermato RCE come utente `dvga` (WEB-013) |
-| Collection | Data from Information Repositories | `T1213` | Esfiltrazione del file `config.py` (chiavi segrete, DB path) e del database SQLite `dvga.db` tramite RCE, ottenendo credenziali admin `admin:changeme` (WEB-013) |
-| Lateral Movement | Valid Accounts: Cloud Accounts | `T1078.003` | Utilizzo delle credenziali esfiltrate per invocare la mutation `login` e ottenere un JWT token admin valido (WEB-013) |
+| reconnaissance | active scanning: wordlist scanning | `T1595.003` | graphql introspection via curl (`__schema`) per mappare tutte le query disponibili, incluse le non documentate `systemDebug`, `systemDiagnostics` (WEB-013) |
+| execution | command and scripting interpreter: unix shell | `T1059.004` | command injection tramite il parametro `arg` della query `systemDebug`: payload `; id` ha confermato rce come utente `dvga` (WEB-013) |
+| collection | data from information repositories | `T1213` | esfiltrazione del file `config.py` (chiavi segrete, db path) e del database sqlite `dvga.db` tramite rce, ottenendo credenziali admin `admin:changeme` (WEB-013) |
+| lateral movement | valid accounts: cloud accounts | `T1078.003` | utilizzo delle credenziali esfiltrate per invocare la mutation `login` e ottenere un jwt token admin valido (WEB-013) |
 
 ---
 

@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Kerberoasting e una delle tecniche di Credential Access piu redditizie in Active Directory, e il motivo e
 di design, non di bug. Qualunque utente autenticato puo chiedere al Domain Controller un ticket di servizio
@@ -42,9 +42,9 @@ ma rumoroso (molti Event ID 4769 ravvicinati, tipici di tool automatici). Un ope
 prima enumera gli SPN interessanti (service account con appartenenze a gruppi privilegiati, individuati
 via BloodHound) e richiede solo quelli.
 
-## Esecuzione / Comandi
+## Esecuzione / comandi
 
-### Fase 1 - Enumerazione degli SPN
+### Fase 1 - enumerazione degli SPN
 
 Da Linux, con Impacket, usando credenziali di dominio valide:
 
@@ -65,7 +65,7 @@ HTTP/web01.corp.local    svc_web    CN=Domain Users,...                   2024-1
 La colonna `PasswordLastSet` e un indicatore di priorita: piu la password e vecchia, piu e probabile che
 sia debole e mai ruotata.
 
-### Fase 2 - Richiesta dei TGS (il "roast")
+### Fase 2 - richiesta dei TGS (il "roast")
 
 ```bash
 # Richiede i TGS e salva gli hash in formato hashcat; -request per ottenere il materiale crackabile
@@ -89,7 +89,7 @@ Il prefisso `$krb5tgs$23$` indica encryption type 23 (RC4-HMAC): la chiave coinc
 password, senza salt ne iterazioni, quindi l'attacco offline e rapido. Un prefisso `$krb5tgs$18$` indica
 AES256, molto piu lento da attaccare.
 
-### Fase 3 - Cracking offline
+### Fase 3 - cracking offline
 
 ```bash
 # Modo 13100 = Kerberos 5 TGS-REP etype 23 (RC4). Per AES256 usare 19700, per AES128 19600
@@ -116,7 +116,7 @@ hash che, pur estratto, resta non craccabile in tempi utili. Il finding reale, i
 classificato in base all'esito effettivo: `Alto` se una password privilegiata viene recuperata, `Medio`
 o `Informativo` se gli SPN esistono ma le password resistono.
 
-### Analisi Teorica
+### Analisi teorica
 
 Kerberoasting non viola la crittografia di Kerberos: ne sfrutta il modello di autorizzazione. Nel flusso
 Kerberos (vedi [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.md>), sezione 3.1), il KDC risponde
@@ -131,7 +131,7 @@ shell Linux o da macchina attaccante con credenziali, Impacket e naturale; su un
 compromesso, Rubeus evita di portare tool Python e si integra con la sessione corrente. In entrambi i casi
 la leva teorica e identica.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Rilevamento (SOC/SIEM).**
 
@@ -154,12 +154,12 @@ la leva teorica e identica.
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Questa sezione descrive come un Kerberoasting riuscito si inserirebbe in un engagement reale, dal punto
 > di vista dell'attaccante (Red Team) e del difensore (Blue Team).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** foothold con credenziali di dominio a basso privilegio; enumerazione SPN completata.
 
@@ -197,7 +197,7 @@ frequente.
 - Esfiltrazione di dati sensibili dai sistemi raggiunti con il service account (es. database di produzione).
 - Rivendita dell'accesso privilegiato come Access Broker.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** picco di Event ID 4769, in particolare con etype RC4, da un singolo account in un
 intervallo ristretto; richiesta di TGS per account honeypot.
@@ -221,14 +221,14 @@ privilegiato. Il controllo efficace non e sul protocollo ma sulla gestione delle
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `GetUserSPNs.py` (Impacket) | Python toolkit | CLI - Attivo | Enumerazione SPN e roasting da Linux/macchina attaccante |
-| `Rubeus` | .NET tool | CLI - Attivo | Kerberoasting da host Windows compromesso, mirato e OPSEC-friendly |
-| `hashcat` | GPU cracker | CLI - Offline | Cracking degli hash TGS (13100 RC4, 19600 AES128, 19700 AES256) |
-| `john` (jumbo) | CPU cracker | CLI - Offline | Alternativa a hashcat per il cracking dei TGS |
-| `BloodHound` / `SharpHound` | Graph enum | CLI/GUI - Attivo | Individuare quali service account sono privilegiati, per roasting selettivo |
-| `NetExec` (`nxc`) | AD/SMB toolkit | CLI - Attivo | Modulo di kerberoasting integrato e azioni correlate |
+| `GetUserSPNs.py` (impacket) | python toolkit | cli - attivo | enumerazione spn e roasting da linux/macchina attaccante |
+| `Rubeus` | .net tool | cli - attivo | kerberoasting da host windows compromesso, mirato e opsec-friendly |
+| `hashcat` | gpu cracker | cli - offline | cracking degli hash tgs (13100 rc4, 19600 aes128, 19700 aes256) |
+| `john` (jumbo) | cpu cracker | cli - offline | alternativa a hashcat per il cracking dei tgs |
+| `BloodHound` / `SharpHound` | graph enum | cli/gui - attivo | individuare quali service account sono privilegiati, per roasting selettivo |
+| `NetExec` (`nxc`) | ad/smb toolkit | cli - attivo | modulo di kerberoasting integrato e azioni correlate |
 
 ---
 
@@ -242,21 +242,21 @@ se quantitativi, nella cartella `EVALUATION/` con la relativa nota di validita.
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Steal or Forge Kerberos Tickets: Kerberoasting | `T1558.003` | Richiesta di TGS per SPN di service account e cracking offline della password. |
-| Discovery | Account Discovery: Domain Account | `T1087.002` | Enumerazione degli account con SPN tramite query al dominio. |
-| Credential Access | Brute Force: Password Cracking | `T1110.002` | Cracking offline dell'hash TGS con wordlist/regole. |
+| credential access | steal or forge kerberos tickets: kerberoasting | `T1558.003` | richiesta di tgs per spn di service account e cracking offline della password. |
+| discovery | account discovery: domain account | `T1087.002` | enumerazione degli account con spn tramite query al dominio. |
+| credential access | brute force: password cracking | `T1110.002` | cracking offline dell'hash tgs con wordlist/regole. |
 
 ---
 
 ## Correlazioni con altri moduli
 
-| Provenienza | Questa tecnica | Effetto |
+| provenienza | questa tecnica | effetto |
 | :--- | :--- | :--- |
-| Password spraying / phishing ([05-social-engineering](<../../../05-social-engineering/README.md>)) | Kerberoasting | fornisce l'account di dominio iniziale necessario al roasting |
-| Kerberoasting | Password cracking ([04-system-exploitation/05-password-cracking](<../../../04-system-exploitation/05-password-cracking/hashcat/README.md>)) | gli hash TGS si crackano con hashcat/john gia documentati nel repo |
-| Kerberoasting | [DCSync](<../../05-credential-dumping/dcsync/README.md>) | un service account privilegiato puo abilitare la catena verso i diritti di replica |
+| password spraying / phishing ([05-social-engineering](<../../../05-social-engineering/README.md>)) | kerberoasting | fornisce l'account di dominio iniziale necessario al roasting |
+| kerberoasting | password cracking ([04-system-exploitation/05-password-cracking](<../../../04-system-exploitation/05-password-cracking/hashcat/README.md>)) | gli hash tgs si crackano con hashcat/john gia documentati nel repo |
+| kerberoasting | [dcsync](<../../05-credential-dumping/dcsync/README.md>) | un service account privilegiato puo abilitare la catena verso i diritti di replica |
 
 ---
 

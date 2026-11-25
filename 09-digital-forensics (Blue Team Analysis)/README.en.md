@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 09 - Digital Forensics (Blue Team Analysis)
+# 09 - Digital forensics (blue team analysis)
 
 > - **Phase:** Defense - Digital Forensics & Incident Response (DFIR)
 > - **Category:** Analysis - incident reconstruction from the evidence
@@ -27,7 +27,7 @@ The positioning in the path is at the end of the defensive chain: prevent (08/ha
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 09-digital-forensics (Blue Team Analysis)/
@@ -42,7 +42,7 @@ The positioning in the path is at the end of the defensive chain: prevent (08/ha
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [INPUT] Detected incident (alert from module 08) + systems/traffic to analyze
@@ -72,50 +72,50 @@ The positioning in the path is at the end of the defensive chain: prevent (08/ha
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Area | Role | Main use case |
+| tool | area | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `Autopsy` / `Sleuth Kit` | Disk | Platform | Filesystem analysis, timeline, recovery (FOR-001) |
-| `Volatility 3` | Memory | Analyzer | Analysis of RAM dumps (processes, network, injection) |
-| `plaso` / `log2timeline` | Disk | Timeline | Correlated super-timeline of the incident |
-| `Wireshark` / `tshark` | Network | Analyzer | PCAP analysis, session reconstruction (FOR-002) |
-| `Zeek` | Network | Framework | Structured traffic logs at large scale |
-| `dc3dd` / write blocker | Acquisition | Preservation | Forensic copy with guaranteed integrity |
+| `Autopsy` / `Sleuth Kit` | disk | platform | filesystem analysis, timeline, recovery (FOR-001) |
+| `Volatility 3` | memory | analyzer | analysis of ram dumps (processes, network, injection) |
+| `plaso` / `log2timeline` | disk | timeline | correlated super-timeline of the incident |
+| `Wireshark` / `tshark` | network | analyzer | pcap analysis, session reconstruction (FOR-002) |
+| `Zeek` | network | framework | structured traffic logs at large scale |
+| `dc3dd` / write blocker | acquisition | preservation | forensic copy with guaranteed integrity |
 
 > **Recommended modern tool:** the `SIFT Workstation` (SANS) integrates the entire forensic arsenal ready to use (Autopsy, Volatility, plaso, Wireshark). For a disk, memory, network flow, the combination `Autopsy` + `Volatility 3` + `Wireshark` covers the complete analysis of an incident, from the disk timeline to the confirmation on the traffic.
 
 ---
 
-## Finding Registry - Module 09
+## Finding registry - module 09
 
-| ID | Description | Severity | Subfolder |
+| id | description | severity | subfolder |
 | :--- | :--- | :---: | :--- |
-| `FOR-001` | Disk forensics: acquisition, incident timeline, recovery of deleted artifacts | `High` | `01-disk-forensics/` |
-| `FOR-002` | Network forensics (Wireshark): session reconstruction, C2/exfil confirmation, IOC | `High` | `02-network-forensics/wireshark/` |
+| `FOR-001` | disk forensics: acquisition, incident timeline, recovery of deleted artifacts | `High` | `01-disk-forensics/` |
+| `FOR-002` | network forensics (wireshark): session reconstruction, c2/exfil confirmation, ioc | `High` | `02-network-forensics/wireshark/` |
 
 ---
 
-## MITRE ATT&CK Mapping - Aggregated
+## MITRE ATT&CK mapping - aggregated
 
 > The forensic module maps the attack techniques that the analysis **reconstructs and confirms** after the fact from the evidence. Complementary framework: MITRE D3FEND.
 
-| Tactic (reconstructed) | Technique | MITRE ID | Related Finding |
+| tactic (reconstructed) | technique | mitre id | related finding |
 | :--- | :--- | :--- | :--- |
-| Defense Evasion | Indicator Removal: File Deletion | `T1070.004` | FOR-001 (carving recovers the deleted files) |
-| Defense Evasion | Indicator Removal: Clear Linux Logs | `T1070.002` | FOR-001 (the timeline highlights the tampering) |
-| Persistence | Account Manipulation: SSH Authorized Keys | `T1098.004` | FOR-001 |
-| Command and Control | Application Layer Protocol: Web Protocols | `T1071.001` | FOR-001, FOR-002 |
-| Command and Control | Application Layer Protocol: DNS | `T1071.004` | FOR-002 |
-| Exfiltration | Exfiltration Over C2 Channel | `T1041` | FOR-002 |
-| Exfiltration | Data Staged | `T1074` | FOR-001 |
-| Credential Access | Network Sniffing | `T1040` | FOR-002 |
+| defense evasion | indicator removal: file deletion | `T1070.004` | FOR-001 (carving recovers the deleted files) |
+| defense evasion | indicator removal: clear linux logs | `T1070.002` | FOR-001 (the timeline highlights the tampering) |
+| persistence | account manipulation: ssh authorized keys | `T1098.004` | FOR-001 |
+| command and control | application layer protocol: web protocols | `T1071.001` | FOR-001, FOR-002 |
+| command and control | application layer protocol: dns | `T1071.004` | FOR-002 |
+| exfiltration | exfiltration over c2 channel | `T1041` | FOR-002 |
+| exfiltration | data staged | `T1074` | FOR-001 |
+| credential access | network sniffing | `T1040` | FOR-002 |
 
-| Defensive countermeasure (D3FEND) | D3FEND ID | Area |
+| defensive countermeasure (d3fend) | d3fend id | area |
 | :--- | :--- | :--- |
-| File Analysis | `D3-FA` | Disk forensics (filesystem artifacts) |
-| Memory Boundary Tracking | `D3-MBT` | Memory forensics (RAM analysis) |
-| Network Traffic Analysis | `D3-NTA` | Network forensics (PCAP analysis) |
+| file analysis | `D3-FA` | disk forensics (filesystem artifacts) |
+| memory boundary tracking | `D3-MBT` | memory forensics (ram analysis) |
+| network traffic analysis | `D3-NTA` | network forensics (pcap analysis) |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Perimeter Mapping: ASN, WHOIS and Certificate Transparency
+# Perimeter mapping: ASN, WHOIS and certificate transparency
 
 > - **Phase:** Reconnaissance - Infrastructure Intelligence (perimeter mapping)
 > - **Visibility:** Zero - querying of public registries (RIR, WHOIS) and Certificate Transparency logs; no packet sent to the target's infrastructure
@@ -19,7 +19,7 @@ The combination of ASN/WHOIS (IP perimeter) and Certificate Transparency (DNS pe
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 asn-whois-ct/
@@ -29,11 +29,11 @@ asn-whois-ct/
 
 ---
 
-## ASN and WHOIS - Identification of the Owned IP Ranges
+## ASN and WHOIS - identification of the owned IP ranges
 
 **Finding ID:** `INTEL-005` | **Severity:** `Variable (Informational / Medium)`
 
-### Operational Context
+### Operational context
 
 The Autonomous System Number identifies a network that announces its IP prefixes via BGP. Large organizations have their own ASN; small ones use the ISP's. Starting from the organization name or a single known IP, one traces back to the ASN and from it to all the announced CIDR blocks. The severity is `Informational` for the mapping alone, but rises to `Medium` when the mapping reveals ranges or services not foreseen by the target (shadow IT, forgotten environments).
 
@@ -80,15 +80,15 @@ Expected output (amass intel):
 
 <!-- screenshot placeholder: BGP Toolkit - ASN prefixes (img/asn-bgp-PLACEHOLDER.jpg) -->
 
-### Analysis of the Results
+### Analysis of the results
 
 The identified CIDR blocks become the **IP scope** for the active network scanning phase (`02-network-scanning-active/`). Finding an undocumented range or services in a "forgotten" block is a finding in itself: it indicates shadow IT or assets not managed by the security team, often the most vulnerable.
 
 ---
 
-## Certificate Transparency - Subdomains Hidden by the Certificates
+## Certificate transparency - subdomains hidden by the certificates
 
-### Operational Context
+### Operational context
 
 The Certificate Transparency logs are the most effective and most passive subdomain enumeration source available. They do not require interaction with the target's DNS: one queries a public index (crt.sh, Censys, the `ctfr` tool) of the issued certificates. Since today almost all services use HTTPS, every subdomain almost certainly has a certificate, and therefore appears in the CT logs - even the internal subdomains never published.
 
@@ -119,7 +119,7 @@ staging-admin.target.com                       <-- internal admin panel
 
 > [Screenshot placeholder: capture the crt.sh web view for the target domain with the list of issued certificates and their SANs.]
 
-### Analysis of the Results / Documented Finding
+### Analysis of the results / documented finding
 
 Subdomains with names like `jenkins`, `dev`, `staging`, `admin`, `vpn`, `gitlab` are the most valuable: they represent support infrastructure (CI/CD, non-production environments, management panels) typically less protected than production and not designed for exposure. An internal wildcard certificate (`*.internal.target.com`) appearing in the CT logs even reveals the naming convention of the internal network.
 
@@ -130,7 +130,7 @@ The produced list is direct input for:
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The enumeration was run on domains authorized for educational purposes or included in public bug bounty programs, without sending any packet to the target's infrastructure. The comparison between Certificate Transparency enumeration and classic DNS enumeration showed the value of the CT logs: support subdomains emerge (development environments, panels, internal services) that DNS resolution alone does not reveal, because their existence is betrayed by the issued certificates. The trade-off, verified during the lab, is that the CT logs also contain old or revoked certificates: some of the names found are no longer resolvable or no longer point to a live host, so a validation step (DNS resolution and probing) was necessary before considering them a real part of the surface. The main decision was precisely in the filtering: distinguishing active subdomains from historical ones and prioritizing non-production environments and remote accesses, which are the highest-value targets for the subsequent phases.
 
@@ -140,7 +140,7 @@ Typical attention points, to verify during execution:
 - Wildcard certificates (`*.target.com`) hide the specific subdomains: in that case CT reveals the existence of the wildcard but not the single hosts, which must be sought with other techniques.
 - crt.sh can be slow or rate-limited on domains with thousands of certificates: in that case prefer the Censys API or `subfinder` (which also aggregates CT sources).
 
-### Theoretical Analysis
+### Theoretical analysis
 
 Certificate Transparency was born as a defensive countermeasure: after cases of compromised CAs issuing fraudulent certificates (e.g. DigiNotar 2011), Google mandated that every trusted certificate be recorded in verifiable public logs, so that a domain can notice certificates issued without its knowledge. The side effect for reconnaissance is that these same logs reveal the entire subdomain structure of an organization. It is a perfect example of the principle whereby a security measure (certificate transparency) creates a new informational surface exploitable in the recon phase.
 
@@ -148,7 +148,7 @@ On the routing plane, the ASN-prefix association is based on BGP: BGP announceme
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [INPUT] Organization name or target domain
@@ -180,31 +180,31 @@ On the routing plane, the ASN-prefix association is based on BGP: BGP announceme
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `whois` | OSINT | CLI | IP/domain resolution to netname, ASN, contacts, CIDR |
-| `amass intel` | OSINT/ASN | CLI | From org name to ASN and IP ranges, CT aggregation |
-| `crt.sh` | Certificate Transparency | Web / API | Subdomain enumeration from the CT logs |
-| `ctfr` | Certificate Transparency | CLI (Python) | Subdomain enumeration via CT logs |
-| `subfinder` | Subdomain enum | CLI | Multi-source aggregation (including CT) of subdomains |
-| `bgp.he.net` | ASN/BGP | Web | BGP Toolkit: prefixes, peers, AS graph |
-| `dnsx` / `httpx` | Validation | CLI | Validation of live hosts from the found subdomains |
+| `whois` | osint | cli | ip/domain resolution to netname, asn, contacts, cidr |
+| `amass intel` | osint/asn | cli | from org name to asn and ip ranges, ct aggregation |
+| `crt.sh` | certificate transparency | web / api | subdomain enumeration from the ct logs |
+| `ctfr` | certificate transparency | cli (python) | subdomain enumeration via ct logs |
+| `subfinder` | subdomain enum | cli | multi-source aggregation (including ct) of subdomains |
+| `bgp.he.net` | asn/bgp | web | bgp toolkit: prefixes, peers, as graph |
+| `dnsx` / `httpx` | validation | cli | validation of live hosts from the found subdomains |
 
 > **Recommended modern tool:** `amass` (OWASP) integrates in a single tool the ASN intelligence (`amass intel`), the enumeration from Certificate Transparency and the passive DNS correlation, replacing the combination of whois + crt.sh + separate tools. For CT alone, `subfinder -d target.com -all` is faster and aggregates dozens of passive sources.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Network Info: IP Addresses | `T1590.005` | Identification of the CIDR blocks owned by the target via WHOIS and amass intel (INTEL-005) |
-| Reconnaissance | Gather Victim Network Info: Network Topology | `T1590.004` | Reconstruction of the network perimeter via ASN and announced BGP prefixes (INTEL-005) |
-| Reconnaissance | Search Open Technical Databases: WHOIS | `T1596.002` | Querying of the RIR WHOIS registries to associate IP, organization and ASN (INTEL-005) |
-| Reconnaissance | Search Open Technical Databases: Digital Certificates | `T1596.003` | Enumeration of hidden subdomains via the Certificate Transparency logs (INTEL-005) |
-| Reconnaissance | Gather Victim Network Info: DNS | `T1590.002` | Discovery of internal subdomains (vpn, dev, jenkins) from the Subject Alternative Names of the certificates (INTEL-005) |
+| reconnaissance | gather victim network info: ip addresses | `T1590.005` | identification of the cidr blocks owned by the target via whois and amass intel (INTEL-005) |
+| reconnaissance | gather victim network info: network topology | `T1590.004` | reconstruction of the network perimeter via asn and announced bgp prefixes (INTEL-005) |
+| reconnaissance | search open technical databases: whois | `T1596.002` | querying of the rir whois registries to associate ip, organization and asn (INTEL-005) |
+| reconnaissance | search open technical databases: digital certificates | `T1596.003` | enumeration of hidden subdomains via the certificate transparency logs (INTEL-005) |
+| reconnaissance | gather victim network info: dns | `T1590.002` | discovery of internal subdomains (vpn, dev, jenkins) from the subject alternative names of the certificates (INTEL-005) |
 
 ---
 

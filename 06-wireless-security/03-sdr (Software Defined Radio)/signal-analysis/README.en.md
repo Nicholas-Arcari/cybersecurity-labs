@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Signal Analysis - Capture and Demodulation with SDR
+# Signal analysis - capture and demodulation with SDR
 
 > - **Phase:** Wireless Security - RF Reconnaissance & Signal Analysis (Software Defined Radio)
 > - **Visibility:** Zero - SDR reception is completely passive; no transmission, no detectable emission (pure reception of the radio spectrum)
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Software Defined Radio (SDR) shifts radio signal processing from dedicated hardware to software: a cheap receiver (RTL-SDR at 30 euro) captures the entire RF spectrum and the software handles demodulation and decoding. This opens to security a huge and historically ignored domain - remotes, sensors, alarm systems, gate openers, car keys, industrial devices - that operates in the ISM bands (315, 433, 868, 915 MHz) often without any encryption.
 
@@ -23,7 +23,7 @@ Finding WIFI-008 documents the cleartext capture of the telemetry of a wireless 
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 signal-analysis/
@@ -33,11 +33,11 @@ signal-analysis/
 
 ---
 
-## Signal Identification with GQRX
+## Signal identification with GQRX
 
 **Finding ID:** `WIFI-008` | **Severity:** `Informational` (cleartext RF telemetry intercepted; enables the replay attacks documented separately)
 
-### Operational Context
+### Operational context
 
 The first step is to locate the signal in the spectrum. GQRX provides a waterfall visualization (frequency on the X axis, time on the Y axis, intensity in colors) that makes every transmission visible. Actuating the target device (pressing the remote) one observes the "burst" appear at a precise frequency, which becomes the starting point for the targeted capture.
 
@@ -74,9 +74,9 @@ rtl_433 recognizes and decodes the weather sensor directly: temperature, humidit
 
 ---
 
-## Protocol Analysis with Universal Radio Hacker (URH)
+## Protocol analysis with universal radio hacker (URH)
 
-### Operational Context
+### Operational context
 
 When the protocol is not known to rtl_433, one moves to URH: it captures the raw signal (IQ samples), demodulates it (ASK/OOK, FSK, PSK), and allows analyzing the bit sequence to reverse-engineer the protocol. URH is the tool that turns a radio burst into an interpretable bit sequence.
 
@@ -105,7 +105,7 @@ The revealed structure (preamble, device ID, command, CRC) shows a static protoc
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The learning curve was mostly on the concepts of signal processing, not on the tools. The first difficulty was the choice of the sample rate and gain in GQRX: a gain too high saturated the receiver, one too low made the signal indistinguishable from noise. The empirical adjustment by observing the waterfall was more effective than any theoretical value.
 
@@ -115,7 +115,7 @@ The most significant observation was the systematic absence of encryption: every
 
 ---
 
-## Theoretical Analysis: Why Embedded RF Is Historically Insecure
+## Theoretical analysis: why embedded RF is historically insecure
 
 Sub-GHz RF devices (315/433/868 MHz) were born in an era and in a market segment where security was not a concern: low-cost and low-consumption microcontrollers, minimal memory, no cryptographic capability. The implicit threat model was the low probability that someone had the equipment to intercept - an assumption demolished by the advent of cheap SDRs.
 
@@ -125,28 +125,28 @@ The critical distinction is between fixed-code systems and rolling-code systems.
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `GQRX` | SDR receiver | GUI | Waterfall visualization, frequency identification of the signals |
-| `Universal Radio Hacker` | Signal analyzer | GUI | Demodulation, protocol reverse engineering, signal generation |
-| `rtl_433` | Protocol decoder | CLI | Automatic decoding of 200+ commercial ISM devices |
-| `SDR++` / `CubicSDR` | SDR receiver | GUI | Modern alternatives to GQRX for spectrum visualization |
-| `GNU Radio` | DSP framework | GUI - Flowgraph | Custom signal processing (see `../gnu-radio-flowgraphs/`) |
-| `inspectrum` | Signal visualizer | GUI | Visual analysis and measurement of captured signals |
+| `GQRX` | sdr receiver | gui | waterfall visualization, frequency identification of the signals |
+| `Universal Radio Hacker` | signal analyzer | gui | demodulation, protocol reverse engineering, signal generation |
+| `rtl_433` | protocol decoder | cli | automatic decoding of 200+ commercial ism devices |
+| `SDR++` / `CubicSDR` | sdr receiver | gui | modern alternatives to gqrx for spectrum visualization |
+| `GNU Radio` | dsp framework | gui - flowgraph | custom signal processing (see `../gnu-radio-flowgraphs/`) |
+| `inspectrum` | signal visualizer | gui | visual analysis and measurement of captured signals |
 
 > **Recommended modern tool:** `Universal Radio Hacker` (URH) is the reference for the analysis and reverse engineering of RF protocols: it integrates capture, demodulation, analysis and generation in a single flow. The [Flipper Zero](https://github.com/Nicholas-Arcari/FlipperZero-guide) brings sub-GHz analysis and capture into a pocket device, ideal for RF recon in the field.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Host Information | `T1592` | Identification and characterization of RF devices via spectrum analysis (WIFI-008) |
-| Credential Access | Network Sniffing | `T1040` | Passive capture and demodulation of RF signals and cleartext telemetry (WIFI-008) |
-| Collection | Data from Information Repositories | `T1213` | Extraction of telemetry data (temperature, ID, status) transmitted in cleartext |
+| reconnaissance | gather victim host information | `T1592` | identification and characterization of rf devices via spectrum analysis (WIFI-008) |
+| credential access | network sniffing | `T1040` | passive capture and demodulation of rf signals and cleartext telemetry (WIFI-008) |
+| collection | data from information repositories | `T1213` | extraction of telemetry data (temperature, id, status) transmitted in cleartext |
 
 ---
 

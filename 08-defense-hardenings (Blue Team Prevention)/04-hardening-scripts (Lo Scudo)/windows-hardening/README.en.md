@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Windows Hardening - GPO, Credential Guard and CIS Baseline
+# Windows hardening - GPO, credential guard and CIS baseline
 
 > - **Phase:** Defense & Hardening - System Hardening (Prevention)
 > - **Category:** Prevention - Windows and Active Directory hardening
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Windows hardening is the direct preventive countermeasure to the offensive techniques of modules 04 and 07: credential dumping (Mimikatz/LSASS), pass-the-hash, privilege escalation, persistence. Unlike Linux where one acts host by host, in a Windows environment the power of hardening lies in the **Group Policy (GPO)**: a centrally defined policy applies to thousands of endpoints simultaneously, making hardening scalable and consistent.
 
@@ -23,7 +23,7 @@ Three countermeasures deserve emphasis because they neutralize attacks documente
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 windows-hardening/
@@ -34,15 +34,15 @@ windows-hardening/
 
 ---
 
-## Windows Hardening via GPO and Baseline
+## Windows hardening via GPO and baseline
 
 **Finding ID:** `DEF-008` | **Severity:** `High` (preventive countermeasure to credential dumping, pass-the-hash and lateral movement in a Windows/AD environment)
 
-### Operational Context
+### Operational context
 
 The strength of Windows hardening is centralization via GPO: the policy is defined once and Active Directory propagates it to all the domain endpoints. The Microsoft Security Baselines provide these GPOs already configured; the defender's task is to import them, adapt them to the context and verify their application, not reinvent them.
 
-### PoC - Phase 1: Import of the Security Baseline
+### PoC - phase 1: import of the security baseline
 
 ```PowerShell
 # Microsoft Security Compliance Toolkit: import of the baseline into GPO
@@ -50,7 +50,7 @@ The strength of Windows hardening is centralization via GPO: the policy is defin
 Import-GPO -BackupGpoName "MSFT Windows 11 - Computer" -TargetName "CIS-Baseline-Workstation" -Path C:\Baselines
 ```
 
-### PoC - Phase 2: Credential Guard (countermeasure to Mimikatz/LSASS - POST-003)
+### PoC - phase 2: credential guard (countermeasure to Mimikatz/LSASS - POST-003)
 
 ```PowerShell
 # Enabling Credential Guard via GPO / registry
@@ -69,7 +69,7 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\LSA" /v LsaCfgFlags /t REG_DWORD 
                          # the dump with Mimikatz (POST-003) now returns encrypted/inaccessible hashes
 ```
 
-### PoC - Phase 3: Lateral movement countermeasures
+### PoC - phase 3: lateral movement countermeasures
 
 ```PowerShell
 # Disable SMBv1 (legacy vector, WannaCry/EternalBlue, relay)
@@ -83,7 +83,7 @@ Get-LapsADPassword -Identity "WIN-CLIENT-01"     # unique and rotated password p
 # via AppLocker / WDAC policy
 ```
 
-### Defensive Operations and Cautions
+### Defensive operations and cautions
 
 - **Test before production:** a misapplied GPO can lock out access to thousands of machines; test in a pilot OU before the rollout
 - **Priority order:** start from the high-impact countermeasures (Credential Guard, LAPS, disabling SMBv1, RDP NLA) before the detail rules
@@ -92,7 +92,7 @@ Get-LapsADPassword -Identity "WIN-CLIENT-01"     # unique and rotated password p
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The most powerful demonstration was Credential Guard against Mimikatz. In module 07 I had used Mimikatz to dump NTLM hashes and Kerberos tickets from LSASS (POST-003, Critical finding); here, with Credential Guard enabled, I re-executed the same attack and saw the dump return encrypted and unusable data. The same technique that as an attacker had given me the keys to the domain, as a defender I had neutralized it with a single policy. Seeing the attack fail where it previously succeeded made the value of hardening concrete better than any theory.
 
@@ -102,7 +102,7 @@ The caution learned was about the operational risk of aggressive policies. An at
 
 ---
 
-## Theoretical Analysis: Hardening as Neutralization of the Techniques, not of the Individual Attacks
+## Theoretical analysis: hardening as neutralization of the techniques, not of the individual attacks
 
 Mature Windows hardening does not chase the individual exploits but neutralizes the techniques at the root. Mimikatz is one of many tools that dump LSASS; chasing the tool (blocking Mimikatz.exe) is useless, because dozens of variants and reimplementations exist (pypykatz, comsvcs.dll). Credential Guard instead neutralizes the technique: it isolates LSASS so that no tool, present or future, can read its memory. Defending the technique instead of the tool is the principle of effective hardening.
 
@@ -112,15 +112,15 @@ The foundation is defense in depth applied to identity. In Active Directory, ide
 
 ---
 
-## Real-World Scenario: Prevention in Action
+## Real-World scenario: prevention in action
 
 > This section describes how this defensive control would operate in a real incident.
 
-### Attacker Perspective (what they attempt)
+### Attacker perspective (what they attempt)
 
 The attacker compromises a workstation and applies the playbook of `07-post-exploitation`: dumps LSASS with Mimikatz to obtain hashes and tickets, then uses the local admin hash to move laterally (pass-the-hash) toward other hosts, aiming at the Domain Controller.
 
-### Defender Perspective (how the control responds)
+### Defender perspective (how the control responds)
 
 ```
 [DEF-008] Domain hardened: Credential Guard + LAPS + baseline via GPO
@@ -146,38 +146,38 @@ Cost and noise of the attack multiplied -> higher probability of detection
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `Group Policy` (GPO) | Policy management | AD | Centralized application of hardening to the domain |
-| `Microsoft Security Baseline` | Baseline (SCT) | Toolkit | Pre-configured and recognized hardening GPOs |
-| `Credential Guard` | Credential protection | Feature | Isolation of LSASS (countermeasure to Mimikatz/POST-003) |
-| `LAPS` | Password management | Feature | Unique and rotated local admin password per host |
-| `CIS-CAT` | Compliance scanner | CLI | Verification of conformity to the Windows CIS Benchmarks |
-| `AppLocker` / `WDAC` | Application control | Feature | Blocking execution from unauthorized paths |
+| `Group Policy` (gpo) | policy management | ad | centralized application of hardening to the domain |
+| `Microsoft Security Baseline` | baseline (sct) | toolkit | pre-configured and recognized hardening gpos |
+| `Credential Guard` | credential protection | feature | isolation of lsass (countermeasure to mimikatz/post-003) |
+| `LAPS` | password management | feature | unique and rotated local admin password per host |
+| `CIS-CAT` | compliance scanner | cli | verification of conformity to the windows cis benchmarks |
+| `AppLocker` / `WDAC` | application control | feature | blocking execution from unauthorized paths |
 
 > **Recommended modern tool:** the `Microsoft Security Baselines` (Security Compliance Toolkit) are the standard starting point, integrated with `CIS-CAT` for conformity verification. `Credential Guard` and `LAPS` (now native Windows LAPS) are the two highest-impact countermeasures against credential dumping and lateral movement techniques. For application control, `WDAC` (Windows Defender Application Control) is more robust than AppLocker.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
 > The table maps the attack techniques that hardening **prevents or neutralizes**.
 
-| Tactic (prevented) | Technique | MITRE ID | Role of the control |
+| tactic (prevented) | technique | mitre id | role of the control |
 | :--- | :--- | :--- | :--- |
-| Credential Access | OS Credential Dumping: LSASS Memory | `T1003.001` | Credential Guard isolates LSASS (neutralizes POST-003) (DEF-008) |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Hash | `T1550.002` | LAPS: unique local admin hash per host (DEF-008) |
-| Lateral Movement | Remote Services: SMB/Windows Admin Shares | `T1021.002` | Disabling SMBv1, restriction of admin shares |
-| Execution | User Execution / payload from user paths | `T1204` | AppLocker/WDAC block unauthorized execution |
-| Persistence | Boot or Logon Autostart: Registry Run Keys | `T1547.001` | Baseline restricts autostart keys and privileges |
+| credential access | os credential dumping: lsass memory | `T1003.001` | credential guard isolates lsass (neutralizes POST-003) (DEF-008) |
+| lateral movement | use alternate authentication material: pass the hash | `T1550.002` | laps: unique local admin hash per host (DEF-008) |
+| lateral movement | remote services: smb/windows admin shares | `T1021.002` | disabling smbv1, restriction of admin shares |
+| execution | user execution / payload from user paths | `T1204` | applocker/wdac block unauthorized execution |
+| persistence | boot or logon autostart: registry run keys | `T1547.001` | baseline restricts autostart keys and privileges |
 
-| Defensive countermeasure (D3FEND) | D3FEND ID | Application |
+| defensive countermeasure (d3fend) | d3fend id | application |
 | :--- | :--- | :--- |
-| Platform Hardening | `D3-PH` | CIS/Microsoft baseline applied via GPO |
-| Credential Hardening | `D3-CH` | Credential Guard + LAPS protect the credentials |
-| Executable Allowlisting | `D3-EAL` | AppLocker/WDAC allow only authorized executables |
+| platform hardening | `D3-PH` | cis/microsoft baseline applied via gpo |
+| credential hardening | `D3-CH` | credential guard + laps protect the credentials |
+| executable allowlisting | `D3-EAL` | applocker/wdac allow only authorized executables |
 
 ---
 

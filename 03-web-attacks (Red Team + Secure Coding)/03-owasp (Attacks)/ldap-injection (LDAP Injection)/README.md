@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# LDAP Injection
+# LDAP injection
 
 > - **Fase:** Web Exploitation - OWASP A03:2021 Injection (filtro LDAP costruito con input non sanitizzato)
 > - **Visibilita:** Media - query LDAP anomale verso il directory server; l'enumerazione con wildcard genera un volume insolito di bind/ricerche
@@ -11,7 +11,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 La LDAP Injection e l'equivalente della SQL Injection applicato ai filtri LDAP. Moltissime applicazioni
 enterprise (portali webmail, VPN, intranet, helpdesk) verificano le credenziali con una query LDAP verso un
@@ -35,9 +35,9 @@ mostra messaggi diversi per "utente inesistente" e "password errata", si puo enu
 contenuto, si estrae; altrimenti si procede in modalita blind, carattere per carattere, come nella
 [SQLi blind](<../sql-injection (SQLi)/README.md>).
 
-## Esecuzione / Comandi
+## Esecuzione / comandi
 
-### Fase 1 - Conferma della vulnerabilita (test non distruttivo)
+### Fase 1 - conferma della vulnerabilita (test non distruttivo)
 
 Un filtro di autenticazione tipico ha questa forma (notazione prefissa, con AND tra le due condizioni):
 
@@ -48,7 +48,7 @@ Un filtro di autenticazione tipico ha questa forma (notazione prefissa, con AND 
 Il test consiste nell'inviare la wildcard `*` come nome utente e osservare se la risposta cambia (es. un errore
 diverso, o "utenti multipli trovati"). Un cambiamento indica che l'input raggiunge il filtro senza escape.
 
-### Fase 2 - Bypass dell'autenticazione
+### Fase 2 - bypass dell'autenticazione
 
 Si iniettano metacaratteri che chiudono prematuramente il filtro e introducono una condizione sempre vera,
 rendendo irrilevante la password. Payload nel campo username (password qualsiasi):
@@ -67,7 +67,7 @@ Esempio di come `admin)(&)` altera il filtro vulnerabile `(&(uid=INPUT)(userPass
          ^^^^  la sotto-clausola (&) e sempre vera; la password non viene piu valutata
 ```
 
-### Fase 3 - Enumerazione ed estrazione (blind)
+### Fase 3 - enumerazione ed estrazione (blind)
 
 Se l'applicazione risponde in modo diverso a condizioni vere e false, si enumerano gli utenti per prefisso e si
 estraggono gli attributi un carattere alla volta. L'attributo di maggior valore in AD e `description`, dove e
@@ -104,7 +104,7 @@ l'estrazione del campo `description` puo restituire password in chiaro riutilizz
 privilegio (es. un service account con diritti di dominio). Se l'applicazione fa escape dei metacaratteri o usa
 binding parametrizzati, il vettore e chiuso (test di Fase 1 negativo).
 
-### Analisi Teorica
+### Analisi teorica
 
 La LDAP Injection e un caso del problema generale dell'injection [Su & Wassermann 2006]: confondere dati e
 istruzioni. Il filtro LDAP e codice (una espressione logica); se l'input dell'utente vi viene concatenato come
@@ -113,7 +113,7 @@ contromisura e la stessa di tutta la famiglia injection: separare dati e codice.
 dei metacaratteri (`*`, `(`, `)`, `\`, NUL) o, meglio, usare API che parametrizzano il filtro (ldap3 in Python,
 Spring LDAP in Java), in modo che l'input non possa mai alterare la sintassi.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Rilevamento (directory server / SIEM).**
 - Query LDAP contenenti metacaratteri sospetti (`*`, `)(`, `|`, `!`) nei log del directory server.
@@ -131,11 +131,11 @@ Spring LDAP in Java), in modo che l'input non possa mai alterare la sintassi.
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Vale per l'esito "bypass auth / estrazione credenziali" (severity Alto/Critico).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** portale aziendale con autenticazione LDAP e input non sanitizzato (confermato in Fase 1).
 
@@ -164,7 +164,7 @@ aprono un account ad alto privilegio. Il collegamento naturale e con il modulo
 **Vettori di monetizzazione tipici:** accesso a dati sensibili aziendali; compromissione del dominio; rivendita
 di accessi.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** metacaratteri LDAP nei log del directory server; picchi di bind/ricerche; enumerazione per
 prefisso.
@@ -188,12 +188,12 @@ non un controllo a valle.
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Burp Suite` | Proxy/scanner | Web - Attivo | Intercetta e modifica i parametri inviati al filtro LDAP; fuzzing dei metacaratteri |
-| `ldapsearch` | LDAP client | CLI - Attivo | Verifica diretta del comportamento del directory server e degli attributi |
-| `python-ldap3` | Libreria Python | Secure coding | Binding/ricerche parametrizzate per la remediation (Blue Team) |
-| `ffuf` / `wfuzz` | Web fuzzer | CLI - Attivo | Automazione dell'enumerazione per prefisso via risposte differenziali |
+| `Burp Suite` | proxy/scanner | web - attivo | intercetta e modifica i parametri inviati al filtro ldap; fuzzing dei metacaratteri |
+| `ldapsearch` | ldap client | cli - attivo | verifica diretta del comportamento del directory server e degli attributi |
+| `python-ldap3` | libreria python | secure coding | binding/ricerche parametrizzate per la remediation (blue team) |
+| `ffuf` / `wfuzz` | web fuzzer | cli - attivo | automazione dell'enumerazione per prefisso via risposte differenziali |
 
 ## Note di metodologia
 
@@ -204,21 +204,21 @@ nella forma didattica minima, non una catena operativa completa.
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Sfruttamento del filtro LDAP non sanitizzato su un'applicazione esposta. |
-| Discovery | Account Discovery: Domain Account | `T1087.002` | Enumerazione degli utenti di dominio tramite wildcard/condizioni differenziali. |
-| Collection | Data from Information Repositories | `T1213` | Estrazione di attributi sensibili (incluse password nel campo description) dalla directory. |
+| initial access | exploit public-facing application | `T1190` | sfruttamento del filtro ldap non sanitizzato su un'applicazione esposta. |
+| discovery | account discovery: domain account | `T1087.002` | enumerazione degli utenti di dominio tramite wildcard/condizioni differenziali. |
+| collection | data from information repositories | `T1213` | estrazione di attributi sensibili (incluse password nel campo description) dalla directory. |
 
 ---
 
 ## Correlazioni con altri finding
 
-| Provenienza | Questa tecnica | Effetto |
+| provenienza | questa tecnica | effetto |
 | :--- | :--- | :--- |
-| [02-web-recon](<../../02-web-recon (Enumeration)/README.md>) | LDAP Injection | l'enumerazione individua i portali con autenticazione LDAP/AD |
-| LDAP Injection (credenziali estratte) | [11-active-directory](<../../../11-active-directory (Windows Domain)/README.md>) | le credenziali aprono la fase di attacco al dominio (fino a DCSync) |
-| LDAP Injection | [secure-coding-lab](<../../06-secure-coding-lab (Defense)/README.md>) | la remediation (filtri parametrizzati) si collega al laboratorio di secure coding |
+| [02-web-recon](<../../02-web-recon (Enumeration)/README.md>) | ldap injection | l'enumerazione individua i portali con autenticazione ldap/ad |
+| ldap injection (credenziali estratte) | [11-active-directory](<../../../11-active-directory (Windows Domain)/README.md>) | le credenziali aprono la fase di attacco al dominio (fino a dcsync) |
+| ldap injection | [secure-coding-lab](<../../06-secure-coding-lab (Defense)/README.md>) | la remediation (filtri parametrizzati) si collega al laboratorio di secure coding |
 
 ---
 

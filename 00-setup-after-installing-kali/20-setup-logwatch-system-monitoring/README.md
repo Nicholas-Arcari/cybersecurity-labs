@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 20 - Imposta Logwatch (System Monitoring Report)
+# 20 - Imposta logwatch (system monitoring report)
 
 > - **Fase:** System Setup - Log Aggregation & Security Reporting
 > - **Priorita:** Media - trasforma il log fatigue in intelligence azionabile
@@ -72,13 +72,13 @@ Ogni giorno (o alla frequenza configurata) ricevi un sommario che include: tenta
 
 ## Tool di riferimento
 
-| Tool | Tipo | Caso d'uso |
+| tool | tipo | caso d'uso |
 | :--- | :--- | :--- |
-| `Logwatch` | Log aggregator | Report giornaliero riassuntivo da `/var/log` |
-| `GoAccess` | Web log analyzer | Analisi in tempo reale log Apache/Nginx con dashboard |
-| `fail2ban` | Ban automatico | Blocca IP dopo N tentativi falliti (complementare a Logwatch) |
-| `logcheck` | Alert log | Alternativa leggera a Logwatch, invia solo le righe anomale |
-| `Splunk Free` | SIEM | Ingestione, indexing e dashboard avanzate per volumi di log elevati |
+| `Logwatch` | log aggregator | report giornaliero riassuntivo da `/var/log` |
+| `GoAccess` | web log analyzer | analisi in tempo reale log apache/nginx con dashboard |
+| `fail2ban` | ban automatico | blocca ip dopo n tentativi falliti (complementare a logwatch) |
+| `logcheck` | alert log | alternativa leggera a logwatch, invia solo le righe anomale |
+| `Splunk Free` | siem | ingestione, indexing e dashboard avanzate per volumi di log elevati |
 
 ---
 

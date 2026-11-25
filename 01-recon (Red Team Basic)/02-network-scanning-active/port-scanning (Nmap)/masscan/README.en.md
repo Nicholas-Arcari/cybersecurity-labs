@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Active Scanning: High-Speed Port Discovery (Masscan)
+# Active scanning: High-Speed port discovery (Masscan)
 
 > - **Phase:** Reconnaissance - Active Network Scanning
 > - **Visibility:** High - SYN flood towards the target, anomalous traffic pattern easily detectable by IDS/IPS
@@ -16,7 +16,7 @@ Tools: `Masscan`
 
 ---
 
-## 1. Theoretical Introduction
+## 1. Theoretical introduction
 
 Masscan is an asynchronous TCP port scanner. Unlike traditional scanners, it uses a custom TCP/IP stack that allows it to send packets (SYN packets) at a speed limited only by the hardware bandwidth, without waiting for responses synchronously.
 
@@ -24,11 +24,11 @@ Use Case: This tool is ideal for the initial phase of Broad Scope Discovery (e.g
 
 ---
 
-## 2 Technical Execution
+## 2 Technical execution
 
 **Finding ID:** `SCAN-002` | **Severity:** `Informational`
 
-#### Phase 1: Target Validation (Ground Truth)
+#### Phase 1: target validation (ground truth)
 
 An Nmap scan was launched to confirm the presence of open ports on the target host and establish a "ground truth".
 
@@ -40,7 +40,7 @@ sudo nmap -p 445 10.0.2.0/24 --open
 
 Analysis: Host 10.0.2.3 is active and port 445 is confirmed OPEN.
 
-#### Phase 2: High-Speed Test (Masscan)
+#### Phase 2: High-Speed test (Masscan)
 
 Subsequently, Masscan was tested on the same specific target to verify asynchronous detection capability.
 
@@ -58,22 +58,22 @@ Analysis: Masscan completed the scan without detecting the open port (False Nega
 
 ---
 
-## 3 Critical Analysis: Limitations in Virtual Environments
+## 3 Critical analysis: limitations in virtual environments
 
 The test highlighted a substantial behavioral difference due to the lab's network architecture (VirtualBox NAT Network).
 
-| Feature | Nmap | Masscan |
+| feature | nmap | masscan |
 | --------- | ------ | --------- |
-| Technology | Synchronous / Stateful | Asynchronous / Stateless |
-| | Uses standard Linux Kernel `syscalls` | Uses Raw Sockets and bypasses the Kernel (custom stack) |
-| NAT Handling | Excellent. The operating system manages connection tracking and NAT traversal | Critical. Response packets (SYN-ACK) are often not correctly routed from the virtual interface to the Masscan process |
-| Result | Port detected (open) | False negative (closed/filtered) |
+| technology | synchronous / stateful | asynchronous / stateless |
+| | uses standard linux kernel `syscalls` | uses raw sockets and bypasses the kernel (custom stack) |
+| nat handling | excellent. the operating system manages connection tracking and nat traversal | Critical. response packets (syn-ack) are often not correctly routed from the virtual interface to the masscan process |
+| result | port detected (open) | false negative (closed/filtered) |
 
 Lesson Learned: In real-world scenarios, Masscan is unbeatable for speed on direct physical networks. However, in virtualized environments or behind complex NAT, its custom stack may lose return packets. It is essential to always perform Cross-Validation with Nmap when Masscan results are negative on suspected targets.
 
 ---
 
-## 4 OpSec Considerations
+## 4 OpSec considerations
 
 Regardless of the technical result in the lab, using Masscan in a real Red Team Engagement requires caution:
 
@@ -82,11 +82,11 @@ Regardless of the technical result in the lab, using Masscan in a real Red Team 
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Discovery | Network Service Discovery | `T1046` | High-speed asynchronous port discovery with Masscan on subnet 10.0.2.0/24, documenting behavior in virtualized NAT environment (SCAN-002) |
+| discovery | network service discovery | `T1046` | high-speed asynchronous port discovery with masscan on subnet 10.0.2.0/24, documenting behavior in virtualized nat environment (SCAN-002) |
 
 ---
 

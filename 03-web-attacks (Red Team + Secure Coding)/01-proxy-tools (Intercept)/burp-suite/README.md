@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Proxy Tools: Burp Suite Interception & Extensions
+# Proxy tools: Burp suite interception & extensions
 
 > - **Fase:** Web Attack - Proxy Setup & Traffic Manipulation
 > - **Visibilita:** Locale - il traffico rimane tra browser e proxy, nessun pacchetto aggiuntivo verso il target
@@ -17,7 +17,7 @@ Strumenti: `Burp Suite Community Edition`
 
 ---
 
-## 1 Introduzione Teorica
+## 1 Introduzione teorica
 
 Un Web Proxy (come Burp Suite) è lo strumento fondamentale per il Web Application Penetration Testing. Si posiziona come "Man-in-the-Middle" (MitM) tra il browser dell'attaccante e il server web. A differenza degli sniffer passivi (Wireshark), il Proxy permette di:
 
@@ -27,7 +27,7 @@ Un Web Proxy (come Burp Suite) è lo strumento fondamentale per il Web Applicati
 
 ---
 
-## 2 Esecuzione Tecnica: Traffic Manipulation
+## 2 Esecuzione tecnica: traffic manipulation
 
 È stato configurato il proxy listener su `127.0.0.1:8080` ed è stato intercettato il traffico verso il target.
 
@@ -53,7 +53,7 @@ La manipolazione dello User-Agent permette di eseguire attacchi di Evasione e Ac
 
 ---
 
-## 3 Advanced Configuration: BApp Store
+## 3 Advanced configuration: BApp store
 
 Per preparare l'ambiente a test più complessi, è stato esplorato il BApp Store, il repository ufficiale delle estensioni di Burp. Le estensioni permettono di automatizzare task ripetitivi o supportare protocolli specifici.
 
@@ -73,7 +73,7 @@ La capacità di intercettare e modificare il traffico "in transito" è il prereq
 
 ---
 
-## 5 Extra, nota su Persistenza e Reporting (.burp files)
+## 5 Extra, nota su persistenza e reporting (.burp files)
 
 Durante questo laboratorio è stata utilizzata la Community Edition, che opera esclusivamente in modalità "Temporary Project" (in memoria).
 In un contesto aziendale (Enterprise/Red Team) che utilizza Burp Suite Professional, il flusso di lavoro standard prevede il salvataggio continuo dei progetti in formato `.burp`.
@@ -86,9 +86,9 @@ Importanza dei file .burp:
 
 ---
 
-## Analisi a Basso Livello: Architettura del Proxy e Flusso di Intercettazione
+## Analisi a basso livello: architettura del proxy e flusso di intercettazione
 
-### Come Funziona Burp Suite a Livello di Rete
+### Come funziona Burp suite a livello di rete
 
 Burp Suite opera come un forward proxy HTTP/HTTPS che si inserisce nel flusso TCP tra il browser e il server:
 
@@ -119,18 +119,18 @@ Browser (Firefox)              Burp Suite (127.0.0.1:8080)          Server (tesl
     |<-- 200 OK (re-cifrata) ------|                                    |
 ```
 
-### Moduli Burp Suite e Workflow
+### Moduli Burp suite e workflow
 
-| Modulo | Funzione | Caso d'uso operativo |
+| modulo | funzione | caso d'uso operativo |
 | :--- | :--- | :--- |
-| **Proxy** | Intercetta e modifica richieste | Manipolazione parametri, header, cookie |
-| **Repeater** | Re-invia richieste singole modificate | Testing manuale di parametri vulnerabili |
-| **Intruder** | Brute force parametrizzato | Credential stuffing, parameter fuzzing |
-| **Scanner** (Pro) | Vulnerability scanning automatico | DAST su applicazioni web |
-| **Decoder** | Encoding/decoding (Base64, URL, HTML) | Analisi payload offuscati |
-| **Comparer** | Diff tra risposte HTTP | Identificare differenze in risposte autenticate vs non |
+| **proxy** | intercetta e modifica richieste | manipolazione parametri, header, cookie |
+| **repeater** | re-invia richieste singole modificate | testing manuale di parametri vulnerabili |
+| **intruder** | brute force parametrizzato | credential stuffing, parameter fuzzing |
+| **scanner** (pro) | vulnerability scanning automatico | dast su applicazioni web |
+| **decoder** | encoding/decoding (base64, url, html) | analisi payload offuscati |
+| **comparer** | diff tra risposte http | identificare differenze in risposte autenticate vs non |
 
-### BApp Extensions per Assessment Professionali
+### BApp extensions per assessment professionali
 
 ```
 Extension            Tipo              Uso
@@ -144,9 +144,9 @@ Hackvertor           Encoding          Encoding dinamico nei payload (bypass WAF
 
 ---
 
-## Blue Team: Detection dei Proxy di Intercettazione
+## Blue team: detection dei proxy di intercettazione
 
-### Indicatori di Manipolazione del Traffico
+### Indicatori di manipolazione del traffico
 
 - **JA3 fingerprint:** il TLS handshake di Burp Suite (Java) ha un JA3 hash diverso da qualsiasi browser reale - i WAF moderni confrontano il JA3 con il User-Agent dichiarato e bloccano se non corrispondono
 - **Certificate chain:** se un'organizzazione ispeziona il traffico TLS dei dipendenti (corporate proxy), la CA dell'organizzazione e nell'Issuer - anomalie nella chain indicano proxy non autorizzati
@@ -160,7 +160,7 @@ Hackvertor           Encoding          Encoding dinamico nei payload (bypass WAF
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 La manipolazione del User-Agent e stata la prima dimostrazione concreta di come il traffico HTTP sia "fidato ma non verificato": il server non ha modo di distinguere un User-Agent reale da uno spoofato, perche l'header e controllato interamente dal client. Questo e il principio fondamentale del web application testing: tutto cio che arriva dal client puo essere manipolato.
 
@@ -172,10 +172,10 @@ L'esplorazione del BApp Store ha rivelato l'ecosistema di estensioni che trasfor
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Collection | Man-in-the-Middle | `T1557` | Posizionamento di Burp Suite come proxy MitM tra browser e server `tesla.com` per intercettare il traffico HTTP/HTTPS |
-| Defense Evasion | Masquerading: Masquerade File Type | `T1036.008` | Modifica dell'header `User-Agent` da browser standard a `Portfolio-Red-Team-Phone` per simulare un dispositivo diverso e potenzialmente bypassare controlli di sicurezza |
+| collection | man-in-the-middle | `T1557` | posizionamento di burp suite come proxy mitm tra browser e server `tesla.com` per intercettare il traffico http/https |
+| defense evasion | masquerading: masquerade file type | `T1036.008` | modifica dell'header `User-Agent` da browser standard a `Portfolio-Red-Team-Phone` per simulare un dispositivo diverso e potenzialmente bypassare controlli di sicurezza |
 
 ---
 

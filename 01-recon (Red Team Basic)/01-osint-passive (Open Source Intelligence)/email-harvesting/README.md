@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# OSINT Passive: Email Harvesting (Personal Audit)
+# OSINT passive: email harvesting (personal audit)
 
 > - **Fase:** Reconnaissance - Passive Information Gathering
 > - **Visibilita:** Zero - nessun contatto diretto con il target, interrogazione di motori di ricerca pubblici
@@ -16,7 +16,7 @@ Strumenti: `theHarvester`, `Google Dorks`
 
 ---
 
-## 1 Introduzione Teorica
+## 1 Introduzione teorica
 
 L'Email Harvesting è una tecnica di ricognizione (Reconnaissance) solitamente utilizzata per mappare la struttura organigrammatica di un'organizzazione target.
 
@@ -24,11 +24,11 @@ Tuttavia, in un contesto di Personal Security Audit, questa tecnica viene adatta
 
 ---
 
-## 2 Esecuzione Tecnica
+## 2 Esecuzione tecnica
 
 **ID Finding:** `OSINT-002` | **Severity:** `Informativo`
 
-#### A. Scansione Automatizzata (TheHarvester)
+#### A. scansione automatizzata (TheHarvester)
 
 È stato interrogato il dominio del portfolio utilizzando `theHarvester` per aggregare risultati da fonti pubbliche (OSINT) e verificare l'indicizzazione di email associate al sottodominio.
 
@@ -40,17 +40,17 @@ theHarvester -d nicholas-arcari.github.io -b all
 
 Nota Tecnica: Poiché GitHub Pages è un servizio di hosting statico e non fornisce un server di posta elettronica diretto, è atteso un risultato nullo per le email strettamente legate al dominio (es. `info@nicholas-arcari.github.io`), a meno di configurazioni personalizzate errate.
 
-#### B. Analisi dei Risultati (TheHarvester)
+#### B. analisi dei risultati (TheHarvester)
 
 Fonti utilizzate: Baidu, Bing, DuckDuckGo, Yahoo, CRTsh.
 
-|Categoria | Risultato |Analisi Tecnica|
+|categoria | risultato |analisi tecnica|
 |---------|-------------|-----------------|
-|Email Esposte | 0 email found | Positiva. Non vi è esposizione diretta di contatti email indicizzati sui motori di ricerca per questo dominio specifico|
-|Infrastruttura | 4 IP (es. 185.199...) | Gli indirizzi IP appartengono all'infrastruttura di GitHub Pages (Hosting Provider). Non rappresentano un server privato gestito dall'utente|
-|Sottodomini | 19 Hosts (es. shop., ftp.) | Falsi Positivi. Si tratta di un artefatto dovuto ai record DNS Wildcard generati dall'infrastruttura cloud di GitHub. Una verifica manuale conferma che questi servizi non sono attivi|
+|email esposte | 0 email found | positiva. non vi è esposizione diretta di contatti email indicizzati sui motori di ricerca per questo dominio specifico|
+|infrastruttura | 4 ip (es. 185.199...) | gli indirizzi ip appartengono all'infrastruttura di github pages (hosting provider). non rappresentano un server privato gestito dall'utente|
+|sottodomini | 19 hosts (es. shop., ftp.) | falsi positivi. si tratta di un artefatto dovuto ai record dns wildcard generati dall'infrastruttura cloud di github. una verifica manuale conferma che questi servizi non sono attivi|
 
-#### C. Ricerca Mirata (Google Dorking)
+#### C. ricerca mirata (Google dorking)
 
 Poiché il dominio è ospitato su GitHub, esiste il rischio che le email di contatto personali (es. Gmail) siano state lasciate "in chiaro" nel codice sorgente o nei file di documentazione (README).
 
@@ -66,7 +66,7 @@ L'analisi ha evidenziato/non ha evidenziato la presenza dell'indirizzo personale
 
 ---
 
-## 3 Conclusione e Remediation
+## 3 Conclusione e remediation
 
 Dall'analisi emerge che il dominio personale presenta una superficie di attacco minima per quanto riguarda l'harvesting automatico.
 
@@ -77,11 +77,11 @@ Raccomandazioni:
 
 ---
 
-## Analisi a Basso Livello: Infrastruttura Email e Record DNS Associati
+## Analisi a basso livello: infrastruttura email e record DNS associati
 
 L'email harvesting non si limita alla raccolta di indirizzi: i record DNS associati al dominio rivelano l'intera infrastruttura di posta elettronica e le relative protezioni anti-spoofing.
 
-### Record MX (Mail Exchanger)
+### Record MX (mail exchanger)
 
 Il record MX definisce quale server accetta la posta per un dominio. La sua analisi rivela il provider email utilizzato:
 
@@ -101,15 +101,15 @@ L'assenza di record MX per `nicholas-arcari.github.io` conferma che GitHub Pages
 
 Questi tre meccanismi, implementati come record TXT nel DNS, costituiscono la difesa contro l'email spoofing:
 
-| Record | Funzione | Verifica con dig |
+| record | funzione | verifica con dig |
 | :--- | :--- | :--- |
-| **SPF** (RFC 7208) | Dichiara quali IP sono autorizzati a inviare email per il dominio | `dig TXT dominio.it +short` -> `"v=spf1 include:_spf.google.com ~all"` |
-| **DKIM** (RFC 6376) | Firma crittografica (RSA/Ed25519) nel header dell'email verificabile tramite chiave pubblica nel DNS | `dig TXT selector._domainkey.dominio.it` |
-| **DMARC** (RFC 7489) | Policy che istruisce il server ricevente su come trattare email che falliscono SPF/DKIM | `dig TXT _dmarc.dominio.it` -> `"v=DMARC1; p=reject; rua=mailto:..."` |
+| **spf** (rfc 7208) | dichiara quali ip sono autorizzati a inviare email per il dominio | `dig TXT dominio.it +short` -> `"v=spf1 include:_spf.google.com ~all"` |
+| **dkim** (rfc 6376) | firma crittografica (rsa/ed25519) nel header dell'email verificabile tramite chiave pubblica nel dns | `dig TXT selector._domainkey.dominio.it` |
+| **dmarc** (rfc 7489) | policy che istruisce il server ricevente su come trattare email che falliscono spf/dkim | `dig TXT _dmarc.dominio.it` -> `"v=DMARC1; p=reject; rua=mailto:..."` |
 
 **Valore per il Red Team:** un dominio con SPF in modalita `~all` (SoftFail) o senza DMARC consente l'invio di email spoofate che superano i filtri di molti provider. L'harvesting delle email combinato con l'analisi dei record DNS permette di valutare la fattibilita di campagne di spear phishing con email che appaiono provenire dal dominio target.
 
-### theHarvester: Pipeline di Raccolta
+### theHarvester: pipeline di raccolta
 
 theHarvester opera interrogando in parallelo le API di motori di ricerca e servizi OSINT. Il parametro `-b all` attiva tutte le fonti disponibili, ma il throughput reale dipende dalle API key configurate:
 
@@ -128,7 +128,7 @@ Senza API key, molte fonti restituiscono risultati parziali o nulli. Il tool `Hu
 
 ---
 
-## Blue Team: Protezione contro Email Harvesting
+## Blue team: protezione contro email harvesting
 
 **Monitoring dell'esposizione:**
 - Eseguire periodicamente `theHarvester -d dominio.it -b all` sul proprio dominio per verificare cosa e visibile
@@ -143,7 +143,7 @@ Senza API key, molte fonti restituiscono risultati parziali o nulli. Il tool `Hu
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'esecuzione su un dominio GitHub Pages ha prodotto un risultato apparentemente banale (zero email trovate), ma l'esercizio ha avuto valore formativo per due aspetti. Il primo: theHarvester ha restituito 4 indirizzi IP e 19 host per il dominio - tutti appartenenti all'infrastruttura GitHub (range 185.199.x.x). Senza l'analisi manuale, questi risultati avrebbero potuto essere erroneamente classificati come server del target. I 19 sottodomini (shop, ftp, www) erano falsi positivi generati dalla wildcard DNS di GitHub Pages - pattern che si ripresenta con qualsiasi servizio cloud che implementa catch-all DNS.
 
@@ -153,9 +153,9 @@ Il secondo aspetto: la ricerca Google Dork `site:nicholas-arcari.github.io "gmai
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Info: Email Addresses | `T1589.002` | Harvesting email associate al dominio nicholas-arcari.github.io con theHarvester e Google Dorks per mappare la superficie di attacco del portfolio (OSINT-002) |
+| reconnaissance | gather victim identity info: email addresses | `T1589.002` | harvesting email associate al dominio nicholas-arcari.github.io con theharvester e google dorks per mappare la superficie di attacco del portfolio (OSINT-002) |
 
 ---
 

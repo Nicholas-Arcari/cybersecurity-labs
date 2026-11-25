@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 04 - Infrastructure Intelligence
+# 04 - Infrastructure intelligence
 
 > - **Fase:** Reconnaissance - Infrastructure Intelligence Gathering
 > - **Visibilita:** Zero / Bassa - ricerca su database pubblici, fingerprinting HTTP standard
@@ -51,7 +51,7 @@ Il tech stack fingerprinting e direttamente connesso al modulo `02-vulnerability
 
 ---
 
-## `shodan-censys/` - Asset Intelligence da Database Pubblici
+## `shodan-censys/` - Asset intelligence da database pubblici
 
 **ID Finding:** `INTEL-001` | **Severity:** `Alto`
 **ID Finding:** `INTEL-002` | **Severity:** `Alto`
@@ -67,7 +67,7 @@ La cross-validation tra Shodan (identificazione servizi e banner) e Censys (anal
 
 ---
 
-## `tech-stack/` - Tech Stack Fingerprinting
+## `tech-stack/` - Tech stack fingerprinting
 
 **ID Finding:** `INTEL-004` | **Severity:** `Informativo`
 
@@ -79,7 +79,7 @@ Il Tech Stack Fingerprinting identifica le tecnologie sottostanti un'applicazion
 
 ---
 
-## `asn-whois-ct/` - Mappatura del Perimetro (ASN, WHOIS, Certificate Transparency)
+## `asn-whois-ct/` - Mappatura del perimetro (ASN, WHOIS, certificate transparency)
 
 **ID Finding:** `INTEL-005` | **Severity:** `Variabile (Informativo / Medio)`
 
@@ -89,7 +89,7 @@ Il risultato e la mappa completa della superficie di attacco esterna - perimetro
 
 ---
 
-## `cloud-asset-discovery/` - Storage Cloud Esposto
+## `cloud-asset-discovery/` - Storage cloud esposto
 
 **ID Finding:** `INTEL-006` | **Severity:** `Variabile (Medio / Critico)`
 
@@ -149,48 +149,48 @@ Il README dedicato copre l'enumerazione per permutazione multi-cloud (`cloud_enu
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Shodan` | Scan database | Web / CLI (`shodan`) | Ricerca asset esposti per IP, porta, banner, CVE |
-| `Censys` | Scan database | Web | Analisi certificati TLS, validazione Shodan |
-| `Whois` | OSINT | CLI | ISP, contatti abuso, geolocalizzazione reale |
-| `WhatWeb` | Tech fingerprint | CLI | Fingerprinting tecnologie web via richiesta HTTP |
-| `Wappalyzer` | Tech fingerprint | Browser extension | Fingerprinting passivo durante navigazione |
-| `BuiltWith` | Tech fingerprint | Web | Database storico tech stack per dominio |
-| `FOFA` | Scan database | Web | Alternativa asiatica a Shodan, utile per target specifici |
-| `Netlas.io` | Scan database | Web | Alternativa moderna a Shodan con query avanzate |
-| `amass intel` | OSINT/ASN | CLI | Da nome org a ASN e blocchi CIDR, aggregazione CT |
-| `crt.sh` | Certificate Transparency | Web / API | Sottodomini nascosti dai certificati TLS emessi |
-| `cloud_enum` | Cloud recon | CLI | Enumerazione bucket S3/Azure/GCP per keyword |
+| `Shodan` | scan database | web / cli (`shodan`) | ricerca asset esposti per ip, porta, banner, cve |
+| `Censys` | scan database | web | analisi certificati tls, validazione shodan |
+| `Whois` | osint | cli | isp, contatti abuso, geolocalizzazione reale |
+| `WhatWeb` | tech fingerprint | cli | fingerprinting tecnologie web via richiesta http |
+| `Wappalyzer` | tech fingerprint | browser extension | fingerprinting passivo durante navigazione |
+| `BuiltWith` | tech fingerprint | web | database storico tech stack per dominio |
+| `FOFA` | scan database | web | alternativa asiatica a shodan, utile per target specifici |
+| `Netlas.io` | scan database | web | alternativa moderna a shodan con query avanzate |
+| `amass intel` | osint/asn | cli | da nome org a asn e blocchi cidr, aggregazione ct |
+| `crt.sh` | certificate transparency | web / api | sottodomini nascosti dai certificati tls emessi |
+| `cloud_enum` | cloud recon | cli | enumerazione bucket s3/azure/gcp per keyword |
 
 > **Tool moderno consigliato:** `Shodan CLI` (`pip install shodan`, `shodan init <API_KEY>`) - permette di automatizzare le query Shodan in script e integrare i risultati in workflow di OSINT automatizzato. Comando di esempio: `shodan search "port:3389 city:Parma" --fields ip_str,port,org`.
 
 ---
 
-## Registro Finding
+## Registro finding
 
-| ID | Descrizione | Severity | File |
+| id | descrizione | severity | file |
 | :--- | :--- | :---: | :--- |
-| `INTEL-001` | 60+ dispositivi con RDP esposto a Parma - nomi host e OS rilevati | `Alto` | `shodan-censys/README.md` |
-| `INTEL-002` | Workstation con RDP + Apache su porta non standard + servizi di gestione su IP pubblico | `Alto` | `shodan-censys/README.md` |
-| `INTEL-003` | Server aziendale con VoIP (3CX) + FTP (FileZilla) + RDP su ADSL consumer | `Critico` | `shodan-censys/README.md` |
-| `INTEL-004` | tesla.com protetta da Akamai WAF - fingerprinting bloccato, HSTS attivo | `Informativo` | `tech-stack/README.md` |
-| `INTEL-005` | Perimetro completo mappato via ASN/WHOIS e sottodomini da Certificate Transparency | `Variabile (Informativo / Medio)` | `asn-whois-ct/README.md` |
-| `INTEL-006` | Storage cloud esposto (bucket S3/Blob) con lettura anonima di dati sensibili | `Variabile (Medio / Critico)` | `cloud-asset-discovery/README.md` |
+| `INTEL-001` | 60+ dispositivi con rdp esposto a parma - nomi host e os rilevati | `Alto` | `shodan-censys/README.md` |
+| `INTEL-002` | workstation con rdp + apache su porta non standard + servizi di gestione su ip pubblico | `Alto` | `shodan-censys/README.md` |
+| `INTEL-003` | server aziendale con voip (3cx) + ftp (filezilla) + rdp su adsl consumer | `Critico` | `shodan-censys/README.md` |
+| `INTEL-004` | tesla.com protetta da akamai waf - fingerprinting bloccato, hsts attivo | `Informativo` | `tech-stack/README.md` |
+| `INTEL-005` | perimetro completo mappato via asn/whois e sottodomini da certificate transparency | `Variabile (Informativo / Medio)` | `asn-whois-ct/README.md` |
+| `INTEL-006` | storage cloud esposto (bucket s3/blob) con lettura anonima di dati sensibili | `Variabile (Medio / Critico)` | `cloud-asset-discovery/README.md` |
 
 ---
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Search Open Technical Databases: Scan Databases | `T1596.005` | Ricerca asset esposti su Shodan e Censys per IP e porta, identificando RDP, VoIP, FTP pubblici (INTEL-001, INTEL-002, INTEL-003) |
-| Reconnaissance | Gather Victim Network Info: Network Topology | `T1590.004` | Mappatura infrastruttura target tramite analisi banner Shodan, certificati TLS e prefissi BGP annunciati dall'ASN (INTEL-001..003, INTEL-005) |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | Tech stack fingerprinting tramite WhatWeb e Wappalyzer per identificare CMS, web server e framework (INTEL-004) |
-| Reconnaissance | Gather Victim Network Info: IP Addresses | `T1590.005` | Identificazione dei blocchi CIDR di proprieta del target tramite WHOIS e amass intel (INTEL-005) |
-| Reconnaissance | Search Open Technical Databases: Digital Certificates | `T1596.003` | Enumerazione di sottodomini nascosti tramite i log di Certificate Transparency (INTEL-005) |
-| Reconnaissance | Search Open Technical Databases | `T1596` | Scoperta di storage cloud esposto tramite enumerazione per permutazione e indici pubblici (INTEL-006) |
-| Collection | Data from Cloud Storage | `T1530` | Accesso anonimo ai contenuti di bucket cloud con permessi pubblici (INTEL-006) |
+| reconnaissance | search open technical databases: scan databases | `T1596.005` | ricerca asset esposti su shodan e censys per ip e porta, identificando rdp, voip, ftp pubblici (INTEL-001, INTEL-002, INTEL-003) |
+| reconnaissance | gather victim network info: network topology | `T1590.004` | mappatura infrastruttura target tramite analisi banner shodan, certificati tls e prefissi bgp annunciati dall'asn (INTEL-001..003, INTEL-005) |
+| reconnaissance | gather victim host info: software | `T1592.002` | tech stack fingerprinting tramite whatweb e wappalyzer per identificare cms, web server e framework (INTEL-004) |
+| reconnaissance | gather victim network info: ip addresses | `T1590.005` | identificazione dei blocchi cidr di proprieta del target tramite whois e amass intel (INTEL-005) |
+| reconnaissance | search open technical databases: digital certificates | `T1596.003` | enumerazione di sottodomini nascosti tramite i log di certificate transparency (INTEL-005) |
+| reconnaissance | search open technical databases | `T1596` | scoperta di storage cloud esposto tramite enumerazione per permutazione e indici pubblici (INTEL-006) |
+| collection | data from cloud storage | `T1530` | accesso anonimo ai contenuti di bucket cloud con permessi pubblici (INTEL-006) |
 
 ---
 

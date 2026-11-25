@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Signal Analysis - Cattura e Demodulazione con SDR
+# Signal analysis - cattura e demodulazione con SDR
 
 > - **Fase:** Wireless Security - RF Reconnaissance & Signal Analysis (Software Defined Radio)
 > - **Visibilita:** Zero - la ricezione SDR e completamente passiva; nessuna trasmissione, nessuna emissione rilevabile (ricezione pura dello spettro radio)
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 La Software Defined Radio (SDR) sposta l'elaborazione del segnale radio dall'hardware dedicato al software: un ricevitore economico (RTL-SDR da 30 euro) cattura l'intero spettro RF e il software si occupa di demodulazione e decodifica. Questo apre alla sicurezza un dominio enorme e storicamente ignorato - telecomandi, sensori, sistemi di allarme, apricancelli, chiavi auto, dispositivi industriali - che opera nelle bande ISM (315, 433, 868, 915 MHz) spesso senza alcuna cifratura.
 
@@ -33,7 +33,7 @@ signal-analysis/
 
 ---
 
-## Identificazione del Segnale con GQRX
+## Identificazione del segnale con GQRX
 
 **ID Finding:** `WIFI-008` | **Severity:** `Informativo` (telemetria RF in chiaro intercettata; abilita gli attacchi replay documentati separatamente)
 
@@ -74,7 +74,7 @@ rtl_433 riconosce e decodifica direttamente il sensore meteo: temperatura, umidi
 
 ---
 
-## Analisi del Protocollo con Universal Radio Hacker (URH)
+## Analisi del protocollo con universal radio hacker (URH)
 
 ### Contesto operativo
 
@@ -105,7 +105,7 @@ La struttura rivelata (preambolo, device ID, comando, CRC) mostra un protocollo 
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 La curva di apprendimento e stata prevalentemente sui concetti di elaborazione del segnale, non sugli strumenti. La prima difficolta e stata la scelta della sample rate e del gain in GQRX: un gain troppo alto saturava il ricevitore, uno troppo basso rendeva il segnale indistinguibile dal rumore. La regolazione empirica osservando il waterfall e stata piu efficace di qualsiasi valore teorico.
 
@@ -115,7 +115,7 @@ L'osservazione piu significativa e stata l'assenza sistematica di cifratura: ogn
 
 ---
 
-## Analisi Teorica: Perche l'RF Embedded e Storicamente Insicuro
+## Analisi teorica: perche l'RF embedded e storicamente insicuro
 
 I dispositivi RF sub-GHz (315/433/868 MHz) sono nati in un'epoca e in un segmento di mercato in cui la sicurezza non era una preoccupazione: microcontrollori a basso costo e consumo, memoria minima, nessuna capacita crittografica. Il modello di minaccia implicito era la scarsa probabilita che qualcuno avesse l'attrezzatura per intercettare - un'assunzione demolita dall'avvento delle SDR economiche.
 
@@ -127,14 +127,14 @@ La distinzione critica e tra sistemi a codice fisso e sistemi a rolling code. Un
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `GQRX` | SDR receiver | GUI | Visualizzazione waterfall, identificazione frequenza dei segnali |
-| `Universal Radio Hacker` | Signal analyzer | GUI | Demodulazione, reverse engineering protocolli, generazione segnali |
-| `rtl_433` | Protocol decoder | CLI | Decodifica automatica di 200+ dispositivi ISM commerciali |
-| `SDR++` / `CubicSDR` | SDR receiver | GUI | Alternative moderne a GQRX per la visualizzazione dello spettro |
-| `GNU Radio` | DSP framework | GUI - Flowgraph | Elaborazione del segnale personalizzata (vedere `../gnu-radio-flowgraphs/`) |
-| `inspectrum` | Signal visualizer | GUI | Analisi visuale e misurazione di segnali catturati |
+| `GQRX` | sdr receiver | gui | visualizzazione waterfall, identificazione frequenza dei segnali |
+| `Universal Radio Hacker` | signal analyzer | gui | demodulazione, reverse engineering protocolli, generazione segnali |
+| `rtl_433` | protocol decoder | cli | decodifica automatica di 200+ dispositivi ism commerciali |
+| `SDR++` / `CubicSDR` | sdr receiver | gui | alternative moderne a gqrx per la visualizzazione dello spettro |
+| `GNU Radio` | dsp framework | gui - flowgraph | elaborazione del segnale personalizzata (vedere `../gnu-radio-flowgraphs/`) |
+| `inspectrum` | signal visualizer | gui | analisi visuale e misurazione di segnali catturati |
 
 > **Tool moderno consigliato:** `Universal Radio Hacker` (URH) e il riferimento per l'analisi e il reverse engineering dei protocolli RF: integra cattura, demodulazione, analisi e generazione in un unico flusso. Il [Flipper Zero](https://github.com/Nicholas-Arcari/FlipperZero-guide) porta l'analisi e la cattura sub-GHz in un dispositivo tascabile, ideale per il recon RF sul campo.
 
@@ -142,11 +142,11 @@ La distinzione critica e tra sistemi a codice fisso e sistemi a rolling code. Un
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Host Information | `T1592` | Identificazione e caratterizzazione di dispositivi RF tramite analisi dello spettro (WIFI-008) |
-| Credential Access | Network Sniffing | `T1040` | Cattura passiva e demodulazione di segnali RF e telemetria in chiaro (WIFI-008) |
-| Collection | Data from Information Repositories | `T1213` | Estrazione di dati di telemetria (temperatura, ID, stato) trasmessi in chiaro |
+| reconnaissance | gather victim host information | `T1592` | identificazione e caratterizzazione di dispositivi rf tramite analisi dello spettro (WIFI-008) |
+| credential access | network sniffing | `T1040` | cattura passiva e demodulazione di segnali rf e telemetria in chiaro (WIFI-008) |
+| collection | data from information repositories | `T1213` | estrazione di dati di telemetria (temperatura, id, stato) trasmessi in chiaro |
 
 ---
 

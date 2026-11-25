@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Wazuh - Piattaforma XDR Open Source
+# Wazuh - piattaforma XDR open source
 
 > - **Fase:** Defense & Hardening - Endpoint Detection & Response (XDR)
 > - **Categoria:** Detection + Prevention - la piattaforma difensiva centrale del modulo
@@ -61,13 +61,13 @@ wazuh/
 
 ## Tool di riferimento
 
-| Componente | Ruolo | Funzione |
+| componente | ruolo | funzione |
 | :--- | :--- | :--- |
-| `Wazuh Manager` | Analisi | Decodifica log, applica regole, genera alert, gestisce active response |
-| `Wazuh Indexer` | Storage | Indicizzazione e ricerca (OpenSearch); esoso di RAM |
-| `Wazuh Dashboard` | Visualizzazione | Interfaccia web, threat hunting, gestione |
-| `Wazuh Agent` | Raccolta | Telemetria e risposta sugli endpoint |
-| `Suricata` | IDS di rete | Detection di rete integrata (`suricata-integration/`) |
+| `Wazuh Manager` | analisi | decodifica log, applica regole, genera alert, gestisce active response |
+| `Wazuh Indexer` | storage | indicizzazione e ricerca (opensearch); esoso di ram |
+| `Wazuh Dashboard` | visualizzazione | interfaccia web, threat hunting, gestione |
+| `Wazuh Agent` | raccolta | telemetria e risposta sugli endpoint |
+| `Suricata` | ids di rete | detection di rete integrata (`suricata-integration/`) |
 
 > **Nota sull'architettura:** l'Indexer e il componente piu esoso di risorse (JVM/OpenSearch). Come documentato in `installing&configuring/`, la gestione della RAM (limitazione dell'heap JVM) e la principale criticita di un deployment su hardware limitato. E lo stesso vincolo dell'ELK Stack (`../../01-siem-log-analysis/elk-stack/`), data la comune base OpenSearch/Elasticsearch.
 

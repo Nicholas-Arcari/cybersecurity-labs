@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Honeypots - Esche e Trappole Difensive
+# Honeypots - esche e trappole difensive
 
 > - **Fase:** Defense & Hardening - Deception
 > - **Categoria:** Deception - dalla singola esca all'infrastruttura trappola
@@ -9,7 +9,7 @@
 
 ---
 
-## Cos'e un Honeypot
+## Cos'e un honeypot
 
 Un honeypot e un sistema, servizio o artefatto progettato per essere attaccato. Non ha scopo produttivo: la sua unica funzione e attirare l'attaccante e rilevarne o studiarne l'attivita. Il principio che accomuna tutte le forme di honeypot e il tasso di falsi positivi strutturalmente nullo: poiche nessun utente legittimo ha motivo di interagire con un'esca, ogni interazione e potenzialmente ostile.
 
@@ -53,13 +53,13 @@ Posizionamento      ovunque (interno)         DMZ/isolato dedicato
 
 ## Tool di riferimento
 
-| Tool | Interazione | Ruolo | Caso d'uso principale |
+| tool | interazione | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Canarytokens` | Bassa | Token passivo | Early warning puntuale, falsi positivi nulli |
-| `OpenCanary` | Bassa/media | Servizi esca | Honeypot leggero per deployment interni |
-| `T-Pot` | Alta | Piattaforma | Threat intelligence multi-servizio |
-| `Cowrie` | Alta | SSH/Telnet | Cattura sessioni d'attacco complete |
-| `Honeytokens` (AD) | Bassa | Account esca | Detection di attacchi Active Directory |
+| `Canarytokens` | bassa | token passivo | early warning puntuale, falsi positivi nulli |
+| `OpenCanary` | bassa/media | servizi esca | honeypot leggero per deployment interni |
+| `T-Pot` | alta | piattaforma | threat intelligence multi-servizio |
+| `Cowrie` | alta | ssh/telnet | cattura sessioni d'attacco complete |
+| `Honeytokens` (ad) | bassa | account esca | detection di attacchi active directory |
 
 > **Tool moderno consigliato:** iniziare con la bassa interazione (`canarytokens.org`) per il miglior rapporto valore/rischio; passare all'alta interazione (`T-Pot`) solo con l'isolamento adeguato e uno scopo di intelligence esplicito.
 

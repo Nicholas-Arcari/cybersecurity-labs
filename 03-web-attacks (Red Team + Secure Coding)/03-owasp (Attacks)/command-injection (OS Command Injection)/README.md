@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# OS Command Injection
+# OS command injection
 
 > - **Fase:** Web Exploitation - OWASP A03:2021 Injection (input dell'utente concatenato in un comando di sistema)
 > - **Visibilita:** Media/Alta - il processo web genera processi figli shell (pattern molto rilevabile da EDR/auditd); le varianti blind generano traffico in uscita o ritardi misurabili
@@ -11,7 +11,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 La OS Command Injection e tra le vulnerabilita web a piu alto impatto: porta direttamente alla **Remote Code
 Execution (RCE)** sul server. Si verifica quando un'applicazione costruisce un comando di sistema concatenando
@@ -33,9 +33,9 @@ operativa e distinguere il caso in-band (output visibile: verifica immediata) da
 indiretto: ritardo temporale o richiesta in uscita verso un server controllato). La verifica iniziale e minima e
 **non distruttiva**: si aggiunge un comando innocuo (`id`, `whoami`) dopo un separatore e si osserva l'output.
 
-## Esecuzione / Comandi
+## Esecuzione / comandi
 
-### Fase 1 - Conferma della vulnerabilita (comando benigno)
+### Fase 1 - conferma della vulnerabilita (comando benigno)
 
 Ipotizzando un parametro `host` passato a un comando `ping`, si appende un comando di verifica innocuo tramite un
 separatore di shell:
@@ -55,7 +55,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)   <-- 'id' eseguito: comma
 L'esecuzione di `id`/`whoami` conferma la RCE con i privilegi del processo web. I separatori comuni sono `;`,
 `|`, `&&`, `$()` e i backtick; la scelta dipende dal contesto (shell, filtri presenti).
 
-### Fase 2 - Variante blind (time-based e out-of-band)
+### Fase 2 - variante blind (time-based e out-of-band)
 
 Se l'output non e riflesso, si conferma l'esecuzione in modo indiretto:
 
@@ -71,7 +71,7 @@ Se l'output non e riflesso, si conferma l'esecuzione in modo indiretto:
 
 Un ritardo di ~10s o una richiesta ricevuta sul proprio server confermano la RCE anche senza output in risposta.
 
-### Fase 3 - Da RCE a shell interattiva (lab)
+### Fase 3 - da RCE a shell interattiva (lab)
 
 Confermata la RCE, in laboratorio si ottiene una shell. Reverse shell bash (listener `nc -lvnp 4444`
 sull'attaccante, IP/porta di lab):
@@ -95,7 +95,7 @@ escalation (vedi modulo 04). Se il processo web gira con privilegi elevati o se 
 l'intero host e compromesso. Se l'applicazione non invoca mai una shell (usa API che passano gli argomenti come
 array) il vettore e chiuso.
 
-### Analisi Teorica
+### Analisi teorica
 
 La OS Command Injection e la forma piu diretta del problema dati/istruzioni [Su & Wassermann 2006]: l'input
 dell'utente (dato) viene interpretato dalla shell come comando (istruzione). La radice e l'uso di una shell per
@@ -104,7 +104,7 @@ binari con API che passano gli argomenti come lista (`execve`, `subprocess.run([
 `ProcessBuilder` con argomenti separati), cosi i metacaratteri restano dati inerti. In subordine: whitelist
 rigorosa dell'input e principio del minimo privilegio per il processo web (contenimento del danno).
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Rilevamento (EDR/auditd/SIEM).**
 - Il processo del web server che genera processi figli shell (`sh`, `bash`, `cmd`, `powershell`): pattern molto
@@ -121,11 +121,11 @@ rigorosa dell'input e principio del minimo privilegio per il processo web (conte
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Vale per l'esito "RCE confermata" (severity Critico).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** parametro che finisce in un comando di sistema, con esecuzione confermata (Fase 1).
 
@@ -154,7 +154,7 @@ della rete interna. Il collegamento naturale e con
 **Vettori di monetizzazione tipici:** compromissione del server (ransomware, cryptomining), esfiltrazione,
 pivoting verso l'infrastruttura interna.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** web server che genera shell; metacaratteri nei parametri; ritardi o traffico in uscita anomali.
 
@@ -177,12 +177,12 @@ argomenti a livello di API.
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Burp Suite` | Proxy/scanner | Web - Attivo | Intercetta e modifica i parametri; test di iniezione con comandi benigni |
-| `commix` | Exploit tool | CLI - Attivo | Rilevamento e sfruttamento automatizzato (in lab autorizzato) di command injection |
-| `curl` | HTTP client | CLI - Attivo | Invio manuale di richieste con payload di verifica |
-| `subprocess` (array) / `ProcessBuilder` | API sicure | Secure coding | Esecuzione senza shell per la remediation (Blue Team) |
+| `Burp Suite` | proxy/scanner | web - attivo | intercetta e modifica i parametri; test di iniezione con comandi benigni |
+| `commix` | exploit tool | cli - attivo | rilevamento e sfruttamento automatizzato (in lab autorizzato) di command injection |
+| `curl` | http client | cli - attivo | invio manuale di richieste con payload di verifica |
+| `subprocess` (array) / `ProcessBuilder` | api sicure | secure coding | esecuzione senza shell per la remediation (blue team) |
 
 ## Note di metodologia
 
@@ -193,21 +193,21 @@ tecniche sono funzionanti: vanno eseguite solo in lab proprio o con autorizzazio
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Sfruttamento della concatenazione non sicura di input in un comando di sistema. |
-| Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | Esecuzione di comandi sul server tramite shell (contesto Linux). |
-| Execution | Command and Scripting Interpreter: Windows Command Shell | `T1059.003` | Esecuzione di comandi sul server tramite cmd (contesto Windows). |
+| initial access | exploit public-facing application | `T1190` | sfruttamento della concatenazione non sicura di input in un comando di sistema. |
+| execution | command and scripting interpreter: unix shell | `T1059.004` | esecuzione di comandi sul server tramite shell (contesto linux). |
+| execution | command and scripting interpreter: windows command shell | `T1059.003` | esecuzione di comandi sul server tramite cmd (contesto windows). |
 
 ---
 
 ## Correlazioni con altri finding
 
-| Provenienza | Questa tecnica | Effetto |
+| provenienza | questa tecnica | effetto |
 | :--- | :--- | :--- |
-| [02-web-recon](<../../02-web-recon (Enumeration)/README.md>) | OS Command Injection | l'enumerazione individua le funzionalita che invocano comandi di sistema |
-| OS Command Injection (RCE) | [04-system-exploitation](<../../../04-system-exploitation/README.md>) | la RCE come utente web apre la privilege escalation locale |
-| OS Command Injection | [secure-coding-lab](<../../06-secure-coding-lab (Defense)/README.md>) | la remediation (niente shell, API con argomenti array) si collega al secure coding |
+| [02-web-recon](<../../02-web-recon (Enumeration)/README.md>) | os command injection | l'enumerazione individua le funzionalita che invocano comandi di sistema |
+| os command injection (rce) | [04-system-exploitation](<../../../04-system-exploitation/README.md>) | la rce come utente web apre la privilege escalation locale |
+| os command injection | [secure-coding-lab](<../../06-secure-coding-lab (Defense)/README.md>) | la remediation (niente shell, api con argomenti array) si collega al secure coding |
 
 ---
 

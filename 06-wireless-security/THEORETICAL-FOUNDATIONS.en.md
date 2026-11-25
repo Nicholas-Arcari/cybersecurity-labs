@@ -1,6 +1,6 @@
 > **English** | [Italiano](THEORETICAL-FOUNDATIONS.md)
 
-# Theoretical Foundations - Module 06: Wireless Security
+# Theoretical foundations - module 06: wireless security
 
 > - **Level:** Academic analysis (theoretical complement to the operational READMEs of the module)
 > - **Purpose:** Formalize the security of the radio layer (absence of a physical perimeter), the fall of security-by-obscurity (Crypto-1), the freshness property against replay and the identification/authentication distinction.
@@ -14,13 +14,13 @@ The wireless domain exposes in pure form cryptographic principles that the other
 
 ---
 
-## 1. The Adversary Model
+## 1. The adversary model
 
 The wireless adversary is a Dolev-Yao network attacker [Dolev & Yao 1983] physically realized: within radio range it possesses **complete access to the channel** without needing to compromise any device. It can passively observe every transmission (the 802.11 management frames are in cleartext even on encrypted networks), inject arbitrary frames (deauthentication, association), and transmit signals (rogue AP, RF replay). Compared to the web attacker (module 03), it is stronger on the channel; compared to pure Dolev-Yao, it is constrained by physics (range, power, band). The passive/active operational distinction of module 01 (section 1) applies: SDR reception is passive and undetectable, transmission is active and detectable.
 
 ---
 
-## 2. Security Properties at Stake
+## 2. Security properties at stake
 
 - **Confidentiality on the broadcast channel:** since anyone in range receives, confidentiality can derive only from cryptography, not from the inaccessibility of the medium.
 - **Mutual authentication:** both parties must prove their identity. Its absence enables the Evil Twin (impersonation of the AP) and cloning (impersonation of the token).
@@ -29,7 +29,7 @@ The wireless adversary is a Dolev-Yao network attacker [Dolev & Yao 1983] physic
 
 ---
 
-## 3. Theoretical Foundations
+## 3. Theoretical foundations
 
 ### 3.1 Crypto-1 and the fall of security-by-obscurity
 
@@ -69,7 +69,7 @@ The evolution WEP, WPA, WPA2, WPA3 illustrates cryptanalysis as a process. WEP f
 
 ---
 
-## 4. Quantitative Analysis
+## 4. Quantitative analysis
 
 ### 4.1 The robustness spectrum of RFID technologies
 
@@ -89,13 +89,13 @@ The 4096 PBKDF2 iterations reduce the attack throughput by a factor of ~4096 com
 
 ---
 
-## 5. Literature Review
+## 5. Literature review
 
 The breaking of Crypto-1 is documented by [Nohl et al. 2008] (reverse engineering) and [Garcia et al. 2008] (cryptanalysis), exemplars of the failure of security-by-obscurity [Kerckhoffs 1883]. The fall of WEP goes back to [Fluhrer et al. 2001]. The attacks on modern WiFi protocols are by [Vanhoef & Piessens 2017] (KRACK, WPA2) and [Vanhoef & Ronen 2020] (Dragonblood, WPA3). The WPA2 key derivation uses PBKDF2 [Kaliski 2000]; the side channels appeal to [Kocher 1996]. The adversary model derives from [Dolev & Yao 1983]; the entropic framing from [Shannon 1949]. The IoT botnets that exploit weak wireless devices are analyzed by [Antonakakis et al. 2017] (Mirai).
 
 ---
 
-## 6. Limitations and Open Problems
+## 6. Limitations and open problems
 
 1. **Irremovable legacy.** MIFARE Classic and EM4100 remain deployed in billions of installations for cost and inertia, despite the cryptographic break being known since 2008. The migration is an economic-logistical problem, not a technical one: an unresolved practical limit.
 
@@ -105,7 +105,7 @@ The breaking of Crypto-1 is documented by [Nohl et al. 2008] (reverse engineerin
 
 ---
 
-## 7. Synthesis and Connection to Practice
+## 7. Synthesis and connection to practice
 
 The `WIFI-` findings of the module instantiate this framework: WPA2/PMKID cracking (WIFI-002/003) is the offline attack of section 3.2; the Evil Twin (WIFI-004) is the violation of mutual authentication and the radio version of the gap of module 05; the RF replay (WIFI-009) is the violation of freshness of section 3.3; MIFARE/EM4100 cloning (WIFI-010/011/012) is the identification/authentication confusion of section 3.4. The countermeasures recommended in the READMEs - WPA3-SAE, EAP-TLS, rolling code, DESFire AES - are the operational translations of the principles formalized here. The module demonstrates in physical and tangible form principles (freshness, mutual authentication, non-secret identity, Kerckhoffs) that recur throughout the path, from the web (module 03) to the cloud (module 10).
 

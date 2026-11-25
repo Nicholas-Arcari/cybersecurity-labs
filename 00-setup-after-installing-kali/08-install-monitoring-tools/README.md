@@ -49,14 +49,14 @@ Il sistema potrebbe bloccarsi per disco pieno o out-of-memory durante un'analisi
 
 ## Tool di riferimento
 
-| Tool | Tipo | Caso d'uso principale |
+| tool | tipo | caso d'uso principale |
 | :--- | :--- | :--- |
-| `glances` | Dashboard terminale | Monitoraggio real-time CPU/RAM/disco/rete in singola vista |
-| `htop` | Process monitor | Gestione interattiva dei processi con filtri e segnali |
-| `iostat` | Disk I/O monitor | Analisi delle performance disco durante scansioni intensive |
-| `iftop` | Network monitor | Traffico di rete per host in tempo reale |
-| `Zabbix agent` | Agent monitoraggio | Integrazione con server Zabbix per monitoraggio centralizzato |
-| `Prometheus + Grafana` | Stack monitoraggio | Dashboard avanzate con alerting per ambienti piu complessi |
+| `glances` | dashboard terminale | monitoraggio real-time cpu/ram/disco/rete in singola vista |
+| `htop` | process monitor | gestione interattiva dei processi con filtri e segnali |
+| `iostat` | disk i/o monitor | analisi delle performance disco durante scansioni intensive |
+| `iftop` | network monitor | traffico di rete per host in tempo reale |
+| `Zabbix agent` | agent monitoraggio | integrazione con server zabbix per monitoraggio centralizzato |
+| `Prometheus + Grafana` | stack monitoraggio | dashboard avanzate con alerting per ambienti piu complessi |
 
 ---
 

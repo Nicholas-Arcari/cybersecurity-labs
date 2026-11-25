@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Cross-Site Scripting (XSS) - Post-Remediation Verification
+# Cross-Site scripting (XSS) - Post-Remediation verification
 
 > - **Phase:** Secure Coding - XSS Mitigation (Output Encoding)
 > - **Visibility:** Zero - local analysis and testing in local PHP environment (`localhost:8000`)
@@ -9,7 +9,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 During the source code analysis of the web application, a Reflected XSS vulnerability was found in the GET parameter `name`.
 
@@ -19,7 +19,7 @@ A fix based on Output Encoding was implemented. Tests confirm that the malicious
 
 ---
 
-## 2 Vulnerability Analysis
+## 2 Vulnerability analysis
 
 Technical Description
 
@@ -39,7 +39,7 @@ Executing the payload generated a JavaScript popup ("Hacked"), confirming the ex
 
 ---
 
-## 3 Root Cause Analysis (Vulnerable Code)
+## 3 Root cause analysis (vulnerable code)
 
 The defect resided in the use of the `echo` statement directly on a user-controlled variable.
 
@@ -53,7 +53,7 @@ The input `<script>...` is written as-is into the DOM, triggering execution.
 
 ---
 
-## 4 Remediation (Secure Coding)
+## 4 Remediation (secure coding)
 
 To mitigate the vulnerability, the Context-Aware Output Encoding technique was applied.
 
@@ -72,7 +72,7 @@ In PHP, this is achieved using the `htmlspecialchars()` function, which converts
 
 ---
 
-## 5 Fix Verification (Verification)
+## 5 Fix verification (verification)
 
 The same attack was re-executed against the patched code block.
 
@@ -97,11 +97,11 @@ It is recommended to extend this "Output Encoding" practice to all variables pri
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Description (Defensive - XSS Mitigation) |
+| tactic | technique | mitre id | description (defensive - xss mitigation) |
 | :--- | :--- | :--- | :--- |
-| (Mitigation) | Exploit Public-Facing Application | `T1190` | Implementation of `htmlspecialchars($_GET['name'], ENT_QUOTES, 'UTF-8')` which converts special characters (`<`, `>`, `"`, `'`) into safe HTML entities, neutralizing the Reflected XSS vector (CWE-79) |
+| (mitigation) | exploit public-facing application | `T1190` | implementation of `htmlspecialchars($_GET['name'], ENT_QUOTES, 'UTF-8')` which converts special characters (`<`, `>`, `"`, `'`) into safe html entities, neutralizing the reflected xss vector (cwe-79) |
 
 ---
 

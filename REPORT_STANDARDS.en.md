@@ -1,6 +1,6 @@
 > **English** | [Italiano](REPORT_STANDARDS.md)
 
-# Report Writing Standards - Cybersecurity Labs
+# Report writing standards - cybersecurity labs
 
 > Reference document for the professional writing of technical READMEs in this repository.
 > Compliance with these rules is mandatory to maintain consistency, quality and professional
@@ -8,7 +8,7 @@
 
 ---
 
-## Table of Contents
+## Table of contents
 
 1. [Work progress status](#1-work-progress-status)
 2. [Language and style](#2-language-and-style)
@@ -29,68 +29,68 @@
 
 ---
 
-## 1. Work Progress Status
+## 1. Work progress status
 
 ### READMEs completed and compliant with standards
 
-| Module | File | Status | Notes |
+| module | file | status | notes |
 | :--- | :--- | :---: | :--- |
-| 00-setup | all (21 files) | Complete | Hardening guide: no finding IDs, no MITRE (setup/config) |
-| Root | `README.md` | Complete | Updated structure, finding table and aggregated MITRE |
-| 01-recon | `README.md` | Complete | Finding registry + MITRE ATT&CK master table |
-| 01-recon | `01-osint-passive/README.md` | Complete | Finding ID, severity, text outputs, MITRE |
-| 01-recon | `02-network-scanning-active/README.md` | Complete | Finding ID, severity, text outputs, MITRE |
-| 01-recon | `03-dns-enumeration/README.md` | Complete | Finding ID, severity, text outputs, MITRE |
-| 01-recon | `04-infrastructure-intel/README.md` | Complete | Finding ID, severity, text outputs, MITRE |
-| 02-vulnerability-assessment | `README.md` | Complete | Finding registry + aggregated MITRE ATT&CK |
-| 02-vulnerability-assessment | `01-general-scanners/README.md` | Complete | Overview of 3 scanners |
-| 02-vulnerability-assessment | `01-general-scanners/nessus/README.md` | Complete | VULN-001, VULN-002, credentialed scan |
-| 02-vulnerability-assessment | `01-general-scanners/nmap-nse-vuln/README.md` | Complete | NSE scripts, categories, workflow |
-| 02-vulnerability-assessment | `01-general-scanners/open-vas-gvm/README.md` | Complete | GVM setup, PostgreSQL troubleshooting |
-| 02-vulnerability-assessment | `02-protocol-specific-audit/README.md` | Complete | Protocol audit overview |
-| 02-vulnerability-assessment | `02-protocol-specific-audit/smb-net-bios/README.md` | Complete | VULN-003, VULN-004, C$ access |
-| 02-vulnerability-assessment | `02-protocol-specific-audit/smtp/README.md` | Complete | VULN-005, filtered port |
-| 02-vulnerability-assessment | `02-protocol-specific-audit/snmp/README.md` | Complete | VULN-006, SNMP absent |
-| 02-vulnerability-assessment | `02-protocol-specific-audit/ssl-tls/README.md` | Complete | testssl.sh/sslscan methodology, lab to be completed |
-| 02-vulnerability-assessment | `03-cve-analysis/README.md` | Complete | CVE analysis overview |
-| 02-vulnerability-assessment | `03-cve-analysis/cvss-calculator/README.md` | Complete | CVSS v3.1, Python, contextual scoring |
-| 02-vulnerability-assessment | `03-cve-analysis/searchsploit-manual-lookup/README.md` | Complete | Searchsploit, msfvenom, code analysis |
-| 02-vulnerability-assessment | `03-cve-analysis/vulnerability-databases/README.md` | Complete | CVE/NVD/Exploit-DB cross-referencing |
-| 02-vulnerability-assessment | `04-reporting-templates/README.md` | Complete | Reporting templates overview |
-| 02-vulnerability-assessment | `04-reporting-templates/executive-summary-template/README.md` | Complete | Template + filled example |
-| 02-vulnerability-assessment | `04-reporting-templates/technical-findings-template/README.md` | Complete | Template + 3 filled examples |
-| 03-web-attacks | all | Complete | WEB-001..015, 34 READMEs written |
-| 04-system-exploitation | `01-frameworks/README.md` | Complete | Finding registry EXPLOIT-001..004, aggregated MITRE |
-| 04-system-exploitation | `01-frameworks/empire/README.md` | Complete | EXPLOIT-001, EXPLOIT-002, Real-World Scenario |
-| 04-system-exploitation | `01-frameworks/metasploit/README.md` | Complete | EXPLOIT-003, EXPLOIT-004, SOCKS pivoting |
-| 04-system-exploitation | `02-exploit-database/README.md` | Complete | Finding registry EXPLOIT-005..007, aggregated MITRE |
-| 04-system-exploitation | `02-exploit-database/compiled-exploits/README.md` | Complete | EXPLOIT-005, EXPLOIT-006, MinGW cross-compilation |
-| 04-system-exploitation | `02-exploit-database/searchsploit/README.md` | Complete | EXPLOIT-007, offline exploit research |
-| 04-system-exploitation | `03-privilege-escalation/README.md` | Complete | Finding registry EXPLOIT-008..019, aggregated MITRE |
-| 04-system-exploitation | `03-privilege-escalation/linux-priv-esc/README.md` | Complete | Finding registry EXPLOIT-008..012, Linux MITRE |
-| 04-system-exploitation | `03-privilege-escalation/linux-priv-esc/gtfo-bins-notes/README.md` | Complete | EXPLOIT-008, EXPLOIT-009, LotL sudo/SUID |
-| 04-system-exploitation | `03-privilege-escalation/linux-priv-esc/linpeas/README.md` | Complete | EXPLOIT-010, EXPLOIT-011, EXPLOIT-012 |
-| 04-system-exploitation | `03-privilege-escalation/windows-priv-esc/README.md` | Complete | Finding registry EXPLOIT-013..019, Windows MITRE |
-| 04-system-exploitation | `03-privilege-escalation/windows-priv-esc/juicypotato-printnightmare/README.md` | Complete | EXPLOIT-013, EXPLOIT-014, PrintSpoofer SYSTEM |
-| 04-system-exploitation | `03-privilege-escalation/windows-priv-esc/sherlock/README.md` | Complete | EXPLOIT-015, kernel patch audit |
-| 04-system-exploitation | `03-privilege-escalation/windows-priv-esc/winpeas/README.md` | Complete | EXPLOIT-016..019, Unattend.xml + XAMPP ACL |
-| 04-system-exploitation | `04-binary-exploitation/README.md` | Complete | Finding registry EXPLOIT-020..021, aggregated MITRE |
-| 04-system-exploitation | `04-binary-exploitation/buffer-overflow-prep/README.md` | Complete | EXPLOIT-020, classic stack overflow, Immunity + Mona.py |
-| 04-system-exploitation | `04-binary-exploitation/pwntools-scripts/README.md` | Complete | EXPLOIT-021, ROP chain, ASLR/DEP bypass, Ret2Libc |
-| 04-system-exploitation | `05-password-cracking/README.md` | Complete | Finding registry EXPLOIT-022..025, aggregated MITRE |
-| 04-system-exploitation | `05-password-cracking/hashcat/README.md` | Complete | EXPLOIT-022, EXPLOIT-023, Mask + Rule-based Attack NTLM |
-| 04-system-exploitation | `05-password-cracking/john-the-ripper/README.md` | Complete | EXPLOIT-024, EXPLOIT-025, ZIP cracking + Linux unshadowing |
-| 04-system-exploitation | `05-password-cracking/wordlists/README.md` | Complete | Wordlist guide: RockYou, SecLists, CeWL, CUPP |
-| 05-social-engineering | all | To do | - |
-| 06-wireless-security | all | To do | - |
-| 07-post-exploitation | all | To do | - |
-| 08-defense-hardenings | all | To do | - |
-| 09-digital-forensics | all | To do | - |
-| 10-cloud-security | all | To do | - |
+| 00-setup | all (21 files) | complete | hardening guide: no finding ids, no mitre (setup/config) |
+| root | `README.md` | complete | updated structure, finding table and aggregated mitre |
+| 01-recon | `README.md` | complete | finding registry + mitre att&ck master table |
+| 01-recon | `01-osint-passive/README.md` | complete | finding id, severity, text outputs, mitre |
+| 01-recon | `02-network-scanning-active/README.md` | complete | finding id, severity, text outputs, mitre |
+| 01-recon | `03-dns-enumeration/README.md` | complete | finding id, severity, text outputs, mitre |
+| 01-recon | `04-infrastructure-intel/README.md` | complete | finding id, severity, text outputs, mitre |
+| 02-vulnerability-assessment | `README.md` | complete | finding registry + aggregated mitre att&ck |
+| 02-vulnerability-assessment | `01-general-scanners/README.md` | complete | overview of 3 scanners |
+| 02-vulnerability-assessment | `01-general-scanners/nessus/README.md` | complete | VULN-001, VULN-002, credentialed scan |
+| 02-vulnerability-assessment | `01-general-scanners/nmap-nse-vuln/README.md` | complete | nse scripts, categories, workflow |
+| 02-vulnerability-assessment | `01-general-scanners/open-vas-gvm/README.md` | complete | gvm setup, postgresql troubleshooting |
+| 02-vulnerability-assessment | `02-protocol-specific-audit/README.md` | complete | protocol audit overview |
+| 02-vulnerability-assessment | `02-protocol-specific-audit/smb-net-bios/README.md` | complete | VULN-003, VULN-004, c$ access |
+| 02-vulnerability-assessment | `02-protocol-specific-audit/smtp/README.md` | complete | VULN-005, filtered port |
+| 02-vulnerability-assessment | `02-protocol-specific-audit/snmp/README.md` | complete | VULN-006, snmp absent |
+| 02-vulnerability-assessment | `02-protocol-specific-audit/ssl-tls/README.md` | complete | testssl.sh/sslscan methodology, lab to be completed |
+| 02-vulnerability-assessment | `03-cve-analysis/README.md` | complete | cve analysis overview |
+| 02-vulnerability-assessment | `03-cve-analysis/cvss-calculator/README.md` | complete | cvss v3.1, python, contextual scoring |
+| 02-vulnerability-assessment | `03-cve-analysis/searchsploit-manual-lookup/README.md` | complete | searchsploit, msfvenom, code analysis |
+| 02-vulnerability-assessment | `03-cve-analysis/vulnerability-databases/README.md` | complete | cve/nvd/exploit-db cross-referencing |
+| 02-vulnerability-assessment | `04-reporting-templates/README.md` | complete | reporting templates overview |
+| 02-vulnerability-assessment | `04-reporting-templates/executive-summary-template/README.md` | complete | template + filled example |
+| 02-vulnerability-assessment | `04-reporting-templates/technical-findings-template/README.md` | complete | template + 3 filled examples |
+| 03-web-attacks | all | complete | WEB-001..015, 34 readmes written |
+| 04-system-exploitation | `01-frameworks/README.md` | complete | finding registry EXPLOIT-001..004, aggregated mitre |
+| 04-system-exploitation | `01-frameworks/empire/README.md` | complete | EXPLOIT-001, EXPLOIT-002, real-world scenario |
+| 04-system-exploitation | `01-frameworks/metasploit/README.md` | complete | EXPLOIT-003, EXPLOIT-004, socks pivoting |
+| 04-system-exploitation | `02-exploit-database/README.md` | complete | finding registry EXPLOIT-005..007, aggregated mitre |
+| 04-system-exploitation | `02-exploit-database/compiled-exploits/README.md` | complete | EXPLOIT-005, EXPLOIT-006, mingw cross-compilation |
+| 04-system-exploitation | `02-exploit-database/searchsploit/README.md` | complete | EXPLOIT-007, offline exploit research |
+| 04-system-exploitation | `03-privilege-escalation/README.md` | complete | finding registry EXPLOIT-008..019, aggregated mitre |
+| 04-system-exploitation | `03-privilege-escalation/linux-priv-esc/README.md` | complete | finding registry EXPLOIT-008..012, linux mitre |
+| 04-system-exploitation | `03-privilege-escalation/linux-priv-esc/gtfo-bins-notes/README.md` | complete | EXPLOIT-008, EXPLOIT-009, lotl sudo/suid |
+| 04-system-exploitation | `03-privilege-escalation/linux-priv-esc/linpeas/README.md` | complete | EXPLOIT-010, EXPLOIT-011, EXPLOIT-012 |
+| 04-system-exploitation | `03-privilege-escalation/windows-priv-esc/README.md` | complete | finding registry EXPLOIT-013..019, windows mitre |
+| 04-system-exploitation | `03-privilege-escalation/windows-priv-esc/juicypotato-printnightmare/README.md` | complete | EXPLOIT-013, EXPLOIT-014, printspoofer system |
+| 04-system-exploitation | `03-privilege-escalation/windows-priv-esc/sherlock/README.md` | complete | EXPLOIT-015, kernel patch audit |
+| 04-system-exploitation | `03-privilege-escalation/windows-priv-esc/winpeas/README.md` | complete | EXPLOIT-016..019, unattend.xml + xampp acl |
+| 04-system-exploitation | `04-binary-exploitation/README.md` | complete | finding registry EXPLOIT-020..021, aggregated mitre |
+| 04-system-exploitation | `04-binary-exploitation/buffer-overflow-prep/README.md` | complete | EXPLOIT-020, classic stack overflow, immunity + mona.py |
+| 04-system-exploitation | `04-binary-exploitation/pwntools-scripts/README.md` | complete | EXPLOIT-021, rop chain, aslr/dep bypass, ret2libc |
+| 04-system-exploitation | `05-password-cracking/README.md` | complete | finding registry EXPLOIT-022..025, aggregated mitre |
+| 04-system-exploitation | `05-password-cracking/hashcat/README.md` | complete | EXPLOIT-022, EXPLOIT-023, mask + rule-based attack ntlm |
+| 04-system-exploitation | `05-password-cracking/john-the-ripper/README.md` | complete | EXPLOIT-024, EXPLOIT-025, zip cracking + linux unshadowing |
+| 04-system-exploitation | `05-password-cracking/wordlists/README.md` | complete | wordlist guide: rockyou, seclists, cewl, cupp |
+| 05-social-engineering | all | to do | - |
+| 06-wireless-security | all | to do | - |
+| 07-post-exploitation | all | to do | - |
+| 08-defense-hardenings | all | to do | - |
+| 09-digital-forensics | all | to do | - |
+| 10-cloud-security | all | to do | - |
 
-### Finding ID Global Sequence
+### Finding ID global sequence
 
-| Prefix | Module | Next available ID |
+| prefix | module | next available id |
 | :--- | :--- | :--- |
 | `OSINT-` | 01-recon/01-osint-passive | `OSINT-005` |
 | `SCAN-` | 01-recon/02-network-scanning | `SCAN-004` |
@@ -108,7 +108,7 @@
 
 ---
 
-## 2. Language and Style
+## 2. Language and style
 
 ### Language
 
@@ -120,7 +120,7 @@
 - **Do not translate** established industry technical terms: use `finding` not `result`,
   `misconfiguration` not `wrong configuration`, `payload` not `payload equivalent`.
 
-### Narrative Style
+### Narrative style
 
 - Write in **impersonal third person** or first person plural: "the scan reveals", "the analysis
   highlighted", not "I did", "I found".
@@ -133,7 +133,7 @@
 
 ---
 
-## 3. Mandatory README Structure
+## 3. Mandatory README structure
 
 Every subfolder README (specific technique) must follow this template in the indicated order.
 Mandatory sections are marked with [M], optional sections with [O] (optional if not applicable).
@@ -191,7 +191,7 @@ Mandatory sections are marked with [M], optional sections with [O] (optional if 
 > **Note:** [disclaimer about authorized targets / lab]        [M]
 ```
 
-### Parent Section READMEs (e.g., `01-recon/README.md`)
+### Parent section READMEs (e.g., `01-recon/README.md`)
 
 Parent READMEs have a different structure: they are navigation and summary documents, not technical guides.
 They must contain:
@@ -206,7 +206,7 @@ They must contain:
 
 ---
 
-## 4. Finding ID System
+## 4. Finding ID system
 
 ### Format
 
@@ -218,7 +218,7 @@ They must contain:
 - `[NNN]`: sequential three-digit number, starting from `001`
 - Examples: `OSINT-001`, `SCAN-003`, `DNS-001`, `EXPLOIT-005`
 
-### Assignment Rules
+### Assignment rules
 
 - IDs are **sequential and never reused**, even if a finding is removed.
 - IDs are **globally unique** within the repository: no two findings with the
@@ -229,7 +229,7 @@ They must contain:
 - Always update the "Finding ID Global Sequence" table in this file when adding
   new findings.
 
-### Positioning in Text
+### Positioning in text
 
 The finding ID badge is positioned **immediately after the section title** that introduces
 the finding, before the descriptive text, on a dedicated line:
@@ -253,19 +253,19 @@ subfolder), the badge is positioned after the sub-paragraph title:
 
 ---
 
-## 5. Severity Scale
+## 5. Severity scale
 
 Use exclusively the following five levels, written in Italian, in backticks in text:
 
-| Level | Backtick | Assignment Criteria |
+| level | backtick | assignment criteria |
 | :--- | :--- | :--- |
-| Critical | `Critico` | Immediate and total compromise of the system or infrastructure. Example: successful Zone Transfer, unauthenticated RCE, plaintext admin credentials. |
-| High | `Alto` | Unauthorized access to sensitive data or probable privilege escalation with low effort. Example: SMB Signing not mandatory (SMB Relay vector), credentials in active breaches. |
-| Medium | `Medio` | Exploitable vulnerability with moderate effort or specific conditions. Example: hidden Virtual Host accessible, self-signed certificates, information facilitating subsequent attacks. |
-| Low | `Basso` | Information useful for further attacks but not directly exploitable. Example: NetBIOS name disclosure, username on social networks. |
-| Informational | `Informativo` | Data relevant for attack surface mapping, no direct risk. Example: active hosts identified, WAF/CDN detected, technology stack confirmed. |
+| Critical | `Critico` | immediate and total compromise of the system or infrastructure. example: successful zone transfer, unauthenticated rce, plaintext admin credentials. |
+| High | `Alto` | unauthorized access to sensitive data or probable privilege escalation with low effort. example: smb signing not mandatory (smb relay vector), credentials in active breaches. |
+| Medium | `Medio` | exploitable vulnerability with moderate effort or specific conditions. example: hidden virtual host accessible, self-signed certificates, information facilitating subsequent attacks. |
+| Low | `Basso` | information useful for further attacks but not directly exploitable. example: netbios name disclosure, username on social networks. |
+| Informational | `Informativo` | data relevant for attack surface mapping, no direct risk. example: active hosts identified, waf/cdn detected, technology stack confirmed. |
 
-### Variable Severity
+### Variable severity
 
 If severity depends on found content (e.g., Google Dorks that may find nothing or find
 credentials), use the format:
@@ -278,9 +278,9 @@ Explain in the body text what determines the effective severity.
 
 ---
 
-## 6. MITRE ATT&CK Format
+## 6. MITRE ATT&CK format
 
-### Standard Table
+### Standard table
 
 The MITRE ATT&CK table is **mandatory** in every technical README. It is always positioned
 **at the end of the document**, before the final disclaimer note, separated by `---`.
@@ -295,7 +295,7 @@ The MITRE ATT&CK table is **mandatory** in every technical README. It is always 
 | [Tactic] | [Extended Technique Name] | `T1234.001` | [What was concretely done, with reference to finding ID if applicable.] |
 ```
 
-### Compilation Rules
+### Compilation rules
 
 - **Tactic:** use the official MITRE tactic name in English
   (e.g., `Reconnaissance`, `Discovery`, `Credential Access`, `Privilege Escalation`).
@@ -306,7 +306,7 @@ The MITRE ATT&CK table is **mandatory** in every technical README. It is always 
 - **Action Description:** in the document language, describe what was concretely done in the lab,
   not what MITRE theory says. Include the correlated Finding ID in parentheses if it exists.
 
-### Aggregated Table in Parent README
+### Aggregated table in parent README
 
 Each module's parent README must contain an aggregated MITRE table with an additional
 "Correlated Finding" column:
@@ -317,7 +317,7 @@ Each module's parent README must contain an aggregated MITRE table with an addit
 | Reconnaissance | Gather Victim Identity Info: Credentials | `T1589.001` | OSINT-001 |
 ```
 
-### Where to Find Correct MITRE IDs
+### Where to find correct MITRE IDs
 
 - Official site: `https://attack.mitre.org/techniques/`
 - Search by technique: `https://attack.mitre.org/techniques/T1589/`
@@ -325,9 +325,9 @@ Each module's parent README must contain an aggregated MITRE table with an addit
 
 ---
 
-## 7. Tool Documentation
+## 7. Tool documentation
 
-### Reference Tool Table
+### Reference tool table
 
 Every README must close (before the MITRE section) with a tool table that includes
 **also modern equivalent or alternative tools**, not just those used in the documented exercise:
@@ -338,7 +338,7 @@ Every README must close (before the MITRE section) with a tool table that includ
 | `tool-name` | [category] | [passive/active/CLI/Web] | [when and why to use it] |
 ```
 
-### Accepted Tool Categories
+### Accepted tool categories
 
 - `Email/Subdomain harvesting`
 - `Username enumeration`
@@ -355,7 +355,7 @@ Every README must close (before the MITRE section) with a tool table that includ
 - `Traffic analyzer`
 - `SIEM/Log analysis`
 
-### Note on Modern Tools
+### Note on modern tools
 
 When a more modern and maintained tool exists compared to the one used in the exercise, add it
 to the table and add a blockquote with explanation:
@@ -367,21 +367,21 @@ to the table and add a blockquote with explanation:
 
 Modern tools to prefer (updated to 2025-2026):
 
-| Classic tool | Modern alternative | Reason |
+| classic tool | modern alternative | reason |
 | :--- | :--- | :--- |
-| `Sublist3r` | `amass` (OWASP) | More powerful, actively maintained, more sources |
-| `httprobe` | `httpx` (ProjectDiscovery) | Faster, provides status code + title + tech |
-| `Masscan` (on VM) | `RustScan` | Compatible with virtualized NAT, more stable |
-| `theHarvester` base | `theHarvester` + Hunter.io API | Without API key results are very limited |
-| Manual scanner | `nuclei` (ProjectDiscovery) | Template-based, thousands of pre-written CVEs |
-| `enum4linux` | `enum4linux-ng` | Modern rewrite, more stable on recent environments |
-| `CrackMapExec` | `NetExec` (nxc) | Active fork after original repo was abandoned |
+| `Sublist3r` | `amass` (owasp) | more powerful, actively maintained, more sources |
+| `httprobe` | `httpx` (projectdiscovery) | faster, provides status code + title + tech |
+| `Masscan` (on vm) | `RustScan` | compatible with virtualized nat, more stable |
+| `theHarvester` base | `theHarvester` + hunter.io api | without api key results are very limited |
+| manual scanner | `nuclei` (projectdiscovery) | template-based, thousands of pre-written cves |
+| `enum4linux` | `enum4linux-ng` | modern rewrite, more stable on recent environments |
+| `CrackMapExec` | `NetExec` (nxc) | active fork after original repo was abandoned |
 
 ---
 
-## 8. Text Outputs and Code Blocks
+## 8. Text outputs and code blocks
 
-### When to Include Text Outputs
+### When to include text outputs
 
 Include a structured output block (even synthetic/example) whenever:
 - The command is shown for the first time in that context
@@ -391,7 +391,7 @@ Include a structured output block (even synthetic/example) whenever:
 Full and lengthy outputs are not necessary: use **synthetic but realistic** outputs
 that show the relevant lines. Annotate the most important lines with `<--`.
 
-### Code Block Format
+### Code block format
 
 ```markdown
 Command block:
@@ -409,7 +409,7 @@ Structured output block (example):
     ```
 ```
 
-### Code Block Rules
+### Code block rules
 
 - Commands are **always** in ` ```Bash ` blocks with language specification.
 - Outputs are in ` ``` ` blocks without language specification.
@@ -419,7 +419,7 @@ Structured output block (example):
 - Do not paste huge outputs: trim with `[... truncated output ...]` if necessary.
 - Commands with placeholders use `<PLACEHOLDER>` in uppercase with angle brackets.
 
-### Screenshot vs Text Output
+### Screenshot vs text output
 
 - **Always prefer text output** when available: it is verifiable, copyable, searchable.
 - Screenshots are accepted only when the output is graphical (GUI, browser, dashboard).
@@ -429,14 +429,14 @@ Structured output block (example):
 
 ---
 
-## 9. Diagrams and Operational Flows
+## 9. Diagrams and operational flows
 
-### When to Include an Operational Flow
+### When to include an operational flow
 
 Mandatory in parent READMEs for each module. Optional (but recommended) in complex
 technical READMEs with multiple sequential steps or conditional decisions.
 
-### Mandatory ASCII Format
+### Mandatory ASCII format
 
 Use exclusively pure ASCII in diagrams, compatible with any Markdown viewer.
 
@@ -482,7 +482,7 @@ Correct flow example:
 
 ---
 
-## 10. Remediation Section (Blue Team)
+## 10. Remediation section (blue team)
 
 ### Requirement
 
@@ -493,7 +493,7 @@ For Low and Informational findings it is optional but recommended.
 
 Immediately after the finding description and its analysis, before the next section.
 
-### Minimum Structure
+### Minimum structure
 
 ```markdown
 ### Remediation
@@ -512,9 +512,9 @@ category ("enable SMB signing").
 
 ---
 
-## 11. Cross-referencing Between Sections
+## 11. Cross-referencing between sections
 
-### How to Reference Other Modules
+### How to reference other modules
 
 When a technique or finding in one section directly connects to another section
 in the repository, indicate it explicitly:
@@ -527,7 +527,7 @@ The SMB Signing misconfiguration (SCAN-003) is exploited in phase
 `07-post-exploitation/04-pivoting-tunneling/`.
 ```
 
-### How to Reference Findings
+### How to reference findings
 
 In current text, reference previous or correlated findings with their ID in backticks:
 
@@ -536,7 +536,7 @@ This finding confirms what was already detected in `DNS-001`: the target's
 DNS attack surface is completely exposed.
 ```
 
-### How to Reference Tools in Other Modules
+### How to reference tools in other modules
 
 ```markdown
 For vulnerability scanning on found subdomains, see
@@ -545,9 +545,9 @@ For vulnerability scanning on found subdomains, see
 
 ---
 
-## 12. Forbidden Characters and Formatting
+## 12. Forbidden characters and formatting
 
-### Em Dash Character (FORBIDDEN)
+### Em dash character (FORBIDDEN)
 
 The character `—` (U+2014, em dash) is **absolutely forbidden** throughout the repository.
 
@@ -569,12 +569,12 @@ open('file.md', 'w').write(content.replace('\u2014', '-'))
 "
 ```
 
-### Unicode Arrows in Text (FORBIDDEN outside code blocks)
+### Unicode arrows in text (FORBIDDEN outside code blocks)
 
 - FORBIDDEN in narrative text: `->`, `=>`, `-->`, and any unicode arrow
 - ALLOWED only inside code blocks ` ``` ` for ASCII diagrams
 
-### Headings with Blockquote in Metadata
+### Headings with blockquote in metadata
 
 The header metadata uses **simple hyphen + space** as separator, not arrows or em dashes:
 
@@ -588,31 +588,31 @@ The header metadata uses **simple hyphen + space** as separator, not arrows or e
 > **Visibility:** Zero — no packets sent
 ```
 
-### Accents and Special Characters in Text
+### Accents and special characters in text
 
 Accented vowels are allowed in Italian narrative text.
 In code blocks and commands, use exclusively pure ASCII (no accents).
 
 ---
 
-## 13. Anti-patterns to Avoid
+## 13. Anti-patterns to avoid
 
-### Content Anti-patterns
+### Content anti-patterns
 
-| Anti-pattern | Problem | Correction |
+| anti-pattern | problem | correction |
 | :--- | :--- | :--- |
-| "Just run `nmap`" | Informal tone, doesn't explain why | Always explain context and motivation before the command |
-| List of commands without explanation | Doesn't demonstrate understanding | Every command must have a line of operational context |
-| "As seen in the screenshot" | Not verifiable, not searchable | Always accompany with text output when possible |
-| Severity not assigned | Unclassified finding | Every finding must have ID and severity |
-| Finding without remediation | Incomplete document | Always add at least one line of remediation |
-| Tool without version | Not reproducible | Specify version when critical for reproducibility (e.g., "Nmap 7.94") |
-| Unauthorized target used without note | Legal/reputational risk | Always declare the authorization perimeter |
-| Missing MITRE section | Not professional | Mandatory in every technical README |
-| Em dash in text | Inconsistency, standard violation | Replace with simple hyphen `-` |
-| English text where not necessary | Linguistic inconsistency | Use Italian for all narrative (in Italian version) |
+| "just run `nmap`" | informal tone, doesn't explain why | always explain context and motivation before the command |
+| list of commands without explanation | doesn't demonstrate understanding | every command must have a line of operational context |
+| "as seen in the screenshot" | not verifiable, not searchable | always accompany with text output when possible |
+| severity not assigned | unclassified finding | every finding must have id and severity |
+| finding without remediation | incomplete document | always add at least one line of remediation |
+| tool without version | not reproducible | specify version when critical for reproducibility (e.g., "nmap 7.94") |
+| unauthorized target used without note | legal/reputational risk | always declare the authorization perimeter |
+| missing mitre section | not professional | mandatory in every technical readme |
+| em dash in text | inconsistency, standard violation | replace with simple hyphen `-` |
+| english text where not necessary | linguistic inconsistency | use italian for all narrative (in italian version) |
 
-### Structural Anti-patterns
+### Structural anti-patterns
 
 - **Do not create a README that is just a list of commands:** every document must have
   introduction, operational context, analysis and conclusions.
@@ -624,7 +624,7 @@ In code blocks and commands, use exclusively pure ASCII (no accents).
 
 ---
 
-## 14. Pre-publication Checklist
+## 14. Pre-publication checklist
 
 Before considering a README completed, verify all points:
 
@@ -642,7 +642,7 @@ Before considering a README completed, verify all points:
 - [ ] ID sequence updated in `REPORT_STANDARDS.md` (section 1 table)
 - [ ] Critical and High findings have complete remediation section
 
-### Technical Content
+### Technical content
 
 - [ ] Each technique has operational context (why before how)
 - [ ] Main commands have an example output block
@@ -675,7 +675,7 @@ Before considering a README completed, verify all points:
 - [ ] Aggregated MITRE table updated
 - [ ] Subfolder description updated in parent README
 
-### Three Dimensions of the Report (Section 15)
+### Three dimensions of the report (section 15)
 
 - [ ] TECHNICAL dimension: real outputs, CVSS score, finding ID, verified MITRE IDs
 - [ ] DESCRIPTIVE dimension: first person (plural) narration of steps performed, problems
@@ -686,7 +686,7 @@ Before considering a README completed, verify all points:
 
 ---
 
-## 15. The Three Dimensions of the Report
+## 15. The three dimensions of the report
 
 Every quality technical README must balance three distinct dimensions. A document missing
 even one appears incomplete to a senior recruiter or a client.
@@ -812,21 +812,21 @@ not the zero-day.
 
 ---
 
-### How to Balance the Three Dimensions
+### How to balance the three dimensions
 
 The three dimensions do not always carry the same weight. Adapt based on document type:
 
-| README Type | Technical | Descriptive | Theoretical |
+| readme type | technical | descriptive | theoretical |
 | :--- | :---: | :---: | :---: |
-| Specific technique (e.g., nmap, enum4linux) | High | High | Medium |
-| Exploitation (e.g., SQLi, SSTI, Drupalgeddon2) | High | High | High |
-| Introductory module (e.g., parent README) | Low | Low | High |
-| Secure Coding / Remediation | Medium | Low | High |
-| Automated scanner (e.g., Nessus, Nikto) | Medium | High | Low |
+| specific technique (e.g., nmap, enum4linux) | High | High | Medium |
+| exploitation (e.g., sqli, ssti, drupalgeddon2) | High | High | High |
+| introductory module (e.g., parent readme) | Low | Low | High |
+| secure coding / remediation | Medium | Low | High |
+| automated scanner (e.g., nessus, nikto) | Medium | High | Low |
 
 ---
 
-## 16. Projection Towards Real-World Scenarios
+## 16. Projection towards Real-World scenarios
 
 Every README related to findings with `High` or `Critical` severity must include a section
 that projects the lab towards a real-world scenario. This section answers the question:
@@ -836,14 +836,14 @@ The section must be presented from two parallel perspectives: **attacker** and *
 
 ---
 
-### Positioning in the Document
+### Positioning in the document
 
 The "Real-World Scenario" section is inserted **after Conclusions and before the MITRE table**,
 separated by `---`. It is a standalone block, not a subsection of the remediation.
 
 ---
 
-### Mandatory Template
+### Mandatory template
 
 ```markdown
 ---
@@ -899,7 +899,7 @@ system encryption, ransom demand, reputational damage]
 
 ---
 
-### Compiled Example (from SMB/VULN-004)
+### Compiled example (from SMB/VULN-004)
 
 ```markdown
 ## Real-World Scenario: Post-Exploitation Projection

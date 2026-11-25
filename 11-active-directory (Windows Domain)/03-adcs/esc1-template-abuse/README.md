@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# AD CS ESC1: template con Subject Alternative Name arbitrario
+# AD CS ESC1: template con subject alternative name arbitrario
 
 > - **Fase:** Privilege Escalation (dominio Active Directory, servizi di certificazione)
 > - **Visibilita:** Media - la richiesta di certificato lascia traccia nel database della CA (richiesta da un utente a basso privilegio per un soggetto privilegiato)
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 ESC1 e la misconfigurazione di AD CS piu diretta: un template di certificato che (a) consente la Client
 Authentication, (b) permette al richiedente di specificare un Subject Alternative Name (SAN) arbitrario, e
@@ -29,7 +29,7 @@ coercizione (a differenza di ESC8): basta un account di dominio con enrollment s
 operativa e scegliere quale identita privilegiata impersonare (tipicamente un Domain Admin noto
 dall'enumerazione).
 
-## Esecuzione / Comandi
+## Esecuzione / comandi
 
 ```bash
 # Richiede un certificato sul template vulnerabile, specificando come SAN un utente privilegiato
@@ -57,7 +57,7 @@ singola richiesta di certificato. La severity e `Critico`: compromissione del do
 relay, senza coercizione. Come per ESC8, il certificato sopravvive al reset della password dell'account
 impersonato, offrendo anche persistenza.
 
-### Analisi Teorica
+### Analisi teorica
 
 ESC1 viola la proprieta P3 (confinamento dell'autorita) a livello di policy della CA: il template definisce
 chi puo ottenere cosa, e una policy che consente a utenti a basso privilegio di emettere certificati con SAN
@@ -67,7 +67,7 @@ certificato firmato dalla CA (che e trusted). La catena di fiducia e corretta in
 nella policy del template, non nella crittografia. Vedi [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.md>)
 sez. 3.4.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Rilevamento.** Richieste di certificato in cui il SAN non corrisponde al richiedente (un utente a basso
 privilegio che richiede un certificato per un Domain Admin); emissione di certificati con Client
@@ -79,11 +79,11 @@ rimuovere Client Authentication dai template che non ne hanno bisogno; audit per
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > ESC1 porta direttamente a privilegi di dominio (severity Critico).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** account di dominio a basso privilegio con enrollment su un template ESC1.
 
@@ -112,7 +112,7 @@ certificato. La persistenza basata su certificato sopravvive ai reset di passwor
 
 **Vettori di monetizzazione tipici:** ransomware e esfiltrazione a valle del dominio; access brokering.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** richieste di certificato con SAN diverso dal richiedente; emissioni anomale su template a
 rischio; PKINIT da host inatteso seguito da attivita privilegiata.
@@ -133,12 +133,12 @@ una scorciatoia verso il dominio. La difesa e la governance dei template, non la
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Certipy` | AD CS toolkit | CLI - Attivo | Richiesta certificato con SAN arbitrario e autenticazione PKINIT |
-| `Certify` | .NET AD CS tool | CLI - Attivo | Richiesta/abuso certificati da host Windows |
-| `Rubeus` | .NET Kerberos tool | CLI - Attivo | Uso del certificato per PKINIT da Windows |
-| `PSPKIAudit` | PowerShell audit | CLI - Attivo | Audit dei template lato blue team |
+| `Certipy` | ad cs toolkit | cli - attivo | richiesta certificato con san arbitrario e autenticazione pkinit |
+| `Certify` | .net ad cs tool | cli - attivo | richiesta/abuso certificati da host windows |
+| `Rubeus` | .net kerberos tool | cli - attivo | uso del certificato per pkinit da windows |
+| `PSPKIAudit` | powershell audit | cli - attivo | audit dei template lato blue team |
 
 ## Note di metodologia
 
@@ -147,18 +147,18 @@ PKINIT, e la verifica che il certificato resta valido dopo un reset di password 
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Steal or Forge Authentication Certificates | `T1649` | Emissione di un certificato con SAN arbitrario per impersonare un account privilegiato. |
-| Privilege Escalation | Valid Accounts: Domain Accounts | `T1078.002` | Uso dell'identita privilegiata ottenuta via certificato. |
+| credential access | steal or forge authentication certificates | `T1649` | emissione di un certificato con san arbitrario per impersonare un account privilegiato. |
+| privilege escalation | valid accounts: domain accounts | `T1078.002` | uso dell'identita privilegiata ottenuta via certificato. |
 
 ## Correlazioni con altri moduli
 
-| Provenienza | Questa tecnica | Effetto |
+| provenienza | questa tecnica | effetto |
 | :--- | :--- | :--- |
-| [esc-enumeration](<../esc-enumeration/README.md>) | ESC1 | individua il template vulnerabile da sfruttare |
-| ESC1 | [DCSync](<../../05-credential-dumping/dcsync/README.md>) | l'identita Domain Admin ottenuta abilita la replica |
-| [ESC8](<../esc8-relay-adcs/README.md>) | ESC1 | due scenari AD CS: ESC1 senza rete/coercizione, ESC8 via relay |
+| [esc-enumeration](<../esc-enumeration/README.md>) | esc1 | individua il template vulnerabile da sfruttare |
+| esc1 | [dcsync](<../../05-credential-dumping/dcsync/README.md>) | l'identita domain admin ottenuta abilita la replica |
+| [esc8](<../esc8-relay-adcs/README.md>) | esc1 | due scenari ad cs: esc1 senza rete/coercizione, esc8 via relay |
 
 ---
 

@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 DCSync e la tecnica che segna, in pratica, la compromissione totale del dominio. Sfrutta il protocollo di
 replica dei Domain Controller (MS-DRSR): un DC che si aggiunge alla foresta deve ricevere una copia del
@@ -39,9 +39,9 @@ piu visibile di un DCSync mirato al solo `krbtgt` e a pochi account privilegiati
 richiede prima solo cio che serve (krbtgt per il Golden Ticket, l'Administrator di dominio), riducendo il
 volume di richieste di replica anomale.
 
-## Esecuzione / Comandi
+## Esecuzione / comandi
 
-### Fase 1 - Verifica dei diritti di replica
+### Fase 1 - verifica dei diritti di replica
 
 Prima di agire, l'operatore verifica chi possiede i diritti di replica sull'oggetto dominio (per capire se
 l'account corrente puo fare DCSync, o quale account prendere di mira).
@@ -102,7 +102,7 @@ dominio. E importante notare cosa DCSync non richiede: nessun login interattivo 
 nessun processo sospetto in esecuzione sul controller. Questo lo rende tanto potente quanto difficile da
 rilevare senza monitoraggio specifico della replica.
 
-### Analisi Teorica
+### Analisi teorica
 
 DCSync non rompe nulla: abusa del protocollo MS-DRSR esattamente come e progettato (vedi
 [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.md>), sez. 3.3). La violazione e della proprieta
@@ -116,7 +116,7 @@ una macchina attaccante Linux, Impacket e immediato e non richiede codice sul ta
 gia in sessione, Mimikatz sfrutta il contesto corrente. In entrambi i casi la leva e il diritto di replica,
 non un difetto crittografico.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Rilevamento (SOC/SIEM).**
 
@@ -139,11 +139,11 @@ non un difetto crittografico.
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Come DCSync si inserirebbe in un engagement reale, dal punto di vista dell'attaccante e del difensore.
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** possesso di un account con diritti di replica (Domain Admin ottenuto via escalation,
 account macchina di un DC via ESC8, o service account con delega di replica).
@@ -179,7 +179,7 @@ particolarmente insidioso perche non viene invalidato da un singolo reset di krb
 - Double extortion con esfiltrazione dei dati sensibili del dominio.
 - Access brokering del controllo Domain Admin.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** Event ID 4662 con i GUID di replica da principal/host non-DC; replica DRSUAPI da IP non
 appartenente ai DC.
@@ -203,13 +203,13 @@ non una patch: non c'e nulla da patchare, solo da confinare.
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `secretsdump.py` (Impacket) | Python toolkit | CLI - Attivo | DCSync da Linux (`-just-dc`, `-just-dc-user`), senza codice sul DC |
-| `Mimikatz` | Credential tool | CLI - Attivo | `lsadump::dcsync` da host Windows in sessione privilegiata |
-| `NetExec` (`nxc`) | AD/SMB toolkit | CLI - Attivo | Modulo `ntdsutil`/`dcsync` e azioni correlate |
-| `BloodHound` / `SharpHound` | Graph enum | CLI/GUI - Attivo | Individuare chi possiede i diritti di replica (privilegio "DCSync") |
-| `ticketer.py` (Impacket) | Kerberos tool | CLI - Attivo | Forgiatura del Golden Ticket a valle, con l'hash krbtgt ottenuto |
+| `secretsdump.py` (impacket) | python toolkit | cli - attivo | dcsync da linux (`-just-dc`, `-just-dc-user`), senza codice sul dc |
+| `Mimikatz` | credential tool | cli - attivo | `lsadump::dcsync` da host windows in sessione privilegiata |
+| `NetExec` (`nxc`) | ad/smb toolkit | cli - attivo | modulo `ntdsutil`/`dcsync` e azioni correlate |
+| `BloodHound` / `SharpHound` | graph enum | cli/gui - attivo | individuare chi possiede i diritti di replica (privilegio "dcsync") |
+| `ticketer.py` (impacket) | kerberos tool | cli - attivo | forgiatura del golden ticket a valle, con l'hash krbtgt ottenuto |
 
 ---
 
@@ -222,21 +222,21 @@ una volta osservati, diventano il finding reale (`AD-NNN`).
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | OS Credential Dumping: DCSync | `T1003.006` | Richiesta di replica abusata (MS-DRSR) per estrarre hash e chiavi dal DC. |
-| Credential Access | Steal or Forge Kerberos Tickets: Golden Ticket | `T1558.001` | Follow-on: forgiatura del Golden Ticket con l'hash di krbtgt ottenuto. |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Hash | `T1550.002` | Follow-on: autenticazione con gli hash NT estratti. |
+| credential access | os credential dumping: dcsync | `T1003.006` | richiesta di replica abusata (ms-drsr) per estrarre hash e chiavi dal dc. |
+| credential access | steal or forge kerberos tickets: golden ticket | `T1558.001` | follow-on: forgiatura del golden ticket con l'hash di krbtgt ottenuto. |
+| lateral movement | use alternate authentication material: pass the hash | `T1550.002` | follow-on: autenticazione con gli hash nt estratti. |
 
 ---
 
 ## Correlazioni con altri moduli
 
-| Provenienza | Questa tecnica | Effetto |
+| provenienza | questa tecnica | effetto |
 | :--- | :--- | :--- |
-| [Kerberoasting](<../../02-kerberos-attacks/kerberoasting/README.md>) / [ESC8](<../../03-adcs/esc8-relay-adcs/README.md>) | DCSync | forniscono l'account privilegiato (o le credenziali del DC) con diritti di replica |
-| DCSync (hash krbtgt) | Golden Ticket ([02-kerberos-attacks](<../../02-kerberos-attacks/README.md>)) | la chiave di krbtgt abilita la persistenza di dominio |
-| DCSync (hash NT) | Pass-the-Hash ([07-post-exploitation](<../../../07-post-exploitation/README.md>)) | gli hash estratti abilitano il movimento laterale senza cracking |
+| [kerberoasting](<../../02-kerberos-attacks/kerberoasting/README.md>) / [esc8](<../../03-adcs/esc8-relay-adcs/README.md>) | dcsync | forniscono l'account privilegiato (o le credenziali del dc) con diritti di replica |
+| dcsync (hash krbtgt) | golden ticket ([02-kerberos-attacks](<../../02-kerberos-attacks/README.md>)) | la chiave di krbtgt abilita la persistenza di dominio |
+| dcsync (hash nt) | pass-the-hash ([07-post-exploitation](<../../../07-post-exploitation/README.md>)) | gli hash estratti abilitano il movimento laterale senza cracking |
 
 ---
 

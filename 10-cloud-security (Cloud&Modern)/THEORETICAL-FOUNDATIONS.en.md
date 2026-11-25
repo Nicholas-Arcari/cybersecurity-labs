@@ -1,6 +1,6 @@
 > **English** | [Italiano](THEORETICAL-FOUNDATIONS.md)
 
-# Theoretical Foundations - Module 10: Cloud Security
+# Theoretical foundations - module 10: cloud security
 
 > - **Level:** Academic analysis (theoretical complement to the operational READMEs of the module)
 > - **Purpose:** Formalize identity as the perimeter, the metadata SSRF as a confused deputy, cloud/container isolation as a configurable property and co-residency as a side channel.
@@ -14,13 +14,13 @@ The cloud dissolves the network perimeter and shifts security onto identity and 
 
 ---
 
-## 1. The Adversary Model
+## 1. The adversary model
 
 The cloud adversary operates in an environment where **every service is a public API endpoint** and the only access control is identity. Its typical entry paths: a leaked credential (module 04/07/09), an SSRF on an application (module 03), a compromised container or workload. The objective is escalation from a limited identity to control of the account/tenant/project, through the traversal of a permission graph (section 3.2). Compared to the other modules, the adversary does not cross a network perimeter but an **authorization graph**: its power depends on the IAM configuration, not on the topology. An honest-but-curious model of the tenancy neighbor is also adopted for co-residency (section 3.4).
 
 ---
 
-## 2. Security Properties at Stake
+## 2. Security properties at stake
 
 - **Least privilege on identity:** every identity (human, managed identity, service account) must have only the necessary permissions; its violation turns a leak into an account takeover.
 - **Intention-based authorization:** a privileged component must not act on behalf of an unauthorized principal (confused deputy, section 3.3).
@@ -29,7 +29,7 @@ The cloud adversary operates in an environment where **every service is a public
 
 ---
 
-## 3. Theoretical Foundations
+## 3. Theoretical foundations
 
 ### 3.1 The collapse of the perimeter and identity as access control
 
@@ -49,7 +49,7 @@ Isolation in the cloud is not a physical barrier but a **configurable** property
 
 ---
 
-## 4. Quantitative Analysis
+## 4. Quantitative analysis
 
 ### 4.1 The probability of co-residency
 
@@ -61,13 +61,13 @@ The case of public S3 buckets quantitatively illustrates the principle "make the
 
 ---
 
-## 5. Literature Review
+## 5. Literature review
 
 Co-residency and cross-VM side-channels are demonstrated by [Ristenpart et al. 2009] and [Zhang et al. 2012], foundational references of cloud isolation security. The confused deputy is by [Hardy 1988]. Privilege escalation as reachability rests on the attack graphs of [Sheyner et al. 2002]. Least privilege and the design principles are by [Saltzer & Schroeder 1975]; surface reduction by [Manadhata & Wing 2011]. The normative definitions and risk models are in NIST SP 800-145 (cloud definition), NIST SP 800-190 (containers) and NIST SP 800-63B (identity). Secrets management appeals to the entropic and cost principles of modules 04 and 07.
 
 ---
 
-## 6. Limitations and Open Problems
+## 6. Limitations and open problems
 
 1. **IAM complexity as an irreducible surface.** The space of IAM configurations (hundreds of services, thousands of actions, policies that compose) is so vast that the exhaustive manual analysis of the privesc paths is intractable; the graph tools (PMapper) are necessary but suffer from the combinatorial explosion of attack graphs [Sheyner et al. 2002].
 
@@ -77,7 +77,7 @@ Co-residency and cross-VM side-channels are demonstrated by [Ristenpart et al. 2
 
 ---
 
-## 7. Synthesis and Connection to Practice
+## 7. Synthesis and connection to practice
 
 The `CLOUD-` findings of the module instantiate this framework: IAM privilege escalation (CLOUD-001) is the reachability in the permission graph of section 3.2; the metadata SSRF and the abuse of managed identity/service account (CLOUD-003/004) are the confused deputies of section 3.3; the container escape (CLOUD-006) is the isolation-as-configuration of section 3.4; the exposed S3 buckets (CLOUD-002) illustrate the cost of the insecure default of section 4.2; auditing and hardening (CLOUD-008/010) are the edge removal and surface reduction. The documented countermeasures - least privilege, permission boundaries, Block Public Access, Workload Identity, Pod Security, shift-left - are the operational realizations of the principles formalized here. The document closes the path by showing that the cloud does not introduce new principles but takes to the extreme those already encountered: the confused deputy (module 03), the transitivity of trust (module 07), the surface reduction (modules 01, 08), the structural elimination of error classes (module 03). Identity as the perimeter is the final synthesis: where position no longer confers trust, security is the correctness of the access configuration.
 

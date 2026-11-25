@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Infrastructure Intelligence: Passive Recon with Shodan & Censys
+# Infrastructure intelligence: passive recon with Shodan & Censys
 
 > - **Fase:** Reconnaissance - Infrastructure Intelligence
 > - **Visibilita:** Zero - ricerca su database pubblici pre-costruiti da scanner di terze parti, nessun contatto con i target
@@ -15,13 +15,13 @@ Target Case Study: Infrastrutture esposte a Parma (IT) Strumenti: `Shodan` (Web)
 
 ---
 
-## 1 Introduzione Teorica
+## 1 Introduzione teorica
 
 A differenza degli scanner attivi (come Nmap) che inviano pacchetti ai bersagli, strumenti come Shodan e Censys effettuano scansioni costanti dell'intero spazio indirizzi IPv4, archiviando le risposte (Banner) dei servizi. Questo permette agli analisti di sicurezza di interrogare un database storico per scoprire asset esposti, versioni software vulnerabili e configurazioni errate in modo totalmente passivo e invisibile agli IDS/IPS del bersaglio.
 
 ---
 
-## 2 Esecuzione Tecnica: Shodan (IoT & Services)
+## 2 Esecuzione tecnica: Shodan (IoT & services)
 
 **ID Finding:** `INTEL-001` | **Severity:** `Alto`
 
@@ -50,7 +50,7 @@ L'analisi dei dettagli forniti da Shodan su due host specifici ha rivelato confi
 
 **ID Finding:** `INTEL-002` | **Severity:** `Alto`
 
-#### Target A (Workstation Esposta)
+#### Target a (workstation esposta)
 
 - IP: `2.118.xx.xx` (Business ISP)
 - OS Fingerprinting: Shodan identifica il sistema operativo come Windows 11.
@@ -69,7 +69,7 @@ L'analisi dei dettagli forniti da Shodan su due host specifici ha rivelato confi
 
 **ID Finding:** `INTEL-003` | **Severity:** `Critico`
 
-#### Target B (Critical Business Server)
+#### Target b (critical business server)
 
 Questo è un bersaglio critico. Guardando i domini e le porte, capiamo esattamente cosa fa questa azienda.
 
@@ -98,7 +98,7 @@ Verdetto: Questo singolo PC gestisce Telefoni, File e Accesso Remoto. Se cade qu
 
 ---
 
-## 3 Integrazione OSINT: Identificazione dell'ISP (Whois)
+## 3 Integrazione OSINT: identificazione dell'ISP (whois)
 
 Per completare la profilazione del target critico (`87.26.xx.xx`), è stata eseguita una query Whois per identificare il provider di servizi internet (ISP) e i contatti di abuso.
 
@@ -131,7 +131,7 @@ Analisi:
 Nota sulla Geolocalizzazione: Sebbene Shodan localizzi l'IP a Parma, l'analisi OSINT incrociata sui domini (`carosello.net`) e sulla Partita IVA ha rivelato che l'azienda opera principalmente in Liguria. Questa discrepanza è attribuibile all'instradamento dell'ISP e conferma l'importanza della verifica manuale dei dati automatici.
 
 
-## 4 Esecuzione Tecnica: Censys (Validation & New Findings)
+## 4 Esecuzione tecnica: Censys (validation & new findings)
 
 Scenario: Validazione incrociata (Cross-Reference) del target critico individuato su Shodan. L'obiettivo è analizzare i certificati TLS e scoprire servizi che potrebbero essere sfuggiti alla prima analisi.
 
@@ -153,7 +153,7 @@ Analisi dei Risultati (Nuove Scoperte): L'analisi su Censys ha arricchito il qua
 
 ---
 
-## 5 Ethical Handling (Gestione Etica)
+## 5 Ethical handling (gestione etica)
 
 In uno scenario reale, dopo aver identificato una criticità così elevata (Esposizione VoIP e Dati), la procedura corretta di Responsible Disclosure prevede:
 
@@ -172,7 +172,7 @@ L'Infrastructure Intelligence ha permesso di mappare una superficie di attacco c
 
 ---
 
-## Analisi a Basso Livello: Come Shodan Costruisce il Suo Database
+## Analisi a basso livello: come Shodan costruisce il suo database
 
 Shodan esegue scansioni continue dell'intero spazio IPv4 (4.3 miliardi di indirizzi) utilizzando scanner distribuiti globalmente. Il processo di raccolta dati segue una pipeline:
 
@@ -202,7 +202,7 @@ Historical data: ogni scansione viene archiviata (Shodan mantiene mesi di storic
 
 ---
 
-## Blue Team: Protezione dalla Passive Reconnaissance
+## Blue team: protezione dalla passive reconnaissance
 
 **Monitoring:**
 - Utilizzare Shodan Monitor (gratuito per piccole reti) per ricevere alert quando un nuovo servizio viene rilevato sugli IP aziendali
@@ -219,11 +219,11 @@ Historical data: ogni scansione viene archiviata (Shodan mantiene mesi di storic
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Search Open Technical Databases: Scan Databases | `T1596.005` | Ricerca su Shodan con query `port:3389 city:"Parma"` per identificare dispositivi con RDP esposto, rilevando 60+ target con Information Disclosure di nomi host e OS (INTEL-001) |
-| Reconnaissance | Gather Victim Network Info: Network Topology | `T1590.004` | Analisi dei banner Shodan e dei certificati TLS Censys per ricostruire la topologia dell'infrastruttura dei target critici (INTEL-002, INTEL-003) |
-| Reconnaissance | Gather Victim Network Info: IP Addresses | `T1590.005` | Correlazione IP tramite Whois per identificare ISP, tipo di connessione (consumer vs datacenter) e geolocalizzazione reale dei target (INTEL-002, INTEL-003) |
+| reconnaissance | search open technical databases: scan databases | `T1596.005` | ricerca su shodan con query `port:3389 city:"Parma"` per identificare dispositivi con rdp esposto, rilevando 60+ target con information disclosure di nomi host e os (INTEL-001) |
+| reconnaissance | gather victim network info: network topology | `T1590.004` | analisi dei banner shodan e dei certificati tls censys per ricostruire la topologia dell'infrastruttura dei target critici (INTEL-002, INTEL-003) |
+| reconnaissance | gather victim network info: ip addresses | `T1590.005` | correlazione ip tramite whois per identificare isp, tipo di connessione (consumer vs datacenter) e geolocalizzazione reale dei target (INTEL-002, INTEL-003) |
 
 ---
 

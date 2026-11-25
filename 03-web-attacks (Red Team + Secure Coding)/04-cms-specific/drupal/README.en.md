@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Drupal Core Remote Code Execution (Drupalgeddon 2)
+# Drupal core remote code execution (drupalgeddon 2)
 
 > - **Phase:** Web Attack - CMS Exploitation
 > - **Visibility:** Medium - HTTP POST requests with payload targeting Drupal forms, detectable but often not blocked by generic WAFs
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 During the Penetration Testing activity conducted on the Windows 10 test environment, a critical vulnerability was identified and successfully exploited in the Drupal CMS instance (version 7.54).
 
@@ -27,9 +27,9 @@ CVSS Score: 9.8 (Critical)
 
 ---
 
-## 2 Technical Analysis
+## 2 Technical analysis
 
-#### 1. Reconnaissance & Fingerprinting
+#### 1. Reconnaissance & fingerprinting
 
 The initial reconnaissance phase allowed identification of the specific Drupal version in use.
 
@@ -55,7 +55,7 @@ Execution:
 
 Initially, automated exploits were attempted but were blocked by the Windows host security policies. A manual attack was then carried out by sending a specific payload to verify code execution (`RCE verification`).
 
-#### 3. Post-Exploitation & Persistence
+#### 3. Post-Exploitation & persistence
 
 Once the vulnerability was confirmed, access was consolidated by transforming the RCE into a persistent Web Shell.
 
@@ -71,7 +71,7 @@ The following screenshot documents the successful operation. The CMS page return
 
 ---
 
-## 3 Business Impact
+## 3 Business impact
 
 The impact of this vulnerability is classified as CRITICAL for the following reasons:
 
@@ -83,7 +83,7 @@ Since the attack requires no authentication, the site is exposed to any maliciou
 
 ---
 
-## 4 Remediation Plan
+## 4 Remediation plan
 
 The following corrective actions are recommended with immediate urgency:
 
@@ -106,14 +106,14 @@ The following corrective actions are recommended with immediate urgency:
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Fingerprinting of Drupal version 7.54 through access to the public `CHANGELOG.txt` file and identification of CVE-2018-7600 (WEB-015) |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Manual exploitation of CVE-2018-7600 through manipulation of `#post_render` parameters in Drupal's Form API to achieve unauthenticated RCE (WEB-015) |
-| Persistence | Server Software Component: Web Shell | `T1505.003` | PHP Web Shell deployment through Drupal's "PHP Filter" module, creating a "system diagnostyc" page that executes system commands (WEB-015) |
-| Discovery | File and Directory Discovery | `T1083` | Execution of the `ipconfig` command through the Web Shell to map the network configuration of the underlying Windows server (WEB-015) |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | fingerprinting of drupal version 7.54 through access to the public `CHANGELOG.txt` file and identification of CVE-2018-7600 (WEB-015) |
+| initial access | exploit public-facing application | `T1190` | manual exploitation of CVE-2018-7600 through manipulation of `#post_render` parameters in drupal's form api to achieve unauthenticated rce (WEB-015) |
+| persistence | server software component: web shell | `T1505.003` | php web shell deployment through drupal's "php filter" module, creating a "system diagnostyc" page that executes system commands (WEB-015) |
+| discovery | file and directory discovery | `T1083` | execution of the `ipconfig` command through the web shell to map the network configuration of the underlying windows server (WEB-015) |
 
 ---
 

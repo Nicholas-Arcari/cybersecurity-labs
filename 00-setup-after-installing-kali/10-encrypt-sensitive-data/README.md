@@ -46,11 +46,11 @@ Se perdi il laptop o viene rubato, chiunque puo montare il disco e leggere tutti
 
 ## Tool di riferimento
 
-| Tool | Tipo | Pro | Contro |
+| tool | tipo | pro | contro |
 | :--- | :--- | :--- | :--- |
-| `LUKS` + `cryptsetup` | Cifratura partizione | Integrato nel kernel Linux, massima performance | Richiede partizione dedicata, formato Linux-only |
-| `VeraCrypt` | Volume cifrato (file o partizione) | Cross-platform (Linux/Win/Mac), hidden volumes | Richiede installazione separata |
-| `GPG` | Cifratura file singoli | Ideale per report e file di testo | Non adatto per volumi grandi |
+| `LUKS` + `cryptsetup` | cifratura partizione | integrato nel kernel linux, massima performance | richiede partizione dedicata, formato linux-only |
+| `VeraCrypt` | volume cifrato (file o partizione) | cross-platform (linux/win/mac), hidden volumes | richiede installazione separata |
+| `GPG` | cifratura file singoli | ideale per report e file di testo | non adatto per volumi grandi |
 
 ---
 

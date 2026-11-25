@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 04 - CMS Specific
+# 04 - CMS specific
 
 > - **Phase:** Web Attack - CMS Fingerprinting & Targeted Exploitation
 > - **Visibility:** Medium - HTTP requests with CMS-specific payloads
@@ -25,7 +25,7 @@ The fingerprinting phase (identifying the CMS and its version) is the prerequisi
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 04-cms-specific/
@@ -36,17 +36,17 @@ The fingerprinting phase (identifying the CMS and its version) is the prerequisi
 
 ---
 
-## Fingerprinting: How to Identify the CMS
+## Fingerprinting: how to identify the CMS
 
 Before choosing the correct tool, it is necessary to identify the CMS. The revealing indicators:
 
-| Indicator | WordPress | Joomla | Drupal |
+| indicator | wordpress | joomla | drupal |
 | :--- | :--- | :--- | :--- |
-| Resource path | `/wp-content/`, `/wp-admin/` | `/administrator/`, `/components/` | `/sites/`, `/modules/` |
-| Cookie | `wordpress_`, `wp-settings-` | `joomla_user_state` | `Drupal.visitor` |
-| Meta tag | `<meta name="generator" content="WordPress...">` | `<meta name="generator" content="Joomla!...">` | `<meta name="Generator" content="Drupal...">` |
-| Version file | `/readme.html`, `/wp-login.php` | `/CHANGELOG.txt` | `/CHANGELOG.txt`, `/core/CHANGELOG.txt` |
-| HTTP response | Header `X-Pingback` | - | - |
+| resource path | `/wp-content/`, `/wp-admin/` | `/administrator/`, `/components/` | `/sites/`, `/modules/` |
+| cookie | `wordpress_`, `wp-settings-` | `joomla_user_state` | `Drupal.visitor` |
+| meta tag | `<meta name="generator" content="WordPress...">` | `<meta name="generator" content="Joomla!...">` | `<meta name="Generator" content="Drupal...">` |
+| version file | `/readme.html`, `/wp-login.php` | `/CHANGELOG.txt` | `/CHANGELOG.txt`, `/core/CHANGELOG.txt` |
+| http response | header `X-Pingback` | - | - |
 
 Automated fingerprinting tools:
 - `whatweb -v <TARGET>`: identifies the CMS and its version.
@@ -59,7 +59,7 @@ Automated fingerprinting tools:
 
 **Finding ID:** `WEB-015` | **Severity:** `Critical` | **CVSS v3.1:** 9.8
 
-### Operational Context
+### Operational context
 
 Drupal is an enterprise-grade CMS used by governments, universities, and large corporations. CVE-2018-7600, nicknamed "Drupalgeddon2", is an unauthenticated Remote Code Execution in the Form API. Drupal versions 6.x, 7.x (before 7.58), and 8.x (before 8.3.9, 8.4.6, 8.5.1) are vulnerable.
 
@@ -72,9 +72,9 @@ The distinctive aspect of this test was the manual bypass of Windows Defender: a
 
 ---
 
-## `wordpress/` - WPScan & WordPress Exploitation
+## `wordpress/` - WPScan & WordPress exploitation
 
-### Operational Context
+### Operational context
 
 WordPress holds approximately 43% of the global CMS market share, making it the most common target in web application pentesting. WPScan is the dedicated tool: a black-box security scanner specifically designed for WordPress.
 
@@ -90,9 +90,9 @@ See `wordpress/README.md` for the complete technical guide with commands and out
 
 ---
 
-## `joomla/` - JoomScan & Joomla Exploitation
+## `joomla/` - JoomScan & joomla exploitation
 
-### Operational Context
+### Operational context
 
 Joomla is the second most widespread CMS, with a significant presence in institutional and governmental environments. JoomScan (OWASP) is the dedicated scanner for enumerating components, plugins, and known vulnerabilities.
 
@@ -102,7 +102,7 @@ See `joomla/README.md` for the complete technical guide with commands and output
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [1] CMS Fingerprinting (02-web-recon/tech-profiler/)
@@ -131,30 +131,30 @@ See `joomla/README.md` for the complete technical guide with commands and output
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Primary Use Case |
+| tool | type | technique/access | primary use case |
 | :--- | :--- | :--- | :--- |
-| `wpscan` | WordPress scanner | CLI - Active | WordPress plugin, user, and CVE enumeration |
-| `joomscan` | Joomla scanner | CLI - Active | Joomla fingerprinting and CVE detection |
-| `droopescan` | CMS scanner | CLI - Active | Drupal, SilverStripe, WordPress scanning |
-| `cmsmap` | Multi-CMS scanner | CLI - Active | General-purpose scanner for WordPress, Joomla, Drupal |
-| `nuclei` | Template-based | CLI - Active | Community-maintained CMS-specific templates |
-| `metasploit` | Exploitation framework | CLI/GUI - Active | Automated exploits for known CMS CVEs |
-| `curl` | HTTP client | CLI - Active | Manual CMS API endpoint testing (CVE-2023-23752) |
+| `wpscan` | wordpress scanner | cli - active | wordpress plugin, user, and cve enumeration |
+| `joomscan` | joomla scanner | cli - active | joomla fingerprinting and cve detection |
+| `droopescan` | cms scanner | cli - active | drupal, silverstripe, wordpress scanning |
+| `cmsmap` | multi-cms scanner | cli - active | general-purpose scanner for wordpress, joomla, drupal |
+| `nuclei` | template-based | cli - active | community-maintained cms-specific templates |
+| `metasploit` | exploitation framework | cli/gui - active | automated exploits for known cms cves |
+| `curl` | http client | cli - active | manual cms api endpoint testing (CVE-2023-23752) |
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Drupal version fingerprinting via `CHANGELOG.txt` and identification of CVE-2018-7600 |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation of CVE-2018-7600 (Drupalgeddon2) on the Form API to achieve unauthenticated RCE (WEB-015) |
-| Persistence | Server Software Component: Web Shell | `T1505.003` | PHP Web Shell deployment through Drupal's "PHP Filter" module in a content node (WEB-015) |
-| Discovery | File and Directory Discovery | `T1083` | Windows server file system enumeration through commands injected via the Web Shell |
-| Credential Access | Brute Force: Password Guessing | `T1110.001` | Brute force on `/wp-login.php` with WPScan (WordPress) |
-| Discovery | Account Discovery | `T1087` | WordPress user enumeration with `--enumerate u` (WPScan) |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | drupal version fingerprinting via `CHANGELOG.txt` and identification of CVE-2018-7600 |
+| initial access | exploit public-facing application | `T1190` | exploitation of CVE-2018-7600 (drupalgeddon2) on the form api to achieve unauthenticated rce (WEB-015) |
+| persistence | server software component: web shell | `T1505.003` | php web shell deployment through drupal's "php filter" module in a content node (WEB-015) |
+| discovery | file and directory discovery | `T1083` | windows server file system enumeration through commands injected via the web shell |
+| credential access | brute force: password guessing | `T1110.001` | brute force on `/wp-login.php` with wpscan (wordpress) |
+| discovery | account discovery | `T1087` | wordpress user enumeration with `--enumerate u` (wpscan) |
 
 ---
 

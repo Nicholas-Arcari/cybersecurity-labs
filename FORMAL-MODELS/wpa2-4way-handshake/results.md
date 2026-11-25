@@ -1,6 +1,6 @@
 > [English](results.en.md) | **Italiano**
 
-# Risultati - Verifica formale del 4-way handshake WPA2 (KRACK)
+# Risultati - verifica formale del 4-way handshake WPA2 (KRACK)
 
 Output verbatim di `handshake_model_checker.py` (deterministico, esplorazione esaustiva).
 Risultato **prodotto dall'esecuzione reale** del model checker, non asserito a mano.

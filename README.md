@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Cybersecurity Labs
+# Cybersecurity labs
 
 ![Security Status](https://img.shields.io/badge/Security-Red%20%26%26%20Blue-blueviolet?style=for-the-badge&logo=kali-linux)
 ![Maintenance](https://img.shields.io/badge/Maintained-Yes-green?style=for-the-badge)
@@ -16,7 +16,7 @@ I README di ogni modulo non sono semplici guide di comandi: documentano l'**espe
 
 ---
 
-## Legal Disclaimer
+## Legal disclaimer
 
 > **ATTENZIONE:** Tutto il materiale, gli script e le metodologie contenute in questa repository sono a scopo puramente **educativo** e di **ricerca**. L'autore non si assume alcuna responsabilita per l'uso improprio di queste informazioni.
 >
@@ -24,26 +24,26 @@ I README di ogni modulo non sono semplici guide di comandi: documentano l'**espe
 
 ---
 
-## Mappa di Navigazione
+## Mappa di navigazione
 
-| Fase / Dominio | Cartella | Stato | Finding |
+| fase / dominio | cartella | stato | finding |
 | :--- | :--- | :---: | :--- |
-| **I. Intelligence** | [01-recon](#01-recon-red-team-basic) | Completo | OSINT-001..006, SCAN-001..003, DNS-001..003, INTEL-001..006 |
-| **II. Assessment** | [02-vulnerability-assessment](#02-vulnerability-assessment) | Completo | VULN-001..009 |
-| **III. Web Ops** | [03-web-attacks](#03-web-attacks-red-team--secure-coding) | Completo | WEB-001..015 |
-| **00. Setup** | [00-setup-after-installing-kali](#00-setup-after-installing-kali) | Completo | - (hardening guide) |
-| **IV. System Ops** | [04-system-exploitation](#04-system-exploitation) | Completo | EXPLOIT-001..025 |
-| **V. Human Ops** | [05-social-engineering](#05-social-engineering-toolingpython) | Completo | SE-001..015 |
-| **VI. Wireless** | [06-wireless-security](#06-wireless-security) | Completo | WIFI-001..012 |
-| **VII. Post-Exploit** | [07-post-exploitation](#07-post-exploitation) | Completo | POST-001..014 |
-| **VIII. Defense** | [08-defense-hardenings](#08-defense-hardenings-blue-team-prevention) | Completo | DEF-001..008 |
-| **IX. Analysis** | [09-digital-forensics](#09-digital-forensics-blue-team-analysis) | Completo | FOR-001..002 |
-| **X. Modern Infra** | [10-cloud-security](#10-cloud-security-cloudmodern) | Completo | CLOUD-001..010 |
-| **XI. Active Directory** | [11-active-directory](#11-active-directory-windows-domain) | In corso (metodologia) | AD- (da lab) |
+| **i. intelligence** | [01-recon](#01-recon-red-team-basic) | completo | OSINT-001..006, SCAN-001..003, DNS-001..003, INTEL-001..006 |
+| **ii. assessment** | [02-vulnerability-assessment](#02-vulnerability-assessment) | completo | VULN-001..009 |
+| **iii. web ops** | [03-web-attacks](#03-web-attacks-red-team--secure-coding) | completo | WEB-001..015 |
+| **00. setup** | [00-setup-after-installing-kali](#00-setup-after-installing-kali) | completo | - (hardening guide) |
+| **iv. system ops** | [04-system-exploitation](#04-system-exploitation) | completo | EXPLOIT-001..025 |
+| **v. human ops** | [05-social-engineering](#05-social-engineering-toolingpython) | completo | SE-001..015 |
+| **vi. wireless** | [06-wireless-security](#06-wireless-security) | completo | WIFI-001..012 |
+| **vii. post-exploit** | [07-post-exploitation](#07-post-exploitation) | completo | POST-001..014 |
+| **viii. defense** | [08-defense-hardenings](#08-defense-hardenings-blue-team-prevention) | completo | DEF-001..008 |
+| **ix. analysis** | [09-digital-forensics](#09-digital-forensics-blue-team-analysis) | completo | FOR-001..002 |
+| **x. modern infra** | [10-cloud-security](#10-cloud-security-cloudmodern) | completo | CLOUD-001..010 |
+| **xi. active directory** | [11-active-directory](#11-active-directory-windows-domain) | in corso (metodologia) | ad- (da lab) |
 
 ---
 
-## Apparato Teorico e Accademico
+## Apparato teorico e accademico
 
 Oltre ai README operativi, ogni modulo include un documento **`THEORETICAL-FOUNDATIONS.md`**: un
 complemento di livello accademico (struttura da capitolo di tesi) che formalizza il modello
@@ -60,20 +60,20 @@ POPL, NIST, RFC).
 > alla verifica in `FORMAL-MODELS/` (Parte III); reticoli BLP/Biba e non-interferenza [Goguen-Meseguer]
 > (Parte IV). E la controparte rigorosa dei foundations concettuali di modulo.
 
-| Modulo | Fondamento teorico centrale | Documento |
+| modulo | fondamento teorico centrale | documento |
 | :--- | :--- | :--- |
-| 01 Recon | Superficie d'attacco [Manadhata & Wing] + entropia [Shannon] | [Foundations](01-recon%20%28Red%20Team%20Basic%29/THEORETICAL-FOUNDATIONS.md) |
-| 02 Vuln Assessment | Indecidibilita del rilevamento (Rice) + metrologia CVSS | [Foundations](02-vulnerability-assessment/THEORETICAL-FOUNDATIONS.md) |
-| 03 Web | Injection come confusione dato/codice [Su & Wassermann] | [Foundations](03-web-attacks%20%28Red%20Team%20%2B%20Secure%20Coding%29/THEORETICAL-FOUNDATIONS.md) |
-| 04 System | Weird machines [Bratus] + ROP Turing-completo [Shacham] | [Foundations](04-system-exploitation/THEORETICAL-FOUNDATIONS.md) |
-| 05 Social Eng. | Doppio processo [Kahneman] + divario di autenticazione | [Foundations](05-social-engineering/THEORETICAL-FOUNDATIONS.md) |
-| 06 Wireless | Caduta di Crypto-1 [Nohl, Garcia] + freshness | [Foundations](06-wireless-security/THEORETICAL-FOUNDATIONS.md) |
-| 07 Post-Exploit | Grafi di attacco [Sheyner] + confinamento [Lampson] | [Foundations](07-post-exploitation/THEORETICAL-FOUNDATIONS.md) |
-| 08 Defense | Base-rate fallacy bayesiano [Axelsson] | [Foundations](08-defense-hardenings%20%28Blue%20Team%20Prevention%29/THEORETICAL-FOUNDATIONS.md) |
-| 09 Forensics | Ordine di volatilita + inferenza abduttiva | [Foundations](09-digital-forensics%20%28Blue%20Team%20Analysis%29/THEORETICAL-FOUNDATIONS.md) |
-| 10 Cloud | Co-residenza [Ristenpart] + identita come perimetro | [Foundations](10-cloud-security%20%28Cloud%26Modern%29/THEORETICAL-FOUNDATIONS.md) |
+| 01 recon | superficie d'attacco [manadhata & wing] + entropia [shannon] | [foundations](01-recon%20%28Red%20Team%20Basic%29/THEORETICAL-FOUNDATIONS.md) |
+| 02 vuln assessment | indecidibilita del rilevamento (rice) + metrologia cvss | [foundations](02-vulnerability-assessment/THEORETICAL-FOUNDATIONS.md) |
+| 03 web | injection come confusione dato/codice [su & wassermann] | [foundations](03-web-attacks%20%28Red%20Team%20%2B%20Secure%20Coding%29/THEORETICAL-FOUNDATIONS.md) |
+| 04 system | weird machines [bratus] + rop turing-completo [shacham] | [foundations](04-system-exploitation/THEORETICAL-FOUNDATIONS.md) |
+| 05 social eng. | doppio processo [kahneman] + divario di autenticazione | [foundations](05-social-engineering/THEORETICAL-FOUNDATIONS.md) |
+| 06 wireless | caduta di crypto-1 [nohl, garcia] + freshness | [foundations](06-wireless-security/THEORETICAL-FOUNDATIONS.md) |
+| 07 post-exploit | grafi di attacco [sheyner] + confinamento [lampson] | [foundations](07-post-exploitation/THEORETICAL-FOUNDATIONS.md) |
+| 08 defense | base-rate fallacy bayesiano [axelsson] | [foundations](08-defense-hardenings%20%28Blue%20Team%20Prevention%29/THEORETICAL-FOUNDATIONS.md) |
+| 09 forensics | ordine di volatilita + inferenza abduttiva | [foundations](09-digital-forensics%20%28Blue%20Team%20Analysis%29/THEORETICAL-FOUNDATIONS.md) |
+| 10 cloud | co-residenza [ristenpart] + identita come perimetro | [foundations](10-cloud-security%20%28Cloud%26Modern%29/THEORETICAL-FOUNDATIONS.md) |
 
-### Valutazione Empirica (misure riproducibili)
+### Valutazione empirica (misure riproducibili)
 
 Oltre alla teoria, la cartella **[`EVALUATION/`](EVALUATION/README.md)** contiene esperimenti
 **eseguibili e deterministici** (Python stdlib, seed fissi) che *misurano* i fenomeni teorici invece
@@ -88,7 +88,7 @@ dall'esecuzione reale del codice incluso.
   resistenza pratica; **749 tentativi craccano il 50%** degli account - misura del divario
   entropia-nominale / guessing-entropy.
 
-### Verifica Formale (metodi formali su protocollo)
+### Verifica formale (metodi formali su protocollo)
 
 La cartella **[`FORMAL-MODELS/`](FORMAL-MODELS/README.md)** aggiunge il terzo metodo del rigore
 accademico: la verifica formale di un protocollo. Un **model checker a stati espliciti** (eseguito,
@@ -104,7 +104,7 @@ Infine, la cartella **[`concepts/`](concepts/README.md)** raccoglie pagine di **
 del malware, DoS/DDoS) con taglio concettuale e difensivo: il contesto teorico che i moduli operativi (00-11)
 danno per acquisito.
 
-### Autovalutazione e Limiti
+### Autovalutazione e limiti
 
 Coerentemente con l'onesta scientifica, **[`SELF-ASSESSMENT.md`](SELF-ASSESSMENT.md)** e una revisione
 critica avversariale interna: elenca le minacce alla validita di ogni strato (dati sintetici,
@@ -114,7 +114,7 @@ review esterna, che nessun repository puo autogenerare. Non e peer review: ne af
 
 ---
 
-## Kill Chain - Scenario di Attacco Documentato
+## Kill chain - scenario di attacco documentato
 
 Il diagramma seguente rappresenta il percorso di attacco completo documentato in questa repository,
 dalla ricognizione iniziale alla compromissione totale del target Windows 10 (`192.168.0.109`).
@@ -160,7 +160,7 @@ flowchart TD
 
 ---
 
-## Risk Heat Map
+## Risk heat map
 
 Distribuzione visuale dei 60 finding per severity e categoria.
 
@@ -181,17 +181,17 @@ xychart-beta
     bar [14, 6, 15, 25]
 ```
 
-| Categoria | Critico | Alto | Medio | Basso | Informativo | Totale |
+| categoria | Critico | Alto | Medio | Basso | Informativo | totale |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| 01-Recon | 1 | 3 | 4 | 2 | 4 | 14 |
-| 02-Vulnerability Assessment | 0 | 2 | 3 | 1 | 0 | 6 |
-| 03-Web Attacks | 7 | 6 | 2 | 0 | 0 | 15 |
-| 04-System Exploitation | 7 | 12 | 2 | 0 | 4 | 25 |
-| **Totale** | **15** | **23** | **11** | **3** | **8** | **60** |
+| 01-recon | 1 | 3 | 4 | 2 | 4 | 14 |
+| 02-vulnerability assessment | 0 | 2 | 3 | 1 | 0 | 6 |
+| 03-web attacks | 7 | 6 | 2 | 0 | 0 | 15 |
+| 04-system exploitation | 7 | 12 | 2 | 0 | 4 | 25 |
+| **totale** | **15** | **23** | **11** | **3** | **8** | **60** |
 
 ---
 
-## Architettura della Repository
+## Architettura della repository
 
 ```
 cybersecurity-labs/
@@ -221,9 +221,9 @@ cybersecurity-labs/
 
 ---
 
-## Struttura della Repository
+## Struttura della repository
 
-### 01-recon (Red Team Basic)
+### 01-Recon (red team basic)
 
 **Obiettivo:** Mappare la superficie d'attacco senza lasciare tracce rilevabili.
 
@@ -235,7 +235,7 @@ La ricognizione e la fase piu critica e piu trascurata: piu informazioni si racc
 
 ---
 
-### 02-vulnerability-assessment
+### 02-Vulnerability-assessment
 
 **Obiettivo:** Rispondere a "cosa e rotto?" con dati misurabili e classificati.
 
@@ -247,7 +247,7 @@ Mentre la recon risponde a "cosa esiste?", il Vulnerability Assessment risponde 
 
 ---
 
-### 03-web-attacks (Red Team + Secure Coding)
+### 03-Web-attacks (red team + secure coding)
 
 **Obiettivo:** Compromettere applicazioni web e API - poi correggere il codice.
 
@@ -259,7 +259,7 @@ Questa e la sezione piu ampia della repository, con doppia anima: **Red Team** (
 
 ---
 
-### 00-setup-after-installing-kali
+### 00-Setup-after-installing-kali
 
 **Obiettivo:** Trasformare un'installazione Kali "bare metal" in un ambiente sicuro e operativo.
 
@@ -270,7 +270,7 @@ Questa e la sezione piu ampia della repository, con doppia anima: **Red Team** (
 
 ---
 
-### 04-system-exploitation
+### 04-System-exploitation
 
 **Obiettivo:** Ottenere una shell (RCE) e diventare root/admin.
 
@@ -282,7 +282,7 @@ Dedicato all'attacco infrastrutturale puro: sfruttamento di servizi esposti, exp
 
 ---
 
-### 05-social-engineering (Tooling&Python)
+### 05-Social-engineering (Tooling&Python)
 
 **Obiettivo:** Hacking del fattore umano.
 
@@ -293,7 +293,7 @@ Il vettore piu efficace non e tecnico: e psicologico. Questa sezione documenta l
 
 ---
 
-### 06-wireless-security
+### 06-Wireless-security
 
 **Obiettivo:** Intercettazione e attacco su frequenze radio.
 
@@ -304,7 +304,7 @@ Tutto cio che "viaggia nell'aria" e potenzialmente intercettabile. Questa sezion
 
 ---
 
-### 07-post-exploitation
+### 07-Post-exploitation
 
 **Obiettivo:** Mantenere l'accesso e muoversi nella rete (Lateral Movement).
 
@@ -315,7 +315,7 @@ Ottenere la shell iniziale e solo il primo passo. Questa sezione documenta cosa 
 
 ---
 
-### 08-defense-hardenings (Blue Team Prevention)
+### 08-Defense-hardenings (blue team prevention)
 
 **Obiettivo:** Proteggere proattivamente e monitorare in tempo reale.
 
@@ -326,7 +326,7 @@ La controparte difensiva dei moduli precedenti. Per ogni tecnica di attacco docu
 
 ---
 
-### 09-digital-forensics (Blue Team Analysis)
+### 09-Digital-forensics (blue team analysis)
 
 **Obiettivo:** Investigare l'incidente e ricostruire la kill chain.
 
@@ -337,7 +337,7 @@ Quando le difese falliscono, entra in gioco la forensics: analisi delle tracce l
 
 ---
 
-### 10-cloud-security (Cloud&Modern)
+### 10-Cloud-security (Cloud&Modern)
 
 **Obiettivo:** Sicurezza per infrastrutture moderne: container, orchestratori e cloud provider.
 
@@ -348,7 +348,7 @@ Le infrastrutture moderne (Docker, Kubernetes, AWS/Azure/GCP) introducono una su
 
 ---
 
-### 11-active-directory (Windows Domain)
+### 11-Active-directory (Windows domain)
 
 **Obiettivo:** Attaccare e difendere il dominio Windows, dall'accesso autenticato al Domain Admin.
 
@@ -359,74 +359,74 @@ Colma il vettore piu comune dei penetration test interni: l'abuso di funzionalit
 
 ---
 
-## Finding Registry Globale
+## Finding registry globale
 
-| ID | Titolo | Severity | Modulo |
+| id | titolo | severity | modulo |
 | :--- | :--- | :--- | :--- |
-| [OSINT-001](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/breach-data/README.md>) | Breach data exposure | Alto | osint-passive/breach-data |
-| [OSINT-002](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/email-harvesting/README.md>) | Email harvesting su dominio personale | Informativo | osint-passive/email-harvesting |
-| [OSINT-003](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/google-dorks/README.md>) | Google Dorking - documenti e login esposti | Variabile | osint-passive/google-dorks |
-| [OSINT-004](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/user-enumeration/README.md>) | User enumeration su social network | Basso | osint-passive/user-enumeration |
-| [OSINT-005](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/osint-frameworks/README.md>) | Correlazione OSINT automatica via framework multi-fonte (SpiderFoot, recon-ng, Maltego) | Variabile | osint-passive/osint-frameworks |
-| [OSINT-006](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/code-secret-leakage/README.md>) | Segreti esposti in repository pubblici (git history) | Alto/Critico | osint-passive/code-secret-leakage |
-| [SCAN-001](<01-recon (Red Team Basic)/02-network-scanning-active/live-host-discovery/README.md>) | Live host discovery - subnet mapping | Informativo | network-scanning/live-host-discovery |
-| [SCAN-002](<01-recon (Red Team Basic)/02-network-scanning-active/port-scanning (Nmap)/masscan/README.md>) | Port scan massivo - superficie esposta | Informativo | port-scanning/masscan |
-| [SCAN-003](<01-recon (Red Team Basic)/02-network-scanning-active/port-scanning (Nmap)/nmap-scripts/README.md>) | SMB Signing not required (via nmap NSE) | Alto | port-scanning/nmap-scripts |
-| [DNS-001](<01-recon (Red Team Basic)/03-dns-enumeration/dns-recon/README.md>) | Zone Transfer o subdomain disclosure | Critico/Medio | dns-enumeration/dns-recon |
-| [DNS-002](<01-recon (Red Team Basic)/03-dns-enumeration/hosts-file/README.md>) | Hosts file manipulation vettore | Medio | dns-enumeration/hosts-file |
-| [DNS-003](<01-recon (Red Team Basic)/03-dns-enumeration/subdomain-finding/README.md>) | Sottodomini nascosti identificati | Medio | dns-enumeration/subdomain-finding |
-| [INTEL-001](<01-recon (Red Team Basic)/04-infrastructure-intel/shodan-censys/README.md>) | Servizi esposti rilevati via Shodan | Alto | infrastructure-intel/shodan-censys |
-| [INTEL-002](<01-recon (Red Team Basic)/04-infrastructure-intel/shodan-censys/README.md>) | Versioni software esposte via Shodan | Medio | infrastructure-intel/shodan-censys |
-| [INTEL-003](<01-recon (Red Team Basic)/04-infrastructure-intel/shodan-censys/README.md>) | Banner grabbing infrastruttura | Basso | infrastructure-intel/shodan-censys |
-| [INTEL-004](<01-recon (Red Team Basic)/04-infrastructure-intel/tech-stack/README.md>) | Tech stack fingerprinting | Informativo | infrastructure-intel/tech-stack |
-| [INTEL-005](<01-recon (Red Team Basic)/04-infrastructure-intel/asn-whois-ct/README.md>) | Perimetro mappato via ASN/WHOIS e Certificate Transparency | Variabile | infrastructure-intel/asn-whois-ct |
-| [INTEL-006](<01-recon (Red Team Basic)/04-infrastructure-intel/cloud-asset-discovery/README.md>) | Storage cloud esposto (bucket S3/Blob) con lettura anonima | Medio/Critico | infrastructure-intel/cloud-asset-discovery |
-| [VULN-001](<02-vulnerability-assessment/01-general-scanners (Infrastructure)/nessus/README.md>) | SMB Signing not required (Nessus credentialed) | Alto | general-scanners/nessus |
-| [VULN-002](<02-vulnerability-assessment/01-general-scanners (Infrastructure)/nessus/README.md>) | Windows 10 22H2 End of Life | Medio | general-scanners/nessus |
-| [VULN-003](<02-vulnerability-assessment/02-protocol-specific-audit/smb-net-bios/README.md>) | NetBIOS Name/Service Disclosure | Basso | protocol-audit/smb-net-bios |
-| [VULN-004](<02-vulnerability-assessment/02-protocol-specific-audit/smb-net-bios/README.md>) | Accesso C$ con credenziali standard | Alto | protocol-audit/smb-net-bios |
-| [VULN-005](<02-vulnerability-assessment/02-protocol-specific-audit/smtp/README.md>) | Audit SMTP - da determinare | Medio | protocol-audit/smtp |
-| [VULN-006](<02-vulnerability-assessment/02-protocol-specific-audit/snmp/README.md>) | Audit SNMP - da determinare | Medio | protocol-audit/snmp |
-| [WEB-001](<03-web-attacks (Red Team + Secure Coding)/01-proxy-tools (Intercept)/owasp-zap/README.md>) | Assenza token CSRF su form di ricerca | Medio | proxy-tools/owasp-zap |
-| [WEB-002](<03-web-attacks (Red Team + Secure Coding)/02-web-recon (Enumeration)/tech-profiler/README.md>) | PHP 5.6.40 EOL + X-Powered-By exposure | Alto | web-recon/tech-profiler |
-| [WEB-003](<03-web-attacks (Red Team + Secure Coding)/02-web-recon (Enumeration)/dir-busting/README.md>) | CVS directory + .idea esposti | Alto | web-recon/dir-busting |
-| [WEB-004](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/sql-injection (SQLi)/manual-payloads/README.md>) | SQL Injection manuale - auth bypass + dump | Critico | owasp/sql-injection/manual-payloads |
-| [WEB-005](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/xss (Cross-Site Scripting)/reflected/README.md>) | XSS Reflected - parametro GET | Medio | owasp/xss/reflected |
-| [WEB-006](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/xss (Cross-Site Scripting)/stored/README.md>) | XSS Stored - campo commenti | Alto | owasp/xss/stored |
-| [WEB-007](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/xss (Cross-Site Scripting)/xss-hunter-payloads/README.md>) | XSS Blind/OOB - form senza output | Alto | owasp/xss/xss-hunter-payloads |
-| [WEB-008](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/ssti (Server Side Template Injection)/README.md>) | SSTI Jinja2 RCE - MRO exploit chain | Critico | owasp/ssti |
-| [WEB-009](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/auth-attacks/bruteforce-web/README.md>) | Brute Force web - assenza rate limiting | Alto | owasp/auth-attacks/bruteforce-web |
-| [WEB-010](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/auth-attacks/session-hijacking/README.md>) | Session Hijacking - cookie non protetto | Alto | owasp/auth-attacks/session-hijacking |
-| [WEB-011](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/sql-injection (SQLi)/sql-map-data/README.md>) | SQLi automatizzata sqlmap - PCI-DSS violation | Critico | owasp/sql-injection/sql-map-data |
-| [WEB-012](<03-web-attacks (Red Team + Secure Coding)/05-api-security/jwt-tokens/README.md>) | JWT weak secret - token admin forged | Critico | api-security/jwt-tokens |
-| [WEB-013](<03-web-attacks (Red Team + Secure Coding)/05-api-security/graphql/README.md>) | GraphQL Introspection + Command Injection RCE | Critico | api-security/graphql |
-| [WEB-014](<03-web-attacks (Red Team + Secure Coding)/05-api-security/postman/README.md>) | IDOR/BOLA - dati finanziari altrui | Critico | api-security/postman |
-| [WEB-015](<03-web-attacks (Red Team + Secure Coding)/04-cms-specific/drupal/README.md>) | Drupal CVE-2018-7600 Drupalgeddon2 RCE | Critico | cms-specific/drupal |
-| [EXPLOIT-001](<04-system-exploitation/01-frameworks/empire/README.md>) | Initial Access fileless via Empire Agent (stager .bat in-memory) | Alto | frameworks/empire |
-| [EXPLOIT-002](<04-system-exploitation/01-frameworks/empire/README.md>) | Persistenza via Registry Run Key HKCU | Alto | frameworks/empire |
-| [EXPLOIT-003](<04-system-exploitation/01-frameworks/metasploit/README.md>) | Initial Access via msfvenom reverse_tcp + Process Injection explorer.exe | Alto | frameworks/metasploit |
-| [EXPLOIT-004](<04-system-exploitation/01-frameworks/metasploit/README.md>) | Network Pivoting via SOCKS proxy interno | Alto | frameworks/metasploit |
-| [EXPLOIT-005](<04-system-exploitation/02-exploit-database/compiled-exploits/README.md>) | Payload C cross-compilato con backdoor persistente (backadmin) | Alto | exploit-database/compiled-exploits |
-| [EXPLOIT-006](<04-system-exploitation/02-exploit-database/compiled-exploits/README.md>) | In-memory shellcode execution via VirtualAlloc/CreateThread | Critico | exploit-database/compiled-exploits |
-| [EXPLOIT-007](<04-system-exploitation/02-exploit-database/searchsploit/README.md>) | Exploit research e correlazione Nmap/Searchsploit (metodologia) | Informativo | exploit-database/searchsploit |
-| [EXPLOIT-008](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/gtfo-bins-notes/README.md>) | sudo NOPASSWD su `find` - escalation root immediata | Alto | linux-priv-esc/gtfo-bins |
-| [EXPLOIT-009](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/gtfo-bins-notes/README.md>) | SUID bit su `awk` - esecuzione arbitraria come root | Alto | linux-priv-esc/gtfo-bins |
-| [EXPLOIT-010](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/linpeas/README.md>) | Credential disclosure in file di log/config (LinPEAS) | Alto | linux-priv-esc/linpeas |
-| [EXPLOIT-011](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/linpeas/README.md>) | Cronjob hijacking: script root scrivibile - reverse shell | Alto | linux-priv-esc/linpeas |
-| [EXPLOIT-012](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/linpeas/README.md>) | CVE-2021-4034 PwnKit audit - sistema aggiornato | Informativo | linux-priv-esc/linpeas |
-| [EXPLOIT-013](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/juicypotato-printnightmare/README.md>) | SeImpersonatePrivilege abuse via PrintSpoofer - NT AUTHORITY\SYSTEM | Critico | windows-priv-esc/juicypotato |
-| [EXPLOIT-014](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/juicypotato-printnightmare/README.md>) | CVE-2021-34527 PrintNightmare audit - sistema patchato | Informativo | windows-priv-esc/juicypotato |
-| [EXPLOIT-015](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/sherlock/README.md>) | Kernel patch audit (Sherlock) - MS10-015..MS16-032 non presenti | Informativo | windows-priv-esc/sherlock |
-| [EXPLOIT-016](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/winpeas/README.md>) | Credential disclosure in Unattend.xml - password Administrator | Critico | windows-priv-esc/winpeas |
-| [EXPLOIT-017](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/winpeas/README.md>) | XAMPP weak ACL: Authenticated Users WriteData su binari servizio | Critico | windows-priv-esc/winpeas |
-| [EXPLOIT-018](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/winpeas/README.md>) | LocalAccountTokenFilterPolicy=1 - lateral movement via PtH | Medio | windows-priv-esc/winpeas |
-| [EXPLOIT-019](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/winpeas/README.md>) | PowerShell history PSReadLine con credenziali in chiaro | Alto | windows-priv-esc/winpeas |
-| [EXPLOIT-020](<04-system-exploitation/04-binary-exploitation/buffer-overflow-prep/README.md>) | Stack Buffer Overflow - EIP overwrite e shellcode injection | Critico | binary-exploitation/buffer-overflow |
-| [EXPLOIT-021](<04-system-exploitation/04-binary-exploitation/pwntools-scripts/README.md>) | Remote ASLR/DEP bypass via GOT leak + Ret2Libc ROP chain | Critico | binary-exploitation/pwntools |
-| [EXPLOIT-022](<04-system-exploitation/05-password-cracking/hashcat/README.md>) | NTLM cracking via Mask Attack (keyspace reduction) | Alto | password-cracking/hashcat |
-| [EXPLOIT-023](<04-system-exploitation/05-password-cracking/hashcat/README.md>) | NTLM cracking via Rule-based Attack (regola custom) | Alto | password-cracking/hashcat |
-| [EXPLOIT-024](<04-system-exploitation/05-password-cracking/john-the-ripper/README.md>) | Cracking password archivio ZIP cifrato (zip2john) | Medio | password-cracking/john |
-| [EXPLOIT-025](<04-system-exploitation/05-password-cracking/john-the-ripper/README.md>) | Cracking hash Linux via unshadowing + dizionario RockYou | Alto | password-cracking/john |
+| [OSINT-001](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/breach-data/README.md>) | breach data exposure | Alto | osint-passive/breach-data |
+| [OSINT-002](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/email-harvesting/README.md>) | email harvesting su dominio personale | Informativo | osint-passive/email-harvesting |
+| [OSINT-003](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/google-dorks/README.md>) | google dorking - documenti e login esposti | variabile | osint-passive/google-dorks |
+| [OSINT-004](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/user-enumeration/README.md>) | user enumeration su social network | Basso | osint-passive/user-enumeration |
+| [OSINT-005](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/osint-frameworks/README.md>) | correlazione osint automatica via framework multi-fonte (spiderfoot, recon-ng, maltego) | variabile | osint-passive/osint-frameworks |
+| [OSINT-006](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/code-secret-leakage/README.md>) | segreti esposti in repository pubblici (git history) | alto/critico | osint-passive/code-secret-leakage |
+| [SCAN-001](<01-recon (Red Team Basic)/02-network-scanning-active/live-host-discovery/README.md>) | live host discovery - subnet mapping | Informativo | network-scanning/live-host-discovery |
+| [SCAN-002](<01-recon (Red Team Basic)/02-network-scanning-active/port-scanning (Nmap)/masscan/README.md>) | port scan massivo - superficie esposta | Informativo | port-scanning/masscan |
+| [SCAN-003](<01-recon (Red Team Basic)/02-network-scanning-active/port-scanning (Nmap)/nmap-scripts/README.md>) | smb signing not required (via nmap nse) | Alto | port-scanning/nmap-scripts |
+| [DNS-001](<01-recon (Red Team Basic)/03-dns-enumeration/dns-recon/README.md>) | zone transfer o subdomain disclosure | critico/medio | dns-enumeration/dns-recon |
+| [DNS-002](<01-recon (Red Team Basic)/03-dns-enumeration/hosts-file/README.md>) | hosts file manipulation vettore | Medio | dns-enumeration/hosts-file |
+| [DNS-003](<01-recon (Red Team Basic)/03-dns-enumeration/subdomain-finding/README.md>) | sottodomini nascosti identificati | Medio | dns-enumeration/subdomain-finding |
+| [INTEL-001](<01-recon (Red Team Basic)/04-infrastructure-intel/shodan-censys/README.md>) | servizi esposti rilevati via shodan | Alto | infrastructure-intel/shodan-censys |
+| [INTEL-002](<01-recon (Red Team Basic)/04-infrastructure-intel/shodan-censys/README.md>) | versioni software esposte via shodan | Medio | infrastructure-intel/shodan-censys |
+| [INTEL-003](<01-recon (Red Team Basic)/04-infrastructure-intel/shodan-censys/README.md>) | banner grabbing infrastruttura | Basso | infrastructure-intel/shodan-censys |
+| [INTEL-004](<01-recon (Red Team Basic)/04-infrastructure-intel/tech-stack/README.md>) | tech stack fingerprinting | Informativo | infrastructure-intel/tech-stack |
+| [INTEL-005](<01-recon (Red Team Basic)/04-infrastructure-intel/asn-whois-ct/README.md>) | perimetro mappato via asn/whois e certificate transparency | variabile | infrastructure-intel/asn-whois-ct |
+| [INTEL-006](<01-recon (Red Team Basic)/04-infrastructure-intel/cloud-asset-discovery/README.md>) | storage cloud esposto (bucket s3/blob) con lettura anonima | medio/critico | infrastructure-intel/cloud-asset-discovery |
+| [VULN-001](<02-vulnerability-assessment/01-general-scanners (Infrastructure)/nessus/README.md>) | smb signing not required (nessus credentialed) | Alto | general-scanners/nessus |
+| [VULN-002](<02-vulnerability-assessment/01-general-scanners (Infrastructure)/nessus/README.md>) | windows 10 22h2 end of life | Medio | general-scanners/nessus |
+| [VULN-003](<02-vulnerability-assessment/02-protocol-specific-audit/smb-net-bios/README.md>) | netbios name/service disclosure | Basso | protocol-audit/smb-net-bios |
+| [VULN-004](<02-vulnerability-assessment/02-protocol-specific-audit/smb-net-bios/README.md>) | accesso c$ con credenziali standard | Alto | protocol-audit/smb-net-bios |
+| [VULN-005](<02-vulnerability-assessment/02-protocol-specific-audit/smtp/README.md>) | audit smtp - da determinare | Medio | protocol-audit/smtp |
+| [VULN-006](<02-vulnerability-assessment/02-protocol-specific-audit/snmp/README.md>) | audit snmp - da determinare | Medio | protocol-audit/snmp |
+| [WEB-001](<03-web-attacks (Red Team + Secure Coding)/01-proxy-tools (Intercept)/owasp-zap/README.md>) | assenza token csrf su form di ricerca | Medio | proxy-tools/owasp-zap |
+| [WEB-002](<03-web-attacks (Red Team + Secure Coding)/02-web-recon (Enumeration)/tech-profiler/README.md>) | php 5.6.40 eol + x-powered-by exposure | Alto | web-recon/tech-profiler |
+| [WEB-003](<03-web-attacks (Red Team + Secure Coding)/02-web-recon (Enumeration)/dir-busting/README.md>) | cvs directory + .idea esposti | Alto | web-recon/dir-busting |
+| [WEB-004](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/sql-injection (SQLi)/manual-payloads/README.md>) | sql injection manuale - auth bypass + dump | Critico | owasp/sql-injection/manual-payloads |
+| [WEB-005](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/xss (Cross-Site Scripting)/reflected/README.md>) | xss reflected - parametro get | Medio | owasp/xss/reflected |
+| [WEB-006](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/xss (Cross-Site Scripting)/stored/README.md>) | xss stored - campo commenti | Alto | owasp/xss/stored |
+| [WEB-007](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/xss (Cross-Site Scripting)/xss-hunter-payloads/README.md>) | xss blind/oob - form senza output | Alto | owasp/xss/xss-hunter-payloads |
+| [WEB-008](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/ssti (Server Side Template Injection)/README.md>) | ssti jinja2 rce - mro exploit chain | Critico | owasp/ssti |
+| [WEB-009](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/auth-attacks/bruteforce-web/README.md>) | brute force web - assenza rate limiting | Alto | owasp/auth-attacks/bruteforce-web |
+| [WEB-010](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/auth-attacks/session-hijacking/README.md>) | session hijacking - cookie non protetto | Alto | owasp/auth-attacks/session-hijacking |
+| [WEB-011](<03-web-attacks (Red Team + Secure Coding)/03-owasp (Attacks)/sql-injection (SQLi)/sql-map-data/README.md>) | sqli automatizzata sqlmap - pci-dss violation | Critico | owasp/sql-injection/sql-map-data |
+| [WEB-012](<03-web-attacks (Red Team + Secure Coding)/05-api-security/jwt-tokens/README.md>) | jwt weak secret - token admin forged | Critico | api-security/jwt-tokens |
+| [WEB-013](<03-web-attacks (Red Team + Secure Coding)/05-api-security/graphql/README.md>) | graphql introspection + command injection rce | Critico | api-security/graphql |
+| [WEB-014](<03-web-attacks (Red Team + Secure Coding)/05-api-security/postman/README.md>) | idor/bola - dati finanziari altrui | Critico | api-security/postman |
+| [WEB-015](<03-web-attacks (Red Team + Secure Coding)/04-cms-specific/drupal/README.md>) | drupal CVE-2018-7600 drupalgeddon2 rce | Critico | cms-specific/drupal |
+| [EXPLOIT-001](<04-system-exploitation/01-frameworks/empire/README.md>) | initial access fileless via empire agent (stager .bat in-memory) | Alto | frameworks/empire |
+| [EXPLOIT-002](<04-system-exploitation/01-frameworks/empire/README.md>) | persistenza via registry run key hkcu | Alto | frameworks/empire |
+| [EXPLOIT-003](<04-system-exploitation/01-frameworks/metasploit/README.md>) | initial access via msfvenom reverse_tcp + process injection explorer.exe | Alto | frameworks/metasploit |
+| [EXPLOIT-004](<04-system-exploitation/01-frameworks/metasploit/README.md>) | network pivoting via socks proxy interno | Alto | frameworks/metasploit |
+| [EXPLOIT-005](<04-system-exploitation/02-exploit-database/compiled-exploits/README.md>) | payload c cross-compilato con backdoor persistente (backadmin) | Alto | exploit-database/compiled-exploits |
+| [EXPLOIT-006](<04-system-exploitation/02-exploit-database/compiled-exploits/README.md>) | in-memory shellcode execution via virtualalloc/createthread | Critico | exploit-database/compiled-exploits |
+| [EXPLOIT-007](<04-system-exploitation/02-exploit-database/searchsploit/README.md>) | exploit research e correlazione nmap/searchsploit (metodologia) | Informativo | exploit-database/searchsploit |
+| [EXPLOIT-008](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/gtfo-bins-notes/README.md>) | sudo nopasswd su `find` - escalation root immediata | Alto | linux-priv-esc/gtfo-bins |
+| [EXPLOIT-009](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/gtfo-bins-notes/README.md>) | suid bit su `awk` - esecuzione arbitraria come root | Alto | linux-priv-esc/gtfo-bins |
+| [EXPLOIT-010](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/linpeas/README.md>) | credential disclosure in file di log/config (linpeas) | Alto | linux-priv-esc/linpeas |
+| [EXPLOIT-011](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/linpeas/README.md>) | cronjob hijacking: script root scrivibile - reverse shell | Alto | linux-priv-esc/linpeas |
+| [EXPLOIT-012](<04-system-exploitation/03-privilege-escalation (PrivEsc)/linux-priv-esc/linpeas/README.md>) | CVE-2021-4034 pwnkit audit - sistema aggiornato | Informativo | linux-priv-esc/linpeas |
+| [EXPLOIT-013](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/juicypotato-printnightmare/README.md>) | seimpersonateprivilege abuse via printspoofer - nt authority\system | Critico | windows-priv-esc/juicypotato |
+| [EXPLOIT-014](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/juicypotato-printnightmare/README.md>) | CVE-2021-34527 printnightmare audit - sistema patchato | Informativo | windows-priv-esc/juicypotato |
+| [EXPLOIT-015](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/sherlock/README.md>) | kernel patch audit (sherlock) - ms10-015..ms16-032 non presenti | Informativo | windows-priv-esc/sherlock |
+| [EXPLOIT-016](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/winpeas/README.md>) | credential disclosure in unattend.xml - password administrator | Critico | windows-priv-esc/winpeas |
+| [EXPLOIT-017](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/winpeas/README.md>) | xampp weak acl: authenticated users writedata su binari servizio | Critico | windows-priv-esc/winpeas |
+| [EXPLOIT-018](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/winpeas/README.md>) | localaccounttokenfilterpolicy=1 - lateral movement via pth | Medio | windows-priv-esc/winpeas |
+| [EXPLOIT-019](<04-system-exploitation/03-privilege-escalation (PrivEsc)/windows-priv-esc/winpeas/README.md>) | powershell history psreadline con credenziali in chiaro | Alto | windows-priv-esc/winpeas |
+| [EXPLOIT-020](<04-system-exploitation/04-binary-exploitation/buffer-overflow-prep/README.md>) | stack buffer overflow - eip overwrite e shellcode injection | Critico | binary-exploitation/buffer-overflow |
+| [EXPLOIT-021](<04-system-exploitation/04-binary-exploitation/pwntools-scripts/README.md>) | remote aslr/dep bypass via got leak + ret2libc rop chain | Critico | binary-exploitation/pwntools |
+| [EXPLOIT-022](<04-system-exploitation/05-password-cracking/hashcat/README.md>) | ntlm cracking via mask attack (keyspace reduction) | Alto | password-cracking/hashcat |
+| [EXPLOIT-023](<04-system-exploitation/05-password-cracking/hashcat/README.md>) | ntlm cracking via rule-based attack (regola custom) | Alto | password-cracking/hashcat |
+| [EXPLOIT-024](<04-system-exploitation/05-password-cracking/john-the-ripper/README.md>) | cracking password archivio zip cifrato (zip2john) | Medio | password-cracking/john |
+| [EXPLOIT-025](<04-system-exploitation/05-password-cracking/john-the-ripper/README.md>) | cracking hash linux via unshadowing + dizionario rockyou | Alto | password-cracking/john |
 
 **Totale finding documentati con evidenza: 60 | Critici: 15 | Alti: 23 | Medi: 11 | Bassi: 3 | Informativi: 8**
 
@@ -434,41 +434,41 @@ Colma il vettore piu comune dei penetration test interni: l'abuso di funzionalit
 
 ---
 
-## MITRE ATT&CK - Master Table
+## MITRE ATT&CK - master table
 
-| Tattica | Tecnica | ID MITRE | Modulo | Finding |
+| tattica | tecnica | id mitre | modulo | finding |
 | :--- | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Info: Credentials | `T1589.001` | 01-recon | OSINT-001 |
-| Reconnaissance | Gather Victim Identity Info: Email Addresses | `T1589.002` | 01-recon | OSINT-002 |
-| Reconnaissance | Gather Victim Identity Info: Employee Names | `T1589.003` | 01-recon | OSINT-004 |
-| Reconnaissance | Search Open Websites/Domains: Search Engines | `T1593.002` | 01-recon | OSINT-003 |
-| Reconnaissance | Search Open Technical Databases: Scan Databases | `T1596.005` | 01-recon | INTEL-001 |
-| Reconnaissance | Gather Victim Network Info: DNS | `T1590.002` | 01-recon | DNS-001..003 |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | 01-recon, 02-vuln | SCAN-001..003 |
-| Reconnaissance | Active Scanning: Wordlist Scanning | `T1595.003` | 03-web | WEB-013 |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | 01-recon, 02-vuln | INTEL-004 |
-| Discovery | Network Service Scanning | `T1046` | 01-recon, 02-vuln | SCAN-001..003 |
-| Discovery | Network Share Discovery | `T1135` | 02-vuln | VULN-003 |
-| Discovery | Remote System Discovery | `T1018` | 01-recon | SCAN-001 |
-| Discovery | Account Discovery | `T1087` | 03-web | WEB-014 |
-| Initial Access | Exploit Public-Facing Application | `T1190` | 02-vuln, 03-web | WEB-004, WEB-008, WEB-011, WEB-013, WEB-015 |
-| Credential Access | Brute Force: Password Guessing | `T1110.001` | 03-web | WEB-009 |
-| Credential Access | Brute Force: Password Cracking | `T1110.002` | 03-web, 04-exploit | WEB-012, EXPLOIT-022..025 |
-| Credential Access | Steal Web Session Cookie | `T1539` | 03-web | WEB-005, WEB-006, WEB-010 |
-| Credential Access | Valid Accounts | `T1078` | 02-vuln, 03-web | VULN-004, WEB-012 |
-| Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | 03-web | WEB-008, WEB-013 |
-| Persistence | Server Software Component: Web Shell | `T1505.003` | 03-web | WEB-006, WEB-015 |
-| Collection | Data from Information Repositories | `T1213` | 02-vuln, 03-web | VULN-004, WEB-004, WEB-011, WEB-013, WEB-014 |
-| Collection | Data from Network Shared Drive | `T1039` | 02-vuln | VULN-004 |
-| Collection | Man in the Middle | `T1557` | 03-web | WEB-010 |
-| Lateral Movement | Use Alternate Authentication Material: Web Session Cookie | `T1550.004` | 03-web | WEB-010, WEB-012 |
-| Execution | Exploitation of Remote Services | `T1210` | 04-exploit | EXPLOIT-020, EXPLOIT-021 |
-| Execution | Native API | `T1106` | 04-exploit | EXPLOIT-006, EXPLOIT-020, EXPLOIT-021 |
-| Exfiltration | Exfiltration Over Web Service | `T1567` | 03-web | WEB-011 |
+| reconnaissance | gather victim identity info: credentials | `T1589.001` | 01-recon | OSINT-001 |
+| reconnaissance | gather victim identity info: email addresses | `T1589.002` | 01-recon | OSINT-002 |
+| reconnaissance | gather victim identity info: employee names | `T1589.003` | 01-recon | OSINT-004 |
+| reconnaissance | search open websites/domains: search engines | `T1593.002` | 01-recon | OSINT-003 |
+| reconnaissance | search open technical databases: scan databases | `T1596.005` | 01-recon | INTEL-001 |
+| reconnaissance | gather victim network info: dns | `T1590.002` | 01-recon | DNS-001..003 |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | 01-recon, 02-vuln | SCAN-001..003 |
+| reconnaissance | active scanning: wordlist scanning | `T1595.003` | 03-web | WEB-013 |
+| reconnaissance | gather victim host info: software | `T1592.002` | 01-recon, 02-vuln | INTEL-004 |
+| discovery | network service scanning | `T1046` | 01-recon, 02-vuln | SCAN-001..003 |
+| discovery | network share discovery | `T1135` | 02-vuln | VULN-003 |
+| discovery | remote system discovery | `T1018` | 01-recon | SCAN-001 |
+| discovery | account discovery | `T1087` | 03-web | WEB-014 |
+| initial access | exploit public-facing application | `T1190` | 02-vuln, 03-web | WEB-004, WEB-008, WEB-011, WEB-013, WEB-015 |
+| credential access | brute force: password guessing | `T1110.001` | 03-web | WEB-009 |
+| credential access | brute force: password cracking | `T1110.002` | 03-web, 04-exploit | WEB-012, EXPLOIT-022..025 |
+| credential access | steal web session cookie | `T1539` | 03-web | WEB-005, WEB-006, WEB-010 |
+| credential access | valid accounts | `T1078` | 02-vuln, 03-web | VULN-004, WEB-012 |
+| execution | command and scripting interpreter: unix shell | `T1059.004` | 03-web | WEB-008, WEB-013 |
+| persistence | server software component: web shell | `T1505.003` | 03-web | WEB-006, WEB-015 |
+| collection | data from information repositories | `T1213` | 02-vuln, 03-web | VULN-004, WEB-004, WEB-011, WEB-013, WEB-014 |
+| collection | data from network shared drive | `T1039` | 02-vuln | VULN-004 |
+| collection | man in the middle | `T1557` | 03-web | WEB-010 |
+| lateral movement | use alternate authentication material: web session cookie | `T1550.004` | 03-web | WEB-010, WEB-012 |
+| execution | exploitation of remote services | `T1210` | 04-exploit | EXPLOIT-020, EXPLOIT-021 |
+| execution | native api | `T1106` | 04-exploit | EXPLOIT-006, EXPLOIT-020, EXPLOIT-021 |
+| exfiltration | exfiltration over web service | `T1567` | 03-web | WEB-011 |
 
 ---
 
-## Prerequisiti e Setup
+## Prerequisiti e setup
 
 Per utilizzare al meglio gli script contenuti in questa repo, si consiglia:
 

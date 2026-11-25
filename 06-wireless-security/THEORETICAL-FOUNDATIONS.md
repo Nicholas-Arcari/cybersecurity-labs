@@ -1,6 +1,6 @@
 > [English](THEORETICAL-FOUNDATIONS.en.md) | **Italiano**
 
-# Fondamenti Teorici - Modulo 06: Wireless Security
+# Fondamenti teorici - modulo 06: wireless security
 
 > - **Livello:** Analisi accademica (complemento teorico ai README operativi del modulo)
 > - **Scopo:** Formalizzare la sicurezza del layer radio (assenza di perimetro fisico), la caduta della security-by-obscurity (Crypto-1), la proprieta di freshness contro il replay e la distinzione identificazione/autenticazione.
@@ -20,7 +20,7 @@ L'avversario wireless e un attaccante di rete di Dolev-Yao [Dolev & Yao 1983] re
 
 ---
 
-## 2. Proprieta di Sicurezza in Gioco
+## 2. Proprieta di sicurezza in gioco
 
 - **Confidenzialita sul canale broadcast:** poiche chiunque nel raggio riceve, la confidenzialita puo derivare solo dalla crittografia, non dall'inaccessibilita del mezzo.
 - **Autenticazione mutua:** entrambe le parti devono provare la propria identita. La sua assenza abilita l'Evil Twin (impersonazione dell'AP) e la clonazione (impersonazione del token).
@@ -29,7 +29,7 @@ L'avversario wireless e un attaccante di rete di Dolev-Yao [Dolev & Yao 1983] re
 
 ---
 
-## 3. Fondamenti Teorici
+## 3. Fondamenti teorici
 
 ### 3.1 Crypto-1 e la caduta della security-by-obscurity
 
@@ -69,7 +69,7 @@ L'evoluzione WEP, WPA, WPA2, WPA3 illustra la crittanalisi come processo. WEP ca
 
 ---
 
-## 4. Analisi Quantitativa
+## 4. Analisi quantitativa
 
 ### 4.1 Lo spettro di robustezza delle tecnologie RFID
 
@@ -89,13 +89,13 @@ Le 4096 iterazioni PBKDF2 riducono il throughput dell'attacco di un fattore ~409
 
 ---
 
-## 5. Rassegna della Letteratura
+## 5. Rassegna della letteratura
 
 La rottura di Crypto-1 e documentata da [Nohl et al. 2008] (reverse engineering) e [Garcia et al. 2008] (crittanalisi), esemplari del fallimento della security-by-obscurity [Kerckhoffs 1883]. La caduta di WEP risale a [Fluhrer et al. 2001]. Gli attacchi ai protocolli WiFi moderni sono di [Vanhoef & Piessens 2017] (KRACK, WPA2) e [Vanhoef & Ronen 2020] (Dragonblood, WPA3). La derivazione delle chiavi WPA2 usa PBKDF2 [Kaliski 2000]; i canali laterali si richiamano a [Kocher 1996]. Il modello di avversario deriva da [Dolev & Yao 1983]; l'inquadramento entropico da [Shannon 1949]. Le botnet IoT che sfruttano dispositivi wireless deboli sono analizzate da [Antonakakis et al. 2017] (Mirai).
 
 ---
 
-## 6. Limiti e Problemi Aperti
+## 6. Limiti e problemi aperti
 
 1. **Legacy irremovibile.** MIFARE Classic ed EM4100 restano deployati in miliardi di installazioni per costo e inerzia, nonostante la rottura crittografica sia nota dal 2008. La migrazione e un problema economico-logistico, non tecnico: un limite pratico irrisolto.
 
@@ -105,7 +105,7 @@ La rottura di Crypto-1 e documentata da [Nohl et al. 2008] (reverse engineering)
 
 ---
 
-## 7. Sintesi e Collegamento alla Pratica
+## 7. Sintesi e collegamento alla pratica
 
 I finding `WIFI-` del modulo istanziano questo quadro: il cracking WPA2/PMKID (WIFI-002/003) e l'attacco offline della sezione 3.2; l'Evil Twin (WIFI-004) e la violazione dell'autenticazione mutua e la versione radio del divario del modulo 05; il replay RF (WIFI-009) e la violazione della freshness della sezione 3.3; la clonazione MIFARE/EM4100 (WIFI-010/011/012) e la confusione identificazione/autenticazione della sezione 3.4. Le contromisure raccomandate nei README - WPA3-SAE, EAP-TLS, rolling code, DESFire AES - sono le traduzioni operative dei principi qui formalizzati. Il modulo dimostra in forma fisica e tangibile principi (freshness, autenticazione mutua, identita non-segreta, Kerckhoffs) che ricorrono in tutto il percorso, dal web (modulo 03) al cloud (modulo 10).
 

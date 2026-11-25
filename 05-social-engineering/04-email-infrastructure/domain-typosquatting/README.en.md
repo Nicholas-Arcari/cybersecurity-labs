@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Domain Typosquatting - Confusable Domain Generation
+# Domain typosquatting - confusable domain generation
 
 > - **Phase:** Social Engineering - Resource Development (Attack Infrastructure)
 > - **Visibility:** Low - domain generation and analysis is passive (DNS/WHOIS queries); registering a domain is trackable via WHOIS and Certificate Transparency logs
@@ -14,7 +14,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Typosquatting is the technique of registering domains that are visually similar to the target domain in order to deceive users. A domain like `target-1ab.com` (with digit "1" instead of the letter "l") is nearly indistinguishable from `target-lab.com` in most fonts. Combined with a valid TLS certificate (Let's Encrypt is free and automatic), the typosquatting domain makes phishing emails and landing pages extremely credible.
 
@@ -22,11 +22,11 @@ The lab used `dnstwist` to systematically generate all variations of the target 
 
 ---
 
-## Typosquatting: Domain Permutation Analysis
+## Typosquatting: domain permutation analysis
 
 **Finding ID:** `SE-012` | **Severity:** `Informational`
 
-### PoC - Phase 1: Variation Generation
+### PoC - phase 1: variation generation
 
 ```Bash
 dnstwist --all --registered target-lab.com
@@ -52,7 +52,7 @@ target-lab.net        tld-swap       -             -                  <-- availa
 target-lab.org        tld-swap       -             -                  <-- available
 ```
 
-### PoC - Phase 2: Risk Analysis by Type
+### PoC - phase 2: risk analysis by type
 
 ```Bash
 # Variation count by type
@@ -70,7 +70,7 @@ dnstwist --all target-lab.com --format csv | tail -n +2 | cut -d',' -f2 | sort |
    1 bitsquatting       <-- hardware bit-flip (rare but documented)
 ```
 
-### PoC - Phase 3: Visual Impact Assessment
+### PoC - phase 3: visual impact assessment
 
 The most dangerous domains are those with the lowest visual distance from the original:
 
@@ -97,7 +97,7 @@ LOW RISK (distinguishable with attention):
 
 ---
 
-## Lab Experience
+## Lab experience
 
 Running dnstwist on the test domain generated over 40 variations in a few seconds. The main surprise was the number of homoglyph domains that are visually identical to the original domain: the substitution of `l` (lowercase L) with `1` (one) is practically invisible in the sans-serif fonts used by most email clients and browsers.
 
@@ -105,7 +105,7 @@ A critical aspect: dnstwist with the `--all` flag also includes Unicode homoglyp
 
 ---
 
-## Theoretical Analysis: Domain Attack Taxonomy
+## Theoretical analysis: domain attack taxonomy
 
 Typosquatting exploits the limited human capacity to visually process long alphanumeric strings. Verizon's research (DBIR 2024) shows that the average time spent analyzing a URL before clicking is less than 2 seconds - insufficient to identify a single character substitution.
 
@@ -117,13 +117,13 @@ The main permutation categories are:
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Search Open Technical Databases: DNS/Passive DNS | `T1596.001` | DNS analysis of generated typosquatting domains (SE-012) |
-| Resource Development | Acquire Infrastructure: Domains | `T1583.001` | Identification of unregistered confusable domains for potential purchase |
-| Resource Development | Compromise Infrastructure: Domains | `T1584.001` | Assessment of typosquatting domains already registered by third parties (parked) |
+| reconnaissance | search open technical databases: dns/passive dns | `T1596.001` | dns analysis of generated typosquatting domains (SE-012) |
+| resource development | acquire infrastructure: domains | `T1583.001` | identification of unregistered confusable domains for potential purchase |
+| resource development | compromise infrastructure: domains | `T1584.001` | assessment of typosquatting domains already registered by third parties (parked) |
 
 ---
 

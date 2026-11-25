@@ -23,7 +23,7 @@ The common thread of the section is a principle of IoT security: many devices de
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 02-bluetooth-ble/
@@ -35,7 +35,7 @@ The common thread of the section is a principle of IoT security: many devices de
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [INPUT] BLE adapter, IoT devices in radio range
@@ -61,41 +61,41 @@ The common thread of the section is a principle of IoT security: many devices de
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `bettercap` | MITM framework | CLI | The BLE reference: `ble.recon`, `ble.enum`, `ble.write` |
-| `gatttool` | GATT client | CLI | Direct read/write of characteristics (legacy but precise) |
-| `bluetoothctl` | BlueZ CLI | CLI | Discovery, pairing and device management |
-| `spooftooph` | BT address spoofer | CLI | Bluetooth address cloning for impersonation |
-| `btlejack` | BLE hijacker | CLI | Hijacking of active BLE connections (Micro:bit hardware) |
-| `nRF Connect` | BLE explorer | GUI / Mobile | Interactive GATT exploration |
+| `bettercap` | mitm framework | cli | the ble reference: `ble.recon`, `ble.enum`, `ble.write` |
+| `gatttool` | gatt client | cli | direct read/write of characteristics (legacy but precise) |
+| `bluetoothctl` | bluez cli | cli | discovery, pairing and device management |
+| `spooftooph` | bt address spoofer | cli | bluetooth address cloning for impersonation |
+| `btlejack` | ble hijacker | cli | hijacking of active ble connections (micro:bit hardware) |
+| `nRF Connect` | ble explorer | gui / mobile | interactive gatt exploration |
 
 > **Recommended modern tool:** `bettercap` is the undisputed reference for BLE recon and manipulation (it replaces the deprecated gatttool/hcitool). For pairing sniffing dedicated hardware is needed (`nRF52840`, `Ubertooth One`); the [Flipper Zero](https://github.com/Nicholas-Arcari/FlipperZero-guide) covers portable recon/replay scenarios.
 
 ---
 
-## Finding Registry - Bluetooth & BLE Section
+## Finding registry - bluetooth & BLE section
 
-| ID | Description | Severity | Subfolder |
+| id | description | severity | subfolder |
 | :--- | :--- | :---: | :--- |
-| `WIFI-006` | GATT enumeration: control characteristic writable without authentication on IoT device | `Informational` | `recon/` |
-| `WIFI-007` | Unauthorized GATT write: manipulation of the state of a test smart lock | `Medium` | `spoofing/` |
+| `WIFI-006` | gatt enumeration: control characteristic writable without authentication on iot device | `Informational` | `recon/` |
+| `WIFI-007` | unauthorized gatt write: manipulation of the state of a test smart lock | `Medium` | `spoofing/` |
 
 ---
 
-## MITRE ATT&CK Mapping - Aggregated
+## MITRE ATT&CK mapping - aggregated
 
-| Tactic | Technique | MITRE ID | Related Finding |
+| tactic | technique | mitre id | related finding |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning | `T1595` | WIFI-006 |
-| Reconnaissance | Gather Victim Host Information | `T1592` | WIFI-006 |
-| Credential Access | Network Sniffing | `T1040` | WIFI-006 |
-| Collection | Adversary-in-the-Middle | `T1557` | WIFI-007 |
-| Defense Evasion | Impersonation | `T1656` | WIFI-007 |
-| Impact (ICS) | Manipulation of Control | `T0831` | WIFI-007 |
-| Initial Access | Hardware Additions | `T1200` | WIFI-007 |
+| reconnaissance | active scanning | `T1595` | WIFI-006 |
+| reconnaissance | gather victim host information | `T1592` | WIFI-006 |
+| credential access | network sniffing | `T1040` | WIFI-006 |
+| collection | adversary-in-the-middle | `T1557` | WIFI-007 |
+| defense evasion | impersonation | `T1656` | WIFI-007 |
+| impact (ics) | manipulation of control | `T0831` | WIFI-007 |
+| initial access | hardware additions | `T1200` | WIFI-007 |
 
 ---
 

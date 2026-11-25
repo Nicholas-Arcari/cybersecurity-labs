@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# cloud_enum - Recon di Asset Cloud
+# Cloud_enum - recon di asset cloud
 
 > - **Fase:** Cloud Security - Reconnaissance (multi-cloud)
 > - **Categoria:** Recon - scoperta di asset esposti
@@ -45,11 +45,11 @@ python3 cloud_enum.py -k nomeazienda -k nomeazienda-prod
 
 ## Tool correlati
 
-| Tool | Ruolo | Relazione |
+| tool | ruolo | relazione |
 | :--- | :--- | :--- |
-| `cloud_enum` | Recon multi-cloud | Questo strumento |
-| `s3scanner` | S3 enum | Focalizzato sui bucket AWS |
-| `Prowler` / `ScoutSuite` | Audit difensivo | Trovano gli asset esposti dall'interno dell'account |
+| `cloud_enum` | recon multi-cloud | questo strumento |
+| `s3scanner` | s3 enum | focalizzato sui bucket aws |
+| `Prowler` / `ScoutSuite` | audit difensivo | trovano gli asset esposti dall'interno dell'account |
 
 > **Tool moderno consigliato:** `cloud_enum` per il recon multi-cloud esterno. Dal lato difensivo, l'audit dall'interno dell'account (`Prowler`/`ScoutSuite`) e piu completo perche vede tutti gli asset, non solo quelli con nome indovinabile.
 
@@ -57,10 +57,10 @@ python3 cloud_enum.py -k nomeazienda -k nomeazienda-prod
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione |
+| tattica | tecnica | id mitre | descrizione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Search Open Websites/Domains | `T1593` | Scoperta di asset cloud pubblici via permutazione dei nomi |
-| Discovery | Cloud Infrastructure Discovery | `T1580` | Enumerazione degli asset cloud esposti |
+| reconnaissance | search open websites/domains | `T1593` | scoperta di asset cloud pubblici via permutazione dei nomi |
+| discovery | cloud infrastructure discovery | `T1580` | enumerazione degli asset cloud esposti |
 
 ---
 

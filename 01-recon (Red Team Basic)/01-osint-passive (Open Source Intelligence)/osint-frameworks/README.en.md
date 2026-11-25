@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# OSINT Frameworks: Automation and Correlation (SpiderFoot, recon-ng, Maltego)
+# OSINT frameworks: automation and correlation (SpiderFoot, recon-ng, maltego)
 
 > - **Phase:** Reconnaissance - Passive Information Gathering (automation and correlation)
 > - **Visibility:** Zero / Low - most modules query public sources and third-party APIs (Zero-Touch); some optional modules perform DNS resolutions or direct HTTP requests (Low) and must be disabled to stay invisible
@@ -25,7 +25,7 @@ The produced results feed directly into `03-dns-enumeration/` (discovered subdom
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 osint-frameworks/
@@ -35,11 +35,11 @@ osint-frameworks/
 
 ---
 
-## SpiderFoot - Multi-Source OSINT Automation
+## SpiderFoot - Multi-Source OSINT automation
 
 **Finding ID:** `OSINT-005` | **Severity:** `Variable (Informational / High)`
 
-### Operational Context
+### Operational context
 
 SpiderFoot is the most complete open source OSINT framework for automated collection. It queries over 200 sources (search engines, breach databases, DNS registries, Shodan, TLS certificates, social media, historical archives) and automatically correlates the results. Its distinctive feature is the management of **visibility**: each module is classified as passive (queries only third parties) or active (contacts the target), allowing the analyst to run scans completely invisible to the target.
 
@@ -87,7 +87,7 @@ sfp_github, Raw Data from Public Repos, "API_KEY=AKIA..."  <-- correlation to se
 
 <!-- screenshot placeholder: SpiderFoot correlation graph (img/spiderfoot-graph-PLACEHOLDER.jpg) -->
 
-### Lab Experience
+### Lab experience
 
 Execution confirmed how much the API key configuration affects the volume of results: without keys the frameworks are limited to open sources and return a sparse graph, whereas with the free keys of the main services enabled the coverage of subdomains, emails and correlated data breaches grows noticeably. We chose to operate in strictly passive mode, disabling the modules that generate traffic towards the target, so as not to leave the OSINT perimeter and not to leave traces: a choice consistent with the passive recon phase of the project. The cost is time - the passive scan is slower because it queries many external sources - and the presence of false positives in the automatic correlation, typically emails or names that are merely homonyms and do not really belong to the target, validated manually before being considered. The highest-value data turned out to be the correlation between subdomains and exposed technologies, which feeds directly into the subsequent scanning and web recon phases.
 
@@ -97,7 +97,7 @@ Typical attention points of this type of scan, to verify during execution:
 - The `sfp_github` module can return false positives (repositories of namesakes): every hit must be validated before being included in a report.
 - The email-breach correlation depends on the state of the HIBP API: a negative result must always be manually validated as described in `breach-data/`.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 An OSINT framework does not add new sources compared to manual research: it queries the same public APIs an analyst would consult one at a time. The added value is in the **correlation engine**, which treats each datum as a typed node (email, domain, IP, hash) and applies expansion rules: when a module produces an `INTERNET_NAME`, other modules automatically take it as input and resolve it, search it on Shodan, extract its certificates. This iterative process (called "correlation cascade") automatically reconstructs the graph that manually would require linking dozens of results by hand.
 
@@ -105,9 +105,9 @@ The choice among the three frameworks depends on the objective: SpiderFoot for m
 
 ---
 
-## recon-ng - Modular OSINT Framework
+## Recon-ng - modular OSINT framework
 
-### Operational Context
+### Operational context
 
 recon-ng adopts the interface and philosophy of Metasploit applied to OSINT: isolated workspaces, an internal database (SQLite) that accumulates the results, and a marketplace of installable modules. It is the ideal framework when a repeatable and documentable process is needed, because every command is tracked and the database can be exported as structured evidence.
 
@@ -154,15 +154,15 @@ Expected output (hosts table in the internal database):
 
 > [Screenshot placeholder: capture the recon-ng dashboard with the populated `hosts` table (`show hosts`) and the generated HTML report.]
 
-### Analysis of the Results
+### Analysis of the results
 
 Subdomains with names like `vpn`, `dev`, `sso`, `staging` are a priority: they indicate remote-access vectors or environments less protected than production. This list becomes direct input for `03-dns-enumeration/subdomain-finding/` and for the web recon in `03-web-attacks/02-web-recon/`.
 
 ---
 
-## Maltego - Visual Graph Analysis
+## Maltego - visual graph analysis
 
-### Operational Context
+### Operational context
 
 Maltego is not a scanner but a **link analysis** tool: it starts from an entity (domain, person, email) and applies "transforms", that is, queries toward data sources that return linked entities, visualized as a graph. It is the reference tool for complex investigations where the structure of the relationships is the result: mapping the subsidiaries of a group, reconstructing a network of people, linking infrastructures via shared certificates.
 
@@ -185,13 +185,13 @@ The use is predominantly graphical (GUI):
 
 **Limits of the Community Edition:** Maltego CE limits the results per transform (typically 12 entities) and requires registration. For a real engagement the Classic/XL version removes the limits. For the lab, the CE is sufficient to demonstrate the methodology.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 Maltego's data model (entities + transforms) is the visual formalization of the same "OSINT graph" that SpiderFoot builds internally. The difference is control: in Maltego the analyst manually decides which node to expand and with which transform, avoiding the noise of a total automatic scan. This makes it superior when the number of entities is high and one needs to discriminate which relationships are relevant.
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [INPUT] A starting datum (domain / email / name)
@@ -218,11 +218,11 @@ Maltego's data model (entities + transforms) is the visual formalization of the 
 
 ---
 
-## Real-World Scenario: Post-Reconnaissance Projection
+## Real-World scenario: Post-Reconnaissance projection
 
 > This section describes how OSINT-005 would fit into a real engagement, from the attacker's and defender's perspectives. Applicable when the correlation reaches `High` severity.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** complete OSINT graph of the target with employee emails, subdomains (including `vpn`, `dev`), exposed assets and at least one email correlated to a breach.
 
@@ -245,7 +245,7 @@ Lateral movement and persistence
 
 **Potential impact:** OSINT aggregation drastically reduces the preparation time of a targeted attack. A complete graph turns a generic campaign into a tailored Spear Phishing and Credential Stuffing campaign, with much higher success rates.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** passive OSINT is by definition invisible (no contact with the target systems). Detection does not happen on the single event but on the result: monitoring one's own exposure with the same tools (periodic self-OSINT) and alerting on anomalous login attempts that follow the collection phase.
 
@@ -264,29 +264,29 @@ Lateral movement and persistence
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `SpiderFoot` | OSINT aggregator | CLI / Web (local) | Automatic collection from 200+ sources with correlation |
-| `recon-ng` | OSINT framework | CLI (modular) | Repeatable OSINT workflow with database and reporting |
-| `Maltego` | Link analysis | GUI | Visual analysis of the relationship graph between entities |
-| `theHarvester` | Email/Subdomain harvesting | CLI | Targeted email/subdomain collection (see `email-harvesting/`) |
-| `Amass` (OWASP) | Subdomain/OSINT | CLI | Asset enumeration and infrastructure correlation |
+| `SpiderFoot` | osint aggregator | cli / web (local) | automatic collection from 200+ sources with correlation |
+| `recon-ng` | osint framework | cli (modular) | repeatable osint workflow with database and reporting |
+| `Maltego` | link analysis | gui | visual analysis of the relationship graph between entities |
+| `theHarvester` | email/subdomain harvesting | cli | targeted email/subdomain collection (see `email-harvesting/`) |
+| `Amass` (owasp) | subdomain/osint | cli | asset enumeration and infrastructure correlation |
 
 > **Recommended modern tool:** `SpiderFoot HX` (commercial cloud version) and `Amass intel` (`amass intel -org "Target Corp"` to discover the IP ranges and ASes associated with an organization starting from the name). Amass is actively maintained by OWASP and integrates Certificate Transparency, passive DNS sources and ASN correlation in a single CLI tool, ideal for pipeline automation.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Info: Email Addresses | `T1589.002` | Automatic aggregation of the target's emails from multiple sources via SpiderFoot and recon-ng (OSINT-005) |
-| Reconnaissance | Search Open Technical Databases: WHOIS | `T1596.002` | Collection of WHOIS data and contacts via recon-ng modules (OSINT-005) |
-| Reconnaissance | Search Open Websites/Domains: Search Engines | `T1593.002` | Automatic correlation of public data indexed by search engines and archives (OSINT-005) |
-| Reconnaissance | Gather Victim Network Info: DNS | `T1590.002` | Subdomain enumeration from Certificate Transparency via recon-ng and SpiderFoot (OSINT-005) |
-| Reconnaissance | Search Open Websites/Domains: Social Media | `T1593.001` | Aggregation of social presence and identity correlation in the OSINT graph (OSINT-005) |
+| reconnaissance | gather victim identity info: email addresses | `T1589.002` | automatic aggregation of the target's emails from multiple sources via spiderfoot and recon-ng (OSINT-005) |
+| reconnaissance | search open technical databases: whois | `T1596.002` | collection of whois data and contacts via recon-ng modules (OSINT-005) |
+| reconnaissance | search open websites/domains: search engines | `T1593.002` | automatic correlation of public data indexed by search engines and archives (OSINT-005) |
+| reconnaissance | gather victim network info: dns | `T1590.002` | subdomain enumeration from certificate transparency via recon-ng and spiderfoot (OSINT-005) |
+| reconnaissance | search open websites/domains: social media | `T1593.001` | aggregation of social presence and identity correlation in the osint graph (OSINT-005) |
 
 ---
 

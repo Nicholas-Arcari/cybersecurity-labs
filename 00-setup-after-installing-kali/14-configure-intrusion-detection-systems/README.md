@@ -48,13 +48,13 @@ Non saprai mai se qualcuno sta scansionando o attaccando il sistema finche non s
 
 ## Tool di riferimento
 
-| Tool | Tipo | Caso d'uso |
+| tool | tipo | caso d'uso |
 | :--- | :--- | :--- |
-| `Suricata` | IDS/IPS | Network packet inspection con regole Emerging Threats |
-| `Snort` | IDS alternativo | IDS classico, stessa architettura regole di Suricata |
-| `Zeek` (Bro) | Network monitor | Analisi comportamentale del traffico, logging strutturato |
-| `suricata-update` | Rule manager | Aggiornamento automatico regole ET Open e altre sorgenti |
-| `evebox` | Log viewer | GUI web per visualizzare gli alert `eve.json` di Suricata |
+| `Suricata` | ids/ips | network packet inspection con regole emerging threats |
+| `Snort` | ids alternativo | ids classico, stessa architettura regole di suricata |
+| `Zeek` (bro) | network monitor | analisi comportamentale del traffico, logging strutturato |
+| `suricata-update` | rule manager | aggiornamento automatico regole et open e altre sorgenti |
+| `evebox` | log viewer | gui web per visualizzare gli alert `eve.json` di suricata |
 
 ---
 

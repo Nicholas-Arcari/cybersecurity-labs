@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Cross-Site Scripting (XSS)
+# Cross-Site scripting (XSS)
 
 > - **Fase:** Web Attack - Cross-Site Scripting (XSS)
 > - **Visibilita:** Variabile - Bassa (Reflected e Stored: richieste standard) / Zero (Blind: payload dormiente)
@@ -25,7 +25,7 @@ Lo script viene salvato permanentemente sul server target (es. in un database). 
 
 - Impatto: Critico (Nessuna interazione utente richiesta, colpisce molteplici utenti/amministratori).
 
-## 3 [XSS Hunter Payloads](./xss-hunter-payloads/) (Blind XSS)
+## 3 [XSS hunter payloads](./xss-hunter-payloads/) (blind XSS)
 
 Risorse per attacchi "Blind XSS". In questo scenario, l'attaccante inietta il payload alla cieca (es. in un form di "Contattaci" o nei Log del server) e non vede il risultato immediato.
 
@@ -37,14 +37,14 @@ Il payload è progettato per "chiamare casa" (inviare una notifica all'attaccant
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Sfruttamento di input non sanitizzati per iniettare codice JavaScript nell'applicazione (WEB-005, WEB-006, WEB-007) |
-| Credential Access | Steal Web Session Cookie | `T1539` | Furto del cookie di sessione tramite `document.cookie` iniettato via XSS (WEB-005, WEB-006) |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | Distribuzione di URL malevoli con payload XSS Reflected per colpire utenti specifici (WEB-005) |
-| Persistence | Server Software Component: Web Shell | `T1505.003` | XSS Stored persistente nel database che esegue codice su ogni visualizzazione della pagina (WEB-006) |
-| Collection | Browser Session Hijacking | `T1185` | Redirect della vittima verso server attaccante tramite XSS Stored per catturare il cookie in modo silente (WEB-007) |
-| Reconnaissance | Gather Victim Identity Information | `T1589` | XSS Blind/OOB tramite tag img per ottenere IP e User-Agent dell'amministratore che visualizza il profilo (WEB-007) |
+| initial access | exploit public-facing application | `T1190` | sfruttamento di input non sanitizzati per iniettare codice javascript nell'applicazione (WEB-005, WEB-006, WEB-007) |
+| credential access | steal web session cookie | `T1539` | furto del cookie di sessione tramite `document.cookie` iniettato via xss (WEB-005, WEB-006) |
+| initial access | phishing: spearphishing link | `T1566.002` | distribuzione di url malevoli con payload xss reflected per colpire utenti specifici (WEB-005) |
+| persistence | server software component: web shell | `T1505.003` | xss stored persistente nel database che esegue codice su ogni visualizzazione della pagina (WEB-006) |
+| collection | browser session hijacking | `T1185` | redirect della vittima verso server attaccante tramite xss stored per catturare il cookie in modo silente (WEB-007) |
+| reconnaissance | gather victim identity information | `T1589` | xss blind/oob tramite tag img per ottenere ip e user-agent dell'amministratore che visualizza il profilo (WEB-007) |
 
 ---
 

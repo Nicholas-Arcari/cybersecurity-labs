@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# CMS Exploitation: WordPress & WPScan
+# CMS exploitation: WordPress & WPScan
 
 > - **Phase:** Web Attack - CMS Exploitation (WordPress)
 > - **Visibility:** Medium - WPScan generates structured HTTP traffic, detectable by WAF and IDS
@@ -24,7 +24,7 @@ WPScan is the de facto tool for this task: an open-source black-box scanner writ
 
 ---
 
-## Phase 1: Fingerprinting
+## Phase 1: fingerprinting
 
 Version confirmation is the prerequisite for CVE mapping. WordPress exposes its version in multiple locations:
 
@@ -49,7 +49,7 @@ The `readme.html` file is often left accessible by default and reveals the exact
 
 ---
 
-## Phase 2: Enumeration with WPScan
+## Phase 2: enumeration with WPScan
 
 ### Installation
 
@@ -61,7 +61,7 @@ wpscan --version
 wpscan --update
 ```
 
-### Full Enumeration
+### Full enumeration
 
 ```Bash
 # Basic scan with enumeration of vulnerable plugins, themes, and users
@@ -99,7 +99,7 @@ Sample output (plugin enumeration):
  |      - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-XXXXX
 ```
 
-### User Enumeration
+### User enumeration
 
 ```Bash
 wpscan --url http://<TARGET> --enumerate u
@@ -126,7 +126,7 @@ The fact that WordPress exposes usernames through the REST API (`/?author=1`) is
 
 ---
 
-## Phase 3: Credential Brute Force
+## Phase 3: credential brute force
 
 ```Bash
 # Brute force with password list (rockyou.txt or custom list)
@@ -149,7 +149,7 @@ Sample output (credential found):
 
 ---
 
-## Phase 4: Post-Authentication Exploitation
+## Phase 4: Post-Authentication exploitation
 
 Once admin access is obtained, the most common post-exploitation actions:
 
@@ -191,30 +191,30 @@ cat /var/www/html/wp-config.php | grep -E "DB_NAME|DB_USER|DB_PASSWORD|DB_HOST"
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Primary Use Case |
+| tool | type | technique/access | primary use case |
 | :--- | :--- | :--- | :--- |
-| `wpscan` | WordPress scanner | CLI - Active | Full enumeration and brute force on WordPress |
-| `nuclei` | Template-based | CLI - Active | Templates `/technologies/cms/wordpress/` for specific CVEs |
-| `metasploit` | Exploitation framework | CLI/GUI - Active | Automated exploits for vulnerable WordPress plugins |
-| `burpsuite` | Web proxy | GUI - Manual | Manual analysis of WordPress features (IDOR, CSRF) |
-| `xmlrpc-scan` | XML-RPC tester | CLI - Active | Testing abuse of the `xmlrpc.php` endpoint for brute force |
+| `wpscan` | wordpress scanner | cli - active | full enumeration and brute force on wordpress |
+| `nuclei` | template-based | cli - active | templates `/technologies/cms/wordpress/` for specific cves |
+| `metasploit` | exploitation framework | cli/gui - active | automated exploits for vulnerable wordpress plugins |
+| `burpsuite` | web proxy | gui - manual | manual analysis of wordpress features (idor, csrf) |
+| `xmlrpc-scan` | xml-rpc tester | cli - active | testing abuse of the `xmlrpc.php` endpoint for brute force |
 
 > **WPScan API Token Note:** without an API token, WPScan does not show specific CVEs for plugins. Register for free at `wpscan.com` and add `--api-token <TOKEN>` to the command to enable the full vulnerability database.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Scanning with WPScan to identify vulnerable plugins, WordPress version, and associated CVEs |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | WordPress version fingerprinting via `readme.html` and HTTP headers |
-| Discovery | Account Discovery | `T1087` | WordPress username enumeration through the REST API (`/?author=1`) with WPScan `--enumerate u` |
-| Credential Access | Brute Force: Password Guessing | `T1110.001` | Dictionary attack on `/wp-login.php` with credential list via WPScan |
-| Persistence | Server Software Component: Web Shell | `T1505.003` | PHP code deployment in the WordPress Theme Editor after admin access to maintain persistence |
-| Execution | Command and Scripting Interpreter: PHP | `T1059.006` | System command execution through PHP Web Shell injected into the theme's `header.php` |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | scanning with wpscan to identify vulnerable plugins, wordpress version, and associated cves |
+| reconnaissance | gather victim host info: software | `T1592.002` | wordpress version fingerprinting via `readme.html` and http headers |
+| discovery | account discovery | `T1087` | wordpress username enumeration through the rest api (`/?author=1`) with wpscan `--enumerate u` |
+| credential access | brute force: password guessing | `T1110.001` | dictionary attack on `/wp-login.php` with credential list via wpscan |
+| persistence | server software component: web shell | `T1505.003` | php code deployment in the wordpress theme editor after admin access to maintain persistence |
+| execution | command and scripting interpreter: php | `T1059.006` | system command execution through php web shell injected into the theme's `header.php` |
 
 ---
 

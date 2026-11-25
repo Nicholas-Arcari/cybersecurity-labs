@@ -1,6 +1,6 @@
 > [English](THEORETICAL-FOUNDATIONS.en.md) | **Italiano**
 
-# Fondamenti Teorici - Modulo 03: Web Attacks
+# Fondamenti teorici - modulo 03: web attacks
 
 > - **Livello:** Analisi accademica (complemento teorico ai README operativi del modulo)
 > - **Scopo:** Formalizzare l'injection come confusione linguistica tra dati e codice, il modello del web attacker e il CSRF/SSRF come istanze del confused deputy.
@@ -27,7 +27,7 @@ Questa restrizione e cio che rende il web attacker interessante: molte vulnerabi
 
 ---
 
-## 2. Proprieta di Sicurezza in Gioco
+## 2. Proprieta di sicurezza in gioco
 
 - **Separazione dati/codice:** l'input non fidato non deve mai essere interpretato come istruzione. E la proprieta violata da tutte le famiglie di injection (SQLi, command injection, XSS come code injection nel DOM).
 - **Autorizzazione basata sull'intenzione:** un'azione privilegiata deve essere eseguita solo se realmente intesa dal principale autorizzato, non solo se la richiesta e sintatticamente valida. E la proprieta violata dal confused deputy (CSRF, SSRF).
@@ -35,7 +35,7 @@ Questa restrizione e cio che rende il web attacker interessante: molte vulnerabi
 
 ---
 
-## 3. Fondamenti Teorici
+## 3. Fondamenti teorici
 
 ### 3.1 Injection come confusione dato/codice (formalizzazione linguistica)
 
@@ -55,13 +55,13 @@ La conseguenza teorica e forte: le contromisure che agiscono sulla stringa (esca
 
 L'unificazione teorica e che entrambi violano l'**autorizzazione basata sull'intenzione** (sezione 2): la richiesta e valida ma non intesa. Il confused deputy mostra che l'autenticazione (chi presenta l'autorita) e insufficiente senza la verifica dell'intenzione (chi ha voluto l'azione).
 
-### 3.3 Complete mediation e Same-Origin Policy
+### 3.3 Complete mediation e Same-Origin policy
 
 La Same-Origin Policy e un'istanza del principio di **complete mediation** di [Saltzer & Schroeder 1975]: ogni accesso a una risorsa deve essere verificato. Il browser media ogni accesso cross-origin secondo l'origine (schema, host, porta) del contesto richiedente. Le vulnerabilita di configurazione CORS sono, in questa cornice, allentamenti della mediazione completa che riaprono il canale che la SOP chiudeva.
 
 ---
 
-## 4. Analisi Quantitativa
+## 4. Analisi quantitativa
 
 ### 4.1 Taint propagation e information flow
 
@@ -73,13 +73,13 @@ L'approccio basato su escaping/blacklist e quantitativamente svantaggioso: il di
 
 ---
 
-## 5. Rassegna della Letteratura
+## 5. Rassegna della letteratura
 
 La formalizzazione dell'injection segue [Su & Wassermann 2006], che ne hanno dato una caratterizzazione linguistica precisa e un metodo di rilevamento basato sui parse tree. Il modello di avversario e le proprieta web derivano da [Akhawe et al. 2010], riferimento fondativo dell'analisi formale della sicurezza web. La difesa contro il CSRF e analizzata rigorosamente da [Barth et al. 2008]. L'inquadramento del CSRF/SSRF come confused deputy risale a [Hardy 1988]. Le contromisure come mediazione completa e minimo privilegio si richiamano a [Saltzer & Schroeder 1975]. Il catalogo empirico delle classi (OWASP Top 10) fornisce la tassonomia operativa complementare.
 
 ---
 
-## 6. Limiti e Problemi Aperti
+## 6. Limiti e problemi aperti
 
 1. **Indecidibilita dell'analisi di flusso.** Come per il modulo 02, il rilevamento esatto dei flussi da taint a sink e indecidibile nel caso generale; gli strumenti (SAST) restano approssimazioni.
 
@@ -89,7 +89,7 @@ La formalizzazione dell'injection segue [Su & Wassermann 2006], che ne hanno dat
 
 ---
 
-## 7. Sintesi e Collegamento alla Pratica
+## 7. Sintesi e collegamento alla pratica
 
 I finding `WEB-` del modulo si mappano su questo quadro: le famiglie di injection (SQLi, command injection, XSS) sono istanze della confusione dato/codice della sezione 3.1, e la remediation raccomandata nei README (prepared statements, output encoding context-aware) e la traduzione operativa della soluzione strutturale; CSRF e SSRF sono confused deputy (sezione 3.2), con le difese (token, SameSite, allowlist di destinazione) come ripristino dell'autorizzazione basata sull'intenzione. Il collegamento al modulo 10 e diretto e teoricamente motivato: l'SSRF che ruba il token del metadata service cloud e lo stesso confused deputy, spostato sul server. Il documento fornisce alla pratica secure-coding del modulo la giustificazione formale del perche le contromisure strutturali (che eliminano la classe) siano superiori a quelle sintattiche (che inseguono le istanze).
 

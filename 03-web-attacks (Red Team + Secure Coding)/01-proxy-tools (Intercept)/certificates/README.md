@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Proxy Tools: SSL/TLS Certificates & HTTPS Interception
+# Proxy tools: SSL/TLS certificates & HTTPS interception
 
 > - **Fase:** Web Attack - HTTPS Interception Setup
 > - **Visibilita:** Locale - la configurazione avviene esclusivamente sul browser locale, nessun traffico aggiuntivo verso il target
@@ -17,7 +17,7 @@ Strumenti: `Burp Suite`, `Firefox Certificate Manager`
 
 ---
 
-## 1 Introduzione Teorica: La rottura della crittografia
+## 1 Introduzione teorica: la rottura della crittografia
 
 Il protocollo HTTPS protegge la riservatezza dei dati cifrandoli tra il client e il server. Un Proxy "Man-in-the-Middle" (come Burp) interrompe questa connessione.
 
@@ -31,7 +31,7 @@ Affinché il browser accetti questo certificato falso senza mostrare errori di s
 
 ---
 
-## 2 Procedura Tecnica: Installazione CA
+## 2 Procedura tecnica: installazione CA
 
 È stata eseguita l'installazione del certificato radice di PortSwigger per abilitare la Deep Packet Inspection.
 
@@ -51,7 +51,7 @@ Ispezionando il certificato del sito, l'emittente risulta essere PortSwigger CA,
 
 ---
 
-## 3 Scenari Avanzati: SSL Pinning
+## 3 Scenari avanzati: SSL pinning
 
 Mentre questa tecnica funziona sui browser desktop, le applicazioni mobili moderne (Android/iOS) implementano l'SSL Pinning.
 
@@ -65,9 +65,9 @@ La corretta gestione dei certificati è il prerequisito per analizzare il traffi
 
 ---
 
-## Analisi a Basso Livello: Chain of Trust e TLS Interception
+## Analisi a basso livello: chain of trust e TLS interception
 
-### Come il Browser Valida i Certificati
+### Come il browser valida i certificati
 
 Il browser esegue una catena di verifiche per ogni connessione HTTPS:
 
@@ -99,7 +99,7 @@ Browser riceve certificato dal server (o dal proxy)
 Connessione HTTPS stabilita (lucchetto verde)
 ```
 
-### Perche il Certificato Burp Viene Accettato
+### Perche il certificato Burp viene accettato
 
 Dopo l'installazione della CA Burp nel trust store di Firefox:
 
@@ -115,20 +115,20 @@ Browser -> tesla.com -> Cert: CN=tesla.com, Issuer=PortSwigger CA
 
 Burp genera un certificato nuovo "al volo" per ogni dominio visitato, firmandolo con la sua CA privata. Il browser si fida perche abbiamo aggiunto quella CA come "trusted root".
 
-### SSL Pinning: La Contromisura
+### SSL pinning: la contromisura
 
 Le applicazioni mobili implementano il certificate pinning per prevenire esattamente questo tipo di intercettazione:
 
-| Tipo di pinning | Meccanismo | Bypass |
+| tipo di pinning | meccanismo | bypass |
 | :--- | :--- | :--- |
-| **Certificate pinning** | L'app contiene il certificato esatto del server | Frida: hook `X509TrustManager.checkServerTrusted()` |
-| **Public key pinning** | L'app contiene solo la chiave pubblica | Objection: `android sslpinning disable` |
-| **HPKP (deprecato)** | Header HTTP con hash della chiave pubblica | Rimosso dai browser per rischio di DoS |
-| **Network Security Config** (Android) | XML config che definisce trust anchors | Modifica del file XML + repack APK |
+| **certificate pinning** | l'app contiene il certificato esatto del server | frida: hook `X509TrustManager.checkServerTrusted()` |
+| **public key pinning** | l'app contiene solo la chiave pubblica | objection: `android sslpinning disable` |
+| **hpkp (deprecato)** | header http con hash della chiave pubblica | rimosso dai browser per rischio di dos |
+| **network security config** (android) | xml config che definisce trust anchors | modifica del file xml + repack apk |
 
 ---
 
-## Blue Team: Protezione contro Intercettazione TLS
+## Blue team: protezione contro intercettazione TLS
 
 - **Certificate Transparency monitoring:** monitorare i CT logs per certificati emessi per il proprio dominio da CA non autorizzate
 - **HSTS preload:** inserire il dominio nella preload list dei browser impedisce l'override dei certificati non validi anche per utenti che cliccano "Accetto il rischio"
@@ -137,7 +137,7 @@ Le applicazioni mobili implementano il certificate pinning per prevenire esattam
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'errore `SEC_ERROR_UNKNOWN_ISSUER` prima dell'installazione della CA e stato istruttivo: il browser ha funzionato esattamente come previsto, rifiutando un certificato firmato da una CA sconosciuta. Questo ha reso tangibile il concetto di "chain of trust" che nei corsi teorici rimane astratto.
 
@@ -149,10 +149,10 @@ La menzione dell'SSL Pinning e stata necessaria per contestualizzare i limiti de
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Defense Evasion | Subvert Trust Controls: Install Root Certificate | `T1553.004` | Installazione del certificato CA di PortSwigger (Burp Suite) nel trust store di Firefox per abilitare l'intercettazione HTTPS senza errori di certificato |
-| Collection | Man-in-the-Middle: AiTM HTTPS Interception | `T1557.002` | Generazione di certificati SSL falsi per ogni dominio visitato (es. `google.com`), con emittente `PortSwigger CA`, permettendo la decifrazione del traffico TLS in transito |
+| defense evasion | subvert trust controls: install root certificate | `T1553.004` | installazione del certificato ca di portswigger (burp suite) nel trust store di firefox per abilitare l'intercettazione https senza errori di certificato |
+| collection | man-in-the-middle: aitm https interception | `T1557.002` | generazione di certificati ssl falsi per ogni dominio visitato (es. `google.com`), con emittente `PortSwigger CA`, permettendo la decifrazione del traffico tls in transito |
 
 ---
 

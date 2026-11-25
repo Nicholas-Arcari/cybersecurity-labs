@@ -54,39 +54,39 @@ Il tema trasversale e la gestione della complessita. Kubernetes ha troppi compon
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `kubectl` | K8s CLI | Ufficiale | Interazione con il cluster |
-| `kube-hunter` | Scanner | Offensivo | Scoperta di componenti esposti |
-| `Peirates` | Exploitation | Offensivo | Post-exploitation su K8s |
-| `kube-bench` | CIS auditor | Difensivo | Audit di conformita CIS |
-| `Pod Security` / `Kyverno` | Admission | Difensivo | Blocco dei pod pericolosi |
-| `Falco` | Runtime security | Difensivo | Detection a runtime |
+| `kubectl` | k8s cli | ufficiale | interazione con il cluster |
+| `kube-hunter` | scanner | offensivo | scoperta di componenti esposti |
+| `Peirates` | exploitation | offensivo | post-exploitation su k8s |
+| `kube-bench` | cis auditor | difensivo | audit di conformita cis |
+| `Pod Security` / `Kyverno` | admission | difensivo | blocco dei pod pericolosi |
+| `Falco` | runtime security | difensivo | detection a runtime |
 
 > **Tool moderno consigliato:** `kube-hunter`/`Peirates` (offensivo) e `kube-bench` + Pod Security Standards + `Falco` (difensivo). Vedere `../Tooling/` per gli scanner cloud trasversali.
 
 ---
 
-## Registro Finding - Orchestration (Kubernetes)
+## Registro finding - orchestration (Kubernetes)
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `CLOUD-007` | K8s cluster esposto/mal configurato: furto Secret e controllo del control plane | `Critico` | `K8s-attacks/` |
-| `CLOUD-008` | K8s auditing: CIS benchmark (kube-bench) + Pod Security Standards (hardening) | `Alto` | `K8s-auditing/` |
+| `CLOUD-007` | k8s cluster esposto/mal configurato: furto secret e controllo del control plane | `Critico` | `K8s-attacks/` |
+| `CLOUD-008` | k8s auditing: cis benchmark (kube-bench) + pod security standards (hardening) | `Alto` | `K8s-auditing/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
 > Riferimento: MITRE ATT&CK for Containers.
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | CLOUD-007, CLOUD-008 |
-| Credential Access | Unsecured Credentials: Container API | `T1552.007` | CLOUD-007, CLOUD-008 |
-| Privilege Escalation | Escape to Host | `T1611` | CLOUD-008 (prevenzione) |
-| Execution | Deploy Container | `T1610` | CLOUD-007, CLOUD-008 |
-| Discovery | Container and Resource Discovery | `T1613` | CLOUD-007 |
+| initial access | exploit public-facing application | `T1190` | CLOUD-007, CLOUD-008 |
+| credential access | unsecured credentials: container api | `T1552.007` | CLOUD-007, CLOUD-008 |
+| privilege escalation | escape to host | `T1611` | CLOUD-008 (prevenzione) |
+| execution | deploy container | `T1610` | CLOUD-007, CLOUD-008 |
+| discovery | container and resource discovery | `T1613` | CLOUD-007 |
 
 ---
 

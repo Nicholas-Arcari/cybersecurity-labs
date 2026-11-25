@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Web Recon: Directory Busting con Gobuster
+# Web recon: Directory busting con Gobuster
 
 > - **Fase:** Web Attack - Web Application Enumeration
 > - **Visibilita:** Media - Gobuster genera molte richieste HTTP in sequenza rapida, rilevabile da WAF e IDS
@@ -21,7 +21,7 @@ Strumenti: `Gobuster` (v3.x), `wget`, `Feroxbuster`
 
 ---
 
-## 1 Introduzione Teorica
+## 1 Introduzione teorica
 
 Il Directory Busting è una tecnica di Enumerazione Attiva.
 
@@ -35,7 +35,7 @@ I codici di stato HTTP rivelano la presenza delle risorse:
 
 ---
 
-## 2 Esecuzione Tecnica: Setup & Scan
+## 2 Esecuzione tecnica: setup & scan
 
 Poiché l'ambiente di test (Kali Purple) non disponeva delle wordlist standard preinstallate, è stato necessario eseguire una fase preliminare di setup per recuperare il dizionario d'attacco `common.txt`.
 
@@ -64,7 +64,7 @@ Analisi dei Findings: La scansione ha rivelato diverse directory critiche non vi
 
 ---
 
-## 3 Advanced Scanning: Feroxbuster (Recursive)
+## 3 Advanced scanning: feroxbuster (recursive)
 
 Per approfondire l'analisi, è stato utilizzato Feroxbuster, un tool scritto in Rust che supporta la ricorsione automatica.
 
@@ -86,7 +86,7 @@ L'attività di Directory Busting ha avuto successo, rivelando una superficie di 
 
 ---
 
-## 5 Scenario Moderno: Docker & REST APIs (Localhost)
+## 5 Scenario moderno: Docker & REST APIs (localhost)
 
 Le tecniche di Directory Busting non si limitano ai server web tradizionali, ma sono fondamentali anche per testare microservizi containerizzati (Docker) e RESTful APIs in fase di sviluppo (es. su `localhost:5173`).
 
@@ -117,9 +117,9 @@ Scansionare container locali permette di individuare Debug Endpoints (es. Spring
 
 ---
 
-## Analisi a Basso Livello: Meccanica del Directory Busting
+## Analisi a basso livello: meccanica del Directory busting
 
-### Come Opera Gobuster a Livello HTTP
+### Come opera Gobuster a livello HTTP
 
 Gobuster invia richieste HTTP GET per ogni entry nella wordlist, analizzando il codice di risposta:
 
@@ -142,18 +142,18 @@ Gobuster                                 Web Server (Nginx/Apache)
     |<-- 200 OK "ref: refs/heads/main" --------|  <-- CRITICO: repo git esposto
 ```
 
-### Codici HTTP e Significato Operativo
+### Codici HTTP e significato operativo
 
-| Codice | Significato | Azione Red Team |
+| codice | significato | azione red team |
 | :--- | :--- | :--- |
-| `200` | Risorsa accessibile | Analizzare il contenuto, cercare credenziali/dati |
-| `301/302` | Redirect (directory esiste) | Seguire il redirect, enumerare ricorsivamente |
-| `401` | Autenticazione richiesta | Tentare credenziali default, brute force |
-| `403` | Accesso negato | La risorsa esiste - tentare bypass (path traversal, encoding) |
-| `404` | Non esiste | Skip (ma attenzione: custom 404 puo mascherare risorse) |
-| `500` | Errore server | Possibile injection point (input non gestito) |
+| `200` | risorsa accessibile | analizzare il contenuto, cercare credenziali/dati |
+| `301/302` | redirect (directory esiste) | seguire il redirect, enumerare ricorsivamente |
+| `401` | autenticazione richiesta | tentare credenziali default, brute force |
+| `403` | accesso negato | la risorsa esiste - tentare bypass (path traversal, encoding) |
+| `404` | non esiste | skip (ma attenzione: custom 404 puo mascherare risorse) |
+| `500` | errore server | possibile injection point (input non gestito) |
 
-### Wordlist e Copertura
+### Wordlist e copertura
 
 La scelta della wordlist determina l'efficacia del test:
 
@@ -168,7 +168,7 @@ La scelta della wordlist determina l'efficacia del test:
     spring-boot.txt                        ~150 entry     (Spring Boot actuators)
 ```
 
-### Gobuster: Flag Avanzati per Assessment Professionali
+### Gobuster: flag avanzati per assessment professionali
 
 ```Bash
 # Scansione con estensioni file (cerca .php, .bak, .old, .conf)
@@ -189,11 +189,11 @@ feroxbuster -u http://target -w wordlist.txt -d 3 -o results.txt
 
 ---
 
-## Scenario Reale: Da Directory Esposta a Source Code Leak (WEB-003)
+## Scenario reale: da Directory esposta a source code leak (WEB-003)
 
 Il finding `/CVS` (directory di versionamento legacy) e un esempio classico di information disclosure che porta a compromissione completa del codice sorgente.
 
-### Kill Chain: Source Code Leak via Exposed VCS
+### Kill chain: source code leak via exposed VCS
 
 ```
 Fase 1: Dir-busting rivela /CVS (WEB-003)
@@ -234,9 +234,9 @@ git diff HEAD~5                  # codice sorgente + credenziali commesse per er
 
 ---
 
-## Blue Team: Detection e Hardening
+## Blue team: detection e hardening
 
-### Detection del Directory Busting
+### Detection del Directory busting
 
 Il pattern di traffico del dir-busting e caratteristico:
 - Centinaia/migliaia di richieste GET dallo stesso IP in pochi secondi
@@ -272,7 +272,7 @@ SecRule IP:404_COUNT "@gt 100" "phase:5,deny,status:429,id:100001,msg:'Dir busti
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il confronto tra Gobuster e Feroxbuster ha rivelato un trade-off operativo fondamentale: Gobuster e piu veloce in modalita single-depth (una directory alla volta), ma richiede intervento manuale per esplorare le sotto-directory scoperte. Feroxbuster con ricorsione automatica (`-d 3`) ha scoperto `/admin/login.php` e `/admin/index.php` in un singolo passaggio, ma ha generato un volume di traffico significativamente maggiore - in un engagement reale con WAF attivo, la ricorsione aggressiva causerebbe un ban dell'IP sorgente.
 
@@ -284,12 +284,12 @@ La sezione Docker/API (Scenario 5) ha introdotto un aspetto critico per lo svilu
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Scansione con Gobuster e Feroxbuster su wordlist `common.txt` per identificare risorse nascoste su `testphp.vulnweb.com` |
-| Reconnaissance | Active Scanning: Wordlist Scanning | `T1595.003` | Brute force delle directory con wordlist per scoprire `/admin`, `/CVS`, `.idea` e altri percorsi non linkati (WEB-003) |
-| Discovery | File and Directory Discovery | `T1083` | Identificazione della directory `/CVS` (versionamento legacy) e della cartella `.idea` (configurazione IDE) esposte pubblicamente (WEB-003) |
-| Collection | Data from Information Repositories | `T1213` | Accesso potenziale al codice sorgente tramite la directory `/CVS` esposta, che potrebbe permettere il download dei file sorgente dell'applicazione (WEB-003) |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | scansione con gobuster e feroxbuster su wordlist `common.txt` per identificare risorse nascoste su `testphp.vulnweb.com` |
+| reconnaissance | active scanning: wordlist scanning | `T1595.003` | brute force delle directory con wordlist per scoprire `/admin`, `/CVS`, `.idea` e altri percorsi non linkati (WEB-003) |
+| discovery | file and directory discovery | `T1083` | identificazione della directory `/CVS` (versionamento legacy) e della cartella `.idea` (configurazione ide) esposte pubblicamente (WEB-003) |
+| collection | data from information repositories | `T1213` | accesso potenziale al codice sorgente tramite la directory `/CVS` esposta, che potrebbe permettere il download dei file sorgente dell'applicazione (WEB-003) |
 
 ---
 

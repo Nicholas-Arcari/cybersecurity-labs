@@ -16,11 +16,11 @@ Domain Controller. The foundations (the MS-DRSR replication protocol) are in
 
 ## Folder structure
 
-| Subfolder | Technique | Typical severity | Status |
+| subfolder | technique | typical severity | status |
 | :--- | :--- | :---: | :--- |
-| `dcsync/` | DCSync (abused replication to extract hashes) | `Critical` | Written |
-| `shadow-credentials/` | Shadow Credentials (msDS-KeyCredentialLink) | `High` | Written |
-| `secretsdump-ntds/` | NTDS.dit dump from a compromised DC or backup | `Critical` | Written |
+| `dcsync/` | dcsync (abused replication to extract hashes) | `Critical` | written |
+| `shadow-credentials/` | shadow credentials (msds-keycredentiallink) | `High` | written |
+| `secretsdump-ntds/` | ntds.dit dump from a compromised dc or backup | `Critical` | written |
 
 ## Recommended operational flow
 

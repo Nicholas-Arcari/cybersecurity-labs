@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Prowler - Hardening e Compliance Cloud
+# Prowler - hardening e compliance cloud
 
 > - **Fase:** Cloud Security - Audit & Compliance (Defense)
 > - **Categoria:** Difensivo - lo standard di fatto per l'hardening cloud
@@ -54,12 +54,12 @@ prowler gcp
 
 ## Tool correlati
 
-| Tool | Ruolo | Relazione |
+| tool | ruolo | relazione |
 | :--- | :--- | :--- |
-| `Prowler` | Audit/compliance | Questo strumento (difensivo) |
-| `ScoutSuite` | Audit multi-cloud | Vista d'insieme complementare (`../scoutsuite/`) |
-| `Pacu` | Exploitation | La controparte offensiva (`../pacu/`) |
-| `Trivy` | Container/IaC scan | Copre container e IaC, non l'account cloud |
+| `Prowler` | audit/compliance | questo strumento (difensivo) |
+| `ScoutSuite` | audit multi-cloud | vista d'insieme complementare (`../scoutsuite/`) |
+| `Pacu` | exploitation | la controparte offensiva (`../pacu/`) |
+| `Trivy` | container/iac scan | copre container e iac, non l'account cloud |
 
 > **Tool moderno consigliato:** `Prowler` per l'audit approfondito e la compliance (mappatura su framework), `ScoutSuite` per la vista d'insieme rapida. I due sono complementari: Prowler per la profondita e l'evidenza di conformita, ScoutSuite per la panoramica multi-cloud.
 
@@ -67,16 +67,16 @@ prowler gcp
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica (prevenuta) | Tecnica | ID MITRE | Ruolo del controllo |
+| tattica (prevenuta) | tecnica | id mitre | ruolo del controllo |
 | :--- | :--- | :--- | :--- |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | Rileva le policy IAM che permettono privesc |
-| Collection | Data from Cloud Storage | `T1530` | Rileva i bucket pubblici/non cifrati |
-| Defense Evasion | Impair Defenses | `T1562` | Rileva logging/monitoring disabilitato |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | rileva le policy iam che permettono privesc |
+| collection | data from cloud storage | `T1530` | rileva i bucket pubblici/non cifrati |
+| defense evasion | impair defenses | `T1562` | rileva logging/monitoring disabilitato |
 
-| Contromisura difensiva (D3FEND) | ID D3FEND | Applicazione |
+| contromisura difensiva (d3fend) | id d3fend | applicazione |
 | :--- | :--- | :--- |
-| Configuration Inventory | `D3-CI` | Inventario e verifica della configurazione cloud |
-| Platform Hardening | `D3-PH` | Hardening guidato dai controlli di conformita |
+| configuration inventory | `D3-CI` | inventario e verifica della configurazione cloud |
+| platform hardening | `D3-PH` | hardening guidato dai controlli di conformita |
 
 ---
 

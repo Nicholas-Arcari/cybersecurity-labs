@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# HTML Smuggling - Bypass Email Gateway via Client-Side Assembly
+# HTML smuggling - bypass email gateway via Client-Side assembly
 
 > - **Phase:** Social Engineering - Payload Delivery via HTML Smuggling
 > - **Visibility:** Low in transit (the HTML file is legitimate to filters) / High at execution (the reassembled payload triggers AV/EDR at download or execution)
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 HTML Smuggling is a delivery technique that leverages native browser functionality to assemble a malicious file directly on the victim's machine. Unlike traditional attachments (.exe, .docm) that are analyzed by email gateway filters in transit, HTML Smuggling delivers only an HTML file containing legitimate JavaScript code. The payload is Base64-encoded within the script and is decoded, assembled into a Blob, and offered as an automatic download only when the victim opens the file in the browser.
 
@@ -21,15 +21,15 @@ This technique has been used in documented real-world APT campaigns: Nobelium/AP
 
 ---
 
-## HTML Smuggling: Server-Side Filter Bypass
+## HTML smuggling: Server-Side filter bypass
 
 **Finding ID:** `SE-008` | **Severity:** `High`
 
-### Operational Context
+### Operational context
 
 The lab created an HTML file that, when opened in the victim's browser, automatically assembles and downloads a payload .exe via the JavaScript Blob API. The HTML file was sent as an email attachment through a simulated email gateway (Mailhog): the gateway did not detect malicious content because the payload does not exist as a file until the moment it is opened in the browser.
 
-### PoC - Phase 1: Payload Generation and Encoding
+### PoC - phase 1: payload generation and encoding
 
 ```Bash
 # Payload generation
@@ -52,7 +52,7 @@ cat payload_b64.txt | wc -c
 9560                                                        <-- Base64 size (compact)
 ```
 
-### PoC - Phase 2: HTML File Creation with Smuggling
+### PoC - phase 2: HTML file creation with smuggling
 
 ```html
 <!-- security_update.html -->
@@ -85,7 +85,7 @@ a.click();                                                  // <-- automatic dow
 </html>
 ```
 
-### PoC - Phase 3: Email Delivery and Bypass Verification
+### PoC - phase 3: email delivery and bypass verification
 
 ```Bash
 # Sending email with HTML attachment via SMTP (or GoPhish)
@@ -103,7 +103,7 @@ swaks --to victim@company-lab.local --from security@company-lab.local \
                                                             <-- no alert: just an HTML file
 ```
 
-### PoC - Phase 4: Execution and Callback
+### PoC - phase 4: execution and callback
 
 ```
 # The victim opens the HTML attachment in the browser:
@@ -123,7 +123,7 @@ swaks --to victim@company-lab.local --from security@company-lab.local \
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The first attempt used a 7 KB .exe payload embedded in the HTML file. The resulting HTML file was approximately 15 KB - a perfectly plausible size for an email attachment. Verification with Mailhog (test email gateway) confirmed that the HTML file transits without any alerts: to the gateway, it is a legitimate HTML attachment.
 
@@ -133,7 +133,7 @@ An important observation: the technique also works when the HTML file is hosted 
 
 ---
 
-## Theoretical Analysis: Why Gateways Fail
+## Theoretical analysis: why gateways fail
 
 Email gateway filters operate with a static analysis model: they inspect attachments as files, looking for malware signatures, analyzing PE (Portable Executable) structures, and sandboxing executable files. HTML Smuggling exploits the architectural gap between server-side analysis and client-side execution.
 
@@ -143,11 +143,11 @@ The technique has been documented in high-profile APT campaigns: Nobelium (APT29
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > This section describes how this finding would fit into a real engagement.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** payload .exe downloaded and executed by the victim (SE-008).
 
@@ -166,7 +166,7 @@ Credential Harvesting -> Mimikatz / LSASS dump
 Lateral Movement -> PsExec / WMI to internal hosts
 ```
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **IOCs to monitor:**
 - Download of .exe from local HTML file (Sysmon Event ID 11: FileCreate with Zone.Identifier)
@@ -176,16 +176,16 @@ Lateral Movement -> PsExec / WMI to internal hosts
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Develop Capabilities: Malware | `T1587.001` | HTML file creation with Base64-embedded payload |
-| Initial Access | Phishing: Spearphishing Attachment | `T1566.001` | HTML file sent as email attachment (SE-008) |
-| Defense Evasion | Obfuscated Files or Information: HTML Smuggling | `T1027.006` | Payload assembled client-side via JavaScript Blob API |
-| Execution | User Execution: Malicious File | `T1204.002` | Victim executes the .exe file downloaded by the browser |
-| Execution | Command and Scripting Interpreter: JavaScript | `T1059.007` | JavaScript in HTML file decodes and assembles the payload |
-| Command and Control | Non-Standard Port | `T1571` | Reverse TCP Meterpreter on port 4444 |
+| resource development | develop capabilities: malware | `T1587.001` | html file creation with base64-embedded payload |
+| initial access | phishing: spearphishing attachment | `T1566.001` | html file sent as email attachment (SE-008) |
+| defense evasion | obfuscated files or information: html smuggling | `T1027.006` | payload assembled client-side via javascript blob api |
+| execution | user execution: malicious file | `T1204.002` | victim executes the .exe file downloaded by the browser |
+| execution | command and scripting interpreter: javascript | `T1059.007` | javascript in html file decodes and assembles the payload |
+| command and control | non-standard port | `T1571` | reverse tcp meterpreter on port 4444 |
 
 ---
 

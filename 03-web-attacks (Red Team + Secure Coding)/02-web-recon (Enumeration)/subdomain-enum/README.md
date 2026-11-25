@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Web Recon: Subdomain Enumeration
+# Web recon: subdomain enumeration
 
 > - **Fase:** Web Attack - Subdomain Enumeration
 > - **Visibilita:** Bassa (enumerazione passiva da CT logs e OSINT) / Media (DNS brute force attivo)
@@ -17,7 +17,7 @@ Strumenti: `Subfinder`, `OWASP Amass`
 
 ---
 
-## 1 Introduzione Teorica
+## 1 Introduzione teorica
 
 La Subdomain Enumeration è la fase critica della ricognizione in cui si passa dal conoscere solo il dominio principale (`tesla.com`) al conoscere l'intera rete di servizi esposti (`dev.tesla.com`, `vpn.tesla.com`, `api.tesla.com`).
 
@@ -28,9 +28,9 @@ Le tecniche si dividono in:
 
 ---
 
-## 2 Strumenti Utilizzati
+## 2 Strumenti utilizzati
 
-#### Subfinder (Go)
+#### Subfinder (go)
 
 È stato scelto Subfinder per la sua velocità e natura passiva. Utilizza sorgenti multiple (Chaos, Censys, SecurityTrails) per aggregare dati senza allertare i sistemi di difesa (IDS/IPS) del target.
 
@@ -40,7 +40,7 @@ In scenari più complessi, Amass viene utilizzato per la mappatura profonda, inc
 
 ---
 
-## 3 Esecuzione Tecnica
+## 3 Esecuzione tecnica
 
 È stata eseguita una scansione passiva sul dominio `tesla.com`.
 
@@ -63,7 +63,7 @@ Analisi dei Risultati: La scansione ha rivelato centinaia di sottodomini attivi.
 
 ---
 
-## 4 Deep Reconnaissance: OWASP Amass
+## 4 Deep reconnaissance: OWASP Amass
 
 Per ottenere una mappatura più approfondita, è stato utilizzato OWASP Amass.
 
@@ -86,13 +86,13 @@ Valore Aggiunto: Amass ha permesso di identificare non solo i nomi dei sottodomi
 
 ---
 
-## 5 Rischio Correlato: Subdomain Takeover
+## 5 Rischio correlato: subdomain takeover
 
 L'enumerazione è il prerequisito per identificare i Subdomain Takeover. Se un sottodominio (es. shop.tesla.com) punta tramite CNAME a un servizio esterno (es. AWS S3, GitHub Pages) che è stato dismesso, un attaccante può registrare quell'account sul servizio terzo e prendere il controllo completo del sottodominio, ereditandone la fiducia (Trust) e i cookie.
 
 ---
 
-## 6 Scenario Locale: Virtual Host Fuzzing (Docker/Localhost)
+## 6 Scenario locale: virtual host fuzzing (Docker/Localhost)
 
 Mentre strumenti come Amass e Subfinder interrogano DNS pubblici, in ambienti locali (LAN o Docker) non è possibile utilizzare queste tecniche.
 Tuttavia, è possibile eseguire l'enumerazione dei Virtual Hosts (VHost).
@@ -107,7 +107,7 @@ gobuster vhost -u http://localhost -w common.txt --append-domain
 
 ---
 
-## 7 Caso Studio: Static Hosting (GitHub Pages)
+## 7 Caso studio: static hosting (GitHub pages)
 
 L'approccio offensivo cambia radicalmente quando il target è un sito statico ospitato su piattaforme come GitHub Pages (es. `https://nicholas-arcari.github.io/portfolio-nicholas/`).
 
@@ -138,9 +138,9 @@ L'identificazione di questi asset periferici è spesso la chiave per trovare vul
 
 ---
 
-## Analisi a Basso Livello: Subdomain Takeover - Il Rischio Nascosto
+## Analisi a basso livello: subdomain takeover - il rischio nascosto
 
-### Meccanica del Subdomain Takeover
+### Meccanica del subdomain takeover
 
 Il subdomain takeover sfrutta record DNS CNAME "dangling" (orfani):
 
@@ -168,7 +168,7 @@ subjack -w subdomains.txt -t 100 -timeout 30 -ssl -o results.txt
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il volume di risultati (centinaia di sottodomini per tesla.com) ha evidenziato l'importanza del post-processing: la lista grezza e inutilizzabile senza triage. La pipeline operativa moderna `subfinder -d tesla.com -silent | httpx -silent -title -status-code` filtra automaticamente i sottodomini risolvibili e raggiungibili, producendo una lista prioritizzata con titolo della pagina e status code HTTP.
 
@@ -180,11 +180,11 @@ La sezione VHost Fuzzing (Sezione 6) ha introdotto un concetto che non esiste ne
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Wordlist Scanning | `T1595.003` | Brute force DNS con OWASP Amass per scoprire sottodomini non listati pubblicamente tramite wordlist interne |
-| Reconnaissance | Gather Victim Network Info: Domain Properties | `T1590.001` | Enumerazione passiva dei sottodomini di `tesla.com` tramite Subfinder (CT logs, VirusTotal, Censys) senza interazione diretta con il target |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | VHost fuzzing con Gobuster in modalita `vhost` per identificare virtual host nascosti su ambienti locali Docker |
+| reconnaissance | active scanning: wordlist scanning | `T1595.003` | brute force dns con owasp amass per scoprire sottodomini non listati pubblicamente tramite wordlist interne |
+| reconnaissance | gather victim network info: domain properties | `T1590.001` | enumerazione passiva dei sottodomini di `tesla.com` tramite subfinder (ct logs, virustotal, censys) senza interazione diretta con il target |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | vhost fuzzing con gobuster in modalita `vhost` per identificare virtual host nascosti su ambienti locali docker |
 
 ---
 

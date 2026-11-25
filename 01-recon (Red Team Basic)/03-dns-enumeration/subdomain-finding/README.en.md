@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Subdomain Discovery
+# Subdomain discovery
 
 > - **Phase:** Reconnaissance - DNS Enumeration
 > - **Visibility:** Low (passive) - querying third-party sources (CT logs, search engines) without contacting the target's servers
@@ -17,7 +17,7 @@ Tools: `Sublist3r`, `Assetfinder`
 
 ---
 
-## 1 Theoretical Introduction
+## 1 Theoretical introduction
 
 Passive Subdomain Enumeration consists of gathering information about a target's subdomains by querying third-party sources (Search engines, Certificate Transparency logs, VirusTotal, etc.) instead of directly querying the company's DNS servers.
 
@@ -29,11 +29,11 @@ Why is it important?
 
 ---
 
-## 2 Technical Execution
+## 2 Technical execution
 
 **Finding ID:** `DNS-003` | **Severity:** `Medium`
 
-#### A. OSINT Aggregation (Sublist3r)
+#### A. OSINT aggregation (sublist3r)
 
 `Sublist3r` was used to query multiple search engines (Google, Bing, Yahoo, Baidu) and aggregate historical results.
 
@@ -47,7 +47,7 @@ sublist3r -d tesla.com -o tesla_sublist3r.txt
 
 Analysis: The tool took several minutes to query the search engine APIs, returning a list of "historical" and well-indexed subdomains.
 
-#### B. Certificate Transparency Analysis (Assetfinder)
+#### B. certificate transparency analysis (Assetfinder)
 
 assetfinder was used for rapid enumeration based on SSL certificates. This technique is extremely effective for finding exposed internal infrastructure (VPN, Mail Server) that has a valid certificate but is not indexed on Google.
 
@@ -80,17 +80,17 @@ grep "admin" tesla_assetfinder.txt
 
 ---
 
-## 3 Results Analysis (Attack Surface)
+## 3 Results analysis (attack surface)
 
 From the combined results of both tools, a list of over 500+ unique subdomains was compiled. Below are some examples of "High Value Targets" identified that would require further investigation (Active Recon):
 
-| Detected Subdomain | Category | Bug Bounty Interest |
+| detected subdomain | category | bug bounty interest |
 | ----------------------- | ----------- | -------------------------- |
-| toolbox.tesla.com | Internal Tool | High (Internal tool panels) |
-| sso.tesla.com | Authentication | Critical (Single Sign-On, phishing target) |
-| vpn.tesla.com | Network Access | High (Infrastructure entry point) |
-| energysupport.tesla.com | Customer Support | Medium (Ticket systems, possible XSS) |
-| dev-app.tesla.com | Development | High (Test environments often vulnerable) |
+| toolbox.tesla.com | internal tool | High (internal tool panels) |
+| sso.tesla.com | authentication | Critical (single sign-on, phishing target) |
+| vpn.tesla.com | network access | High (infrastructure entry point) |
+| energysupport.tesla.com | customer support | Medium (ticket systems, possible xss) |
+| dev-app.tesla.com | development | High (test environments often vulnerable) |
 
 Technical Note: Unlike a controlled lab, in a real target like Tesla the amount of data requires post-processing (filtering dead domains with tools like `httprobe`) before proceeding with attacks.
 
@@ -102,12 +102,12 @@ The combined use of `Sublist3r` and `Assetfinder` on an Enterprise target demons
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Search Open Technical Databases: DNS/Passive DNS | `T1596.001` | tesla.com subdomain enumeration through Certificate Transparency logs with Assetfinder, identifying 500+ hosts including vpn and sso (DNS-003) |
-| Reconnaissance | Gather Victim Network Info: DNS | `T1590.002` | Subdomain aggregation from search engines (Sublist3r) to map the target's external attack surface (DNS-003) |
+| reconnaissance | search open technical databases: dns/passive dns | `T1596.001` | tesla.com subdomain enumeration through certificate transparency logs with assetfinder, identifying 500+ hosts including vpn and sso (DNS-003) |
+| reconnaissance | gather victim network info: dns | `T1590.002` | subdomain aggregation from search engines (sublist3r) to map the target's external attack surface (DNS-003) |
 
 ---
 

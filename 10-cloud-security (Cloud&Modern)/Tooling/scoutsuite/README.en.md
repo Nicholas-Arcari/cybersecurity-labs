@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# ScoutSuite - Multi-Cloud Configuration Audit
+# ScoutSuite - Multi-Cloud configuration audit
 
 > - **Phase:** Cloud Security - Multi-Cloud Audit (Defense)
 > - **Category:** Defensive - big picture of the security posture
@@ -11,7 +11,7 @@
 
 ---
 
-## What It Is and What It Is For
+## What it is and what it is for
 
 `ScoutSuite` is a multi-cloud audit tool that produces a navigable big-picture view of the security posture of an environment. It collects the configuration through the provider's APIs (AWS, Azure, GCP, and others) and generates an HTML report that highlights the misconfigurations per service, with a snapshot of what is at risk.
 
@@ -45,7 +45,7 @@ scout gcp
 
 ---
 
-## When to Use It in the Flow
+## When to use it in the flow
 
 - **First orientation audit:** to quickly understand where the risks are in an unknown environment
 - **Unified multi-cloud view:** useful in organizations that use multiple providers, for an overall posture
@@ -54,31 +54,31 @@ scout gcp
 
 ---
 
-## Related Tools
+## Related tools
 
-| Tool | Role | Relationship |
+| tool | role | relationship |
 | :--- | :--- | :--- |
-| `ScoutSuite` | Multi-cloud audit | This tool (defensive) |
-| `Prowler` | Audit/compliance | Complementary: depth vs overview (`../prowler/`) |
-| `Pacu` / `AzureHound` | Exploitation | The offensive counterparts |
-| `PMapper` | IAM graph | Targeted analysis of the IAM privesc paths |
+| `ScoutSuite` | multi-cloud audit | this tool (defensive) |
+| `Prowler` | audit/compliance | complementary: depth vs overview (`../prowler/`) |
+| `Pacu` / `AzureHound` | exploitation | the offensive counterparts |
+| `PMapper` | iam graph | targeted analysis of the iam privesc paths |
 
 > **Recommended modern tool:** use `ScoutSuite` for the quick overview and `Prowler` for the in-depth audit and compliance. In a multi-cloud environment, ScoutSuite offers a unified posture; for specific providers, the native tools (AWS Security Hub, Azure Defender for Cloud) complete the picture.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic (prevented) | Technique | MITRE ID | Role of the control |
+| tactic (prevented) | technique | mitre id | role of the control |
 | :--- | :--- | :--- | :--- |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | Detects the IAM configurations at risk |
-| Collection | Data from Cloud Storage | `T1530` | Detects the exposed buckets/storage |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Detects the too-open security groups |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | detects the iam configurations at risk |
+| collection | data from cloud storage | `T1530` | detects the exposed buckets/storage |
+| initial access | exploit public-facing application | `T1190` | detects the too-open security groups |
 
-| Defensive countermeasure (D3FEND) | D3FEND ID | Application |
+| defensive countermeasure (d3fend) | d3fend id | application |
 | :--- | :--- | :--- |
-| Configuration Inventory | `D3-CI` | Navigable inventory of the multi-cloud configuration |
-| Platform Hardening | `D3-PH` | Identification of the misconfig to correct |
+| configuration inventory | `D3-CI` | navigable inventory of the multi-cloud configuration |
+| platform hardening | `D3-PH` | identification of the misconfig to correct |
 
 ---
 

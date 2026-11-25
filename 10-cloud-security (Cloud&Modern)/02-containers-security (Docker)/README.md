@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 02 - Containers Security (Docker)
+# 02 - Containers security (Docker)
 
 > - **Fase:** Cloud Security - Container Security
 > - **Categoria:** Difensivo + Offensivo - supply chain e isolamento
@@ -62,35 +62,35 @@ I due finding coprono il ciclo di vita: la scansione previene le vulnerabilita n
 
 ## Tool di riferimento
 
-| Tool | Fase | Tipo | Caso d'uso principale |
+| tool | fase | tipo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Trivy` | Build | Difensivo | Scansione CVE di immagini (standard) |
-| `Dive` | Build | Analisi | Ispezione dei layer |
-| `Falco` | Runtime | Difensivo | Detection a runtime degli escape |
-| `deepce` | Runtime | Offensivo | Enumerazione delle vie di escape |
-| `seccomp`/`AppArmor` | Runtime | Difensivo | Restrizione delle syscall/capability |
+| `Trivy` | build | difensivo | scansione cve di immagini (standard) |
+| `Dive` | build | analisi | ispezione dei layer |
+| `Falco` | runtime | difensivo | detection a runtime degli escape |
+| `deepce` | runtime | offensivo | enumerazione delle vie di escape |
+| `seccomp`/`AppArmor` | runtime | difensivo | restrizione delle syscall/capability |
 
 > **Tool moderno consigliato:** `Trivy` per la build (supply chain), `Falco` per il runtime (detection escape). La combinazione copre entrambe le superfici. Vedere `../Tooling/` per gli scanner cloud piu ampi.
 
 ---
 
-## Registro Finding - Containers Security
+## Registro finding - containers security
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `CLOUD-005` | Image scanning: vulnerabilita note (CVE) nelle immagini prima del deploy | `Medio` | `image-scanning/` |
-| `CLOUD-006` | Container escape via Docker socket: evasione e root sull'host | `Critico` | `runtime-security/` |
+| `CLOUD-005` | image scanning: vulnerabilita note (cve) nelle immagini prima del deploy | `Medio` | `image-scanning/` |
+| `CLOUD-006` | container escape via docker socket: evasione e root sull'host | `Critico` | `runtime-security/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Supply Chain Compromise | `T1195` | CLOUD-005 |
-| Privilege Escalation | Escape to Host | `T1611` | CLOUD-006 |
-| Execution | Deploy Container | `T1610` | CLOUD-006 |
-| Discovery | Container and Resource Discovery | `T1613` | CLOUD-006 |
+| initial access | supply chain compromise | `T1195` | CLOUD-005 |
+| privilege escalation | escape to host | `T1611` | CLOUD-006 |
+| execution | deploy container | `T1610` | CLOUD-006 |
+| discovery | container and resource discovery | `T1613` | CLOUD-006 |
 
 ---
 

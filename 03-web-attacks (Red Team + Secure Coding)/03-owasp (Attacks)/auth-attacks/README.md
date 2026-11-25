@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Auth Attacks - Autenticazione e Gestione delle Sessioni
+# Auth attacks - autenticazione e gestione delle sessioni
 
 > - **Fase:** Web Attack - Authentication & Session Management Testing
 > - **Visibilita:** Alta (brute force genera molte richieste login) / Media (XSS per session hijacking) / Alta (ARP spoofing su LAN)
@@ -33,7 +33,7 @@ auth-attacks/
 
 ---
 
-## `bruteforce-web/` - Brute Force su Form Web
+## `bruteforce-web/` - Brute force su form web
 
 **ID Finding:** `WEB-009` | **Severity:** `Alto` | **CVSS v3.1:** 7.5
 
@@ -57,7 +57,7 @@ La tecnica documentata in `bruteforce-web/README.md` include:
 
 ---
 
-## `session-hijacking/` - Session Hijacking
+## `session-hijacking/` - Session hijacking
 
 **ID Finding:** `WEB-010` | **Severity:** `Alto` | **CVSS v3.1:** 8.0
 
@@ -114,29 +114,29 @@ Il vettore XSS (Scenario B) e il piu comune e pericoloso nel Red Teaming moderno
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `hydra` | Password cracking | CLI - Attiva | Brute force su protocolli di rete e form web |
-| `medusa` | Password cracking | CLI - Attiva | Alternativa a Hydra, migliore su alcuni protocolli |
-| `burpsuite Intruder` | Web proxy | GUI - Attiva | Brute force integrato nel proxy, con gestione CSRF |
-| `python requests` | Scripting | CLI - Attiva | Brute force custom con gestione sessioni e cookie |
-| `ettercap` | ARP Spoofing | GUI/CLI - Attiva | ARP poisoning per MitM su LAN |
-| `wireshark` | Network sniffer | GUI - Passiva | Cattura pacchetti e filtraggio cookie HTTP |
-| `xsshunter` | Blind XSS | Web SaaS | Payload OOB per confermare XSS in aree non visibili |
+| `hydra` | password cracking | cli - attiva | brute force su protocolli di rete e form web |
+| `medusa` | password cracking | cli - attiva | alternativa a hydra, migliore su alcuni protocolli |
+| `burpsuite Intruder` | web proxy | gui - attiva | brute force integrato nel proxy, con gestione csrf |
+| `python requests` | scripting | cli - attiva | brute force custom con gestione sessioni e cookie |
+| `ettercap` | arp spoofing | gui/cli - attiva | arp poisoning per mitm su lan |
+| `wireshark` | network sniffer | gui - passiva | cattura pacchetti e filtraggio cookie http |
+| `xsshunter` | blind xss | web saas | payload oob per confermare xss in aree non visibili |
 
 ---
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Brute Force: Password Guessing | `T1110.001` | Attacco con Hydra su form login usando wordlist `passlist.txt` (WEB-009) |
-| Credential Access | Brute Force: Password Spraying | `T1110.004` | Tentativo con password comuni (admin, 123456, test) su utenti multipli (WEB-009) |
-| Credential Access | Modify Authentication Process | `T1556` | Analisi e bypass dei meccanismi di autenticazione del framework (Laravel Sanctum CSRF) |
-| Credential Access | Steal Web Session Cookie | `T1539` | Furto del cookie `login=test%2Ftest` tramite XSS Stored (WEB-010) |
-| Collection | Man-in-the-Middle: AiTM HTTPS Interception | `T1557.002` | ARP spoofing con Ettercap e cattura cookie HTTP con Wireshark (WEB-010 - Scenario C) |
-| Defense Evasion | Use Alternate Authentication Material: Web Session Cookie | `T1550.004` | Iniezione del cookie rubato nel browser attaccante per impersonare la sessione (WEB-010) |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Sfruttamento dell'assenza di rate limiting per eseguire brute force sul form di login (WEB-009) |
+| credential access | brute force: password guessing | `T1110.001` | attacco con hydra su form login usando wordlist `passlist.txt` (WEB-009) |
+| credential access | brute force: password spraying | `T1110.004` | tentativo con password comuni (admin, 123456, test) su utenti multipli (WEB-009) |
+| credential access | modify authentication process | `T1556` | analisi e bypass dei meccanismi di autenticazione del framework (laravel sanctum csrf) |
+| credential access | steal web session cookie | `T1539` | furto del cookie `login=test%2Ftest` tramite xss stored (WEB-010) |
+| collection | man-in-the-middle: aitm https interception | `T1557.002` | arp spoofing con ettercap e cattura cookie http con wireshark (WEB-010 - scenario c) |
+| defense evasion | use alternate authentication material: web session cookie | `T1550.004` | iniezione del cookie rubato nel browser attaccante per impersonare la sessione (WEB-010) |
+| initial access | exploit public-facing application | `T1190` | sfruttamento dell'assenza di rate limiting per eseguire brute force sul form di login (WEB-009) |
 
 ---
 

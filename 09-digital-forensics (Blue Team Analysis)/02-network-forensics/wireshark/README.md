@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Wireshark - Analisi dei Pacchetti e Ricostruzione delle Sessioni
+# Wireshark - analisi dei pacchetti e ricostruzione delle sessioni
 
 > - **Fase:** Digital Forensics & Incident Response - Network Forensics (packet analysis)
 > - **Categoria:** Analysis - analisi di dettaglio del traffico catturato
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Wireshark e lo strumento di analisi di dettaglio del traffico di rete: dove il SIEM (`../../../08-defense-hardenings/01-siem-log-analysis/`) rileva e correla e Suricata segnala, Wireshark si apre dopo, per guardare dentro i singoli pacchetti e capire esattamente cosa contenevano. E l'ultimo miglio dell'analisi di rete: la conferma definitiva di cosa e realmente passato sul filo.
 
@@ -33,7 +33,7 @@ wireshark/
 
 ---
 
-## Analisi Forense di una Cattura di Traffico
+## Analisi forense di una cattura di traffico
 
 **ID Finding:** `FOR-002` | **Severity:** `Alto` (ricostruzione delle sessioni d'attacco dal traffico, conferma di esfiltrazione/C2 ed estrazione di IOC)
 
@@ -41,7 +41,7 @@ wireshark/
 
 Una cattura di traffico grezza contiene migliaia di pacchetti, in gran parte rumore. L'analisi forense e l'arte di isolare il segnale: i **display filter** di Wireshark permettono di restringere la vista alle sole conversazioni rilevanti, e il **Follow Stream** ricompone i pacchetti frammentati di una sessione TCP nella loro sequenza logica, rendendo leggibile lo scambio applicativo.
 
-### PoC - Display filter: isolare il traffico sospetto
+### PoC - display filter: isolare il traffico sospetto
 
 ```
 # Filtro: traffico verso un IP sospetto identificato dal SIEM
@@ -54,7 +54,7 @@ http.request.method == "POST" and http.content_length > 100000
 dns.qry.name.len > 50
 ```
 
-### PoC - Follow TCP Stream: ricostruire la sessione
+### PoC - follow TCP stream: ricostruire la sessione
 
 ```
 # Wireshark: tasto destro sul pacchetto -> Follow -> TCP Stream
@@ -67,7 +67,7 @@ Authorization: Basic YWRtaW46UGFzc3cwcmQh    <-- credenziali in chiaro (base64) 
 # decodifica base64 -> admin:Passw0rd!
 ```
 
-### PoC - Identificazione del C2 (beaconing)
+### PoC - identificazione del c2 (beaconing)
 
 ```
 # Statistics -> Conversations: individua il beaconing (connessioni regolari)
@@ -82,7 +82,7 @@ ip.src == 10.0.5.15 and ip.dst == 45.83.x.x and tcp.flags.syn == 1
 # connessione regolare a intervalli fissi = canale di comando e controllo
 ```
 
-### PoC - Estrazione di file e IOC (tshark)
+### PoC - estrazione di file e IOC (tshark)
 
 ```Bash
 # Estrazione automatica degli oggetti trasferiti (file exfiltrati/malware)
@@ -97,7 +97,7 @@ extracted/exfil.zip      <-- file esfiltrato recuperato dal traffico (FOR-002)
 45.83.x.x                <-- IOC: IP C2/esfiltrazione
 ```
 
-### Metodologia di Analisi
+### Metodologia di analisi
 
 - **Parti dall'indizio:** la detection (SIEM/IDS) fornisce il punto di partenza (un IP, un orario, un alert); il display filter restringe la cattura a quel contesto invece di navigare a caso
 - **Ricostruisci, non leggere pacchetto per pacchetto:** il Follow Stream ricompone la sessione; l'analisi avviene sulla conversazione, non sui singoli frame
@@ -106,7 +106,7 @@ extracted/exfil.zip      <-- file esfiltrato recuperato dal traffico (FOR-002)
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il salto di comprensione e stato passare dalla cattura grezza alla sessione ricostruita. Una cattura di migliaia di pacchetti e illeggibile pacchetto per pacchetto; il primo `Follow TCP Stream` che ha ricomposto una conversazione HTTP completa - richiesta, header, credenziali, risposta - ha reso Wireshark improvvisamente utile. Ho capito che l'analista forense non legge pacchetti, ricostruisce conversazioni: il pacchetto e l'unita di trasporto, la sessione e l'unita di significato.
 
@@ -116,7 +116,7 @@ Il limite piu istruttivo e stato la cifratura. Gran parte del traffico moderno e
 
 ---
 
-## Analisi Teorica: Il Traffico come Registrazione Fedele degli Eventi
+## Analisi teorica: il traffico come registrazione fedele degli eventi
 
 Il traffico di rete ha una proprieta forense unica: e la registrazione diretta e non alterabile di cio che e realmente accaduto sul filo. Mentre i log sono una rappresentazione di secondo livello (un'applicazione decide cosa registrare e puo essere manomessa), una cattura di pacchetti e la realta stessa della comunicazione, catturata al livello piu basso. Se un dato e uscito dalla rete, e nel PCAP; nessuna anti-forensics applicativa puo cancellarlo da una cattura gia effettuata.
 
@@ -126,7 +126,7 @@ Il limite teorico e la cifratura, che introduce una tensione fondamentale. Il TL
 
 ---
 
-## Scenario Reale: La Conferma dell'Incidente
+## Scenario reale: la conferma dell'Incidente
 
 > Questa sezione descrive come l'analisi di rete opererebbe in un incidente reale, confermando e dettagliando cio che la detection ha segnalato.
 
@@ -165,14 +165,14 @@ IOC -> regole SIEM/blocklist -> caccia alla stessa minaccia sugli altri host
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Wireshark` | Packet analyzer | GUI | Analisi interattiva, display filter, Follow Stream |
-| `tshark` | Packet analyzer | CLI | Analisi scriptabile, estrazione oggetti/campi |
-| `NetworkMiner` | Network forensics | GUI | Estrazione automatica di file, credenziali, host |
-| `Zeek` (Bro) | Network analysis | Framework | Log strutturati del traffico per analisi su larga scala |
-| `tcpdump` | Packet capture | CLI | Cattura del traffico (a monte dell'analisi) |
-| `Suricata` | IDS | Engine | Detection che innesca l'analisi (`../../../08-.../`) |
+| `Wireshark` | packet analyzer | gui | analisi interattiva, display filter, follow stream |
+| `tshark` | packet analyzer | cli | analisi scriptabile, estrazione oggetti/campi |
+| `NetworkMiner` | network forensics | gui | estrazione automatica di file, credenziali, host |
+| `Zeek` (bro) | network analysis | framework | log strutturati del traffico per analisi su larga scala |
+| `tcpdump` | packet capture | cli | cattura del traffico (a monte dell'analisi) |
+| `Suricata` | ids | engine | detection che innesca l'analisi (`../../../08-.../`) |
 
 > **Tool moderno consigliato:** `Wireshark` per l'analisi interattiva di dettaglio, `tshark` per l'automazione e l'estrazione. Per le catture grandi, `Zeek` produce log strutturati (connessioni, DNS, HTTP, file) che rendono l'analisi scalabile - complementare a Wireshark: Zeek per il quadro d'insieme, Wireshark per il dettaglio del singolo stream. `NetworkMiner` per l'estrazione automatica rapida di artefatti.
 
@@ -182,19 +182,19 @@ IOC -> regole SIEM/blocklist -> caccia alla stessa minaccia sugli altri host
 
 > La tabella mappa le tecniche d'attacco che l'analisi di rete **ricostruisce/conferma** dal traffico.
 
-| Tattica (ricostruita) | Tecnica | ID MITRE | Ruolo dell'analisi |
+| tattica (ricostruita) | tecnica | id mitre | ruolo dell'analisi |
 | :--- | :--- | :--- | :--- |
-| Command and Control | Application Layer Protocol: Web Protocols | `T1071.001` | Identificazione del beaconing C2 su HTTP/S (FOR-002) |
-| Command and Control | Application Layer Protocol: DNS | `T1071.004` | Rilevamento di tunnel DNS (query anomale) (FOR-002) |
-| Exfiltration | Exfiltration Over C2 Channel | `T1041` | Conferma e quantificazione dell'esfiltrazione (FOR-002) |
-| Credential Access | Network Sniffing / cleartext | `T1040` | Recupero di credenziali trasmesse in chiaro (FOR-002) |
-| Command and Control | Non-Standard Port | `T1571` | Identificazione di C2 su porte non standard |
+| command and control | application layer protocol: web protocols | `T1071.001` | identificazione del beaconing c2 su http/s (FOR-002) |
+| command and control | application layer protocol: dns | `T1071.004` | rilevamento di tunnel dns (query anomale) (FOR-002) |
+| exfiltration | exfiltration over c2 channel | `T1041` | conferma e quantificazione dell'esfiltrazione (FOR-002) |
+| credential access | network sniffing / cleartext | `T1040` | recupero di credenziali trasmesse in chiaro (FOR-002) |
+| command and control | non-standard port | `T1571` | identificazione di c2 su porte non standard |
 
-| Contromisura difensiva (D3FEND) | ID D3FEND | Applicazione |
+| contromisura difensiva (d3fend) | id d3fend | applicazione |
 | :--- | :--- | :--- |
-| Network Traffic Analysis | `D3-NTA` | Analisi del traffico per ricostruire le sessioni |
-| Protocol Metadata Anomaly Detection | `D3-PMAD` | Rilevamento di beaconing/tunnel dai metadati |
-| Client-Server Payload Profiling | `D3-CSPP` | Profilazione del payload per identificare C2/esfil |
+| network traffic analysis | `D3-NTA` | analisi del traffico per ricostruire le sessioni |
+| protocol metadata anomaly detection | `D3-PMAD` | rilevamento di beaconing/tunnel dai metadati |
+| client-server payload profiling | `D3-CSPP` | profilazione del payload per identificare c2/esfil |
 
 ---
 

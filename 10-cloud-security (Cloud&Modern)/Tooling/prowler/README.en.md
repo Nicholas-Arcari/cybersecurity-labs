@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Prowler - Cloud Hardening and Compliance
+# Prowler - cloud hardening and compliance
 
 > - **Phase:** Cloud Security - Audit & Compliance (Defense)
 > - **Category:** Defensive - the de facto standard for cloud hardening
@@ -11,7 +11,7 @@
 
 ---
 
-## What It Is and What It Is For
+## What it is and what it is for
 
 `Prowler` is the de facto standard for cloud hardening and compliance: it runs hundreds of security checks on the account and produces a report of what is wrong, mapped to recognized frameworks (CIS Benchmark, NIST, GDPR, PCI-DSS, and MITRE ATT&CK). It is the defensive tool that answers the question "how secure is my cloud account?" with a concrete and prioritized list of corrections.
 
@@ -43,7 +43,7 @@ prowler gcp
 
 ---
 
-## When to Use It in the Flow
+## When to use it in the flow
 
 - **Periodic audit of the account:** run it regularly to measure and maintain the security posture
 - **Before an incident:** closing the priority FAILs (root without MFA, public buckets, IAM admin) makes the account resilient to credential leaks
@@ -52,31 +52,31 @@ prowler gcp
 
 ---
 
-## Related Tools
+## Related tools
 
-| Tool | Role | Relationship |
+| tool | role | relationship |
 | :--- | :--- | :--- |
-| `Prowler` | Audit/compliance | This tool (defensive) |
-| `ScoutSuite` | Multi-cloud audit | Complementary big-picture (`../scoutsuite/`) |
-| `Pacu` | Exploitation | The offensive counterpart (`../pacu/`) |
-| `Trivy` | Container/IaC scan | Covers containers and IaC, not the cloud account |
+| `Prowler` | audit/compliance | this tool (defensive) |
+| `ScoutSuite` | multi-cloud audit | complementary big-picture (`../scoutsuite/`) |
+| `Pacu` | exploitation | the offensive counterpart (`../pacu/`) |
+| `Trivy` | container/iac scan | covers containers and iac, not the cloud account |
 
 > **Recommended modern tool:** `Prowler` for the in-depth audit and the compliance (mapping to frameworks), `ScoutSuite` for the quick big picture. The two are complementary: Prowler for the depth and the conformity evidence, ScoutSuite for the multi-cloud overview.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic (prevented) | Technique | MITRE ID | Role of the control |
+| tactic (prevented) | technique | mitre id | role of the control |
 | :--- | :--- | :--- | :--- |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | Detects the IAM policies that allow privesc |
-| Collection | Data from Cloud Storage | `T1530` | Detects the public/unencrypted buckets |
-| Defense Evasion | Impair Defenses | `T1562` | Detects disabled logging/monitoring |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | detects the iam policies that allow privesc |
+| collection | data from cloud storage | `T1530` | detects the public/unencrypted buckets |
+| defense evasion | impair defenses | `T1562` | detects disabled logging/monitoring |
 
-| Defensive countermeasure (D3FEND) | D3FEND ID | Application |
+| defensive countermeasure (d3fend) | d3fend id | application |
 | :--- | :--- | :--- |
-| Configuration Inventory | `D3-CI` | Inventory and verification of the cloud configuration |
-| Platform Hardening | `D3-PH` | Hardening guided by the conformity checks |
+| configuration inventory | `D3-CI` | inventory and verification of the cloud configuration |
+| platform hardening | `D3-PH` | hardening guided by the conformity checks |
 
 ---
 

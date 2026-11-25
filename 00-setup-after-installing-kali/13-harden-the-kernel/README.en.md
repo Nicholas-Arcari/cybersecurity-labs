@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 13 - Harden the Kernel (sysctl Hardening)
+# 13 - Harden the kernel (sysctl hardening)
 
 > - **Phase:** System Setup - Kernel & Network Hardening
 > - **Priority:** High - protection against common network attack classes

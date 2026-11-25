@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Domain Typosquatting - Generazione Domini Confondibili
+# Domain typosquatting - generazione domini confondibili
 
 > - **Fase:** Social Engineering - Resource Development (Infrastruttura di Attacco)
 > - **Visibilita:** Bassa - la generazione e l'analisi dei domini e passiva (query DNS/WHOIS); la registrazione di un dominio e tracciabile tramite WHOIS e Certificate Transparency logs
@@ -14,7 +14,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Il typosquatting e la tecnica di registrazione di domini visivamente simili al dominio target per ingannare gli utenti. Un dominio come `target-1ab.com` (con cifra "1" al posto della lettera "l") e quasi indistinguibile da `target-lab.com` nella maggior parte dei font. Combinato con un certificato TLS valido (Let's Encrypt e gratuito e automatico), il dominio typosquatting rende le email e le landing page di phishing estremamente credibili.
 
@@ -22,11 +22,11 @@ Il laboratorio ha utilizzato `dnstwist` per generare sistematicamente tutte le v
 
 ---
 
-## Typosquatting: Domain Permutation Analysis
+## Typosquatting: domain permutation analysis
 
 **ID Finding:** `SE-012` | **Severity:** `Informativo`
 
-### PoC - Fase 1: Generazione Variazioni
+### PoC - fase 1: generazione variazioni
 
 ```Bash
 dnstwist --all --registered target-lab.com
@@ -52,7 +52,7 @@ target-lab.net        tld-swap       -             -                  <-- dispon
 target-lab.org        tld-swap       -             -                  <-- disponibile
 ```
 
-### PoC - Fase 2: Analisi Rischio per Tipo
+### PoC - fase 2: analisi rischio per tipo
 
 ```Bash
 # Conteggio variazioni per tipo
@@ -70,7 +70,7 @@ dnstwist --all target-lab.com --format csv | tail -n +2 | cut -d',' -f2 | sort |
    1 bitsquatting       <-- bit-flip hardware (raro ma documentato)
 ```
 
-### PoC - Fase 3: Valutazione Impatto Visivo
+### PoC - fase 3: valutazione impatto visivo
 
 I domini piu pericolosi sono quelli con la minore distanza visiva dall'originale:
 
@@ -97,7 +97,7 @@ RISCHIO BASSO (distinguibili con attenzione):
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'esecuzione di dnstwist sul dominio di test ha generato oltre 40 variazioni in pochi secondi. La sorpresa principale e stata la quantita di domini omoglifi che risultano visivamente identici al dominio originale: la sostituzione `l` (elle minuscola) con `1` (uno) e praticamente invisibile nei font sans-serif utilizzati dalla maggior parte dei client email e browser.
 
@@ -105,7 +105,7 @@ Un aspetto critico: dnstwist con il flag `--all` include anche gli omoglifi Unic
 
 ---
 
-## Analisi Teorica: Tassonomia degli Attacchi di Dominio
+## Analisi teorica: tassonomia degli attacchi di dominio
 
 Il typosquatting sfrutta la limitata capacita umana di processare visivamente stringhe alfanumeriche lunghe. La ricerca di Verizon (DBIR 2024) mostra che il tempo medio di analisi di un URL prima del click e inferiore a 2 secondi - insufficiente per identificare una sostituzione di carattere singola.
 
@@ -119,11 +119,11 @@ Le categorie principali di permutazione sono:
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Search Open Technical Databases: DNS/Passive DNS | `T1596.001` | Analisi DNS dei domini typosquatting generati (SE-012) |
-| Resource Development | Acquire Infrastructure: Domains | `T1583.001` | Identificazione domini confondibili non registrati per potenziale acquisto |
-| Resource Development | Compromise Infrastructure: Domains | `T1584.001` | Valutazione domini typosquatting gia registrati da terzi (parked) |
+| reconnaissance | search open technical databases: dns/passive dns | `T1596.001` | analisi dns dei domini typosquatting generati (SE-012) |
+| resource development | acquire infrastructure: domains | `T1583.001` | identificazione domini confondibili non registrati per potenziale acquisto |
+| resource development | compromise infrastructure: domains | `T1584.001` | valutazione domini typosquatting gia registrati da terzi (parked) |
 
 ---
 

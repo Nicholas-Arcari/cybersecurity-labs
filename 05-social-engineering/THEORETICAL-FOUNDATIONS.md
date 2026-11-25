@@ -1,6 +1,6 @@
 > [English](THEORETICAL-FOUNDATIONS.en.md) | **Italiano**
 
-# Fondamenti Teorici - Modulo 05: Social Engineering
+# Fondamenti teorici - modulo 05: social engineering
 
 > - **Livello:** Analisi accademica (complemento teorico ai README operativi del modulo)
 > - **Scopo:** Fondare l'ingegneria sociale sulla teoria del doppio processo cognitivo e sui principi dell'influenza, e formalizzare il divario di autenticazione sistema-verso-umano come limite strutturale.
@@ -20,7 +20,7 @@ L'avversario di ingegneria sociale ha come bersaglio non un sistema ma un **oper
 
 ---
 
-## 2. Proprieta di Sicurezza in Gioco
+## 2. Proprieta di sicurezza in gioco
 
 - **Autenticazione bidirezionale:** non solo il sistema deve autenticare l'utente, ma l'utente deve poter autenticare il sistema/interlocutore. Il phishing viola la seconda direzione, generalmente piu debole (sezione 3.3).
 - **Integrita dell'intenzione:** un'azione privilegiata deve derivare da una decisione informata del legittimo detentore, non da una manipolazione. E la stessa proprieta violata dal confused deputy (modulo 03), qui applicata all'agente umano.
@@ -28,7 +28,7 @@ L'avversario di ingegneria sociale ha come bersaglio non un sistema ma un **oper
 
 ---
 
-## 3. Fondamenti Teorici
+## 3. Fondamenti teorici
 
 ### 3.1 Doppio processo e sfruttamento dell'euristica
 
@@ -58,7 +58,7 @@ Questo collega teoricamente il modulo 05 al modulo 06: l'Evil Twin (rogue AP) e 
 
 ---
 
-## 4. Analisi Quantitativa
+## 4. Analisi quantitativa
 
 ### 4.1 La base-rate a sfavore dell'utente
 
@@ -70,13 +70,13 @@ Una campagna di phishing ha costo marginale quasi nullo per bersaglio aggiuntivo
 
 ---
 
-## 5. Rassegna della Letteratura
+## 5. Rassegna della letteratura
 
 Il substrato cognitivo dell'ingegneria sociale si fonda sulla teoria del doppio processo di [Kahneman 2011] e sui principi dell'influenza di [Cialdini 1984], entrambi con solida base empirica in psicologia. La dimostrazione empirica dell'efficacia del phishing e dei limiti percettivi umani e di [Dhamija et al. 2006]. Il framework per valutare l'autenticazione (e implicitamente il suo divario direzionale) e di [Bonneau et al. 2012]. Il modello dell'errore umano e della difesa a strati e di [Reason 1990]. L'argomento base-rate si richiama, per dualita, all'analisi di [Axelsson 2000] sviluppata nel modulo 08.
 
 ---
 
-## 6. Limiti e Problemi Aperti
+## 6. Limiti e problemi aperti
 
 1. **Autenticazione sistema-verso-umano usabile.** Progettare un meccanismo con cui un umano verifichi in modo affidabile e a basso costo cognitivo l'autenticita di una controparte resta un problema aperto: le soluzioni proposte (indicatori di sicurezza, immagini personalizzate) sono ignorate o aggirate [Dhamija et al. 2006].
 
@@ -86,7 +86,7 @@ Il substrato cognitivo dell'ingegneria sociale si fonda sulla teoria del doppio 
 
 ---
 
-## 7. Sintesi e Collegamento alla Pratica
+## 7. Sintesi e collegamento alla pratica
 
 I finding `SE-` del modulo istanziano questo quadro: le campagne di phishing (GoPhish), i pretesti e i payload documentati nei README sono applicazioni dei principi di [Cialdini 1984] operanti sul System 1 [Kahneman 2011], e la loro efficacia rispecchia i risultati di [Dhamija et al. 2006]. La remediation raccomandata - MFA resistente al phishing, DMARC/SPF/DKIM, filtri, verifiche procedurali fuori banda - e la traduzione operativa della sezione 4.1: spostare il carico dalla vigilanza umana ai controlli sistemici. Il collegamento teorico al modulo 06 (Evil Twin) e al modulo 03 (confused deputy) unifica l'ingegneria sociale con il resto del percorso sotto un unico principio: dove manca l'autenticazione dell'intenzione e della controparte, l'attacco passa - che il deputy confuso sia un browser, un server o un essere umano.
 

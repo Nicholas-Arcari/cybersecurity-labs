@@ -16,11 +16,11 @@ Controller. I fondamenti (protocollo di replica MS-DRSR) sono in
 
 ## Struttura della cartella
 
-| Sottocartella | Tecnica | Severity tipica | Stato |
+| sottocartella | tecnica | severity tipica | stato |
 | :--- | :--- | :---: | :--- |
-| `dcsync/` | DCSync (replica abusata per estrarre gli hash) | `Critico` | Scritta |
-| `shadow-credentials/` | Shadow Credentials (msDS-KeyCredentialLink) | `Alto` | Scritta |
-| `secretsdump-ntds/` | Dump NTDS.dit da DC compromesso o backup | `Critico` | Scritta |
+| `dcsync/` | dcsync (replica abusata per estrarre gli hash) | `Critico` | scritta |
+| `shadow-credentials/` | shadow credentials (msds-keycredentiallink) | `Alto` | scritta |
+| `secretsdump-ntds/` | dump ntds.dit da dc compromesso o backup | `Critico` | scritta |
 
 ## Flusso operativo consigliato
 

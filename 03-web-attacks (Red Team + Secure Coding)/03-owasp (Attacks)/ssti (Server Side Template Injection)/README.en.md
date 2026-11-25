@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Vulnerability Assessment: Server-Side Template Injection (SSTI)
+# Vulnerability assessment: Server-Side template injection (SSTI)
 
 > - **Phase:** Web Attack - Server Side Template Injection
 > - **Visibility:** Medium - HTTP requests with `{{ }}` payload in URL parameter, similar to normal user input
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 During the security analysis of the web application (lab environment), a critical Server-Side Template Injection (SSTI) vulnerability was identified.
 
@@ -25,9 +25,9 @@ The impact is assessed as CRITICAL since it grants the attacker total server con
 
 ---
 
-## 2 Technical Analysis
+## 2 Technical analysis
 
-#### Phase 1: Detection & Verification
+#### Phase 1: detection & verification
 
 Reconnaissance activity revealed that the `name` parameter is reflected in the HTML response without adequate sanitization.
 To confirm the use of a server-side template engine, a mathematical payload was injected.
@@ -37,7 +37,7 @@ To confirm the use of a server-side template engine, a mathematical payload was 
 
 ![](./img/Screenshot_2026-02-15_17_52_58.jpg)
 
-#### Phase 2: Exploitation (Remote Code Execution)
+#### Phase 2: exploitation (remote code execution)
 
 Leveraging the template engine's ability to access Python internal objects (through Method Resolution Order - MRO), an exploit chain was constructed to access the `os` module and execute system commands.
 
@@ -57,7 +57,7 @@ As shown in the screenshot below, it was possible to exfiltrate the system user 
 
 ---
 
-## 3 Root Cause Analysis (Code Review)
+## 3 Root cause analysis (code review)
 
 Source code analysis (`ssti_vuln.py`) revealed the problem's root cause. The application uses string concatenation (f-string) to insert user input into the template before it is processed by the rendering engine.
 
@@ -74,7 +74,7 @@ In this configuration, any special characters (like `{{` or `}}`) entered by the
 
 ---
 
-## 4 Remediation Plan
+## 4 Remediation plan
 
 To mitigate the vulnerability, it is necessary to strictly separate presentation logic from data. User input must never be concatenated directly into a template string.
 
@@ -92,7 +92,7 @@ return render_template_string("<h1>Ciao, {{ person }}!</h1>", person=person)
 
 ---
 
-## 5 Post-Remediation Verification
+## 5 Post-Remediation verification
 
 After implementing the Remediation Plan, a new test session was performed to verify the effectiveness of the countermeasures adopted in the source code.
 
@@ -127,13 +127,13 @@ The SSTI vulnerability was correctly mitigated through the adoption of Secure Co
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Jinja2 SSTI exploitation through payload `{{ 7*7 }}` to confirm server-side code execution, followed by escalation to RCE (WEB-008) |
-| Execution | Command and Scripting Interpreter: Python | `T1059.006` | Access to Python's `os` module through Method Resolution Order (MRO) to execute system commands: `popen('cat /etc/passwd').read()` (WEB-008) |
-| Discovery | File and Directory Discovery | `T1083` | Reading of `/etc/passwd` file through RCE, revealing the system user list including `root` (WEB-008) |
+| initial access | exploit public-facing application | `T1190` | jinja2 ssti exploitation through payload `{{ 7*7 }}` to confirm server-side code execution, followed by escalation to rce (WEB-008) |
+| execution | command and scripting interpreter: python | `T1059.006` | access to python's `os` module through method resolution order (mro) to execute system commands: `popen('cat /etc/passwd').read()` (WEB-008) |
+| discovery | file and directory discovery | `T1083` | reading of `/etc/passwd` file through rce, revealing the system user list including `root` (WEB-008) |
 
 ---
 

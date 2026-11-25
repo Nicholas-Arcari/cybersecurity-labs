@@ -49,14 +49,14 @@ Hai la conferma oggettiva, basata su evidenze, che le difese configurate rilevan
 
 ## Checklist di validazione
 
-| Test | Comando | Risultato atteso |
+| test | comando | risultato atteso |
 | :--- | :--- | :--- |
-| Firewall attivo | `sudo ufw status` | `Status: active` |
-| Porte chiuse | `nmap [IP]` da altra VM | Solo porte autorizzate visibili |
-| SSH porta personalizzata | `ssh -p 2222 utente@[IP]` | Login riuscito |
-| SSH root bloccato | `ssh root@[IP] -p 2222` | `Permission denied` |
-| IDS alert port scan | `nmap -sS [IP]` + `fast.log` | Alert ET SCAN in Suricata |
-| Kernel hardening | `sysctl net.ipv4.tcp_syncookies` | `= 1` |
+| firewall attivo | `sudo ufw status` | `Status: active` |
+| porte chiuse | `nmap [IP]` da altra vm | solo porte autorizzate visibili |
+| ssh porta personalizzata | `ssh -p 2222 utente@[IP]` | login riuscito |
+| ssh root bloccato | `ssh root@[IP] -p 2222` | `Permission denied` |
+| ids alert port scan | `nmap -sS [IP]` + `fast.log` | alert et scan in suricata |
+| kernel hardening | `sysctl net.ipv4.tcp_syncookies` | `= 1` |
 
 ---
 

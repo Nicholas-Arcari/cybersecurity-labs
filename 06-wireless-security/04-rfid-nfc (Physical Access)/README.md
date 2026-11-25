@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 04 - RFID / NFC (Physical Access)
+# 04 - RFID / NFC (physical access)
 
 > - **Fase:** Wireless Security - Sicurezza fisica e controllo accessi (RFID/NFC)
 > - **Visibilita:** Zero verso i sistemi di controllo accessi; richiede prossimita fisica al tag o al lettore
@@ -71,42 +71,42 @@ Il filo conduttore teorico e la distinzione tra identificazione e autenticazione
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Proxmark3 RDV4` | RFID multi-tool | Hardware | LF+HF: lettura, clonazione, sniffing, emulazione (riferimento pro) |
-| `libnfc` (nfc-list) | NFC library | CLI | Identificazione e lettura tag HF |
-| `mfoc` / `mfcuk` | MIFARE cracker | CLI | Recupero chiavi MIFARE Classic (nested/darkside) |
-| `nfc-mfclassic` | MIFARE writer | CLI | Dump e scrittura del clone su tag magic |
-| `Mifare Classic Tool` | NFC app | Android | Lettura/clonazione da smartphone |
-| `Flipper Zero` | Portable multi-tool | Hardware | LF/HF lettura, emulazione, clonazione tascabile |
-| Tag magic / T5577 | Hardware | - | Tag scrivibili per cloni HF (magic) e LF (T5577) |
+| `Proxmark3 RDV4` | rfid multi-tool | hardware | lf+hf: lettura, clonazione, sniffing, emulazione (riferimento pro) |
+| `libnfc` (nfc-list) | nfc library | cli | identificazione e lettura tag hf |
+| `mfoc` / `mfcuk` | mifare cracker | cli | recupero chiavi mifare classic (nested/darkside) |
+| `nfc-mfclassic` | mifare writer | cli | dump e scrittura del clone su tag magic |
+| `Mifare Classic Tool` | nfc app | android | lettura/clonazione da smartphone |
+| `Flipper Zero` | portable multi-tool | hardware | lf/hf lettura, emulazione, clonazione tascabile |
+| tag magic / T5577 | hardware | - | tag scrivibili per cloni hf (magic) e lf (T5577) |
 
 > **Tool moderno consigliato:** il `Proxmark3 RDV4` (firmware Iceman) per la copertura RFID completa e il `Flipper Zero` per gli scenari comuni sul campo. Per il solo MIFARE Classic in laboratorio, l'`ACR122U` con libnfc e sufficiente ed economico.
 
 ---
 
-## Registro Finding - Sezione RFID/NFC
+## Registro finding - sezione RFID/NFC
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `WIFI-010` | Recupero chiavi e dump di un badge MIFARE Classic con chiavi di default (attacco nested mfoc) | `Medio` | `nfc-tools/` |
-| `WIFI-011` | Clonazione completa del badge MIFARE su tag magic, incluso l'UID - clone funzionante | `Alto` | `mifare-cloning/` |
-| `WIFI-012` | Lettura e clonazione di badge Low Frequency EM4100 (nessuna autenticazione) via Proxmark3 | `Alto` | `proxmark3-client/` |
+| `WIFI-010` | recupero chiavi e dump di un badge mifare classic con chiavi di default (attacco nested mfoc) | `Medio` | `nfc-tools/` |
+| `WIFI-011` | clonazione completa del badge mifare su tag magic, incluso l'uid - clone funzionante | `Alto` | `mifare-cloning/` |
+| `WIFI-012` | lettura e clonazione di badge Low frequency em4100 (nessuna autenticazione) via proxmark3 | `Alto` | `proxmark3-client/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Host Information | `T1592` | WIFI-010, WIFI-012 |
-| Credential Access | Brute Force | `T1110` | WIFI-010 |
-| Credential Access | Network Sniffing | `T1040` | WIFI-012 |
-| Credential Access | Steal Application Access Token | `T1528` | WIFI-010 |
-| Resource Development | Develop Capabilities | `T1587` | WIFI-011 |
-| Defense Evasion | Impersonation | `T1656` | WIFI-011, WIFI-012 |
-| Initial Access | Hardware Additions | `T1200` | WIFI-010, WIFI-011, WIFI-012 |
-| Initial Access | Valid Accounts: Local Accounts | `T1078.003` | WIFI-011, WIFI-012 |
+| reconnaissance | gather victim host information | `T1592` | WIFI-010, WIFI-012 |
+| credential access | brute force | `T1110` | WIFI-010 |
+| credential access | network sniffing | `T1040` | WIFI-012 |
+| credential access | steal application access token | `T1528` | WIFI-010 |
+| resource development | develop capabilities | `T1587` | WIFI-011 |
+| defense evasion | impersonation | `T1656` | WIFI-011, WIFI-012 |
+| initial access | hardware additions | `T1200` | WIFI-010, WIFI-011, WIFI-012 |
+| initial access | valid accounts: local accounts | `T1078.003` | WIFI-011, WIFI-012 |
 
 ---
 

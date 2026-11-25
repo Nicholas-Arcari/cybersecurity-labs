@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 12 - Pianifica manutenzione regolare (Cron)
+# 12 - Pianifica manutenzione regolare (cron)
 
 > - **Fase:** System Setup - Automazione Manutenzione
 > - **Priorita:** Media - previene problemi di disco e mantiene il sistema aggiornato nel tempo

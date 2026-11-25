@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Modelli Formali - Verifica di Protocollo
+# Modelli formali - verifica di protocollo
 
 > - **Livello:** Verifica formale (metodi formali applicati a un protocollo di sicurezza)
 > - **Scopo:** Fornire un modello formale eseguibile e verificato di un protocollo, come artefatto di livello di ricerca complementare alla teoria (`THEORETICAL-FOUNDATIONS`) e alla misura empirica (`EVALUATION`).

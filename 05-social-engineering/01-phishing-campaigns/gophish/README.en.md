@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# GoPhish - Campaign Management & Credential Harvesting
+# GoPhish - campaign management & credential harvesting
 
 > - **Phase:** Social Engineering - Phishing Campaign Deployment
 > - **Visibility:** High - phishing emails generate SMTP logs, tracking pixel and URLs visible to email filters/proxy/SIEM; the landing page can be classified by URL reputation systems and Google Safe Browsing
@@ -14,7 +14,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 GoPhish is the de facto standard for simulated phishing campaigns in enterprise environments. Unlike tools such as PyPhisher or Zphisher that operate through generic tunnels easily blocked, GoPhish offers a complete ecosystem for professional simulation management: creation of custom email templates with dynamic variables, landing page cloning with credential capture, scheduled sends, and most importantly a granular tracking system that monitors every recipient interaction (email open, link click, credential submission, phishing report).
 
@@ -22,15 +22,15 @@ These metrics are the primary deliverable in a security awareness assessment: th
 
 ---
 
-## Campaign: Credential Harvesting via Password Reset
+## Campaign: credential harvesting via password reset
 
 **Finding ID:** `SE-001` | **Severity:** `High`
 
-### Operational Context
+### Operational context
 
 The campaign simulated a classic corporate phishing scenario: an urgent email from the IT department requesting an immediate password reset, with a link to a cloned landing page of the authentication portal. The scenario was chosen for its documented effectiveness: according to the Proofpoint State of the Phish 2024 report, password reset emails have an average click rate of 25-35% in organizations without structured awareness programs.
 
-### PoC - Phase 1: GoPhish Setup
+### PoC - phase 1: GoPhish setup
 
 ```Bash
 # Download and start GoPhish
@@ -45,7 +45,7 @@ time="2026-03-15T10:00:00Z" level=info msg="Background Worker Started Successful
 time="2026-03-15T10:00:00Z" level=info msg="Starting IMAP monitor manager"
 ```
 
-### PoC - Phase 2: Sending Profile Configuration
+### PoC - phase 2: sending profile configuration
 
 ```Bash
 # Sending Profile (via Web UI -> Sending Profiles -> New Profile)
@@ -56,7 +56,7 @@ time="2026-03-15T10:00:00Z" level=info msg="Starting IMAP monitor manager"
 # -> Send Test Email for verification
 ```
 
-### PoC - Phase 3: Landing Page Creation
+### PoC - phase 3: landing page creation
 
 ```Bash
 # Landing Page (via Web UI -> Landing Pages -> New Page)
@@ -67,7 +67,7 @@ time="2026-03-15T10:00:00Z" level=info msg="Starting IMAP monitor manager"
 # Redirect to: https://portal.company-lab.local/login?reset=success
 ```
 
-### PoC - Phase 4: Email Template
+### PoC - phase 4: email template
 
 ```Bash
 # Email Template (via Web UI -> Email Templates -> New Template)
@@ -91,7 +91,7 @@ will be temporarily suspended.</p>
 {{.Tracker}}
 ```
 
-### PoC - Phase 5: Target Import and Launch
+### PoC - phase 5: target import and launch
 
 ```Bash
 # Users & Groups (via Web UI -> Users & Groups -> New Group)
@@ -113,7 +113,7 @@ will be temporarily suspended.</p>
 # -> Launch Campaign
 ```
 
-### PoC - Phase 6: Campaign Results
+### PoC - phase 6: campaign results
 
 ```
 Campaign Results - "Password Reset Q1 2026"
@@ -150,7 +150,7 @@ Credentials Captured:
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The test environment was configured with GoPhish v0.12.1 on Kali Linux Purple, using a local SMTP relay (Postfix) to send emails to the mailboxes of 20 fictitious users hosted on a second VM with Mailhog as the receiving SMTP server.
 
@@ -162,7 +162,7 @@ The most significant data point from the exercise is not the click rate itself (
 
 ---
 
-## Theoretical Analysis: Why Phishing Works
+## Theoretical analysis: why phishing works
 
 The effectiveness of phishing is not a technological problem but a cognitive one. The template used exploits three of Robert Cialdini's six principles of influence:
 
@@ -176,11 +176,11 @@ The critical difference between GoPhish and amateur tools (PyPhisher, Zphisher) 
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > This section describes how this finding would fit into a real engagement, from both the attacker (Red Team) and defender (Blue Team) perspectives.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** 4 valid corporate credentials obtained through phishing (SE-001).
 
@@ -206,7 +206,7 @@ Domain Admin -> data exfiltration / ransomware deployment
 
 **Potential impact:** complete compromise of the Active Directory domain starting from a single standard-level account. The average time from Initial Access to Domain Admin, according to Mandiant M-Trends 2024 reports, is less than 48 hours in organizations without network segmentation.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **IOCs to monitor:**
 - Emails with tracking pixels pointing to non-corporate domains (URLs with `rid` or similar parameters)
@@ -228,15 +228,15 @@ Domain Admin -> data exfiltration / ransomware deployment
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Stage Capabilities: Upload Malware | `T1608.001` | Preparation of clone landing page and email template on GoPhish server (SE-001) |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | Sending email with link to credential harvesting landing page (SE-001) |
-| Execution | User Execution: Malicious Link | `T1204.001` | 7 out of 20 users clicked the phishing link (SE-001) |
-| Credential Access | Input Capture: Web Portal Capture | `T1056.003` | 4 users entered credentials in the cloned landing page (SE-001) |
-| Discovery | System Information Discovery | `T1082` | Tracking pixel revealed User-Agent and IP of 14 users who opened the email |
+| resource development | stage capabilities: upload malware | `T1608.001` | preparation of clone landing page and email template on gophish server (SE-001) |
+| initial access | phishing: spearphishing link | `T1566.002` | sending email with link to credential harvesting landing page (SE-001) |
+| execution | user execution: malicious link | `T1204.001` | 7 out of 20 users clicked the phishing link (SE-001) |
+| credential access | input capture: web portal capture | `T1056.003` | 4 users entered credentials in the cloned landing page (SE-001) |
+| discovery | system information discovery | `T1082` | tracking pixel revealed user-agent and ip of 14 users who opened the email |
 
 ---
 

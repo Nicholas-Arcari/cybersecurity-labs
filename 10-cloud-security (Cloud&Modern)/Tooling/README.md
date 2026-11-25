@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Tooling - Strumenti per la Sicurezza Cloud
+# Tooling - strumenti per la sicurezza cloud
 
 > - **Fase:** Cloud Security - Toolkit trasversale
 > - **Categoria:** Riferimento strumenti (offensivi e difensivi)
@@ -56,13 +56,13 @@ Tooling/
 
 ## Tool di riferimento
 
-| Tool | Prospettiva | Provider | Ruolo principale |
+| tool | prospettiva | provider | ruolo principale |
 | :--- | :--- | :--- | :--- |
-| `cloud_enum` | Recon | Multi | Scoperta di asset e bucket via permutazione dei nomi |
-| `Pacu` | Offensivo | AWS | "Metasploit per AWS": enum, privesc, exploitation |
-| `Prowler` | Difensivo | AWS/Azure/GCP | Controlli di sicurezza e compliance (CIS, ...) |
-| `ScoutSuite` | Difensivo | Multi | Audit della configurazione multi-cloud |
-| `Trivy` | Difensivo | (container/IaC) | Scanner universale (vedere `../02-.../image-scanning/`) |
+| `cloud_enum` | recon | multi | scoperta di asset e bucket via permutazione dei nomi |
+| `Pacu` | offensivo | aws | "metasploit per aws": enum, privesc, exploitation |
+| `Prowler` | difensivo | aws/azure/gcp | controlli di sicurezza e compliance (cis, ...) |
+| `ScoutSuite` | difensivo | multi | audit della configurazione multi-cloud |
+| `Trivy` | difensivo | (container/iac) | scanner universale (vedere `../02-.../image-scanning/`) |
 
 > **Tool moderno consigliato:** per un assessment cloud completo, `cloud_enum` per il recon, `Pacu` per l'exploitation AWS, `Prowler` e `ScoutSuite` per l'audit difensivo. `Trivy` (documentato in `../02-containers-security/image-scanning/`) come scanner universale per container e IaC.
 

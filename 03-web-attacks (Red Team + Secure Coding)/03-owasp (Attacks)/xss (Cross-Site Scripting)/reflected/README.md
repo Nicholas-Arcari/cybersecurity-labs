@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Vulnerability Assessment: Reflected Cross-Site Scripting (XSS)
+# Vulnerability assessment: reflected Cross-Site scripting (XSS)
 
 > - **Fase:** Web Attack - XSS Reflected
 > - **Visibilita:** Bassa - richiesta singola con payload nel parametro URL, indistinguibile da normale navigazione
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 Durante l'analisi dell'applicazione web `testphp.vulnweb.com`, è stata individuata una vulnerabilità di tipo Reflected Cross-Site Scripting (XSS).
 
@@ -29,9 +29,9 @@ I rischi includono:
 
 ---
 
-## 2 Technical Analysis
+## 2 Technical analysis
 
-#### Scenario A: URL Parameter Injection
+#### Scenario a: URL parameter injection
 
 L'endpoint `listproducts.php` accetta il parametro `cat` per filtrare i prodotti. È stato verificato che inserendo codice HTML/JavaScript nel valore del parametro, questo viene eseguito dal browser senza filtri.
 
@@ -51,7 +51,7 @@ Come mostrato nello screenshot sottostante, il payload iniettato nell'URL viene 
 
 ![](./img/Screenshot_2026-02-15_19_02_29.jpg)
 
-#### Scenario B: Virtual Defacement (Phishing Vector)
+#### Scenario b: virtual defacement (phishing vector)
 
 Oltre all'esecuzione di codice JavaScript, è stato verificato che l'applicazione permette l'iniezione di tag HTML arbitrari (HTML Injection).
 
@@ -71,7 +71,7 @@ Lo screenshot sottostante mostra l'alterazione visiva della pagina. L'applicazio
 
 ---
 
-## 3 Remediation Plan
+## 3 Remediation plan
 
 La vulnerabilità Reflected XSS deve essere corretta trattando tutto l'input utente come non fidato.
 
@@ -107,7 +107,7 @@ Implementare header CSP per limitare le sorgenti da cui il browser può caricare
 
 ---
 
-## Analisi a Basso Livello: Reflected XSS - Dal Parametro URL al DOM
+## Analisi a basso livello: reflected XSS - dal parametro URL al DOM
 
 ### Meccanica dell'Iniezione
 
@@ -133,7 +133,7 @@ Browser HTML parser incontra il tag <script>:
 -> Cookie, localStorage, DOM accessibili allo script
 ```
 
-### Virtual Defacement e Phishing: Impatto Reale
+### Virtual defacement e phishing: impatto reale
 
 Il payload HTML Injection (Scenario B) e particolarmente insidioso perche:
 - L'URL e sul dominio legittimo del target (`testphp.vulnweb.com`)
@@ -143,9 +143,9 @@ Il payload HTML Injection (Scenario B) e particolarmente insidioso perche:
 
 ---
 
-## Blue Team: Detection e Difese Anti-XSS
+## Blue team: detection e difese Anti-XSS
 
-### Content Security Policy (CSP)
+### Content security policy (CSP)
 
 CSP e la difesa piu efficace contro XSS Reflected:
 
@@ -160,17 +160,17 @@ Con questa policy:
 
 ### Difese Multi-Layer
 
-| Layer | Difesa | Cosa blocca |
+| layer | difesa | cosa blocca |
 | :--- | :--- | :--- |
-| Input | Type validation (`cat` deve essere intero) | Rifiuta input non numerico |
-| Output | `htmlspecialchars()` | Converte `<>` in entities |
-| Browser | CSP header | Blocca script inline/external non autorizzati |
-| Cookie | `HttpOnly` flag | Impedisce accesso JS ai cookie anche se XSS riesce |
-| Session | `SameSite=Strict` | Impedisce invio cookie in richieste cross-site |
+| input | type validation (`cat` deve essere intero) | rifiuta input non numerico |
+| output | `htmlspecialchars()` | converte `<>` in entities |
+| browser | csp header | blocca script inline/external non autorizzati |
+| cookie | `HttpOnly` flag | impedisce accesso js ai cookie anche se xss riesce |
+| session | `SameSite=Strict` | impedisce invio cookie in richieste cross-site |
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 La differenza tra i due scenari (alert PoC vs virtual defacement) ha dimostrato la distanza tra il "proof of concept didattico" e l'impatto reale. Il popup `alert()` dimostra l'esecuzione di codice ma non convince un cliente; il form di login falso iniettato nel dominio legittimo dimostra un rischio di phishing concreto che anche un non-tecnico comprende immediatamente.
 
@@ -182,11 +182,11 @@ La classificazione a `Medio` (vs `Alto` per la Stored) riflette il requisito di 
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation del parametro `cat` vulnerabile a XSS Reflected su `listproducts.php`, con injection di `<script>alert('XSS Riuscito')</script>` (WEB-005) |
-| Credential Access | Steal Web Session Cookie | `T1539` | Il payload XSS Reflected e il vettore primario per rubare il cookie di sessione dalla vittima che clicca il link malevolo (WEB-005) |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | Distribuzione dell'URL malevolo `listproducts.php?cat=<PAYLOAD>` tramite email o social engineering per colpire utenti specifici (WEB-005) |
+| initial access | exploit public-facing application | `T1190` | exploitation del parametro `cat` vulnerabile a xss reflected su `listproducts.php`, con injection di `<script>alert('XSS Riuscito')</script>` (WEB-005) |
+| credential access | steal web session cookie | `T1539` | il payload xss reflected e il vettore primario per rubare il cookie di sessione dalla vittima che clicca il link malevolo (WEB-005) |
+| initial access | phishing: spearphishing link | `T1566.002` | distribuzione dell'url malevolo `listproducts.php?cat=<PAYLOAD>` tramite email o social engineering per colpire utenti specifici (WEB-005) |
 
 ---
 

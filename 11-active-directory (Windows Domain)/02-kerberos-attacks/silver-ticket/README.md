@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Silver Ticket: forgiatura del ticket di servizio (TGS)
+# Silver ticket: forgiatura del ticket di servizio (TGS)
 
 > - **Fase:** Persistence / Lateral Movement (dominio Active Directory)
 > - **Visibilita:** Molto bassa - il ticket e forgiato offline e presentato direttamente al servizio, senza mai contattare il KDC (ne TGT ne TGS-REQ a registro)
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Il Silver Ticket e la controparte "chirurgica" del Golden Ticket. Mentre il Golden forgia un TGT valido per
 l'intero dominio usando la chiave di krbtgt, il Silver forgia un TGS valido per un singolo servizio usando
@@ -33,7 +33,7 @@ Golden quando serve discrezione e basta l'accesso a un servizio specifico: non t
 detection basate sul monitoraggio dei ticket a livello di dominio. La decisione riguarda il servizio
 bersaglio (lo SPN) e, ancora una volta, l'uso di AES invece di RC4.
 
-## Esecuzione / Comandi
+## Esecuzione / comandi
 
 ```bash
 # Forgia un TGS per il servizio CIFS dell'host target usando l'hash dell'account macchina
@@ -62,7 +62,7 @@ sensibili, o HOST su un server per eseguire codice). Non raggiunge il `Critico` 
 dominio-wide, ma la combinazione di piu Silver su servizi chiave si avvicina allo stesso effetto, con molto
 meno rumore.
 
-### Analisi Teorica
+### Analisi teorica
 
 Nel flusso Kerberos (vedi [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.md>), sez. 3.1) il TGS e
 cifrato con la chiave dell'account di servizio, e il servizio lo valida decifrandolo con la propria chiave.
@@ -71,7 +71,7 @@ del PAC e opzionale e spesso non attiva). Chi possiede la chiave del servizio pu
 un PAC arbitrario e il servizio lo accettera. E la violazione della proprieta P1 limitata al perimetro di un
 singolo servizio: l'attaccante falsifica la prova di autenticazione verso quel servizio specifico.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Rilevamento.** Difficile lato KDC (il Silver non lo contatta). La detection si sposta sul servizio e
 sull'host: accessi a un servizio senza corrispondente TGS-REQ a registro sul DC; abilitare la verifica del
@@ -83,11 +83,11 @@ locali e DCSync); Tiering Model.
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Vale per l'accesso mirato a un servizio critico (severity Alto).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** possesso della chiave di un account di servizio/macchina (da dump locale o DCSync).
 
@@ -113,7 +113,7 @@ segnali tipici dell'attivita Kerberos a livello di dominio.
 
 **Vettori di monetizzazione tipici:** esfiltrazione discreta e prolungata; persistenza su sistemi chiave.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** accessi a un servizio privi del corrispondente TGS-REQ sul DC; abilitazione della PAC
 validation per smascherare PAC forgiati.
@@ -134,11 +134,11 @@ utente legittimo.
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `ticketer.py` (Impacket) | Kerberos tool | CLI - Attivo | Forgiatura del Silver Ticket da Linux |
-| `Mimikatz` | Credential/ticket tool | CLI - Attivo | `kerberos::golden` con `/service` e `/target` per il Silver da Windows |
-| `Rubeus` | .NET Kerberos tool | CLI - Attivo | Forgiatura/uso ticket da Windows |
+| `ticketer.py` (impacket) | kerberos tool | cli - attivo | forgiatura del silver ticket da linux |
+| `Mimikatz` | credential/ticket tool | cli - attivo | `kerberos::golden` con `/service` e `/target` per il silver da windows |
+| `Rubeus` | .net kerberos tool | cli - attivo | forgiatura/uso ticket da windows |
 
 ## Note di metodologia
 
@@ -148,19 +148,19 @@ Documentare la PAC validation come contromisura.
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Steal or Forge Kerberos Tickets: Silver Ticket | `T1558.002` | Forgiatura di un TGS per un servizio usando la chiave dell'account di servizio. |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Ticket | `T1550.003` | Uso del ticket forgiato per accedere al servizio bersaglio. |
-| Persistence | Account Manipulation | `T1098` | Persistenza mirata sul servizio tramite ticket forgiati. |
+| credential access | steal or forge kerberos tickets: silver ticket | `T1558.002` | forgiatura di un tgs per un servizio usando la chiave dell'account di servizio. |
+| lateral movement | use alternate authentication material: pass the ticket | `T1550.003` | uso del ticket forgiato per accedere al servizio bersaglio. |
+| persistence | account manipulation | `T1098` | persistenza mirata sul servizio tramite ticket forgiati. |
 
 ## Correlazioni con altri moduli
 
-| Provenienza | Questa tecnica | Effetto |
+| provenienza | questa tecnica | effetto |
 | :--- | :--- | :--- |
-| [DCSync](<../../05-credential-dumping/dcsync/README.md>) / dump locale | Silver Ticket | fornisce la chiave dell'account di servizio/macchina |
-| [Golden Ticket](<../golden-ticket/README.md>) | Silver Ticket | varianti complementari: dominio-wide vs servizio mirato |
-| Silver Ticket | [07-post-exploitation](<../../../07-post-exploitation/README.md>) | lateral movement e persistenza discreti su servizi chiave |
+| [dcsync](<../../05-credential-dumping/dcsync/README.md>) / dump locale | silver ticket | fornisce la chiave dell'account di servizio/macchina |
+| [golden ticket](<../golden-ticket/README.md>) | silver ticket | varianti complementari: dominio-wide vs servizio mirato |
+| silver ticket | [07-post-exploitation](<../../../07-post-exploitation/README.md>) | lateral movement e persistenza discreti su servizi chiave |
 
 ---
 

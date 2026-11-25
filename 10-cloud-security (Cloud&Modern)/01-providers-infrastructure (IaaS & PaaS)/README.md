@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 01 - Providers Infrastructure (IaaS & PaaS)
+# 01 - Providers infrastructure (IaaS & PaaS)
 
 > - **Fase:** Cloud Security - Provider IaaS/PaaS (AWS, Azure, GCP)
 > - **Categoria:** Offensivo + Difensivo - l'identita come perimetro
@@ -67,41 +67,41 @@ Il filo comune e trasversale: le identita non umane legate alle risorse (IAM rol
 
 ## Tool di riferimento
 
-| Tool | Provider | Tipo | Caso d'uso principale |
+| tool | provider | tipo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Pacu` | AWS | Offensivo | Exploitation framework AWS |
-| `AzureHound` / `MicroBurst` | Azure | Offensivo | Attack path e enumerazione Entra ID |
-| `gcloud` + metadata | GCP | Offensivo | Furto token service account |
-| `ScoutSuite` | Multi | Difensivo | Audit multi-cloud della configurazione |
-| `Prowler` | AWS/Azure/GCP | Difensivo | Controlli di sicurezza e compliance |
+| `Pacu` | aws | offensivo | exploitation framework aws |
+| `AzureHound` / `MicroBurst` | azure | offensivo | attack path e enumerazione entra id |
+| `gcloud` + metadata | gcp | offensivo | furto token service account |
+| `ScoutSuite` | multi | difensivo | audit multi-cloud della configurazione |
+| `Prowler` | aws/azure/gcp | difensivo | controlli di sicurezza e compliance |
 
 > **Tool moderno consigliato:** `ScoutSuite` per l'audit multi-cloud unificato; per provider, `Pacu` (AWS), `AzureHound` (Azure), `Prowler` (trasversale). Dettaglio in `../Tooling/`.
 
 ---
 
-## Registro Finding - Providers Infrastructure
+## Registro finding - providers infrastructure
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `CLOUD-001` | AWS IAM enumeration + privilege escalation ad admin | `Critico` | `AWS/IAM-enumeration/` |
-| `CLOUD-002` | AWS S3 bucket esposto/misconfigurato: esfiltrazione dati | `Alto` | `AWS/S3-buckets-attacks/` |
-| `CLOUD-003` | Azure: abuso managed identity (IMDS) + enumerazione Entra ID | `Alto` | `Azure/` |
-| `CLOUD-004` | GCP: furto token service account via metadata/SSRF | `Alto` | `GCP/` |
+| `CLOUD-001` | aws iam enumeration + privilege escalation ad admin | `Critico` | `AWS/IAM-enumeration/` |
+| `CLOUD-002` | aws s3 bucket esposto/misconfigurato: esfiltrazione dati | `Alto` | `AWS/S3-buckets-attacks/` |
+| `CLOUD-003` | azure: abuso managed identity (imds) + enumerazione entra id | `Alto` | `Azure/` |
+| `CLOUD-004` | gcp: furto token service account via metadata/ssrf | `Alto` | `GCP/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
 > Riferimento: MITRE ATT&CK for Cloud (IaaS).
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Discovery | Cloud Infrastructure Discovery | `T1580` | CLOUD-001, CLOUD-003, CLOUD-004 |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | CLOUD-001, CLOUD-003, CLOUD-004 |
-| Credential Access | Steal Application Access Token | `T1528` | CLOUD-003, CLOUD-004 |
-| Credential Access | Unsecured Credentials: Cloud Instance Metadata API | `T1552.005` | CLOUD-004 |
-| Collection | Data from Cloud Storage | `T1530` | CLOUD-002 |
-| Persistence | Account Manipulation: Additional Cloud Credentials | `T1098.001` | CLOUD-001 |
+| discovery | cloud infrastructure discovery | `T1580` | CLOUD-001, CLOUD-003, CLOUD-004 |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | CLOUD-001, CLOUD-003, CLOUD-004 |
+| credential access | steal application access token | `T1528` | CLOUD-003, CLOUD-004 |
+| credential access | unsecured credentials: cloud instance metadata api | `T1552.005` | CLOUD-004 |
+| collection | data from cloud storage | `T1530` | CLOUD-002 |
+| persistence | account manipulation: additional cloud credentials | `T1098.001` | CLOUD-001 |
 
 ---
 

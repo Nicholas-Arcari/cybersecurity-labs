@@ -1,6 +1,6 @@
 > [English](THEORETICAL-FOUNDATIONS.en.md) | **Italiano**
 
-# Fondamenti Teorici - Modulo 01: Reconnaissance
+# Fondamenti teorici - modulo 01: reconnaissance
 
 > - **Livello:** Analisi accademica (complemento teorico ai README operativi del modulo)
 > - **Scopo:** Fornire il modello formale dell'avversario, i fondamenti teorico-informativi e l'analisi quantitativa della ricognizione, con riferimento alla letteratura primaria.
@@ -26,7 +26,7 @@ L'obiettivo formale di entrambi i profili non e "trovare vulnerabilita" ma un ob
 
 ---
 
-## 2. Proprieta di Sicurezza in Gioco
+## 2. Proprieta di sicurezza in gioco
 
 La ricognizione minaccia la **confidenzialita dei metadati infrastrutturali**: non i dati degli utenti, ma le informazioni sulla struttura del sistema (quali host esistono, quali servizi espongono, quali tecnologie usano). Occorre distinguere due proprieta difensive frequentemente confuse:
 
@@ -38,7 +38,7 @@ Il documento sostiene, con [Manadhata & Wing 2011], che solo la seconda propriet
 
 ---
 
-## 3. Fondamenti Teorici
+## 3. Fondamenti teorici
 
 ### 3.1 Formalizzazione della superficie d'attacco
 
@@ -66,7 +66,7 @@ Un'informazione una volta pubblicata non puo essere de-pubblicata in senso teori
 
 ---
 
-## 4. Analisi Quantitativa
+## 4. Analisi quantitativa
 
 ### 4.1 L'economia della scansione dopo ZMap
 
@@ -78,13 +78,13 @@ Mentre il port scanning e un campionamento probabilistico (soggetto a perdita di
 
 ---
 
-## 5. Rassegna della Letteratura
+## 5. Rassegna della letteratura
 
 Il modello dell'attaccante di rete adottato deriva da [Dolev & Yao 1983], il cui contributo fondativo e stato astrarre l'avversario dalle specifiche implementazioni a un insieme di capacita sul canale; la loro formalizzazione resta la baseline dei protocolli di sicurezza. La quantificazione della superficie d'attacco poggia su [Manadhata & Wing 2011], che per primi hanno proposto una metrica sistematica e misurabile, superando le definizioni qualitative precedenti. Sul piano empirico, la coppia di lavori di [Durumeric et al. 2013a] (ZMap) e [Durumeric et al. 2013b] (ecosistema HTTPS) ha ridefinito la comprensione della ricognizione su scala Internet, dimostrando sia la fattibilita della scansione esaustiva sia la ricchezza informativa dei canali deterministici come CT. L'inquadramento teorico-informativo si richiama a [Shannon 1949]; l'inefficacia dell'oscurita al principio di [Kerckhoffs 1883]. Il posizionamento della ricognizione come primo stadio di una sequenza segue il Cyber Kill Chain di [Hutchins et al. 2011].
 
 ---
 
-## 6. Limiti e Problemi Aperti
+## 6. Limiti e problemi aperti
 
 1. **Non prevenibilita della ricognizione passiva.** Poiche `A_pass` opera esclusivamente su informazione gia pubblica, non esiste una contromisura che la rilevi o la impedisca: il difensore puo solo ridurre l'informazione esposta a priori. Questo pone un limite teorico invalicabile alla difesa contro la ricognizione OSINT.
 
@@ -94,7 +94,7 @@ Il modello dell'attaccante di rete adottato deriva da [Dolev & Yao 1983], il cui
 
 ---
 
-## 7. Sintesi e Collegamento alla Pratica
+## 7. Sintesi e collegamento alla pratica
 
 I README operativi del modulo 01 (finding con prefissi `OSINT-`, `SCAN-`, `DNS-`, `INTEL-`) istanziano concretamente il quadro qui formalizzato: l'OSINT passivo corrisponde ad `A_pass`, il network scanning attivo ad `A_act`, l'enumerazione via Certificate Transparency e la manifestazione pratica del canale deterministico della sezione 4.2. La lezione unificante e che ogni finding di ricognizione riduce `H(X)` per l'attaccante e amplia la conoscenza empirica della superficie d'attacco [Manadhata & Wing 2011]; la contromisura corretta, coerente con la sezione 2, non e occultare (oscurita, debole) ma ridurre la superficie e iniettare rumore controllato (minimizzazione + deception, forti). Questo collega direttamente il modulo 01 alle contromisure di hardening (modulo 08) e chiude il cerchio tra la prospettiva offensiva e quella difensiva.
 

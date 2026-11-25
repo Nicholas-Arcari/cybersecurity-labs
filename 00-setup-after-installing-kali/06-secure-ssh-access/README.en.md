@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 06 - Secure SSH Access
+# 06 - Secure SSH access
 
 > - **Phase:** System Setup - Remote Access Hardening
 > - **Priority:** High - execute before exposing the system on untrusted networks
@@ -55,15 +55,15 @@ The `/var/log/auth.log` file will fill with thousands of failed access attempts 
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| `sshd_config` Parameter | Description |
+| `sshd_config` parameter | description |
 | :--- | :--- |
-| `Port` | SSH daemon listening port |
-| `PermitRootLogin no` | Block direct root login (requires standard user + sudo) |
-| `MaxAuthTries 3` | Maximum 3 attempts per connection before reset |
-| `AllowUsers [name]` | Whitelist: only listed users can authenticate |
-| `PubkeyAuthentication yes` | Enable public/private key authentication (more secure than password) |
+| `Port` | ssh daemon listening port |
+| `PermitRootLogin no` | block direct root login (requires standard user + sudo) |
+| `MaxAuthTries 3` | maximum 3 attempts per connection before reset |
+| `AllowUsers [name]` | whitelist: only listed users can authenticate |
+| `PubkeyAuthentication yes` | enable public/private key authentication (more secure than password) |
 
 ---
 

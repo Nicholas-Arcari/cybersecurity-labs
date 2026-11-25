@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Auth Attacks: Brute-Force Web (Hydra)
+# Auth attacks: Brute-Force web (Hydra)
 
 > - **Phase:** Web Attack - Authentication Brute Force
 > - **Visibility:** High - Hydra generates many login requests in short time, easily detectable by IDS and monitoring systems
@@ -21,7 +21,7 @@ Tools: `THC-Hydra` (Network Login Cracker), `Firefox DevTools`
 
 ---
 
-## 1 Theoretical Introduction
+## 1 Theoretical introduction
 
 Web Brute-Force consists of systematically trying numerous username and password combinations.
 
@@ -31,7 +31,7 @@ Risk (OWASP): Broken Authentication. The lack of protection mechanisms (Rate Lim
 
 ---
 
-## 2 Target Analysis and "False Positive Trap"
+## 2 Target analysis and "false positive trap"
 
 Preliminary analysis with Developer Tools revealed the form parameters (`uname`, `pass`) sent to `/userinfo.php`.
 
@@ -47,7 +47,7 @@ Hydra's logic was inverted: instead of searching for the error, the tool was con
 
 ---
 
-## 3 Attack Execution
+## 3 Attack execution
 
 A targeted wordlist (`passlist.txt`) was created containing the correct credential mixed with false ones.
 
@@ -71,7 +71,7 @@ Hydra correctly discarded wrong passwords (like admin or 123456) and uniquely id
 
 ---
 
-## 4 Secure Coding & Defense
+## 4 Secure coding & defense
 
 To mitigate these attacks:
 
@@ -82,7 +82,7 @@ To mitigate these attacks:
 
 ---
 
-## 5 Docker & Localhost Scenario (Lab Setup)
+## 5 Docker & localhost scenario (lab setup)
 
 The attack was replicated against a real containerized infrastructure (Docker) to simulate an "Internal Penetration Test" scenario.
 
@@ -110,18 +110,18 @@ This confirmed that requests were reaching the server, but were being rejected.
 
 ---
 
-## 6 Case Study: "The Laravel Wall" (Defensive Analysis)
+## 6 Case study: "the laravel wall" (defensive analysis)
 
 During the attempt to brute force the Laravel application's authentication, the attack evolved through several troubleshooting phases that highlighted modern web framework defenses.
 
-#### Phase 1: The "Frontend Trap"
+#### Phase 1: the "frontend trap"
 
 Initially, the attack was directed at the URL visible in the browser: `http://host:5173/login`.
 
 - Result: `HTTP 404 Not Found`.
 - Analysis: Being a Single Page Application (SPA), the `/login` route on port 5173 is virtual (managed by JavaScript). The real API endpoint resided on port 80.
 
-#### Phase 2: Protocol Complexity (JSON vs Form)
+#### Phase 2: protocol complexity (JSON vs form)
 
 Hydra is optimized for standard HTML forms (`application/x-www-form-urlencoded`). The target API required a JSON payload.
 
@@ -171,7 +171,7 @@ done < passlist.txt
 
 ![](./img/Screenshot_2026-02-14_21_38_45.jpg)
 
-#### Phase 3: The CSRF Clash (Sanctum)
+#### Phase 3: the CSRF clash (sanctum)
 
 Once the `/login` endpoint on port 80 was correctly reached with the custom script, the server systematically responded with an `HTTP 419` error.
 
@@ -196,14 +196,14 @@ This test demonstrated that modern MVC/API frameworks (like Laravel, Django, Rai
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Brute Force: Password Guessing | `T1110.001` | Attack with Hydra on login form `testphp.vulnweb.com/userinfo.php` using `passlist.txt`, identifying credentials `test:test` (WEB-009) |
-| Credential Access | Brute Force: Password Spraying | `T1110.004` | Testing common passwords (`admin`, `123456`, `password`) against user `test` as preliminary phase (WEB-009) |
-| Credential Access | Modify Authentication Process | `T1556` | Analysis and bypass of Laravel Sanctum Anti-CSRF protection (HTTP 419) demonstrating Hydra's ineffectiveness on modern frameworks |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation of missing rate limiting and account lockout on login form for unblocked brute force (WEB-009) |
+| credential access | brute force: password guessing | `T1110.001` | attack with hydra on login form `testphp.vulnweb.com/userinfo.php` using `passlist.txt`, identifying credentials `test:test` (WEB-009) |
+| credential access | brute force: password spraying | `T1110.004` | testing common passwords (`admin`, `123456`, `password`) against user `test` as preliminary phase (WEB-009) |
+| credential access | modify authentication process | `T1556` | analysis and bypass of laravel sanctum anti-csrf protection (http 419) demonstrating hydra's ineffectiveness on modern frameworks |
+| initial access | exploit public-facing application | `T1190` | exploitation of missing rate limiting and account lockout on login form for unblocked brute force (WEB-009) |
 
 ---
 

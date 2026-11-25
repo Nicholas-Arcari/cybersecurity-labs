@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# T-Pot - Piattaforma Honeypot Multi-Servizio
+# T-Pot - piattaforma honeypot Multi-Servizio
 
 > - **Fase:** Defense & Hardening - Deception & Threat Intelligence
 > - **Categoria:** Deception - honeypot ad alta interazione e raccolta di threat intel
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Dove il canary token (`../canary-tokens/`) e una singola esca passiva, T-Pot e un'intera infrastruttura esca. E una piattaforma honeypot all-in-one sviluppata da Deutsche Telekom che orchestra decine di honeypot specializzati in container Docker: Cowrie (SSH/Telnet), Dionaea (malware/SMB), Honeytrap, Elasticpot e molti altri, con una dashboard ELK integrata che visualizza gli attacchi in tempo reale su una mappa mondiale.
 
@@ -33,7 +33,7 @@ t-pot/
 
 ---
 
-## Deployment e Threat Intelligence con T-Pot
+## Deployment e threat intelligence con T-Pot
 
 **ID Finding:** `DEF-006` | **Severity:** `Medio` (raccolta di threat intelligence; l'honeypot non protegge ma genera IOC/TTP reali e ad alta confidenza)
 
@@ -41,7 +41,7 @@ t-pot/
 
 T-Pot va deployato su una VM dedicata e isolata: essendo progettato per essere attaccato, non deve mai condividere la rete con sistemi di produzione. Espone una superficie d'attacco volutamente allettante; gli attacchi che riceve (soprattutto se ha un IP pubblico) sono in gran parte scansioni opportunistiche e botnet, ma forniscono una fotografia realistica del "rumore di fondo" ostile di Internet.
 
-### PoC - Installazione (isolata)
+### PoC - installazione (isolata)
 
 ```Bash
 # Su una VM dedicata Debian, rete isolata
@@ -63,7 +63,7 @@ suricata        <-- IDS integrato
 elasticsearch   <-- storage per la dashboard
 ```
 
-### PoC - Cattura di una sessione d'attacco (Cowrie SSH)
+### PoC - cattura di una sessione d'attacco (cowrie SSH)
 
 ```
 # Cowrie registra una sessione SSH completa: credenziali, comandi, file
@@ -75,7 +75,7 @@ elasticsearch   <-- storage per la dashboard
   downloaded sample: mirai.arm (hash sha256: ...)           <-- IOC catturato
 ```
 
-### PoC - Threat intelligence dalla dashboard
+### PoC - threat intelligence dalla dashboard
 
 ```
 # La dashboard ELK di T-Pot aggrega gli attacchi:
@@ -85,7 +85,7 @@ Top CVE probed          : CVE-2021-44228 (Log4Shell), ...   <-- TTP (exploit ten
 Malware samples captured : N sample -> analisi in 09-forensics
 ```
 
-### Tuning e Operativita Difensiva
+### Tuning e operativita difensiva
 
 - **Isolamento assoluto:** T-Pot va su rete separata, mai in produzione; un honeypot compromesso oltre lo strato di containment diventa un trampolino per l'attaccante
 - **Uso dell'intelligence:** gli IOC raccolti (IP, hash malware, credenziali) vanno inseriti nelle blocklist e nelle regole del SIEM reale (`../../../01-siem-log-analysis/`); e questo il valore operativo
@@ -94,7 +94,7 @@ Malware samples captured : N sample -> analisi in 09-forensics
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 La prima lezione e stata il costo in risorse. T-Pot avvia decine di container Docker contemporaneamente, e la VM iniziale (4 GB RAM) e stata insufficiente: i container andavano in crash a catena. Portata la VM a 12 GB, la piattaforma si e stabilizzata. E lo stesso pattern gia visto con Wazuh Indexer ed Elasticsearch - gli strumenti difensivi basati su ELK/OpenSearch sono strutturalmente affamati di memoria.
 
@@ -104,7 +104,7 @@ La riflessione strategica e stata sul valore dell'intelligence prodotta. Gli IP 
 
 ---
 
-## Analisi Teorica: L'Honeypot come Sensore di Intelligence, non come Difesa
+## Analisi teorica: L'Honeypot come sensore di intelligence, non come difesa
 
 Un honeypot non protegge nulla: e un sistema progettato per essere compromesso. Il suo valore non e difensivo in senso diretto ma informativo - e un sensore di intelligence. Questa distinzione e fondamentale: chi si aspetta che un honeypot "fermi" gli attacchi ne fraintende lo scopo. L'honeypot osserva, registra, apprende; la difesa vera avviene altrove, alimentata da cio che l'honeypot ha appreso.
 
@@ -116,14 +116,14 @@ Questo colloca l'honeypot nel ciclo di threat intelligence: raccolta (l'attacco 
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `T-Pot` (Telekom) | Honeypot platform | Piattaforma | Orchestrazione all-in-one di honeypot multipli + dashboard |
-| `Cowrie` | SSH/Telnet honeypot | Container | Cattura sessioni SSH: credenziali, comandi, malware |
-| `Dionaea` | Malware honeypot | Container | Cattura di malware via SMB/FTP/altri servizi |
-| `Suricata` | IDS | Container | Detection di rete sugli attacchi ricevuti |
-| `ELK` (integrato) | Dashboard | Stack | Visualizzazione e analisi degli attacchi (attack map) |
-| `OpenCanary` | Lightweight honeypot | Alternativa | Honeypot leggero per deployment interni mirati |
+| `T-Pot` (telekom) | honeypot platform | piattaforma | orchestrazione all-in-one di honeypot multipli + dashboard |
+| `Cowrie` | ssh/telnet honeypot | container | cattura sessioni ssh: credenziali, comandi, malware |
+| `Dionaea` | malware honeypot | container | cattura di malware via smb/ftp/altri servizi |
+| `Suricata` | ids | container | detection di rete sugli attacchi ricevuti |
+| `ELK` (integrato) | dashboard | stack | visualizzazione e analisi degli attacchi (attack map) |
+| `OpenCanary` | lightweight honeypot | alternativa | honeypot leggero per deployment interni mirati |
 
 > **Tool moderno consigliato:** `T-Pot` resta la piattaforma di riferimento per un honeypot ricco e visuale, ideale per la ricerca e l'apprendimento. Per un deployment interno mirato (esca per rilevare movimento laterale, non per raccogliere rumore da Internet), un honeypot leggero come `OpenCanary` o gli honeytoken di Active Directory sono piu adatti e meno esosi. Gli IOC raccolti alimentano il SIEM (`../../../01-siem-log-analysis/`).
 
@@ -133,18 +133,18 @@ Questo colloca l'honeypot nel ciclo di threat intelligence: raccolta (l'attacco 
 
 > La tabella mappa le tecniche d'attacco che l'honeypot **osserva e registra** dagli attaccanti.
 
-| Tattica (osservata) | Tecnica | ID MITRE | Ruolo del controllo |
+| tattica (osservata) | tecnica | id mitre | ruolo del controllo |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Brute Force | `T1110` | Cowrie registra le credenziali tentate (DEF-006) |
-| Initial Access | Valid Accounts / Exploit Public-Facing App | `T1078` / `T1190` | Honeypot registra accessi e exploit tentati (DEF-006) |
-| Command and Control | Ingress Tool Transfer | `T1105` | Cattura del malware che l'attaccante tenta di scaricare (DEF-006) |
-| Execution | Command and Scripting Interpreter | `T1059` | Registrazione dei comandi eseguiti nella sessione esca |
+| credential access | brute force | `T1110` | cowrie registra le credenziali tentate (DEF-006) |
+| initial access | valid accounts / exploit public-facing app | `T1078` / `T1190` | honeypot registra accessi e exploit tentati (DEF-006) |
+| command and control | ingress tool transfer | `T1105` | cattura del malware che l'attaccante tenta di scaricare (DEF-006) |
+| execution | command and scripting interpreter | `T1059` | registrazione dei comandi eseguiti nella sessione esca |
 
-| Contromisura difensiva (D3FEND) | ID D3FEND | Applicazione |
+| contromisura difensiva (d3fend) | id d3fend | applicazione |
 | :--- | :--- | :--- |
-| Decoy Environment | `D3-DE` | Ambiente esca completo per osservare l'attaccante |
-| Decoy Network Resource | `D3-DNR` | Servizi di rete esca (SSH, SMB, HTTP) |
-| Connected Honeynet | `D3-CHN` | Rete di honeypot interconnessi (T-Pot) |
+| decoy environment | `D3-DE` | ambiente esca completo per osservare l'attaccante |
+| decoy network resource | `D3-DNR` | servizi di rete esca (ssh, smb, http) |
+| connected honeynet | `D3-CHN` | rete di honeypot interconnessi (t-pot) |
 
 ---
 

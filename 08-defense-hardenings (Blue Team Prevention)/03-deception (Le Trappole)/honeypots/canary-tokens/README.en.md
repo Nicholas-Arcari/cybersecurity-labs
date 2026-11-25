@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Canary Tokens - Digital Tripwires for Early Breach Detection
+# Canary tokens - digital tripwires for early breach detection
 
 > - **Phase:** Defense & Hardening - Deception & Early Warning
 > - **Category:** Deception - high-confidence alarm signals
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Canary Tokens are digital tripwires: harmless decoys - a document, a credential, a URL, an AWS key - that have no legitimate function and whose only reason to exist is to be touched by an attacker. The moment someone opens the decoy document or uses the fake credential, the token "calls home" and generates an alarm. Since no legitimate user has a reason to interact with the decoy, every activation is a very high-confidence signal: almost zero false positives.
 
@@ -23,7 +23,7 @@ Canary tokens are particularly effective against the post-exploitation phase (`0
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 canary-tokens/
@@ -33,15 +33,15 @@ canary-tokens/
 
 ---
 
-## Canary Token Deployment
+## Canary token deployment
 
 **Finding ID:** `DEF-005` | **Severity:** `Medium` (high-confidence early warning; activation indicates a compromise already in progress)
 
-### Operational Context
+### Operational context
 
 A canary token is generated as an artifact that, on use, produces a network request toward the token's server. There are many types: unique URLs, Office/PDF documents with an embedded beacon, DNS records, fake cloud keys, files with enticing names. The key is placement: the token must be put where an attacker would look, but a legitimate user would not.
 
-### PoC - Generation and placement of a token
+### PoC - generation and placement of a token
 
 ```Bash
 # Token generated (via canarytokens.org or self-hosted instance)
@@ -51,7 +51,7 @@ A canary token is generated as an artifact that, on use, produces a network requ
 /srv/share/finance/passwords_2026.xlsx      # <-- decoy (no legitimate use)
 ```
 
-### PoC - Token activation (attacker takes the bait)
+### PoC - token activation (attacker takes the bait)
 
 ```
 # [Attack] the attacker in post-exploitation enumerates the share and opens the decoy
@@ -64,7 +64,7 @@ A canary token is generated as an artifact that, on use, produces a network requ
   Reminder: "Finance share decoy file"
 ```
 
-### PoC - Fake AWS key (honeytoken for credentials)
+### PoC - fake AWS key (honeytoken for credentials)
 
 ```
 # A pair of fake AWS keys left in a config file or script.
@@ -76,7 +76,7 @@ A canary token is generated as an artifact that, on use, produces a network requ
   Source IP: 45.83.x.x  (attacker infrastructure)   <-- exfiltrated credential used (DEF-005)
 ```
 
-### Tuning and Defensive Operations
+### Tuning and defensive operations
 
 - **Strategic placement:** tokens go where the attacker looks (shares "Finance"/"IT", `passwords` files, keys in scripts/config, records in Active Directory), never where a legitimate user would open them by accident
 - **Credible naming:** the decoy must look real and valuable; a generic name does not attract, a targeted name (`vpn_credentials.txt`, `backup_admin.kdbx`) does
@@ -85,7 +85,7 @@ A canary token is generated as an artifact that, on use, produces a network requ
 
 ---
 
-## Lab Experience
+## Lab experience
 
 I placed several types of tokens in the lab environment and then "wore the attacker's hat", repeating the post-exploitation enumeration of module 07. The experiment was illuminating: during the share enumeration, the file `passwords_2026.xlsx` was exactly what my attacker-self would have opened first. Opening it fired the alert within a few seconds, with the IP of the host I was operating from. The token had anticipated my offensive behavior.
 
@@ -95,7 +95,7 @@ The limit that emerged is coverage. A canary token detects only an attacker who 
 
 ---
 
-## Theoretical Analysis: The Asymmetry of Deception in the Defender's Favor
+## Theoretical analysis: the asymmetry of deception in the defender's favor
 
 Deception overturns an asymmetry that normally favors the attacker. Usually the defender must be right always (protect every point), the attacker only once (find one hole). Deception introduces the opposite asymmetry: the attacker must avoid every decoy (they do not know which files are real and which are traps), the defender must guess just one decoy that the attacker will touch. In an environment scattered with tokens, the attacker cannot explore without risking triggering one.
 
@@ -105,36 +105,36 @@ The theoretical foundation is the structurally null false-positive rate. Every d
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `Canarytokens` (Thinkst) | Token generator | Service/self-hosted | Generation of various token types (doc, URL, AWS, DNS) |
-| `Thinkst Canary` | Honeypot appliance | Product | Physical/virtual honeypot "birds" with very low noise |
-| `OpenCanary` | Honeypot daemon | Open source | Self-hosted decoy services (FTP, SSH, HTTP) |
-| `Honeytokens` (AD) | Deception account | Technique | Fake accounts/credentials in Active Directory |
-| `DNS canary` | DNS beacon | Token | Detection of exfiltration or access to decoy resources |
+| `Canarytokens` (thinkst) | token generator | service/self-hosted | generation of various token types (doc, url, aws, dns) |
+| `Thinkst Canary` | honeypot appliance | product | physical/virtual honeypot "birds" with very low noise |
+| `OpenCanary` | honeypot daemon | open source | self-hosted decoy services (ftp, ssh, http) |
+| `Honeytokens` (ad) | deception account | technique | fake accounts/credentials in active directory |
+| `DNS canary` | dns beacon | token | detection of exfiltration or access to decoy resources |
 
 > **Recommended modern tool:** `canarytokens.org` (Thinkst) is the fastest way to start, free and without infrastructure. For a controlled internal deployment, self-hosted `OpenCanary` offers complete decoy services. In Active Directory environments, honeytokens (fake accounts with enticing SPNs) integrate deception with the detection of Kerberoasting and other AD attacks.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
 > The table maps the attack techniques that the decoys **detect** at the moment of interaction.
 
-| Tactic (detected) | Technique | MITRE ID | Role of the control |
+| tactic (detected) | technique | mitre id | role of the control |
 | :--- | :--- | :--- | :--- |
-| Collection | Data from Network Shared Drive | `T1039` | The decoy document on a share fires if opened (DEF-005) |
-| Collection | Data from Local System | `T1005` | Local decoy files that reveal enumeration |
-| Credential Access | Unsecured Credentials: Credentials In Files | `T1552.001` | Fake credentials that fire if used (DEF-005) |
-| Discovery | File and Directory Discovery | `T1083` | Interaction with the decoy reveals ongoing enumeration |
+| collection | data from network shared drive | `T1039` | the decoy document on a share fires if opened (DEF-005) |
+| collection | data from local system | `T1005` | local decoy files that reveal enumeration |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | fake credentials that fire if used (DEF-005) |
+| discovery | file and directory discovery | `T1083` | interaction with the decoy reveals ongoing enumeration |
 
-| Defensive countermeasure (D3FEND) | D3FEND ID | Application |
+| defensive countermeasure (d3fend) | d3fend id | application |
 | :--- | :--- | :--- |
-| Decoy File | `D3-DF` | Decoy files placed to detect unauthorized access |
-| Decoy User Credential | `D3-DUC` | Fake credentials (honeytokens) that betray use |
-| Decoy Network Resource | `D3-DNR` | Decoy network resources (shares, URLs, DNS records) |
+| decoy file | `D3-DF` | decoy files placed to detect unauthorized access |
+| decoy user credential | `D3-DUC` | fake credentials (honeytokens) that betray use |
+| decoy network resource | `D3-DNR` | decoy network resources (shares, urls, dns records) |
 
 ---
 

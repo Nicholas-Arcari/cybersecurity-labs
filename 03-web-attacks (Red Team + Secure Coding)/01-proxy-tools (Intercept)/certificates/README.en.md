@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Proxy Tools: SSL/TLS Certificates & HTTPS Interception
+# Proxy tools: SSL/TLS certificates & HTTPS interception
 
 > - **Phase:** Web Attack - HTTPS Interception Setup
 > - **Visibility:** Local - configuration is performed exclusively on the local browser, no additional traffic towards the target
@@ -17,7 +17,7 @@ Tools: `Burp Suite`, `Firefox Certificate Manager`
 
 ---
 
-## 1 Theoretical Introduction: Breaking Encryption
+## 1 Theoretical introduction: breaking encryption
 
 The HTTPS protocol protects data confidentiality by encrypting them between client and server. A "Man-in-the-Middle" Proxy (like Burp) breaks this connection.
 
@@ -31,7 +31,7 @@ For the browser to accept this fake certificate without displaying security erro
 
 ---
 
-## 2 Technical Procedure: CA Installation
+## 2 Technical procedure: CA installation
 
 The PortSwigger root certificate installation was performed to enable Deep Packet Inspection.
 
@@ -51,7 +51,7 @@ Inspecting the site's certificate, the issuer is PortSwigger CA, confirming that
 
 ---
 
-## 3 Advanced Scenarios: SSL Pinning
+## 3 Advanced scenarios: SSL pinning
 
 While this technique works on desktop browsers, modern mobile applications (Android/iOS) implement SSL Pinning.
 
@@ -65,12 +65,12 @@ Proper certificate management is the prerequisite for analyzing modern traffic. 
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Defense Evasion | Subvert Trust Controls: Install Root Certificate | `T1553.004` | Installation of the PortSwigger (Burp Suite) CA certificate in Firefox's trust store to enable HTTPS interception without certificate errors |
-| Collection | Man-in-the-Middle: AiTM HTTPS Interception | `T1557.002` | Generation of fake SSL certificates for each visited domain (e.g., `google.com`), with issuer `PortSwigger CA`, allowing decryption of TLS traffic in transit |
+| defense evasion | subvert trust controls: install root certificate | `T1553.004` | installation of the portswigger (burp suite) ca certificate in firefox's trust store to enable https interception without certificate errors |
+| collection | man-in-the-middle: aitm https interception | `T1557.002` | generation of fake ssl certificates for each visited domain (e.g., `google.com`), with issuer `PortSwigger CA`, allowing decryption of tls traffic in transit |
 
 ---
 

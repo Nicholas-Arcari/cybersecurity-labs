@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# AWS (Amazon Web Services) - Sicurezza e Attacco
+# AWS (Amazon web services) - sicurezza e attacco
 
 > - **Fase:** Cloud Security - AWS (IaaS & PaaS)
 > - **Categoria:** Offensivo + Difensivo - identita e storage al centro
@@ -60,38 +60,38 @@ AWS (Amazon Web Services)/
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `aws-cli` | Cloud CLI | Ufficiale | Interazione con le API AWS |
-| `Pacu` | Exploitation framework | Offensivo | Enum, privesc, persistenza su AWS |
-| `enumerate-iam` / `cloud_enum` | Recon | Offensivo | Enumerazione permessi e bucket |
-| `Prowler` / `ScoutSuite` | Audit | Difensivo | Rilevamento misconfig e vie di privesc |
-| `PMapper` | IAM graph | Difensivo | Analisi a grafo delle escalation IAM |
+| `aws-cli` | cloud cli | ufficiale | interazione con le api aws |
+| `Pacu` | exploitation framework | offensivo | enum, privesc, persistenza su aws |
+| `enumerate-iam` / `cloud_enum` | recon | offensivo | enumerazione permessi e bucket |
+| `Prowler` / `ScoutSuite` | audit | difensivo | rilevamento misconfig e vie di privesc |
+| `PMapper` | iam graph | difensivo | analisi a grafo delle escalation iam |
 
 > **Tool moderno consigliato:** `Pacu` (offensivo) e `Prowler`/`ScoutSuite` (difensivo) coprono la simmetria attacco/difesa su AWS. Vedere `../../../Tooling/` per il dettaglio di ciascuno.
 
 ---
 
-## Registro Finding - AWS
+## Registro finding - AWS
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `CLOUD-001` | IAM enumeration + privilege escalation da credenziale limitata ad admin | `Critico` | `IAM-enumeration/` |
-| `CLOUD-002` | S3 bucket esposto/misconfigurato: esfiltrazione dati o manomissione | `Alto` | `S3-buckets-attacks/` |
+| `CLOUD-001` | iam enumeration + privilege escalation da credenziale limitata ad admin | `Critico` | `IAM-enumeration/` |
+| `CLOUD-002` | s3 bucket esposto/misconfigurato: esfiltrazione dati o manomissione | `Alto` | `S3-buckets-attacks/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
 > Riferimento: MITRE ATT&CK for Cloud (IaaS).
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Discovery | Cloud Infrastructure Discovery | `T1580` | CLOUD-001 |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | CLOUD-001 |
-| Persistence | Account Manipulation: Additional Cloud Credentials | `T1098.001` | CLOUD-001 |
-| Collection | Data from Cloud Storage | `T1530` | CLOUD-002 |
-| Discovery | Cloud Storage Object Discovery | `T1619` | CLOUD-002 |
+| discovery | cloud infrastructure discovery | `T1580` | CLOUD-001 |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | CLOUD-001 |
+| persistence | account manipulation: additional cloud credentials | `T1098.001` | CLOUD-001 |
+| collection | data from cloud storage | `T1530` | CLOUD-002 |
+| discovery | cloud storage object discovery | `T1619` | CLOUD-002 |
 
 ---
 

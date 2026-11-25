@@ -1,6 +1,6 @@
 > [English](THEORETICAL-FOUNDATIONS.en.md) | **Italiano**
 
-# Fondamenti Teorici - Modulo 09: Digital Forensics
+# Fondamenti teorici - modulo 09: digital forensics
 
 > - **Livello:** Analisi accademica (complemento teorico ai README operativi del modulo)
 > - **Scopo:** Fondare la forense sull'ordine di volatilita, sull'integrita crittografica delle prove, sul principio di scambio e sull'inferenza inversa dallo stato presente al passato.
@@ -20,7 +20,7 @@ Il modulo 09 ha due agenti in opposizione. L'**analista forense** `F` mira a ric
 
 ---
 
-## 2. Proprieta di Sicurezza e Prova in Gioco
+## 2. Proprieta di sicurezza e prova in gioco
 
 - **Integrita della prova:** la prova deve essere dimostrabilmente non alterata dall'acquisizione all'analisi. E la proprieta [Biba 1977] che l'hashing crittografico garantisce (sezione 3.3).
 - **Autenticita e catena di custodia:** deve essere tracciabile chi ha maneggiato la prova, quando e come; una custodia non documentata la rende inammissibile.
@@ -29,7 +29,7 @@ Il modulo 09 ha due agenti in opposizione. L'**analista forense** `F` mira a ric
 
 ---
 
-## 3. Fondamenti Teorici
+## 3. Fondamenti teorici
 
 ### 3.1 Il principio di scambio come assioma di ricostruibilita
 
@@ -53,7 +53,7 @@ Ricostruire `sigma` dallo stato osservato e un problema di **inferenza inversa**
 
 ---
 
-## 4. Analisi Quantitativa
+## 4. Analisi quantitativa
 
 ### 4.1 Robustezza dell'integrita e paradosso del compleanno
 
@@ -65,13 +65,13 @@ Se `k` tracce indipendenti supportano ciascuna la stessa ipotesi di ricostruzion
 
 ---
 
-## 5. Rassegna della Letteratura
+## 5. Rassegna della letteratura
 
 L'ordine di volatilita e le best practice di acquisizione sono codificati da [Brezinski & Killalea 2002] (RFC 3227) e [Farmer & Venema 2005]. I limiti fisici della volatilita della memoria sono dimostrati da [Halderman et al. 2008]. La proprieta di integrita richiamata e di [Biba 1977]. Le sfide programmatiche e la maturazione della disciplina sono discusse da [Garfinkel 2010]. La cornice analitica per l'interpretazione dell'intrusione ricostruita e il Diamond Model [Caltagirone et al. 2013]. Il principio di scambio di Locard (criminalistica classica) e lo standard di ammissibilita scientifica (nel diritto statunitense, il criterio Daubert) sono riferimenti fondativi trasversali richiamati come principi consolidati.
 
 ---
 
-## 6. Limiti e Problemi Aperti
+## 6. Limiti e problemi aperti
 
 1. **Non iniettivita della ricostruzione.** Poiche piu sequenze di eventi producono lo stesso stato osservato (sezione 3.5), la ricostruzione forense e intrinsecamente abduttiva e non deduttiva: esiste sempre incertezza residua, riducibile ma non azzerabile dalla convergenza delle fonti. E un limite epistemico, non tecnologico.
 
@@ -81,7 +81,7 @@ L'ordine di volatilita e le best practice di acquisizione sono codificati da [Br
 
 ---
 
-## 7. Sintesi e Collegamento alla Pratica
+## 7. Sintesi e collegamento alla pratica
 
 I finding `FOR-` del modulo istanziano questo quadro: la disk & memory forensics (FOR-001) applica l'ordine di volatilita della sezione 3.2, l'integrita crittografica della sezione 3.3 e il recupero degli artefatti cancellati come esempio del principio di scambio della sezione 3.1; la network forensics (FOR-002) e la fonte indipendente immune alla manomissione a posteriori (sezione 3.4) che rafforza la convergenza della sezione 4.2. La catena di custodia e la verifica dell'hash documentate nei README sono le realizzazioni operative delle sezioni 3.3 e 2. Il documento fornisce alla pratica forense la giustificazione teorica del perche l'ordine di volatilita, l'integrita e la molteplicita delle fonti non siano formalita ma condizioni di validita del risultato, e chiude il conflitto con il modulo 07: cio che l'anti-forensics tenta di distruggere, l'immutabilita della preservazione conserva, spostando l'equilibrio a favore dell'analista.
 

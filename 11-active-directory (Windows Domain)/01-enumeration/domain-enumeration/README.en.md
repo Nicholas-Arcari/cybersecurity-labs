@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Alongside BloodHound, targeted enumeration with CLI tools remains indispensable for answering specific
 questions: which users exist and their attributes, what the password policy is (essential before a spray),
@@ -27,7 +27,7 @@ for example, it is essential to read the lockout policy so as not to lock accoun
 reveals the attack and harms the client). Before Kerberoasting, you need the list of SPNs. This data is best
 extracted with targeted LDAP queries rather than a graph collection.
 
-## Execution / Commands
+## Execution / commands
 
 ### LDAP (ldapsearch)
 
@@ -76,7 +76,7 @@ Roasting. On its own, enumeration is `Informational`/`Low`; its value lies in re
 the later phases. A null session exposing the entire user list is a `Low` finding in itself (information
 disclosure), because it gives an unauthenticated attacker the raw material for spraying.
 
-### Theoretical Analysis
+### Theoretical analysis
 
 The richness of LDAP enumeration derives from an AD design choice: the domain database is readable by any
 authenticated user, because the model assumes that knowledge of the structure is not itself a secret
@@ -85,7 +85,7 @@ cost: the attacker with a single account obtains a detailed map. The defense can
 can reduce the readable sensitive attributes and, where unnecessary, eliminate null sessions (a legacy
 configuration remnant).
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection.** Anomalous volume of LDAP/RPC queries from a single account; RID cycling (sequences of SAMR
 queries over increasing RIDs); anonymous/null-session access to the DCs.
@@ -96,13 +96,13 @@ however, does not open the door to account DoS).
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `ldapsearch` | LDAP client | CLI - Active | Targeted queries on users, groups, policies, SPNs |
-| `windapsearch` | LDAP wrapper | CLI - Active | Common prepackaged LDAP queries |
-| `rpcclient` | RPC client | CLI - Active | User/group enumeration via RPC, including null session |
-| `NetExec` (`nxc`) | AD/SMB toolkit | CLI - Active | User enumeration, password policy, RID brute, shares |
-| `enum4linux-ng` | Enum wrapper | CLI - Active | Overall SMB/RPC enumeration (successor to enum4linux) |
+| `ldapsearch` | ldap client | cli - active | targeted queries on users, groups, policies, spns |
+| `windapsearch` | ldap wrapper | cli - active | common prepackaged ldap queries |
+| `rpcclient` | rpc client | cli - active | user/group enumeration via rpc, including null session |
+| `NetExec` (`nxc`) | ad/smb toolkit | cli - active | user enumeration, password policy, rid brute, shares |
+| `enum4linux-ng` | enum wrapper | cli - active | overall smb/rpc enumeration (successor to enum4linux) |
 
 ## Methodology notes
 
@@ -112,19 +112,19 @@ disclosure). These become direct inputs to techniques 02-05.
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Discovery | Account Discovery: Domain Account | `T1087.002` | Enumeration of domain accounts via LDAP/RPC. |
-| Discovery | Permission Groups Discovery: Domain Groups | `T1069.002` | Enumeration of groups and memberships. |
-| Discovery | Password Policy Discovery | `T1201` | Reading lockout and password policy before spraying. |
+| discovery | account discovery: domain account | `T1087.002` | enumeration of domain accounts via ldap/rpc. |
+| discovery | permission groups discovery: domain groups | `T1069.002` | enumeration of groups and memberships. |
+| discovery | password policy discovery | `T1201` | reading lockout and password policy before spraying. |
 
 ## Links to other modules
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
-| [BloodHound](<../bloodhound/README.en.md>) | Domain enumeration | complements the graph with precise details (policy, SPNs) |
-| Domain enumeration | [Kerberoasting](<../../02-kerberos-attacks/kerberoasting/README.en.md>) / [kerbrute spraying](<../kerbrute-userenum/README.en.md>) | provides SPNs, accounts without pre-auth and policy for safe spraying |
-| SMB enumeration | [module 02 - smb-net-bios](<../../../02-vulnerability-assessment/02-protocol-specific-audit/smb-net-bios/README.en.md>) | continuity with the SMB audit already in the repo |
+| [bloodhound](<../bloodhound/README.en.md>) | domain enumeration | complements the graph with precise details (policy, spns) |
+| domain enumeration | [kerberoasting](<../../02-kerberos-attacks/kerberoasting/README.en.md>) / [kerbrute spraying](<../kerbrute-userenum/README.en.md>) | provides spns, accounts without pre-auth and policy for safe spraying |
+| smb enumeration | [module 02 - smb-net-bios](<../../../02-vulnerability-assessment/02-protocol-specific-audit/smb-net-bios/README.en.md>) | continuity with the smb audit already in the repo |
 
 ---
 

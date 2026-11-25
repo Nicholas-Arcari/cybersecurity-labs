@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# MIFARE Cloning - Access Badge Cloning
+# MIFARE cloning - access badge cloning
 
 > - **Phase:** Wireless Security - Physical Access / Badge Impersonation (NFC/RFID 13.56 MHz)
 > - **Visibility:** Zero toward the access control system - a cloned badge is indistinguishable from the original; the only trace is in the access logs (a badge used in two incompatible places/times)
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Cloning turns the dump of a badge (`../nfc-tools/`, WIFI-010) into a working physical token indistinguishable from the original. It is the step that makes the attack concrete: it is not enough to read a badge, one must produce a copy that the access control reader accepts as authentic.
 
@@ -23,7 +23,7 @@ Finding WIFI-011 documents the production of a complete clone of the test badge 
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 mifare-cloning/
@@ -33,15 +33,15 @@ mifare-cloning/
 
 ---
 
-## Cloning on Magic Tag
+## Cloning on magic tag
 
 **Finding ID:** `WIFI-011` | **Severity:** `High` (cloned and working access badge - physical impersonation of the holder)
 
-### Operational Context
+### Operational context
 
 The dump obtained in WIFI-010 (`badge_dump.mfd`) contains the entire content of the original badge, including UID and keys. To create a clone accepted even by the systems that verify the UID, the dump is written to a magic tag whose block 0 is modifiable.
 
-### PoC - Phase 1: Magic tag verification
+### PoC - phase 1: magic tag verification
 
 ```Bash
 # Identification of the magic tag (accepts block 0 write commands)
@@ -53,7 +53,7 @@ nfc-list
     MIFARE Classic 1K (Gen1a magic)     <-- writable block 0
 ```
 
-### PoC - Phase 2: Writing the clone
+### PoC - phase 2: writing the clone
 
 ```Bash
 # Writing the entire dump (including block 0/UID) to the magic tag
@@ -68,7 +68,7 @@ Writing block 0 (UID)...                          <-- UID cloned (only on magic)
 Done.                                             <-- complete clone written (WIFI-011)
 ```
 
-### PoC - Phase 3: Clone verification
+### PoC - phase 3: clone verification
 
 ```Bash
 # Re-reading the clone for comparison with the original
@@ -90,7 +90,7 @@ The UID of the clone (`a1b2c3d4`) corresponds exactly to that of the original ba
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The turning point was understanding the role of the magic tags. The first cloning attempt on a standard MIFARE Classic tag failed in writing block 0: the UID was immutable, and the resulting clone had a UID different from the original. The test access control system, which verified the UID, rejected it. The switch to a Gen1a magic tag - whose block 0 accepts the write - solved the problem by producing a clone with an identical UID.
 
@@ -100,7 +100,7 @@ The concluding observation concerns detectability: a clone is perfect for the re
 
 ---
 
-## Theoretical Analysis: UID Spoofing and the Failure of Identity as a Secret
+## Theoretical analysis: UID spoofing and the failure of identity as a secret
 
 MIFARE cloning illustrates a recurring conceptual error: using a public identifier as if it were an authentication secret. The UID of a tag is designed for anti-collision (distinguishing multiple tags in the reader's field), not for authentication: it is transmitted in cleartext at every query and, on magic tags, is freely settable. A system that grants access based on the UID is authenticating "something that anyone can read and anyone can falsify".
 
@@ -110,11 +110,11 @@ This is the same principle that distinguishes, in the web domain, a predictable 
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > This section describes how this finding would fit into a real engagement, from both the attacker (Red Team) and defender (Blue Team) perspectives.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** cloned and working access badge, indistinguishable from the original (WIFI-011).
 
@@ -140,7 +140,7 @@ Internal foothold -> pivoting toward the network (07-post-exploitation)
 
 **Potential impact:** a cloned badge nullifies the physical security perimeter. The attacker obtains, with a few seconds of proximity to the original badge (via skimming or social engineering) and material costing a few euros, the same access capability as the legitimate employee. In high-security contexts (data centers, industrial areas), this is often the cheapest and quietest entry point. The vector integrates with `05-social-engineering/` (obtaining the proximity) and opens the internal network access phase.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** a cloned badge is identical to the original for the reader, so it is not detectable at the moment of access. Detection occurs via log analysis: impossible uses (same card in two places at incompatible times) or anomalous ones (accesses outside hours, areas never used by the holder).
 
@@ -162,29 +162,29 @@ Internal foothold -> pivoting toward the network (07-post-exploitation)
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `nfc-mfclassic` | MIFARE writer | CLI | Writing the dump to a tag (including block 0 on magic) |
-| `libnfc` | NFC library | CLI | Interface with NFC readers for reading/writing |
-| `Mifare Classic Tool` | NFC app | Android | Cloning from a smartphone with NFC (reading+writing) |
-| Magic tag Gen1a/Gen2 | Hardware | - | Tag with writable block 0 (UID) for a perfect clone |
-| `Proxmark3` | RFID multi-tool | Hardware | Advanced cloning, protected tags, LF+HF (`../proxmark3-client/`) |
-| [Flipper Zero](https://github.com/Nicholas-Arcari/FlipperZero-guide) | Portable multi-tool | Hardware | Portable NFC reading/emulation/cloning |
+| `nfc-mfclassic` | mifare writer | cli | writing the dump to a tag (including block 0 on magic) |
+| `libnfc` | nfc library | cli | interface with nfc readers for reading/writing |
+| `Mifare Classic Tool` | nfc app | android | cloning from a smartphone with nfc (reading+writing) |
+| magic tag gen1a/gen2 | hardware | - | tag with writable block 0 (uid) for a perfect clone |
+| `Proxmark3` | rfid multi-tool | hardware | advanced cloning, protected tags, lf+hf (`../proxmark3-client/`) |
+| [flipper zero](https://github.com/Nicholas-Arcari/FlipperZero-guide) | portable multi-tool | hardware | portable nfc reading/emulation/cloning |
 
 > **Recommended modern tool:** the `Proxmark3 RDV4` is the professional standard for cloning (it handles magic, protected, LF and HF tags, and emulates badges without a physical tag). The `Flipper Zero` offers NFC emulation and cloning in a pocket device, ideal for demonstrations and field assessments.
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Develop Capabilities | `T1587` | Production of a working clone badge on a magic tag (WIFI-011) |
-| Defense Evasion | Impersonation | `T1656` | The cloned badge impersonates the legitimate holder toward the access control (WIFI-011) |
-| Initial Access | Hardware Additions | `T1200` | Use of the cloned badge to gain unauthorized physical access (WIFI-011) |
-| Initial Access | Valid Accounts: Local Accounts | `T1078.003` | The clone is equivalent to a valid physical access credential of the holder |
+| resource development | develop capabilities | `T1587` | production of a working clone badge on a magic tag (WIFI-011) |
+| defense evasion | impersonation | `T1656` | the cloned badge impersonates the legitimate holder toward the access control (WIFI-011) |
+| initial access | hardware additions | `T1200` | use of the cloned badge to gain unauthorized physical access (WIFI-011) |
+| initial access | valid accounts: local accounts | `T1078.003` | the clone is equivalent to a valid physical access credential of the holder |
 
 ---
 

@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 01 - Reconnaissance (Red Team Basic)
+# 01 - Reconnaissance (red team basic)
 
 > - **Fase:** Reconnaissance - Pre-engagement Information Gathering
 > - **Visibilita:** Zero / Bassa - da OSINT passivo a network scanning attivo
@@ -96,30 +96,30 @@ Nella Cyber Kill Chain (Lockheed Martin), questa fase corrisponde al primo stadi
 
 ---
 
-## Registro Finding
+## Registro finding
 
 Tutti i finding identificati durante la fase di Reconnaissance sono elencati di seguito. La colonna "File" punta al README della sottocartella che contiene i dettagli tecnici completi.
 
-| ID | Descrizione | Severity | File |
+| id | descrizione | severity | file |
 | :--- | :--- | :---: | :--- |
-| `OSINT-001` | Credenziali del target identificate in data breach pubblici | `Alto` | `01-osint-passive/breach-data/` |
-| `OSINT-002` | Esposizione email su dominio personale - superficie di attacco minima | `Informativo` | `01-osint-passive/email-harvesting/` |
-| `OSINT-003` | Documenti e pannelli di login indicizzati da Google su nasa.gov | `Variabile (Basso / Alto)` | `01-osint-passive/google-dorks/` |
-| `OSINT-004` | Identity correlation tramite username riutilizzato su piu piattaforme | `Basso` | `01-osint-passive/user-enumeration/` |
-| `OSINT-005` | Correlazione OSINT automatica del target via framework multi-fonte (SpiderFoot, recon-ng, Maltego) | `Variabile (Informativo / Alto)` | `01-osint-passive/osint-frameworks/` |
-| `OSINT-006` | Segreti (credenziali, API key, chiavi) esposti in repository pubblici (git history) | `Variabile (Alto / Critico)` | `01-osint-passive/code-secret-leakage/` |
-| `SCAN-001` | Host attivi identificati nella subnet 10.0.2.0/24 (target Windows 10) | `Informativo` | `02-network-scanning-active/live-host-discovery/` |
-| `SCAN-002` | Port discovery con Masscan - falso negativo in ambiente NAT virtualizzato | `Informativo` | `02-network-scanning-active/port-scanning (Nmap)/masscan/` |
-| `SCAN-003` | SMB Signing non obbligatorio su 10.0.2.3 - vettore SMB Relay abilitato | `Alto` | `02-network-scanning-active/port-scanning (Nmap)/nmap-scripts/` |
-| `DNS-001` | Zone Transfer riuscito su zonetransfer.me - esposizione completa della zona DNS | `Critico` | `03-dns-enumeration/dns-recon/` |
-| `DNS-002` | Virtual Host non pubblicato accessibile via manipolazione /etc/hosts | `Medio` | `03-dns-enumeration/hosts-file/` |
+| `OSINT-001` | credenziali del target identificate in data breach pubblici | `Alto` | `01-osint-passive/breach-data/` |
+| `OSINT-002` | esposizione email su dominio personale - superficie di attacco minima | `Informativo` | `01-osint-passive/email-harvesting/` |
+| `OSINT-003` | documenti e pannelli di login indicizzati da google su nasa.gov | `Variabile (Basso / Alto)` | `01-osint-passive/google-dorks/` |
+| `OSINT-004` | identity correlation tramite username riutilizzato su piu piattaforme | `Basso` | `01-osint-passive/user-enumeration/` |
+| `OSINT-005` | correlazione osint automatica del target via framework multi-fonte (spiderfoot, recon-ng, maltego) | `Variabile (Informativo / Alto)` | `01-osint-passive/osint-frameworks/` |
+| `OSINT-006` | segreti (credenziali, api key, chiavi) esposti in repository pubblici (git history) | `Variabile (Alto / Critico)` | `01-osint-passive/code-secret-leakage/` |
+| `SCAN-001` | host attivi identificati nella subnet 10.0.2.0/24 (target windows 10) | `Informativo` | `02-network-scanning-active/live-host-discovery/` |
+| `SCAN-002` | port discovery con masscan - falso negativo in ambiente nat virtualizzato | `Informativo` | `02-network-scanning-active/port-scanning (Nmap)/masscan/` |
+| `SCAN-003` | smb signing non obbligatorio su 10.0.2.3 - vettore smb relay abilitato | `Alto` | `02-network-scanning-active/port-scanning (Nmap)/nmap-scripts/` |
+| `DNS-001` | zone transfer riuscito su zonetransfer.me - esposizione completa della zona dns | `Critico` | `03-dns-enumeration/dns-recon/` |
+| `DNS-002` | virtual host non pubblicato accessibile via manipolazione /etc/hosts | `Medio` | `03-dns-enumeration/hosts-file/` |
 | `DNS-003` | 500+ sottodomini di tesla.com enumerati passivamente (inclusi vpn, sso, dev-app) | `Medio` | `03-dns-enumeration/subdomain-finding/` |
-| `INTEL-001` | 60+ dispositivi con RDP esposto a Parma - Information Disclosure (nomi host, OS) | `Alto` | `04-infrastructure-intel/shodan-censys/` |
-| `INTEL-002` | Workstation con RDP + Apache + porte non standard esposta su IP pubblico | `Alto` | `04-infrastructure-intel/shodan-censys/` |
-| `INTEL-003` | Server aziendale con VoIP (3CX) + FTP (FileZilla) + RDP esposti su ADSL consumer | `Critico` | `04-infrastructure-intel/shodan-censys/` |
-| `INTEL-004` | tesla.com protetta da Akamai WAF - fingerprinting bloccato, HSTS attivo | `Informativo` | `04-infrastructure-intel/tech-stack/` |
-| `INTEL-005` | Perimetro completo mappato via ASN/WHOIS e sottodomini da Certificate Transparency | `Variabile (Informativo / Medio)` | `04-infrastructure-intel/asn-whois-ct/` |
-| `INTEL-006` | Storage cloud esposto (bucket S3/Blob) con lettura anonima di dati sensibili | `Variabile (Medio / Critico)` | `04-infrastructure-intel/cloud-asset-discovery/` |
+| `INTEL-001` | 60+ dispositivi con rdp esposto a parma - information disclosure (nomi host, os) | `Alto` | `04-infrastructure-intel/shodan-censys/` |
+| `INTEL-002` | workstation con rdp + apache + porte non standard esposta su ip pubblico | `Alto` | `04-infrastructure-intel/shodan-censys/` |
+| `INTEL-003` | server aziendale con voip (3cx) + ftp (filezilla) + rdp esposti su adsl consumer | `Critico` | `04-infrastructure-intel/shodan-censys/` |
+| `INTEL-004` | tesla.com protetta da akamai waf - fingerprinting bloccato, hsts attivo | `Informativo` | `04-infrastructure-intel/tech-stack/` |
+| `INTEL-005` | perimetro completo mappato via asn/whois e sottodomini da certificate transparency | `Variabile (Informativo / Medio)` | `04-infrastructure-intel/asn-whois-ct/` |
+| `INTEL-006` | storage cloud esposto (bucket s3/blob) con lettura anonima di dati sensibili | `Variabile (Medio / Critico)` | `04-infrastructure-intel/cloud-asset-discovery/` |
 
 ---
 
@@ -127,26 +127,26 @@ Tutti i finding identificati durante la fase di Reconnaissance sono elencati di 
 
 Tabella aggregata di tutte le tecniche MITRE ATT&CK rilevate durante la fase di Reconnaissance.
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Identity Info: Credentials | `T1589.001` | OSINT-001 |
-| Reconnaissance | Gather Victim Identity Info: Email Addresses | `T1589.002` | OSINT-002 |
-| Reconnaissance | Search Open Websites/Domains: Search Engines | `T1593.002` | OSINT-003 |
-| Reconnaissance | Gather Victim Identity Info: Employee Names | `T1589.003` | OSINT-004 |
-| Reconnaissance | Search Open Websites/Domains: Social Media | `T1593.001` | OSINT-004 |
-| Reconnaissance | Remote System Discovery | `T1018` | SCAN-001 |
-| Reconnaissance | Network Service Discovery | `T1046` | SCAN-001, SCAN-002, SCAN-003 |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | SCAN-003, INTEL-004 |
-| Reconnaissance | Gather Victim Network Info: DNS | `T1590.002` | DNS-001, DNS-003 |
-| Reconnaissance | Search Open Technical Databases: DNS/Passive DNS | `T1596.001` | DNS-001, DNS-003 |
-| Reconnaissance | Search Open Technical Databases: Scan Databases | `T1596.005` | INTEL-001, INTEL-002, INTEL-003 |
-| Reconnaissance | Gather Victim Network Info: Network Topology | `T1590.004` | INTEL-001, INTEL-002, INTEL-003, INTEL-005 |
-| Reconnaissance | Search Open Technical Databases (aggregazione multi-fonte) | `T1596` | OSINT-005, OSINT-006, INTEL-006 |
-| Reconnaissance | Search Open Technical Databases: WHOIS | `T1596.002` | OSINT-005, INTEL-005 |
-| Reconnaissance | Search Open Technical Databases: Digital Certificates | `T1596.003` | INTEL-005 |
-| Reconnaissance | Gather Victim Network Info: IP Addresses | `T1590.005` | INTEL-005 |
-| Credential Access | Unsecured Credentials: Credentials In Files | `T1552.001` | OSINT-006 |
-| Collection | Data from Cloud Storage | `T1530` | INTEL-006 |
+| reconnaissance | gather victim identity info: credentials | `T1589.001` | OSINT-001 |
+| reconnaissance | gather victim identity info: email addresses | `T1589.002` | OSINT-002 |
+| reconnaissance | search open websites/domains: search engines | `T1593.002` | OSINT-003 |
+| reconnaissance | gather victim identity info: employee names | `T1589.003` | OSINT-004 |
+| reconnaissance | search open websites/domains: social media | `T1593.001` | OSINT-004 |
+| reconnaissance | remote system discovery | `T1018` | SCAN-001 |
+| reconnaissance | network service discovery | `T1046` | SCAN-001, SCAN-002, SCAN-003 |
+| reconnaissance | gather victim host info: software | `T1592.002` | SCAN-003, INTEL-004 |
+| reconnaissance | gather victim network info: dns | `T1590.002` | DNS-001, DNS-003 |
+| reconnaissance | search open technical databases: dns/passive dns | `T1596.001` | DNS-001, DNS-003 |
+| reconnaissance | search open technical databases: scan databases | `T1596.005` | INTEL-001, INTEL-002, INTEL-003 |
+| reconnaissance | gather victim network info: network topology | `T1590.004` | INTEL-001, INTEL-002, INTEL-003, INTEL-005 |
+| reconnaissance | search open technical databases (aggregazione multi-fonte) | `T1596` | OSINT-005, OSINT-006, INTEL-006 |
+| reconnaissance | search open technical databases: whois | `T1596.002` | OSINT-005, INTEL-005 |
+| reconnaissance | search open technical databases: digital certificates | `T1596.003` | INTEL-005 |
+| reconnaissance | gather victim network info: ip addresses | `T1590.005` | INTEL-005 |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | OSINT-006 |
+| collection | data from cloud storage | `T1530` | INTEL-006 |
 
 ---
 

@@ -23,7 +23,7 @@ The cross-cutting theme is the management of complexity. Kubernetes has too many
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 03-orchestration (Kubernetes)/
@@ -35,7 +35,7 @@ The cross-cutting theme is the management of complexity. Kubernetes has too many
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [OFFENSIVE] K8s-attacks/
@@ -52,41 +52,41 @@ The cross-cutting theme is the management of complexity. Kubernetes has too many
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Type | Role | Main use case |
+| tool | type | role | main use case |
 | :--- | :--- | :--- | :--- |
-| `kubectl` | K8s CLI | Official | Interaction with the cluster |
-| `kube-hunter` | Scanner | Offensive | Discovery of exposed components |
-| `Peirates` | Exploitation | Offensive | Post-exploitation on K8s |
-| `kube-bench` | CIS auditor | Defensive | CIS conformity audit |
-| `Pod Security` / `Kyverno` | Admission | Defensive | Blocking of dangerous pods |
-| `Falco` | Runtime security | Defensive | Runtime detection |
+| `kubectl` | k8s cli | official | interaction with the cluster |
+| `kube-hunter` | scanner | offensive | discovery of exposed components |
+| `Peirates` | exploitation | offensive | post-exploitation on k8s |
+| `kube-bench` | cis auditor | defensive | cis conformity audit |
+| `Pod Security` / `Kyverno` | admission | defensive | blocking of dangerous pods |
+| `Falco` | runtime security | defensive | runtime detection |
 
 > **Recommended modern tool:** `kube-hunter`/`Peirates` (offensive) and `kube-bench` + Pod Security Standards + `Falco` (defensive). See `../Tooling/` for the cross-cutting cloud scanners.
 
 ---
 
-## Finding Registry - Orchestration (Kubernetes)
+## Finding registry - orchestration (Kubernetes)
 
-| ID | Description | Severity | Subfolder |
+| id | description | severity | subfolder |
 | :--- | :--- | :---: | :--- |
-| `CLOUD-007` | Exposed/misconfigured K8s cluster: Secret theft and control of the control plane | `Critical` | `K8s-attacks/` |
-| `CLOUD-008` | K8s auditing: CIS benchmark (kube-bench) + Pod Security Standards (hardening) | `High` | `K8s-auditing/` |
+| `CLOUD-007` | exposed/misconfigured k8s cluster: secret theft and control of the control plane | `Critical` | `K8s-attacks/` |
+| `CLOUD-008` | k8s auditing: cis benchmark (kube-bench) + pod security standards (hardening) | `High` | `K8s-auditing/` |
 
 ---
 
-## MITRE ATT&CK Mapping - Aggregated
+## MITRE ATT&CK mapping - aggregated
 
 > Reference: MITRE ATT&CK for Containers.
 
-| Tactic | Technique | MITRE ID | Related Finding |
+| tactic | technique | mitre id | related finding |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | CLOUD-007, CLOUD-008 |
-| Credential Access | Unsecured Credentials: Container API | `T1552.007` | CLOUD-007, CLOUD-008 |
-| Privilege Escalation | Escape to Host | `T1611` | CLOUD-008 (prevention) |
-| Execution | Deploy Container | `T1610` | CLOUD-007, CLOUD-008 |
-| Discovery | Container and Resource Discovery | `T1613` | CLOUD-007 |
+| initial access | exploit public-facing application | `T1190` | CLOUD-007, CLOUD-008 |
+| credential access | unsecured credentials: container api | `T1552.007` | CLOUD-007, CLOUD-008 |
+| privilege escalation | escape to host | `T1611` | CLOUD-008 (prevention) |
+| execution | deploy container | `T1610` | CLOUD-007, CLOUD-008 |
+| discovery | container and resource discovery | `T1613` | CLOUD-007 |
 
 ---
 

@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 03 - Deception (Le Trappole)
+# 03 - Deception (le trappole)
 
 > - **Fase:** Defense & Hardening - Deception & Early Warning
 > - **Categoria:** Deception - trappole ad alta confidenza e threat intelligence
@@ -72,38 +72,38 @@ Sono particolarmente efficaci contro la post-exploitation (`07-post-exploitation
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Canarytokens` (Thinkst) | Token generator | Servizio/self-hosted | Tripwire digitali (doc, URL, AWS, DNS) |
-| `T-Pot` (Telekom) | Honeypot platform | Piattaforma | Honeypot multi-servizio + threat intel |
-| `OpenCanary` | Honeypot daemon | Open source | Servizi esca leggeri self-hosted |
-| `Cowrie` | SSH/Telnet honeypot | Container | Cattura sessioni d'attacco SSH |
-| `Honeytokens` (AD) | Deception account | Tecnica | Account fittizi in Active Directory |
+| `Canarytokens` (thinkst) | token generator | servizio/self-hosted | tripwire digitali (doc, url, aws, dns) |
+| `T-Pot` (telekom) | honeypot platform | piattaforma | honeypot multi-servizio + threat intel |
+| `OpenCanary` | honeypot daemon | open source | servizi esca leggeri self-hosted |
+| `Cowrie` | ssh/telnet honeypot | container | cattura sessioni d'attacco ssh |
+| `Honeytokens` (ad) | deception account | tecnica | account fittizi in active directory |
 
 > **Tool moderno consigliato:** `canarytokens.org` per iniziare senza infrastruttura; `OpenCanary` o honeytoken AD per deployment interni mirati (detection di movimento laterale); `T-Pot` per la ricerca e la raccolta di threat intelligence su VM isolata.
 
 ---
 
-## Registro Finding - Sezione Deception
+## Registro finding - sezione deception
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `DEF-005` | Canary Tokens: tripwire digitali per early breach detection (falsi positivi nulli) | `Medio` | `honeypots/canary-tokens/` |
-| `DEF-006` | T-Pot: piattaforma honeypot multi-servizio, raccolta TTP/IOC reali | `Medio` | `honeypots/t-pot/` |
+| `DEF-005` | canary tokens: tripwire digitali per early breach detection (falsi positivi nulli) | `Medio` | `honeypots/canary-tokens/` |
+| `DEF-006` | t-pot: piattaforma honeypot multi-servizio, raccolta ttp/ioc reali | `Medio` | `honeypots/t-pot/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
 > Tecniche d'attacco **rilevate/osservate** dalle esche della sezione.
 
-| Tattica (rilevata) | Tecnica | ID MITRE | Finding Correlato |
+| tattica (rilevata) | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Collection | Data from Network Shared Drive | `T1039` | DEF-005 |
-| Credential Access | Unsecured Credentials: Credentials In Files | `T1552.001` | DEF-005 |
-| Credential Access | Brute Force | `T1110` | DEF-006 |
-| Command and Control | Ingress Tool Transfer | `T1105` | DEF-006 |
-| Discovery | File and Directory Discovery | `T1083` | DEF-005 |
+| collection | data from network shared drive | `T1039` | DEF-005 |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | DEF-005 |
+| credential access | brute force | `T1110` | DEF-006 |
+| command and control | ingress tool transfer | `T1105` | DEF-006 |
+| discovery | file and directory discovery | `T1083` | DEF-005 |
 
 ---
 

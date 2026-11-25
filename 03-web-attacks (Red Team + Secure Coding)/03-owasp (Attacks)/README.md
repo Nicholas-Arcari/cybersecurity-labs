@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 03 - OWASP Attacks
+# 03 - OWASP attacks
 
 > - **Fase:** Web Attack - OWASP Top 10:2021 Exploitation
 > - **Visibilita:** Variabile - da Media (richieste HTTP con payload) ad Alta (scanner automatici e attacchi brute force)
@@ -15,16 +15,16 @@ L'OWASP Top 10 e la lista delle vulnerabilita piu critiche nelle applicazioni we
 
 Questa sezione documenta l'exploitation pratica delle categorie OWASP piu rilevanti identificate nel target `testphp.vulnweb.com` e negli ambienti di laboratorio locali:
 
-| Categoria OWASP Top 10:2021 | Finding Correlato | Sottocartella |
+| categoria owasp top 10:2021 | finding correlato | sottocartella |
 | :--- | :--- | :--- |
-| A01:2021 - Broken Access Control | WEB-010 (Session Hijacking) | `auth-attacks/` |
-| A02:2021 - Cryptographic Failures | WEB-010 (cookie senza flag Secure) | `auth-attacks/` |
-| A03:2021 - Injection | WEB-004, WEB-008, WEB-011 | `sql-injection/`, `ssti/` |
-| A07:2021 - Identification & Auth Failures | WEB-009 (Brute Force), WEB-010 | `auth-attacks/` |
-| A03:2021 - Injection (XSS) | WEB-005, WEB-006, WEB-007 | `xss/` |
-| A03:2021 - Injection (famiglia estesa) | metodologia (no lab) | `ldap-injection/`, `xpath-injection/`, `crlf-injection/`, `command-injection/` |
-| A05:2021 - Security Misconfiguration (XXE) | metodologia (no lab) | `xxe (XML External Entity)/` |
-| A08:2021 - Software & Data Integrity (Deserialization) | metodologia (no lab) | `deserialization (Insecure Deserialization)/` |
+| A01:2021 - broken access control | WEB-010 (session hijacking) | `auth-attacks/` |
+| A02:2021 - cryptographic failures | WEB-010 (cookie senza flag secure) | `auth-attacks/` |
+| A03:2021 - injection | WEB-004, WEB-008, WEB-011 | `sql-injection/`, `ssti/` |
+| A07:2021 - identification & auth failures | WEB-009 (brute force), WEB-010 | `auth-attacks/` |
+| A03:2021 - injection (xss) | WEB-005, WEB-006, WEB-007 | `xss/` |
+| A03:2021 - injection (famiglia estesa) | metodologia (no lab) | `ldap-injection/`, `xpath-injection/`, `crlf-injection/`, `command-injection/` |
+| A05:2021 - security misconfiguration (xxe) | metodologia (no lab) | `xxe (XML External Entity)/` |
+| A08:2021 - software & data integrity (deserialization) | metodologia (no lab) | `deserialization (Insecure Deserialization)/` |
 
 La filosofia di questa sezione e la **doppia prospettiva**: ogni tecnica offensiva e accompagnata dalla root cause analysis e dal pattern di fix sicuro, perche comprendere il perche di una vulnerabilita e altrettanto importante per un analista quanto saperla sfruttare.
 
@@ -62,7 +62,7 @@ La filosofia di questa sezione e la **doppia prospettiva**: ogni tecnica offensi
 
 ---
 
-## `auth-attacks/` - Authentication & Session Attacks
+## `auth-attacks/` - Authentication & session attacks
 
 ### Contesto operativo
 
@@ -74,7 +74,7 @@ Vedere `auth-attacks/README.md` per la guida completa.
 
 ---
 
-## `sql-injection (SQLi)/` - SQL Injection
+## `sql-injection (SQLi)/` - SQL injection
 
 ### Contesto operativo
 
@@ -94,7 +94,7 @@ Vedere `sql-injection/README.md` per la guida completa.
 
 ---
 
-## `ssti/` - Server Side Template Injection
+## `ssti/` - Server side template injection
 
 ### Contesto operativo
 
@@ -114,11 +114,11 @@ Il Cross-Site Scripting permette a un attaccante di iniettare codice JavaScript 
 
 Le tre varianti hanno impatto e visibilita diversi:
 
-| Variante | Persistenza | Target | Visibilita |
+| variante | persistenza | target | visibilita |
 | :--- | :--- | :--- | :--- |
-| Reflected (WEB-005) | No (per richiesta) | Chi clicca il link malevolo | Bassa (URL con payload) |
-| Stored (WEB-006) | Si (nel database) | Tutti i visitatori della pagina | Zero (il payload e nel DB) |
-| Blind/OOB (WEB-007) | Si | Admin del pannello di gestione | Zero (il payload e lato server) |
+| reflected (WEB-005) | no (per richiesta) | chi clicca il link malevolo | bassa (url con payload) |
+| stored (WEB-006) | si (nel database) | tutti i visitatori della pagina | zero (il payload e nel db) |
+| blind/oob (WEB-007) | si | admin del pannello di gestione | zero (il payload e lato server) |
 
 La XSS Stored (WEB-006) e la piu critica in termini di impatto perche colpisce tutti gli utenti senza richiedere interazione specifica, e spesso conduce al furto di cookie di sessione degli amministratori.
 
@@ -157,47 +157,47 @@ La XSS Stored (WEB-006) e la piu critica in termini di impatto perche colpisce t
 
 ---
 
-## Registro Finding - OWASP Attacks
+## Registro finding - OWASP attacks
 
-| ID | Descrizione | Severity | CVSS | Sottocartella |
+| id | descrizione | severity | cvss | sottocartella |
 | :--- | :--- | :---: | :---: | :--- |
-| `WEB-004` | SQL Injection manuale: auth bypass e UNION-based data exfiltration | `Critico` | 9.8 | `sql-injection/manual-payloads/` |
-| `WEB-005` | XSS Reflected - input URL riflesso senza encoding | `Medio` | 6.1 | `xss/reflected/` |
-| `WEB-006` | XSS Stored - payload persistente nel database | `Alto` | 8.2 | `xss/stored/` |
-| `WEB-007` | XSS Blind/OOB - callback su webhook.site da area admin | `Alto` | 8.2 | `xss/xss-hunter-payloads/` |
-| `WEB-008` | SSTI Jinja2 - Remote Code Execution tramite template injection | `Critico` | 9.8 | `ssti/` |
-| `WEB-009` | Brute Force autenticazione web - assenza rate limiting | `Alto` | 7.5 | `auth-attacks/bruteforce-web/` |
-| `WEB-010` | Session Hijacking - cookie privo di flag HttpOnly e Secure | `Alto` | 8.0 | `auth-attacks/session-hijacking/` |
-| `WEB-011` | SQLi automatizzata - dump DB completo con PAN carte di credito | `Critico` | 9.8 | `sql-injection/sql-map-data/` |
+| `WEB-004` | sql injection manuale: auth bypass e union-based data exfiltration | `Critico` | 9.8 | `sql-injection/manual-payloads/` |
+| `WEB-005` | xss reflected - input url riflesso senza encoding | `Medio` | 6.1 | `xss/reflected/` |
+| `WEB-006` | xss stored - payload persistente nel database | `Alto` | 8.2 | `xss/stored/` |
+| `WEB-007` | xss blind/oob - callback su webhook.site da area admin | `Alto` | 8.2 | `xss/xss-hunter-payloads/` |
+| `WEB-008` | ssti jinja2 - remote code execution tramite template injection | `Critico` | 9.8 | `ssti/` |
+| `WEB-009` | brute force autenticazione web - assenza rate limiting | `Alto` | 7.5 | `auth-attacks/bruteforce-web/` |
+| `WEB-010` | session hijacking - cookie privo di flag httponly e secure | `Alto` | 8.0 | `auth-attacks/session-hijacking/` |
+| `WEB-011` | sqli automatizzata - dump db completo con pan carte di credito | `Critico` | 9.8 | `sql-injection/sql-map-data/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | WEB-004, WEB-005, WEB-006, WEB-008, WEB-011 |
-| Credential Access | Brute Force: Password Guessing | `T1110.001` | WEB-009 |
-| Credential Access | Brute Force: Password Spraying | `T1110.004` | WEB-009 |
-| Credential Access | Steal Web Session Cookie | `T1539` | WEB-005, WEB-006, WEB-007, WEB-010 |
-| Collection | Man-in-the-Middle: AiTM HTTPS Interception | `T1557.002` | WEB-010 |
-| Collection | Browser Session Hijacking | `T1185` | WEB-007, WEB-010 |
-| Execution | Command and Scripting Interpreter: Python | `T1059.006` | WEB-008 |
-| Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | WEB-008 |
-| Persistence | Server Software Component: Web Shell | `T1505.003` | WEB-006 |
-| Defense Evasion | Use Alternate Authentication Material: Web Session Cookie | `T1550.004` | WEB-010 |
-| Discovery | Account Discovery: Local Account | `T1087.001` | WEB-004 |
-| Discovery | File and Directory Discovery | `T1083` | WEB-008 |
-| Collection | Data from Information Repositories | `T1213` | WEB-004, WEB-011 |
-| Exfiltration | Exfiltration Over Web Service | `T1567` | WEB-011 |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | WEB-005 |
-| Reconnaissance | Gather Victim Identity Information | `T1589` | WEB-007 |
-| Credential Access | Modify Authentication Process | `T1556` | WEB-009 |
-| Discovery | Account Discovery: Domain Account | `T1087.002` | LDAP Injection (metodologia) |
-| Credential Access | Unsecured Credentials: Credentials in Files | `T1552.001` | XXE (metodologia) |
-| Execution | Command and Scripting Interpreter: Unix Shell | `T1059.004` | Command Injection / deserializzazione (metodologia) |
-| Execution | Command and Scripting Interpreter: Windows Command Shell | `T1059.003` | Command Injection (metodologia) |
-| Impact | Data Manipulation: Stored Data Manipulation | `T1565.001` | CRLF Injection (metodologia) |
+| initial access | exploit public-facing application | `T1190` | WEB-004, WEB-005, WEB-006, WEB-008, WEB-011 |
+| credential access | brute force: password guessing | `T1110.001` | WEB-009 |
+| credential access | brute force: password spraying | `T1110.004` | WEB-009 |
+| credential access | steal web session cookie | `T1539` | WEB-005, WEB-006, WEB-007, WEB-010 |
+| collection | man-in-the-middle: aitm https interception | `T1557.002` | WEB-010 |
+| collection | browser session hijacking | `T1185` | WEB-007, WEB-010 |
+| execution | command and scripting interpreter: python | `T1059.006` | WEB-008 |
+| execution | command and scripting interpreter: unix shell | `T1059.004` | WEB-008 |
+| persistence | server software component: web shell | `T1505.003` | WEB-006 |
+| defense evasion | use alternate authentication material: web session cookie | `T1550.004` | WEB-010 |
+| discovery | account discovery: local account | `T1087.001` | WEB-004 |
+| discovery | file and directory discovery | `T1083` | WEB-008 |
+| collection | data from information repositories | `T1213` | WEB-004, WEB-011 |
+| exfiltration | exfiltration over web service | `T1567` | WEB-011 |
+| initial access | phishing: spearphishing link | `T1566.002` | WEB-005 |
+| reconnaissance | gather victim identity information | `T1589` | WEB-007 |
+| credential access | modify authentication process | `T1556` | WEB-009 |
+| discovery | account discovery: domain account | `T1087.002` | ldap injection (metodologia) |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | xxe (metodologia) |
+| execution | command and scripting interpreter: unix shell | `T1059.004` | command injection / deserializzazione (metodologia) |
+| execution | command and scripting interpreter: windows command shell | `T1059.003` | command injection (metodologia) |
+| impact | data manipulation: stored data manipulation | `T1565.001` | crlf injection (metodologia) |
 
 > Le righe marcate "(metodologia)" si riferiscono alle pagine senza Finding ID (XXE, deserializzazione, LDAP /
 > XPath / CRLF / Command Injection); `T1190` e `T1213`, gia presenti, coprono anche queste pagine.

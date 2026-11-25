@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Canary Tokens - Tripwire Digitali per Early Breach Detection
+# Canary tokens - tripwire digitali per early breach detection
 
 > - **Fase:** Defense & Hardening - Deception & Early Warning
 > - **Categoria:** Deception - segnali d'allarme ad alta confidenza
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 I Canary Token sono tripwire digitali: esche innocue - un documento, una credenziale, un URL, una chiave AWS - che non hanno alcuna funzione legittima e la cui unica ragione di esistere e essere toccate da un attaccante. Nel momento in cui qualcuno apre il documento-esca o usa la credenziale fittizia, il token "chiama casa" e genera un allarme. Poiche nessun utente legittimo ha motivo di interagire con l'esca, ogni attivazione e un segnale ad altissima confidenza: quasi zero falsi positivi.
 
@@ -33,7 +33,7 @@ canary-tokens/
 
 ---
 
-## Deployment di Canary Token
+## Deployment di canary token
 
 **ID Finding:** `DEF-005` | **Severity:** `Medio` (early warning ad alta confidenza; l'attivazione indica una compromissione gia in corso)
 
@@ -41,7 +41,7 @@ canary-tokens/
 
 Un canary token e generato come un artefatto che, all'uso, produce una richiesta di rete verso il server del token. Ne esistono molti tipi: URL univoci, documenti Office/PDF con un beacon incorporato, record DNS, chiavi cloud fittizie, file con nomi allettanti. La chiave e il posizionamento: il token va messo dove un attaccante guarderebbe, ma un utente legittimo no.
 
-### PoC - Generazione e posizionamento di un token
+### PoC - generazione e posizionamento di un token
 
 ```Bash
 # Token generato (via canarytokens.org o istanza self-hosted)
@@ -51,7 +51,7 @@ Un canary token e generato come un artefatto che, all'uso, produce una richiesta
 /srv/share/finance/passwords_2026.xlsx      # <-- esca (nessun uso legittimo)
 ```
 
-### PoC - Attivazione del token (attaccante che abbocca)
+### PoC - attivazione del token (attaccante che abbocca)
 
 ```
 # [Attacco] l'attaccante in post-exploitation enumera la share e apre l'esca
@@ -64,7 +64,7 @@ Un canary token e generato come un artefatto che, all'uso, produce una richiesta
   Reminder: "File esca share Finance"
 ```
 
-### PoC - Chiave AWS fittizia (honeytoken per credenziali)
+### PoC - chiave AWS fittizia (honeytoken per credenziali)
 
 ```
 # Una coppia di chiavi AWS fittizie lasciata in un file di config o script.
@@ -76,7 +76,7 @@ Un canary token e generato come un artefatto che, all'uso, produce una richiesta
   Source IP: 45.83.x.x  (infrastruttura attaccante)   <-- credenziale esfiltrata usata (DEF-005)
 ```
 
-### Tuning e Operativita Difensiva
+### Tuning e operativita difensiva
 
 - **Posizionamento strategico:** i token vanno dove l'attaccante cerca (share "Finance"/"IT", file `passwords`, chiavi in script/config, record in Active Directory), mai dove un utente legittimo li aprirebbe per caso
 - **Naming credibile:** l'esca deve sembrare vera e preziosa; un nome generico non attira, un nome mirato (`vpn_credentials.txt`, `backup_admin.kdbx`) si
@@ -85,7 +85,7 @@ Un canary token e generato come un artefatto che, all'uso, produce una richiesta
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Ho posizionato diversi tipi di token nell'ambiente di laboratorio e poi ho "indossato il cappello dell'attaccante", ripetendo l'enumerazione post-exploitation del modulo 07. L'esperimento e stato illuminante: durante l'enumerazione della share, il file `passwords_2026.xlsx` era esattamente cio che il mio io-attaccante avrebbe aperto per primo. Aprirlo ha fatto scattare l'alert in pochi secondi, con l'IP dell'host da cui operavo. Il token aveva anticipato il mio comportamento offensivo.
 
@@ -95,7 +95,7 @@ Il limite emerso e la copertura. Un canary token rileva solo un attaccante che t
 
 ---
 
-## Analisi Teorica: L'Asimmetria della Deception a Favore del Difensore
+## Analisi teorica: L'Asimmetria della deception a favore del difensore
 
 La deception ribalta un'asimmetria che normalmente favorisce l'attaccante. Di solito il difensore deve avere ragione sempre (proteggere ogni punto), l'attaccante una volta sola (trovare un buco). La deception introduce l'asimmetria opposta: l'attaccante deve evitare ogni esca (non sa quali file sono reali e quali trappole), il difensore deve indovinare una sola esca che l'attaccante tocchera. In un ambiente disseminato di token, l'attaccante non puo esplorare senza rischiare di attivarne uno.
 
@@ -107,13 +107,13 @@ Il fondamento teorico e il tasso di falsi positivi strutturalmente nullo. Ogni s
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Canarytokens` (Thinkst) | Token generator | Servizio/self-hosted | Generazione di token di vario tipo (doc, URL, AWS, DNS) |
-| `Thinkst Canary` | Honeypot appliance | Prodotto | Honeypot fisici/virtuali "birds" a bassissimo rumore |
-| `OpenCanary` | Honeypot daemon | Open source | Servizi esca (FTP, SSH, HTTP) self-hosted |
-| `Honeytokens` (AD) | Deception account | Tecnica | Account/credenziali fittizie in Active Directory |
-| `DNS canary` | DNS beacon | Token | Rilevamento di esfiltrazione o accesso a risorse esca |
+| `Canarytokens` (thinkst) | token generator | servizio/self-hosted | generazione di token di vario tipo (doc, url, aws, dns) |
+| `Thinkst Canary` | honeypot appliance | prodotto | honeypot fisici/virtuali "birds" a bassissimo rumore |
+| `OpenCanary` | honeypot daemon | open source | servizi esca (ftp, ssh, http) self-hosted |
+| `Honeytokens` (ad) | deception account | tecnica | account/credenziali fittizie in active directory |
+| `DNS canary` | dns beacon | token | rilevamento di esfiltrazione o accesso a risorse esca |
 
 > **Tool moderno consigliato:** `canarytokens.org` (Thinkst) e il modo piu rapido per iniziare, gratuito e senza infrastruttura. Per un deployment interno controllato, `OpenCanary` self-hosted offre servizi esca completi. In ambienti Active Directory, gli honeytoken (account fittizi con SPN allettanti) integrano la deception con il rilevamento di Kerberoasting e altri attacchi AD.
 
@@ -123,18 +123,18 @@ Il fondamento teorico e il tasso di falsi positivi strutturalmente nullo. Ogni s
 
 > La tabella mappa le tecniche d'attacco che le esche **rilevano** al momento dell'interazione.
 
-| Tattica (rilevata) | Tecnica | ID MITRE | Ruolo del controllo |
+| tattica (rilevata) | tecnica | id mitre | ruolo del controllo |
 | :--- | :--- | :--- | :--- |
-| Collection | Data from Network Shared Drive | `T1039` | Il documento esca su share scatta se aperto (DEF-005) |
-| Collection | Data from Local System | `T1005` | File esca locali che rivelano l'enumerazione |
-| Credential Access | Unsecured Credentials: Credentials In Files | `T1552.001` | Credenziali fittizie che scattano se usate (DEF-005) |
-| Discovery | File and Directory Discovery | `T1083` | L'interazione con l'esca rivela l'enumerazione in corso |
+| collection | data from network shared drive | `T1039` | il documento esca su share scatta se aperto (DEF-005) |
+| collection | data from local system | `T1005` | file esca locali che rivelano l'enumerazione |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | credenziali fittizie che scattano se usate (DEF-005) |
+| discovery | file and directory discovery | `T1083` | l'interazione con l'esca rivela l'enumerazione in corso |
 
-| Contromisura difensiva (D3FEND) | ID D3FEND | Applicazione |
+| contromisura difensiva (d3fend) | id d3fend | applicazione |
 | :--- | :--- | :--- |
-| Decoy File | `D3-DF` | File esca posizionati per rilevare l'accesso non autorizzato |
-| Decoy User Credential | `D3-DUC` | Credenziali fittizie (honeytoken) che tradiscono l'uso |
-| Decoy Network Resource | `D3-DNR` | Risorse di rete esca (share, URL, record DNS) |
+| decoy file | `D3-DF` | file esca posizionati per rilevare l'accesso non autorizzato |
+| decoy user credential | `D3-DUC` | credenziali fittizie (honeytoken) che tradiscono l'uso |
+| decoy network resource | `D3-DNR` | risorse di rete esca (share, url, record dns) |
 
 ---
 

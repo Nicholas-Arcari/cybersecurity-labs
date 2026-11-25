@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Tech Stack Fingerprinting: WhatWeb & BuiltWith
+# Tech stack fingerprinting: WhatWeb & BuiltWith
 
 > - **Phase:** Reconnaissance - Infrastructure Intelligence
 > - **Visibility:** Low - standard HTTP requests for fingerprinting, detectable by WAF but common in legitimate traffic
@@ -17,7 +17,7 @@ Tools: `WhatWeb` (CLI), `Wappalyzer` (Browser Extension), `BuiltWith` (Web)
 
 ---
 
-## 1 Theoretical Introduction
+## 1 Theoretical introduction
 
 Tech Stack Fingerprinting is the process of collecting "digital fingerprints" from the web server. By analyzing HTTP responses, cookies, and HTML source code, it is possible to determine:
 
@@ -30,7 +30,7 @@ For an attacker, this phase is crucial to select the correct exploits (e.g., not
 
 ---
 
-## 2 Technical Execution: WhatWeb
+## 2 Technical execution: WhatWeb
 
 **Finding ID:** `INTEL-004` | **Severity:** `Informational`
 
@@ -78,12 +78,12 @@ This fingerprinting phase confirmed that tesla.com uses a "Defense in Depth" str
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | Technology fingerprinting of tesla.com with WhatWeb to identify CMS, web server, framework and client-side libraries (INTEL-004) |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | HTTP fingerprinting request that revealed the presence of Akamai WAF as perimeter defense system, confirming active HSTS (INTEL-004) |
+| reconnaissance | gather victim host info: software | `T1592.002` | technology fingerprinting of tesla.com with whatweb to identify cms, web server, framework and client-side libraries (INTEL-004) |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | http fingerprinting request that revealed the presence of akamai waf as perimeter defense system, confirming active hsts (INTEL-004) |
 
 ---
 

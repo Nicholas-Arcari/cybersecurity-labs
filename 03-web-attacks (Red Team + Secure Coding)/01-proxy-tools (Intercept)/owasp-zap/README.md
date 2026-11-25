@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Proxy Tools: OWASP ZAP & Automated Scanning
+# Proxy tools: OWASP ZAP & automated scanning
 
 > - **Fase:** Web Attack - DAST Scanning
 > - **Visibilita:** Media - OWASP ZAP genera traffico HTTP strutturato verso il target durante lo spider e l'active scan
@@ -21,7 +21,7 @@ Strumenti: `OWASP ZAP` (Zed Attack Proxy)
 
 ---
 
-## 1 Introduzione Teorica: DAST & Automazione
+## 1 Introduzione teorica: DAST & automazione
 
 Mentre strumenti come Burp Suite sono ideali per l'analisi manuale approfondita, OWASP ZAP è lo standard open-source per l'automazione.
 ZAP opera come uno scanner DAST: non guarda il codice sorgente, ma attacca l'applicazione "da fuori" mentre è in esecuzione, simulando un hacker che invia payload malevoli (SQL Injection, XSS) in ogni campo di input trovato.
@@ -30,7 +30,7 @@ L'uso principale di ZAP nel mondo reale è nelle pipeline DevSecOps: viene integ
 
 ---
 
-## 2 Esecuzione Tecnica: Automated Scan
+## 2 Esecuzione tecnica: automated scan
 
 Il test è stato condotto in tre fasi distinte.
 
@@ -40,13 +40,13 @@ Eseguire da terminale:
 zaproxy
 ```
 
-#### Fase A: Configurazione e Spidering
+#### Fase a: configurazione e spidering
 
 È stato lanciato un "Automated Scan" contro l'applicazione target. ZAP ha attivato il Spider (crawler) per navigare automaticamente il sito e scoprire tutte le pagine, i form e i parametri nascosti.
 
 ![](./img/Screenshot_2026-02-12_16_53_57.jpg)
 
-#### Fase B: Identification (Alerts)
+#### Fase b: identification (alerts)
 
 Al termine dello scan, ZAP ha popolato la scheda "Alerts" con le vulnerabilità potenziali, classificate per rischio (High, Medium, Low).
 
@@ -62,7 +62,7 @@ Dallo screenshot si evidenziano diverse problematiche di sicurezza:
 
 3. Missing Security Headers: Mancano header come CSP (Content Security Policy) e Anti-Clickjacking.
 
-#### Fase C: Verifica Manuale (Triage)
+#### Fase c: verifica manuale (triage)
 
 Un aspetto critico dell'uso degli scanner automatici è la verifica. Gli scanner generano spesso Falsi Positivi.
 È stato analizzato nel dettaglio l'alert relativo ai token CSRF per verificare la richiesta e la risposta del server.
@@ -73,7 +73,7 @@ Un aspetto critico dell'uso degli scanner automatici è la verifica. Gli scanner
 
 ---
 
-## 3 Conclusioni e Valutazione
+## 3 Conclusioni e valutazione
 
 L'utilizzo di OWASP ZAP ha permesso di mappare rapidamente la postura di sicurezza di `testphp.vulnweb.com`.
 
@@ -83,20 +83,20 @@ Outcome: Il target presenta vulnerabilità confermate di livello Medio (CSRF, XS
 
 ---
 
-## Analisi a Basso Livello: Architettura ZAP e Fasi di Scansione
+## Analisi a basso livello: architettura ZAP e fasi di scansione
 
-### ZAP: Spider vs Active Scanner
+### ZAP: spider vs Active scanner
 
 ZAP opera in due fasi distinte, ciascuna con un impatto di rete diverso:
 
-| Fase | Metodo | Cosa fa | Traffico generato |
+| fase | metodo | cosa fa | traffico generato |
 | :--- | :--- | :--- | :--- |
-| **Spider** (Crawl) | Segue i link HTML | Mappa pagine, form, parametri, endpoint | Basso (GET standard) |
-| **Ajax Spider** | Esegue JavaScript (Selenium) | Mappa SPA (React, Angular, Vue) | Medio (rendering JS) |
-| **Active Scan** | Injection automatica | Inietta payload SQLi/XSS/LFI in ogni parametro | Alto (migliaia di richieste) |
-| **Passive Scan** | Analisi risposte | Cerca header mancanti, cookie insicuri, info leak | Zero (nessuna richiesta extra) |
+| **spider** (crawl) | segue i link html | mappa pagine, form, parametri, endpoint | Basso (get standard) |
+| **ajax spider** | esegue javascript (selenium) | mappa spa (react, angular, vue) | Medio (rendering js) |
+| **active scan** | injection automatica | inietta payload sqli/xss/lfi in ogni parametro | Alto (migliaia di richieste) |
+| **passive scan** | analisi risposte | cerca header mancanti, cookie insicuri, info leak | zero (nessuna richiesta extra) |
 
-### Anti-CSRF Token: Perche e un Finding Medio (WEB-001)
+### Anti-CSRF token: perche e un finding medio (WEB-001)
 
 L'assenza di token CSRF nei form permette il Cross-Site Request Forgery:
 
@@ -129,7 +129,7 @@ docker run -t zaproxy/zap-stable zap-baseline.py -t http://app:8080 -c zap-rules
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il triage degli alert e stato l'aspetto piu formativo: ZAP ha generato decine di alert, ma non tutti erano vulnerabilita reali. La distinzione tra "User Controllable HTML Element Attribute (Potential XSS)" (alert ZAP) e una XSS confermata (WEB-005, verificata manualmente) richiede analisi umana. Lo scanner segnala il potenziale; l'analista conferma o esclude.
 
@@ -141,10 +141,10 @@ Il confronto con Burp Suite ha evidenziato il posizionamento di ZAP: e lo strume
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Scansione DAST con OWASP ZAP su `testphp.vulnweb.com` per identificare vulnerabilita strutturali: assenza token CSRF (WEB-001), header mancanti, XSS potenziale |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Identificazione e documentazione dell'assenza di protezione Anti-CSRF sui form dell'applicazione (WEB-001), che costituisce un vettore per Cross-Site Request Forgery |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | scansione dast con owasp zap su `testphp.vulnweb.com` per identificare vulnerabilita strutturali: assenza token csrf (WEB-001), header mancanti, xss potenziale |
+| initial access | exploit public-facing application | `T1190` | identificazione e documentazione dell'assenza di protezione anti-csrf sui form dell'applicazione (WEB-001), che costituisce un vettore per cross-site request forgery |
 
 ---
 

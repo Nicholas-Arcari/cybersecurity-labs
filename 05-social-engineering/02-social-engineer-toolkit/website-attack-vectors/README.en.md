@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# SET Website Attack Vectors: Credential Harvester via Site Cloning
+# SET website attack vectors: credential harvester via site cloning
 
 > - **Phase:** Social Engineering - Website Attack Vectors - Credential Harvesting
 > - **Visibility:** Medium - the local web server generates HTTP traffic; anomalous URL visible in browser address bar if the user pays attention; no payload on disk, no AV alert
@@ -14,7 +14,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 The Credential Harvester is the most commonly used vector within SET for targeted social engineering campaigns. The technique consists of automatically cloning a legitimate login page and hosting it on a web server controlled by the attacker. When the victim enters their credentials in the cloned page, SET intercepts the POST request, captures username and password in cleartext, and transparently redirects the user to the real site.
 
@@ -22,7 +22,7 @@ The effectiveness of this technique relies on the human factor: the cloned page 
 
 ---
 
-## Finding SE-003: Credential Harvesting via Cloned Login Page
+## Finding SE-003: credential harvesting via cloned login page
 
 **Finding ID:** `SE-003` | **Severity:** `High` | **CVSS:** 7.5
 
@@ -30,7 +30,7 @@ An attacker can clone any publicly accessible login page and capture credentials
 
 **PoC Scenario:** The analyst clones the lab corporate portal login page and waits for the victim (simulated on the Windows VM) to access the attacker's URL. Entered credentials are captured in real time.
 
-### PoC - Phase 1: SET Launch and Site Cloner Configuration
+### PoC - phase 1: SET launch and site cloner configuration
 
 SET is launched with root privileges (required for binding to port 80). The interactive menu navigation follows the path: Social-Engineering Attacks, Website Attack Vectors, Credential Harvester Attack Method, Site Cloner.
 
@@ -101,11 +101,11 @@ set:webattack> 2
 [*] Information will be displayed to you as it arrives.
 ```
 
-### PoC - Phase 2: Victim Accesses the Cloned Page
+### PoC - phase 2: victim accesses the cloned page
 
 The victim (Windows VM) navigates to `http://192.168.0.110` - in a real engagement the URL would be masked via typosquatting (e.g., `portal-company-lab.local`) or a link shortener. The page appears identical to the legitimate login portal.
 
-### PoC - Phase 3: Credential Capture
+### PoC - phase 3: credential capture
 
 When the victim enters credentials and presses the login button, SET intercepts the POST request and displays the captured data in the attacker's console.
 
@@ -122,11 +122,11 @@ The credentials `m.rossi@company-lab.local` / `Pr0gett0_2026!` were captured in 
 
 ---
 
-## Impact and Remediation (Blue Team)
+## Impact and remediation (blue team)
 
 Capturing valid credentials via cloned page allows the attacker direct access to corporate systems with the compromised user's privileges. If credentials are reused across multiple services (a common pattern), the impact extends to the entire exposed surface.
 
-### Recommended Countermeasures
+### Recommended countermeasures
 
 1. **Multi-Factor Authentication (MFA):** even with compromised credentials, MFA prevents access without the second factor. FIDO2/WebAuthn is phishing-resistant because it verifies the origin domain.
 2. **URL Filtering and DNS Monitoring:** corporate proxies with URL categorization block known typosquatting domains; DNS monitoring detects anomalous resolutions to external IPs.
@@ -136,7 +136,7 @@ Capturing valid credentials via cloned page allows the attacker direct access to
 
 ---
 
-## Lab Experience
+## Lab experience
 
 The test environment was configured with Kali Linux (192.168.0.110) as attacker and a Windows 10 VM (192.168.0.120) as victim, both on the same VirtualBox Bridge network. SET was installed from the Kali repository (`sudo apt install set`) without issues.
 
@@ -150,7 +150,7 @@ A non-obvious aspect that emerged from the lab: SET captures all POST fields, no
 
 ---
 
-## Theoretical Analysis: Why Credential Harvesting Works
+## Theoretical analysis: why credential harvesting works
 
 Credential harvesting via site cloning exploits three cognitive biases documented in social engineering literature:
 
@@ -166,11 +166,11 @@ In the kill chain, credential harvesting falls in the Initial Access phase: capt
 
 ---
 
-## Real-World Scenario: Corporate Credential Harvesting Campaign
+## Real-World scenario: corporate credential harvesting campaign
 
 > This section describes how SE-003 would fit into a real engagement against a target organization.
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** OSINT reconnaissance completed; corporate domain and login portal identified; employee email list obtained from LinkedIn/Hunter.io; typosquatting domain registered (e.g., `portal-company-Iab.local` with the "l" replaced by uppercase "I").
 
@@ -200,7 +200,7 @@ Lateral Movement -> Privilege Escalation -> Domain Compromise
 
 **Potential impact:** with a single employee's credentials, the attacker accesses the corporate network via VPN or the email system via OWA. If the compromised account has IT privileges, escalation to Domain Admin can occur within hours.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** monitoring VPN/SSO logins for access from anomalous IP/geolocation; alerts on Certificate Transparency logs for domains similar to your own; DNS monitoring for resolutions to known typosquatting domains.
 
@@ -220,14 +220,14 @@ Lateral Movement -> Privilege Escalation -> Domain Compromise
 
 ---
 
-## MITRE ATT&CK Mapping
+## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Resource Development | Obtain Capabilities: Tool | `T1588.002` | Use of SET for automatic cloning of the login page and hosting of the credential harvester. |
-| Initial Access | Phishing: Spearphishing Link | `T1566.002` | Sending link to the cloned page via pretexting email or target communication channels. |
-| Execution | User Execution: Malicious Link | `T1204.001` | Victim voluntarily navigates to the cloned page URL and enters their credentials. |
-| Credential Access | Input Capture: Web Portal Capture | `T1056.003` | SET captures credentials transmitted via POST from the cloned login page. |
+| resource development | obtain capabilities: tool | `T1588.002` | use of set for automatic cloning of the login page and hosting of the credential harvester. |
+| initial access | phishing: spearphishing link | `T1566.002` | sending link to the cloned page via pretexting email or target communication channels. |
+| execution | user execution: malicious link | `T1204.001` | victim voluntarily navigates to the cloned page url and enters their credentials. |
+| credential access | input capture: web portal capture | `T1056.003` | set captures credentials transmitted via post from the cloned login page. |
 
 ---
 

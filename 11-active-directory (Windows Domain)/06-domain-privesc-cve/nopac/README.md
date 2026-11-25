@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# noPac: da utente di dominio a Domain Admin (CVE-2021-42278 + CVE-2021-42287)
+# noPac: da utente di dominio a domain admin (CVE-2021-42278 + CVE-2021-42287)
 
 > - **Fase:** Privilege Escalation nel dominio - sfruttamento di due CVE del flusso Kerberos/KDC
 > - **Visibilita:** Media - la catena crea e rinomina un computer account (eventi a registro) e genera richieste Kerberos anomale; e rumorosa se il DC e monitorato
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 noPac e una delle catene di privilege escalation piu rapide e ad alto impatto in Active Directory non patchato.
 Combina due vulnerabilita di novembre 2021:
@@ -38,7 +38,7 @@ rendendo la catena immediata; se = 0, serve un computer account gia controllato)
 dell'assessment, il valore sta nel documentare se il dominio e vulnerabile e con quali prerequisiti, non nel
 "lanciare l'exploit".
 
-## Esecuzione / Comandi
+## Esecuzione / comandi
 
 ### Verifica preliminare (non invasiva)
 
@@ -122,7 +122,7 @@ sAMAccountName e bloccato). Se `MachineAccountQuota = 0` e non si controlla gia 
 passo non e eseguibile. Documentare quale dei prerequisiti manca e parte del valore dell'assessment: indica
 esattamente quale controllo sta proteggendo il dominio.
 
-### Analisi Teorica
+### Analisi teorica
 
 noPac e un difetto di **coerenza tra identita e autorizzazione** nel flusso Kerberos. CVE-2021-42278 rompe
 l'assunzione che il nome di un computer account sia univoco e terminante in `$`; CVE-2021-42287 introduce un
@@ -132,7 +132,7 @@ di un Domain Controller. E un esempio di come due difetti "minori" di validazion
 critica. La contromisura e strutturale: il patching ripristina le validazioni mancanti; l'hardening
 (`MachineAccountQuota = 0`, restrizione sulla creazione di computer account) riduce la superficie a monte.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Rilevamento.**
 - Event ID **4741** (creazione di un computer account) da parte di utenti non amministrativi.
@@ -151,11 +151,11 @@ critica. La contromisura e strutturale: il patching ripristina le validazioni ma
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Vale per lo sfruttamento riuscito su DC non patchato (severity Critico).
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** credenziali di un utente di dominio a basso privilegio (es. da password spraying).
 
@@ -182,7 +182,7 @@ l'hash di `krbtgt`, la persistenza puo diventare di lungo periodo (vedi Golden/D
 
 **Vettori di monetizzazione tipici:** ransomware a livello di dominio, esfiltrazione massiva, persistenza.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** eventi 4741/4742/4781 da attori non amministrativi; sequenza creazione-rinomina-ticket;
 anomalie Kerberos sui principal macchina.
@@ -204,11 +204,11 @@ un hardening a costo quasi nullo con grande ritorno.
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `noPac.py` (sam-the-admin) | Exploit AD | CLI - Attivo | Verifica (`--scan`) e, in lab autorizzato, catena noPac automatizzata |
-| `Impacket` (addcomputer, renameMachine, getTGT, getST, secretsdump) | Toolkit AD | CLI - Attivo | Esecuzione manuale dei singoli passi (comprensione e troubleshooting) |
-| `NetExec` (modulo `maq`) | AD recon | CLI - Attivo | Verifica di `MachineAccountQuota` e dello stato del dominio |
+| `noPac.py` (sam-the-admin) | exploit ad | cli - attivo | verifica (`--scan`) e, in lab autorizzato, catena nopac automatizzata |
+| `Impacket` (addcomputer, renamemachine, gettgt, getst, secretsdump) | toolkit ad | cli - attivo | esecuzione manuale dei singoli passi (comprensione e troubleshooting) |
+| `NetExec` (modulo `maq`) | ad recon | cli - attivo | verifica di `MachineAccountQuota` e dello stato del dominio |
 
 ## Note di metodologia
 
@@ -219,19 +219,19 @@ documento resta su sfruttabilita, detection e remediation, non sulla riproduzion
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Privilege Escalation | Exploitation for Privilege Escalation | `T1068` | Sfruttamento combinato di CVE-2021-42278 e CVE-2021-42287 per impersonare un DC. |
-| Persistence | Create Account: Domain Account | `T1136.002` | Creazione di un computer account come passo iniziale della catena. |
-| Credential Access | OS Credential Dumping: DCSync | `T1003.006` | Dump delle credenziali di dominio tramite il ticket nel contesto del DC. |
+| privilege escalation | exploitation for privilege escalation | `T1068` | sfruttamento combinato di CVE-2021-42278 e CVE-2021-42287 per impersonare un dc. |
+| persistence | create account: domain account | `T1136.002` | creazione di un computer account come passo iniziale della catena. |
+| credential access | os credential dumping: dcsync | `T1003.006` | dump delle credenziali di dominio tramite il ticket nel contesto del dc. |
 
 ## Correlazioni con altri moduli
 
-| Provenienza | Questa tecnica | Effetto |
+| provenienza | questa tecnica | effetto |
 | :--- | :--- | :--- |
-| [Password spraying](<../../../07-post-exploitation/README.md>) / credenziali iniziali | noPac | fornisce l'utente di dominio da cui parte la catena |
-| noPac | [DCSync](<../../05-credential-dumping/dcsync/README.md>) | il ticket ottenuto abilita il dump delle credenziali di dominio |
-| noPac (hash krbtgt) | [Golden](<../../02-kerberos-attacks/golden-ticket/README.md>) / [Diamond](<../../02-kerberos-attacks/diamond-ticket/README.md>) | la chiave di krbtgt ottenuta abilita la persistenza dominio-wide |
+| [password spraying](<../../../07-post-exploitation/README.md>) / credenziali iniziali | nopac | fornisce l'utente di dominio da cui parte la catena |
+| nopac | [dcsync](<../../05-credential-dumping/dcsync/README.md>) | il ticket ottenuto abilita il dump delle credenziali di dominio |
+| nopac (hash krbtgt) | [golden](<../../02-kerberos-attacks/golden-ticket/README.md>) / [diamond](<../../02-kerberos-attacks/diamond-ticket/README.md>) | la chiave di krbtgt ottenuta abilita la persistenza dominio-wide |
 
 ---
 

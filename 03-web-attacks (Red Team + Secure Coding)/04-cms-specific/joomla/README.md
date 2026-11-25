@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# CMS Exploitation: Joomla & JoomScan
+# CMS exploitation: joomla & JoomScan
 
 > - **Fase:** Web Attack - CMS Exploitation (Joomla)
 > - **Visibilita:** Media (JoomScan) / Bassa (CVE-2023-23752 via singola richiesta curl)
@@ -22,7 +22,7 @@ Joomla presenta alcune caratteristiche che lo rendono un target interessante nel
 
 ---
 
-## Fase 1: Fingerprinting
+## Fase 1: fingerprinting
 
 Il primo obiettivo e confermare che il target usa Joomla e identificarne la versione.
 
@@ -55,7 +55,7 @@ La versione nel CHANGELOG permette il mapping diretto con le CVE note nel Nation
 
 ---
 
-## Fase 2: Enumerazione con JoomScan
+## Fase 2: enumerazione con JoomScan
 
 JoomScan e il tool OWASP dedicato a Joomla: enumera la versione, i componenti installati (con CVE), i file di configurazione esposti e le misconfiguration comuni.
 
@@ -96,7 +96,7 @@ Output di esempio:
 
 ---
 
-## Fase 3: CVE-2023-23752 - Information Disclosure via API REST
+## Fase 3: CVE-2023-23752 - information disclosure via API REST
 
 CVE-2023-23752 e una vulnerabilita critica che colpisce Joomla dalla versione 4.0.0 alla 4.2.7. Permette a un attaccante non autenticato di accedere alle configurazioni del database dell'applicazione tramite l'API REST.
 
@@ -138,7 +138,7 @@ Con le credenziali del database, l'attaccante puo:
 
 ---
 
-## Fase 4: Brute Force sul Pannello Admin
+## Fase 4: brute force sul pannello admin
 
 Se CVE-2023-23752 non e applicabile o le credenziali database non permettono l'accesso al pannello, si puo tentare il brute force su `/administrator/`:
 
@@ -179,20 +179,20 @@ Con accesso admin al pannello Joomla:
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `joomscan` | Joomla scanner | CLI - Attiva | Enumerazione versione, componenti, file esposti |
-| `droopescan` | CMS scanner | CLI - Attiva | Alternativa a JoomScan, supporta anche Drupal |
-| `nuclei` | Template-based | CLI - Attiva | Template CVE-2023-23752 e altre CVE Joomla |
-| `hydra` | Password cracker | CLI - Attiva | Brute force su `/administrator/` |
-| `metasploit` | Exploitation framework | CLI/GUI | Moduli specifici per CVE Joomla |
-| `curl` | HTTP client | CLI | Test manuale CVE-2023-23752 (singola richiesta GET) |
+| `joomscan` | joomla scanner | cli - attiva | enumerazione versione, componenti, file esposti |
+| `droopescan` | cms scanner | cli - attiva | alternativa a joomscan, supporta anche drupal |
+| `nuclei` | template-based | cli - attiva | template CVE-2023-23752 e altre cve joomla |
+| `hydra` | password cracker | cli - attiva | brute force su `/administrator/` |
+| `metasploit` | exploitation framework | cli/gui | moduli specifici per cve joomla |
+| `curl` | http client | cli | test manuale CVE-2023-23752 (singola richiesta get) |
 
 ---
 
-## Analisi a Basso Livello: Meccanica di CVE-2023-23752
+## Analisi a basso livello: meccanica di CVE-2023-23752
 
-### API REST di Joomla e il Bypass dell'Autenticazione
+### API REST di joomla e il bypass dell'Autenticazione
 
 CVE-2023-23752 e un Improper Access Check nell'API REST di Joomla. Il problema risiede nel modo in cui Joomla gestisce il parametro `public` nelle richieste API:
 
@@ -219,7 +219,7 @@ Dati esposti nell'output JSON:
 - sitename, MetaDesc                       <- informazioni pubbliche
 ```
 
-### Struttura del File configuration.php
+### Struttura del file configuration.php
 
 Il file `configuration.php` nella root di Joomla contiene tutte le configurazioni in una classe PHP. In caso di misconfiguration del web server, questo file puo essere accessibile direttamente:
 
@@ -237,7 +237,7 @@ class JConfig {
 
 I file di backup (`configuration.php.bak`, `configuration.php.old`, `configuration.php~`) sono un finding comune di JoomScan perche gli editor di testo li creano automaticamente e non vengono serviti come PHP dal web server.
 
-### Kill Chain Completa: da CVE-2023-23752 a RCE
+### Kill chain completa: da CVE-2023-23752 a RCE
 
 ```
 1. Fingerprint   -> curl CHANGELOG.txt -> Joomla 4.2.6
@@ -251,7 +251,7 @@ I file di backup (`configuration.php.bak`, `configuration.php.old`, `configurati
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il test di CVE-2023-23752 ha dimostrato quanto una singola richiesta curl possa essere devastante: l'intero contenuto di `configuration.php` restituito in formato JSON strutturato, senza autenticazione. Il CVSS ufficiale (5.3, Medium) e fuorviante: il punteggio non considera l'impatto a cascata del credential reuse, che nella pratica trasforma un information disclosure in un full compromise.
 
@@ -265,15 +265,15 @@ Il brute force su `/administrator/` con Hydra ha richiesto l'adattamento della s
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning: Vulnerability Scanning | `T1595.002` | Scansione con JoomScan per identificare la versione Joomla e i componenti vulnerabili |
-| Reconnaissance | Gather Victim Host Info: Software | `T1592.002` | Fingerprinting della versione Joomla tramite `CHANGELOG.txt` e meta tag HTML |
-| Initial Access | Exploit Public-Facing Application | `T1190` | Sfruttamento di CVE-2023-23752 sull'API REST di Joomla per ottenere le credenziali del database |
-| Credential Access | Brute Force: Password Guessing | `T1110.001` | Attacco dizionario su `/administrator/` con Hydra |
-| Discovery | File and Directory Discovery | `T1083` | Identificazione di file di configurazione e backup esposti (`configuration.php.bak`) |
-| Persistence | Server Software Component: Web Shell | `T1505.003` | Deploy di Web Shell PHP tramite il Template Manager di Joomla dopo accesso admin |
-| Collection | Data from Information Repositories | `T1213` | Accesso alle credenziali del database e ai dati degli utenti tramite CVE-2023-23752 |
+| reconnaissance | active scanning: vulnerability scanning | `T1595.002` | scansione con joomscan per identificare la versione joomla e i componenti vulnerabili |
+| reconnaissance | gather victim host info: software | `T1592.002` | fingerprinting della versione joomla tramite `CHANGELOG.txt` e meta tag html |
+| initial access | exploit public-facing application | `T1190` | sfruttamento di CVE-2023-23752 sull'api rest di joomla per ottenere le credenziali del database |
+| credential access | brute force: password guessing | `T1110.001` | attacco dizionario su `/administrator/` con hydra |
+| discovery | file and directory discovery | `T1083` | identificazione di file di configurazione e backup esposti (`configuration.php.bak`) |
+| persistence | server software component: web shell | `T1505.003` | deploy di web shell php tramite il template manager di joomla dopo accesso admin |
+| collection | data from information repositories | `T1213` | accesso alle credenziali del database e ai dati degli utenti tramite CVE-2023-23752 |
 
 ---
 

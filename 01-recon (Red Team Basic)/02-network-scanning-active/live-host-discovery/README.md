@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Network Scanning Active: Live Host Discovery
+# Network scanning Active: live host discovery
 
 > - **Fase:** Reconnaissance - Active Network Scanning
 > - **Visibilita:** Bassa - pacchetti ARP/ICMP verso la subnet locale, rilevabili da IDS ma comuni nel traffico legittimo
@@ -16,7 +16,7 @@ Strumenti: `arp-scan`, `netdiscover`, `nmap`
 
 ---
 
-## 1 Introduzione Teorica
+## 1 Introduzione teorica
 
 Il Live Host Discovery è la fase preliminare del Network Scanning. Consiste nell'identificare quali indirizzi IP all'interno di un range di rete sono assegnati a dispositivi attivi.
 
@@ -31,11 +31,11 @@ Questa attività è fondamentale per:
 
 ---
 
-## 2 Esecuzione Tecnica
+## 2 Esecuzione tecnica
 
 **ID Finding:** `SCAN-001` | **Severity:** `Informativo`
 
-#### A. Scansione ARP (arp-scan)
+#### A. scansione ARP (arp-scan)
 È stato utilizzato `arp-scan` per una rilevazione rapida degli host nella sottorete locale. Questo metodo bypassa i firewall di livello OS.
 
 Comando:
@@ -49,7 +49,7 @@ sudo arp-scan -l
 
 Analisi: Sono stati rilevati 3 dispositivi, inclusa la macchina target Windows 10 (identificabile dal MAC Address o dall'IP noto).
 
-#### B. Mappatura Attiva (Netdiscover)
+#### B. mappatura attiva (netdiscover)
 
 È stato utilizzato netdiscover in modalità attiva per interrogare l'intero range di rete.
 
@@ -64,7 +64,7 @@ sudo netdiscover -r 10.0.2.0/24
 
 Analisi: Il tool ha fornito una lista chiara di IP e relativi vendor MAC (es. Oracle VirtualBox).
 
-#### C. Ping Sweep (Nmap)
+#### C. ping sweep (Nmap)
 
 È stata eseguita una scansione ICMP (Ping Sweep) per verificare la visibilità degli host tramite protocolli routabili.
 
@@ -84,9 +84,9 @@ L'attività di Live Host Discovery ha permesso di identificare con successo il t
 
 ---
 
-## Analisi a Basso Livello: ARP Frame e ICMP Discovery
+## Analisi a basso livello: ARP frame e ICMP discovery
 
-### Struttura del Frame ARP (Layer 2)
+### Struttura del frame ARP (layer 2)
 
 Il protocollo ARP (RFC 826) opera a Layer 2 (Data Link) ed e il fondamento del live host discovery su reti locali. Un ARP Request e un frame Ethernet broadcast strutturato come segue:
 
@@ -108,26 +108,26 @@ ARP Payload:
 
 L'host con IP 10.0.2.3 risponde con un ARP Reply (Opcode 0x0002) unicast, inserendo il proprio MAC nel campo Sender MAC. Questo meccanismo e infallibile su reti locali: nessun firewall Layer 3+ puo filtrare ARP perche opera prima dell'IP stack. L'unica difesa e 802.1X (port-based access control) o Dynamic ARP Inspection (DAI) sullo switch.
 
-### Nmap Ping Sweep: Tecniche Multiple
+### Nmap ping sweep: tecniche multiple
 
 Il comando `nmap -sn` non invia solo ICMP Echo Request. Quando eseguito con privilegi root su rete locale, Nmap utilizza una combinazione di probe:
 
-| Tecnica | Pacchetto | Livello | Efficacia |
+| tecnica | pacchetto | livello | efficacia |
 | :--- | :--- | :--- | :--- |
-| ARP Request | Broadcast Ethernet | Layer 2 | Massima (non filtrabile da firewall IP) |
-| ICMP Echo (Type 8) | ICMP Echo Request | Layer 3 | Media (bloccato da Windows Firewall di default) |
-| TCP SYN | SYN sulla porta 443 | Layer 4 | Alta (molti host rispondono con RST anche se filtrati) |
-| ICMP Timestamp (Type 13) | ICMP Timestamp Request | Layer 3 | Bassa (raramente usata, spesso filtrata) |
+| arp request | broadcast ethernet | layer 2 | massima (non filtrabile da firewall ip) |
+| icmp echo (type 8) | icmp echo request | layer 3 | media (bloccato da windows firewall di default) |
+| tcp syn | syn sulla porta 443 | layer 4 | alta (molti host rispondono con rst anche se filtrati) |
+| icmp timestamp (type 13) | icmp timestamp request | layer 3 | bassa (raramente usata, spesso filtrata) |
 
 Su rete locale, Nmap invia solo ARP Request (scelta ottimale). Su reti remote, invia in parallelo tutti e 4 i probe e considera l'host "up" se riceve risposta da almeno uno. Questa combinazione riduce drasticamente i falsi negativi rispetto al semplice `ping`.
 
-### OUI Lookup (Vendor Identification)
+### OUI lookup (vendor identification)
 
 Il MAC address contiene nei primi 3 byte (24 bit) l'OUI (Organizationally Unique Identifier) assegnato da IEEE al produttore hardware. `arp-scan` e Nmap consultano il database OUI per tradurre `08:00:27:xx:xx:xx` in "PCS Systemtechnik GmbH" (OUI di Oracle VirtualBox). In un assessment reale, il vendor MAC rivela il tipo di dispositivo senza necessita di interazione applicativa: Cisco, Juniper, Dell, HP identificano infrastruttura di rete; Apple, Samsung identificano endpoint mobili; VMware, Hyper-V identificano ambienti virtualizzati.
 
 ---
 
-## Blue Team: Rilevamento e Contromisure
+## Blue team: rilevamento e contromisure
 
 **Detection:**
 - ARP scanning genera un volume anomalo di ARP Request da un singolo MAC address verso tutti gli IP della subnet in sequenza rapida. Switch managed con Dynamic ARP Inspection (DAI) possono rilevare e bloccare questo pattern.
@@ -141,7 +141,7 @@ Il MAC address contiene nei primi 3 byte (24 bit) l'OUI (Organizationally Unique
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 Il confronto tra i tre tool ha evidenziato differenze operative significative. `arp-scan -l` e il piu veloce e silenzioso per reti locali: completa la scansione della /24 in meno di 2 secondi e restituisce risultati puliti con MAC address e vendor. `netdiscover -r` offre un output piu leggibile (tabella interattiva aggiornata in tempo reale) ma e piu lento a causa del retry automatico per host che non rispondono al primo tentativo.
 
@@ -151,10 +151,10 @@ Il dato piu interessante e stato il comportamento di `nmap -sn`: nonostante il t
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Discovery | Remote System Discovery | `T1018` | ARP sweep con arp-scan e ICMP ping sweep con nmap -sn per identificare host attivi nella subnet 10.0.2.0/24, rilevando il target Windows 10 a 10.0.2.3 (SCAN-001) |
-| Discovery | Network Service Discovery | `T1046` | Netdiscover in modalita attiva per mappare IP attivi e vendor MAC address nella rete locale (SCAN-001) |
+| discovery | remote system discovery | `T1018` | arp sweep con arp-scan e icmp ping sweep con nmap -sn per identificare host attivi nella subnet 10.0.2.0/24, rilevando il target windows 10 a 10.0.2.3 (SCAN-001) |
+| discovery | network service discovery | `T1046` | netdiscover in modalita attiva per mappare ip attivi e vendor mac address nella rete locale (SCAN-001) |
 
 ---
 

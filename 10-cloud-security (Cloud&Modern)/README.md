@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 10 - Cloud Security (Cloud & Modern)
+# 10 - Cloud security (cloud & modern)
 
 > - **Fase:** Cloud & Modern Infrastructure Security
 > - **Categoria:** Offensivo + Difensivo - l'identita e la configurazione come perimetro
@@ -98,66 +98,66 @@ Il modulo chiude il percorso collegandosi a tutti i precedenti: l'SSRF (03) dive
 
 ## Tool di riferimento
 
-| Tool | Area | Prospettiva | Caso d'uso principale |
+| tool | area | prospettiva | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `Pacu` | AWS | Offensivo | Exploitation framework (enum, privesc) |
-| `AzureHound` / `MicroBurst` | Azure | Offensivo | Attack path e enumerazione Entra ID |
-| `cloud_enum` | Multi | Recon | Scoperta di asset e bucket |
-| `Trivy` | Container/IaC | Difensivo | Scansione CVE e misconfig |
-| `Falco` | Container/K8s | Difensivo | Runtime detection (escape, anomalie) |
-| `kube-bench` / `kube-hunter` | Kubernetes | Dif./Off. | Audit CIS / scoperta esposizioni |
-| `Checkov` / `gitleaks` | IaC | Difensivo | Analisi statica e scoperta segreti |
-| `Prowler` / `ScoutSuite` | Multi | Difensivo | Audit e compliance dell'account |
+| `Pacu` | aws | offensivo | exploitation framework (enum, privesc) |
+| `AzureHound` / `MicroBurst` | azure | offensivo | attack path e enumerazione entra id |
+| `cloud_enum` | multi | recon | scoperta di asset e bucket |
+| `Trivy` | container/iac | difensivo | scansione cve e misconfig |
+| `Falco` | container/k8s | difensivo | runtime detection (escape, anomalie) |
+| `kube-bench` / `kube-hunter` | kubernetes | dif./off. | audit cis / scoperta esposizioni |
+| `Checkov` / `gitleaks` | iac | difensivo | analisi statica e scoperta segreti |
+| `Prowler` / `ScoutSuite` | multi | difensivo | audit e compliance dell'account |
 
 > **Tool moderno consigliato:** uno stack cloud completo combina `Pacu`/`kube-hunter` (offensivo), `Prowler`/`ScoutSuite`/`kube-bench` (audit difensivo), `Trivy`/`Checkov`/`gitleaks` (shift-left in CI/CD) e `Falco` (runtime detection). Dettaglio in `Tooling/` e nelle rispettive sezioni.
 
 ---
 
-## Registro Finding - Modulo 10
+## Registro finding - modulo 10
 
-| ID | Descrizione | Severity | Sottocartella |
+| id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
-| `CLOUD-001` | AWS IAM enumeration + privilege escalation ad admin | `Critico` | `01-.../AWS/IAM-enumeration/` |
-| `CLOUD-002` | AWS S3 bucket esposto/misconfigurato: esfiltrazione dati | `Alto` | `01-.../AWS/S3-buckets-attacks/` |
-| `CLOUD-003` | Azure: abuso managed identity (IMDS) + enumerazione Entra ID | `Alto` | `01-.../Azure/` |
-| `CLOUD-004` | GCP: furto token service account via metadata/SSRF | `Alto` | `01-.../GCP/` |
-| `CLOUD-005` | Container image scanning: CVE nelle immagini prima del deploy | `Medio` | `02-.../image-scanning/` |
-| `CLOUD-006` | Container escape via Docker socket: root sull'host | `Critico` | `02-.../runtime-security/` |
-| `CLOUD-007` | K8s cluster esposto: furto Secret e controllo del control plane | `Critico` | `03-.../K8s-attacks/` |
-| `CLOUD-008` | K8s auditing: CIS (kube-bench) + Pod Security Standards | `Alto` | `03-.../K8s-auditing/` |
-| `CLOUD-009` | Segreti hardcoded in codice/IaC/git + gestione con Vault | `Alto` | `04-.../secrets-management/` |
-| `CLOUD-010` | Terraform scanning: misconfigurazioni IaC prima del deploy | `Medio` | `04-.../terraform-scanning/` |
+| `CLOUD-001` | aws iam enumeration + privilege escalation ad admin | `Critico` | `01-.../AWS/IAM-enumeration/` |
+| `CLOUD-002` | aws s3 bucket esposto/misconfigurato: esfiltrazione dati | `Alto` | `01-.../AWS/S3-buckets-attacks/` |
+| `CLOUD-003` | azure: abuso managed identity (imds) + enumerazione entra id | `Alto` | `01-.../Azure/` |
+| `CLOUD-004` | gcp: furto token service account via metadata/ssrf | `Alto` | `01-.../GCP/` |
+| `CLOUD-005` | container image scanning: cve nelle immagini prima del deploy | `Medio` | `02-.../image-scanning/` |
+| `CLOUD-006` | container escape via docker socket: root sull'host | `Critico` | `02-.../runtime-security/` |
+| `CLOUD-007` | k8s cluster esposto: furto secret e controllo del control plane | `Critico` | `03-.../K8s-attacks/` |
+| `CLOUD-008` | k8s auditing: cis (kube-bench) + pod security standards | `Alto` | `03-.../K8s-auditing/` |
+| `CLOUD-009` | segreti hardcoded in codice/iac/git + gestione con vault | `Alto` | `04-.../secrets-management/` |
+| `CLOUD-010` | terraform scanning: misconfigurazioni iac prima del deploy | `Medio` | `04-.../terraform-scanning/` |
 
 ---
 
-## Mappatura MITRE ATT&CK - Aggregata
+## Mappatura MITRE ATT&CK - aggregata
 
 > Riferimento: MITRE ATT&CK for Cloud (IaaS) e for Containers. Framework difensivo complementare: MITRE D3FEND.
 
-| Tattica | Tecnica | ID MITRE | Finding Correlato |
+| tattica | tecnica | id mitre | finding correlato |
 | :--- | :--- | :--- | :--- |
-| Discovery | Cloud Infrastructure Discovery | `T1580` | CLOUD-001, CLOUD-003, CLOUD-004 |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | CLOUD-001, CLOUD-003, CLOUD-004, CLOUD-009 |
-| Credential Access | Steal Application Access Token | `T1528` | CLOUD-003, CLOUD-004 |
-| Credential Access | Unsecured Credentials: Cloud Instance Metadata API | `T1552.005` | CLOUD-004 |
-| Credential Access | Unsecured Credentials: Credentials In Files | `T1552.001` | CLOUD-009 |
-| Credential Access | Unsecured Credentials: Credentials in Repositories | `T1552.008` | CLOUD-009 |
-| Credential Access | Unsecured Credentials: Container API | `T1552.007` | CLOUD-007, CLOUD-008 |
-| Collection | Data from Cloud Storage | `T1530` | CLOUD-002 |
-| Persistence | Account Manipulation: Additional Cloud Credentials | `T1098.001` | CLOUD-001 |
-| Initial Access | Supply Chain Compromise | `T1195` | CLOUD-005 |
-| Initial Access | Exploit Public-Facing Application | `T1190` | CLOUD-007, CLOUD-008, CLOUD-010 |
-| Privilege Escalation | Escape to Host | `T1611` | CLOUD-006, CLOUD-008 |
-| Execution | Deploy Container | `T1610` | CLOUD-006, CLOUD-007 |
-| Discovery | Container and Resource Discovery | `T1613` | CLOUD-006, CLOUD-007 |
+| discovery | cloud infrastructure discovery | `T1580` | CLOUD-001, CLOUD-003, CLOUD-004 |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | CLOUD-001, CLOUD-003, CLOUD-004, CLOUD-009 |
+| credential access | steal application access token | `T1528` | CLOUD-003, CLOUD-004 |
+| credential access | unsecured credentials: cloud instance metadata api | `T1552.005` | CLOUD-004 |
+| credential access | unsecured credentials: credentials in files | `T1552.001` | CLOUD-009 |
+| credential access | unsecured credentials: credentials in repositories | `T1552.008` | CLOUD-009 |
+| credential access | unsecured credentials: container api | `T1552.007` | CLOUD-007, CLOUD-008 |
+| collection | data from cloud storage | `T1530` | CLOUD-002 |
+| persistence | account manipulation: additional cloud credentials | `T1098.001` | CLOUD-001 |
+| initial access | supply chain compromise | `T1195` | CLOUD-005 |
+| initial access | exploit public-facing application | `T1190` | CLOUD-007, CLOUD-008, CLOUD-010 |
+| privilege escalation | escape to host | `T1611` | CLOUD-006, CLOUD-008 |
+| execution | deploy container | `T1610` | CLOUD-006, CLOUD-007 |
+| discovery | container and resource discovery | `T1613` | CLOUD-006, CLOUD-007 |
 
-| Contromisura difensiva (D3FEND) | ID D3FEND | Area |
+| contromisura difensiva (d3fend) | id d3fend | area |
 | :--- | :--- | :--- |
-| Configuration Inventory | `D3-CI` | Audit cloud (Prowler/ScoutSuite), IaC (Checkov) |
-| Platform Hardening | `D3-PH` | Least privilege, kube-bench, hardening IaC |
-| Application Vulnerability Assessment | `D3-AVA` | Image scanning (Trivy) |
-| Mandatory Access Control | `D3-MAC` | Pod Security, seccomp/AppArmor |
-| Credential Rotation | `D3-CR` | Secrets management (Vault, segreti dinamici) |
+| configuration inventory | `D3-CI` | audit cloud (prowler/scoutsuite), iac (checkov) |
+| platform hardening | `D3-PH` | least privilege, kube-bench, hardening iac |
+| application vulnerability assessment | `D3-AVA` | image scanning (trivy) |
+| mandatory access control | `D3-MAC` | pod security, seccomp/apparmor |
+| credential rotation | `D3-CR` | secrets management (vault, segreti dinamici) |
 
 ---
 

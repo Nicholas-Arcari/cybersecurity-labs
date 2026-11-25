@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# 01 - Providers Infrastructure (IaaS & PaaS)
+# 01 - Providers infrastructure (IaaS & PaaS)
 
 > - **Phase:** Cloud Security - IaaS/PaaS providers (AWS, Azure, GCP)
 > - **Category:** Offensive + Defensive - identity as the perimeter
@@ -27,7 +27,7 @@ The common thread is cross-cutting: the non-human identities tied to the resourc
 
 ---
 
-## Folder Structure
+## Folder structure
 
 ```
 01-providers-infrastructure (IaaS & PaaS)/
@@ -40,7 +40,7 @@ The common thread is cross-cutting: the non-human identities tied to the resourc
 
 ---
 
-## Recommended Operational Flow
+## Recommended operational flow
 
 ```
 [INPUT] Compromised credential / compromised resource / SSRF web app
@@ -65,43 +65,43 @@ The common thread is cross-cutting: the non-human identities tied to the resourc
 
 ---
 
-## Reference Tools
+## Reference tools
 
-| Tool | Provider | Type | Main use case |
+| tool | provider | type | main use case |
 | :--- | :--- | :--- | :--- |
-| `Pacu` | AWS | Offensive | AWS exploitation framework |
-| `AzureHound` / `MicroBurst` | Azure | Offensive | Attack path and Entra ID enumeration |
-| `gcloud` + metadata | GCP | Offensive | Service account token theft |
-| `ScoutSuite` | Multi | Defensive | Multi-cloud audit of the configuration |
-| `Prowler` | AWS/Azure/GCP | Defensive | Security and compliance checks |
+| `Pacu` | aws | offensive | aws exploitation framework |
+| `AzureHound` / `MicroBurst` | azure | offensive | attack path and entra id enumeration |
+| `gcloud` + metadata | gcp | offensive | service account token theft |
+| `ScoutSuite` | multi | defensive | multi-cloud audit of the configuration |
+| `Prowler` | aws/azure/gcp | defensive | security and compliance checks |
 
 > **Recommended modern tool:** `ScoutSuite` for the unified multi-cloud audit; by provider, `Pacu` (AWS), `AzureHound` (Azure), `Prowler` (cross-cutting). Detail in `../Tooling/`.
 
 ---
 
-## Finding Registry - Providers Infrastructure
+## Finding registry - providers infrastructure
 
-| ID | Description | Severity | Subfolder |
+| id | description | severity | subfolder |
 | :--- | :--- | :---: | :--- |
-| `CLOUD-001` | AWS IAM enumeration + privilege escalation to admin | `Critical` | `AWS/IAM-enumeration/` |
-| `CLOUD-002` | Exposed/misconfigured AWS S3 bucket: data exfiltration | `High` | `AWS/S3-buckets-attacks/` |
-| `CLOUD-003` | Azure: managed identity abuse (IMDS) + Entra ID enumeration | `High` | `Azure/` |
-| `CLOUD-004` | GCP: service account token theft via metadata/SSRF | `High` | `GCP/` |
+| `CLOUD-001` | aws iam enumeration + privilege escalation to admin | `Critical` | `AWS/IAM-enumeration/` |
+| `CLOUD-002` | exposed/misconfigured aws s3 bucket: data exfiltration | `High` | `AWS/S3-buckets-attacks/` |
+| `CLOUD-003` | azure: managed identity abuse (imds) + entra id enumeration | `High` | `Azure/` |
+| `CLOUD-004` | gcp: service account token theft via metadata/ssrf | `High` | `GCP/` |
 
 ---
 
-## MITRE ATT&CK Mapping - Aggregated
+## MITRE ATT&CK mapping - aggregated
 
 > Reference: MITRE ATT&CK for Cloud (IaaS).
 
-| Tactic | Technique | MITRE ID | Related Finding |
+| tactic | technique | mitre id | related finding |
 | :--- | :--- | :--- | :--- |
-| Discovery | Cloud Infrastructure Discovery | `T1580` | CLOUD-001, CLOUD-003, CLOUD-004 |
-| Privilege Escalation | Valid Accounts: Cloud Accounts | `T1078.004` | CLOUD-001, CLOUD-003, CLOUD-004 |
-| Credential Access | Steal Application Access Token | `T1528` | CLOUD-003, CLOUD-004 |
-| Credential Access | Unsecured Credentials: Cloud Instance Metadata API | `T1552.005` | CLOUD-004 |
-| Collection | Data from Cloud Storage | `T1530` | CLOUD-002 |
-| Persistence | Account Manipulation: Additional Cloud Credentials | `T1098.001` | CLOUD-001 |
+| discovery | cloud infrastructure discovery | `T1580` | CLOUD-001, CLOUD-003, CLOUD-004 |
+| privilege escalation | valid accounts: cloud accounts | `T1078.004` | CLOUD-001, CLOUD-003, CLOUD-004 |
+| credential access | steal application access token | `T1528` | CLOUD-003, CLOUD-004 |
+| credential access | unsecured credentials: cloud instance metadata api | `T1552.005` | CLOUD-004 |
+| collection | data from cloud storage | `T1530` | CLOUD-002 |
+| persistence | account manipulation: additional cloud credentials | `T1098.001` | CLOUD-001 |
 
 ---
 

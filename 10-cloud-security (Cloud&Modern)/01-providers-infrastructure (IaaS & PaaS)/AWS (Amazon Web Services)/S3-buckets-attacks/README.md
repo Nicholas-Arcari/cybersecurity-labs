@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# AWS S3 Bucket Attacks - Storage Esposto e Misconfigurazioni
+# AWS s3 bucket attacks - storage esposto e misconfigurazioni
 
 > - **Fase:** Cloud Security - Data Access (AWS S3)
 > - **Visibilita:** Bassa/Media - l'accesso a un bucket pubblico non richiede autenticazione e puo non lasciare tracce lato attaccante; gli accessi autenticati sono in CloudTrail se il data event logging e attivo
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Amazon S3 (Simple Storage Service) e il servizio di storage a oggetti di AWS, e le sue misconfigurazioni sono tra le cause piu comuni e piu gravi di data breach cloud. Il problema ricorrente e semplice: bucket configurati come pubblici o con ACL troppo permissive, che espongono a chiunque - spesso senza alcuna autenticazione - dati che dovrebbero essere privati. Backup, dump di database, documenti interni, credenziali: la cronaca delle violazioni e piena di "bucket S3 esposto".
 
@@ -30,7 +30,7 @@ S3-buckets-attacks/
 
 ---
 
-## Scoperta e Accesso a Bucket Mal Configurati
+## Scoperta e accesso a bucket mal configurati
 
 **ID Finding:** `CLOUD-002` | **Severity:** `Alto` (accesso non autorizzato a storage esposto; esfiltrazione di dati o manomissione di contenuti)
 
@@ -38,7 +38,7 @@ S3-buckets-attacks/
 
 I bucket S3 hanno nomi globalmente univoci e spesso prevedibili (`nomeazienda-backup`, `nomeazienda-assets`, `nomeazienda-logs`). Questo li rende enumerabili: un attaccante genera nomi plausibili e verifica quali esistono e quali sono accessibili. Un bucket pubblico non richiede alcuna credenziale.
 
-### PoC - Enumerazione e accesso anonimo
+### PoC - enumerazione e accesso anonimo
 
 ```Bash
 # Verifica di un bucket via HTTP anonimo
@@ -54,7 +54,7 @@ aws s3 ls s3://nomeazienda-backup --no-sign-request
 2026-05-10 02:14:24    950000  backup_config.tar.gz
 ```
 
-### PoC - Esfiltrazione dei dati
+### PoC - esfiltrazione dei dati
 
 ```Bash
 # Download dell'intero bucket pubblico
@@ -79,7 +79,7 @@ upload: ./poc.txt -> s3://nomeazienda-assets/poc.txt
 [!] Scrittura riuscita: se il bucket serve contenuti web -> defacement/malware injection
 ```
 
-### PoC - Automazione della scoperta
+### PoC - automazione della scoperta
 
 ```Bash
 # cloud_enum e s3scanner cercano bucket con permutazioni del nome target
@@ -95,7 +95,7 @@ python3 cloud_enum.py -k nomeazienda      # (vedere ../../../Tooling/cloud-enum/
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 La lezione piu forte e stata la banalita dell'attacco rispetto alla gravita del risultato. Non c'e stato exploit, non c'e stato bypass: un bucket configurato come pubblico e semplicemente accessibile a chiunque ne conosca il nome, con un comando `aws s3 ls`. La sproporzione tra sforzo (minimo) e impatto (un dump di database esfiltrato) spiega perche i bucket esposti restino una delle prime cause di breach: non richiedono un attaccante sofisticato, solo uno attento.
 
@@ -105,7 +105,7 @@ Il caso della ACL scrivibile e stato il piu istruttivo sul piano dell'impatto. U
 
 ---
 
-## Analisi Teorica: Il Default Sicuro e l'Errore di Configurazione
+## Analisi teorica: il default sicuro e l'Errore di configurazione
 
 I bucket S3 sono privati per default: AWS ha reso sicura la configurazione di partenza. Eppure i breach da bucket esposti abbondano, il che rivela una verita sulla sicurezza delle configurazioni: il rischio non e il default, ma la deviazione dal default. Qualcuno, per far funzionare qualcosa in fretta ("rendilo pubblico cosi l'app lo legge"), disabilita la protezione e non la ripristina. La misconfigurazione e un atto umano, non un difetto tecnico.
 
@@ -115,11 +115,11 @@ La contromisura strutturale - "Block Public Access" a livello di account - rifle
 
 ---
 
-## Scenario Reale: Proiezione Post-Exploitation
+## Scenario reale: proiezione Post-Exploitation
 
 > Prospettiva dell'attaccante e del difensore in un engagement reale.
 
-### Prospettiva Attaccante (Red Team)
+### Prospettiva attaccante (red team)
 
 **Punto di partenza:** accesso a un bucket S3 esposto contenente dati sensibili (CLOUD-002).
 
@@ -140,7 +140,7 @@ Data breach completo / escalation nell'account
 
 **Impatto potenziale:** un bucket esposto e spesso il punto di ingresso a compromissioni piu ampie, perche contiene frequentemente altre credenziali (file di config, `.env`, chiavi). Il data breach diretto (dati dei clienti, PII) e gia grave di per se - con conseguenze legali (GDPR) e reputazionali - ma il pivot verso altre credenziali trovate nel bucket collega questo finding a CLOUD-001 (IAM) e a una compromissione dell'intero account.
 
-### Prospettiva Difensore (Blue Team)
+### Prospettiva difensore (blue team)
 
 **Rilevamento:** AWS Config e GuardDuty segnalano i bucket pubblici; il logging dei data event su CloudTrail traccia gli accessi agli oggetti (senza di esso, un accesso anonimo puo essere invisibile).
 
@@ -161,13 +161,13 @@ Data breach completo / escalation nell'account
 
 ## Tool di riferimento
 
-| Tool | Tipo | Ruolo | Caso d'uso principale |
+| tool | tipo | ruolo | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `aws-cli` | Cloud CLI | Ufficiale | Accesso ed enumerazione dei bucket |
-| `cloud_enum` | Bucket enum | Offensivo | Scoperta di bucket via permutazioni del nome |
-| `s3scanner` | S3 scanner | Offensivo | Test di massa di esistenza e permessi dei bucket |
-| `Prowler` | Security scanner | Difensivo | Rilevamento dei bucket pubblici e misconfig |
-| `AWS Config` | Compliance | Difensivo | Monitoraggio continuo della conformita dei bucket |
+| `aws-cli` | cloud cli | ufficiale | accesso ed enumerazione dei bucket |
+| `cloud_enum` | bucket enum | offensivo | scoperta di bucket via permutazioni del nome |
+| `s3scanner` | s3 scanner | offensivo | test di massa di esistenza e permessi dei bucket |
+| `Prowler` | security scanner | difensivo | rilevamento dei bucket pubblici e misconfig |
+| `AWS Config` | compliance | difensivo | monitoraggio continuo della conformita dei bucket |
 
 > **Tool moderno consigliato:** offensivamente `cloud_enum` (`../../../Tooling/cloud-enum/`) per la scoperta multi-cloud dei bucket. Difensivamente, `Prowler` e `AWS Config` per il rilevamento continuo, ma la contromisura decisiva resta "S3 Block Public Access" a livello di account.
 
@@ -175,12 +175,12 @@ Data breach completo / escalation nell'account
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Collection | Data from Cloud Storage | `T1530` | Accesso ed esfiltrazione di dati da bucket S3 esposto (CLOUD-002) |
-| Discovery | Cloud Storage Object Discovery | `T1619` | Enumerazione degli oggetti nel bucket |
-| Reconnaissance | Search Open Websites/Domains | `T1593` | Scoperta dei nomi dei bucket via OSINT/permutazione |
-| Impact | Data Manipulation | `T1565` | Scrittura/manomissione su bucket con ACL scrivibile |
+| collection | data from cloud storage | `T1530` | accesso ed esfiltrazione di dati da bucket s3 esposto (CLOUD-002) |
+| discovery | cloud storage object discovery | `T1619` | enumerazione degli oggetti nel bucket |
+| reconnaissance | search open websites/domains | `T1593` | scoperta dei nomi dei bucket via osint/permutazione |
+| impact | data manipulation | `T1565` | scrittura/manomissione su bucket con acl scrivibile |
 
 ---
 

@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Sapphire Ticket: authentic PAC via S4U2self
+# Sapphire ticket: authentic PAC via S4U2self
 
 > - **Phase:** Persistence / Privilege Escalation (Active Directory domain)
 > - **Visibility:** Extremely low - like the Diamond there is a real Kerberos flow, but additionally the inserted PAC is authentic (issued by the KDC for a real privileged user), not modified
@@ -12,7 +12,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 The Sapphire Ticket is the stealthiest evolution of the Golden/Diamond family. All three require the `krbtgt`
 key, but they differ in the origin of the PAC (the structure that lists the user's groups, i.e., the
@@ -37,7 +37,7 @@ valid PAC for that user. By combining S4U2self (to obtain the authentic PAC of a
 `krbtgt` key (to assemble the final ticket), you obtain a ticket with maximum privileges and a genuine PAC. A
 domain account is needed for the request, along with the identification of a high-privilege target user.
 
-## Execution / Commands
+## Execution / commands
 
 ```bash
 # Impacket ticketer: sapphire technique - uses S4U2self to obtain the authentic PAC of a privileged user
@@ -64,7 +64,7 @@ necessarily shift to protecting the `krbtgt` key and rotating it. Compared to th
 residual indicator (the PAC discrepancy), at the cost of a slightly more complex interaction with the KDC (the
 S4U2self request).
 
-### Theoretical Analysis
+### Theoretical analysis
 
 The Sapphire combines two legitimate Kerberos elements used maliciously. S4U2self (see
 [THEORETICAL-FOUNDATIONS](<../../THEORETICAL-FOUNDATIONS.en.md>), sec. 3.1-3.2, and the
@@ -75,7 +75,7 @@ from that of a real administrator login, because it is: it was issued by the KDC
 once the root of trust (`krbtgt`) is compromised, even controls on PAC authenticity lose value. The only
 countermeasure remains invalidating the key.
 
-## Remediation (Blue Team)
+## Remediation (blue team)
 
 **Detection.** The hardest of the family. The PAC is authentic, the AS-REQ (or S4U request) is real. You rely on:
 monitoring of anomalous **S4U2self** requests (an account requesting tickets in the name of others without being
@@ -88,11 +88,11 @@ Tiering Model.
 
 ---
 
-## Real-World Scenario: Post-Exploitation Projection
+## Real-World scenario: Post-Exploitation projection
 
 > Applies to domain-wide control with an authentic PAC (severity Critical).
 
-### Attacker Perspective (Red Team)
+### Attacker perspective (red team)
 
 **Starting point:** the `krbtgt` key (from DCSync) and a domain account for the S4U2self request.
 
@@ -119,7 +119,7 @@ Domain-wide persistence virtually indistinguishable from legitimate activity
 **Typical monetization vectors:** long-term persistence in high-maturity defensive environments; undisturbed
 access to critical data and systems.
 
-### Defender Perspective (Blue Team)
+### Defender perspective (blue team)
 
 **Detection:** anomalous S4U2self requests; use of privileged tickets without a corresponding interactive login;
 MDI behavioral analytics.
@@ -139,11 +139,11 @@ withstands the compromise of `krbtgt`. The defense is entirely upstream (protect
 
 ## Reference tools
 
-| Tool | Type | Technique/Access | Main use case |
+| tool | type | technique/access | main use case |
 | :--- | :--- | :--- | :--- |
-| `ticketer.py` (Impacket) | Kerberos tool | CLI - Active | Sapphire technique: authentic PAC via S4U2self + assembly with krbtgt |
-| `Rubeus` | .NET Kerberos tool | CLI - Active | S4U requests and ticket manipulation from Windows |
-| `getST.py` (Impacket) | Kerberos tool | CLI - Active | Supporting S4U2self/S4U2proxy requests |
+| `ticketer.py` (impacket) | kerberos tool | cli - active | sapphire technique: authentic pac via s4u2self + assembly with krbtgt |
+| `Rubeus` | .net kerberos tool | cli - active | s4u requests and ticket manipulation from windows |
+| `getST.py` (impacket) | kerberos tool | cli - active | supporting s4u2self/s4u2proxy requests |
 
 ## Methodology notes
 
@@ -153,19 +153,19 @@ double `krbtgt` reset as the only resolving countermeasure. Real keys and SIDs m
 
 ## MITRE ATT&CK mapping
 
-| Tactic | Technique | MITRE ID | Action Description |
+| tactic | technique | mitre id | action description |
 | :--- | :--- | :--- | :--- |
-| Credential Access | Steal or Forge Kerberos Tickets: Golden Ticket | `T1558.001` | Domain-wide ticket with an authentic PAC obtained via S4U2self and the krbtgt key. |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Ticket | `T1550.003` | Use of the ticket to access domain services as an administrator. |
-| Persistence | Account Manipulation | `T1098` | Domain-wide persistence with a genuine PAC. |
+| credential access | steal or forge kerberos tickets: golden ticket | `T1558.001` | domain-wide ticket with an authentic pac obtained via s4u2self and the krbtgt key. |
+| lateral movement | use alternate authentication material: pass the ticket | `T1550.003` | use of the ticket to access domain services as an administrator. |
+| persistence | account manipulation | `T1098` | domain-wide persistence with a genuine pac. |
 
 ## Links to other modules
 
-| Source | This technique | Effect |
+| source | this technique | effect |
 | :--- | :--- | :--- |
-| [DCSync](<../../05-credential-dumping/dcsync/README.en.md>) | Sapphire Ticket | provides the krbtgt key |
-| [Diamond Ticket](<../diamond-ticket/README.en.md>) | Sapphire Ticket | the Sapphire uses an authentic PAC (S4U2self) instead of modifying it: stealthier |
-| [Kerberos delegation](<../../04-delegation-acl/delegation-unconstrained-constrained/README.en.md>) | Sapphire Ticket | S4U2self is the delegation primitive leveraged to obtain the PAC |
+| [dcsync](<../../05-credential-dumping/dcsync/README.en.md>) | sapphire ticket | provides the krbtgt key |
+| [diamond ticket](<../diamond-ticket/README.en.md>) | sapphire ticket | the sapphire uses an authentic pac (s4u2self) instead of modifying it: stealthier |
+| [kerberos delegation](<../../04-delegation-acl/delegation-unconstrained-constrained/README.en.md>) | sapphire ticket | s4u2self is the delegation primitive leveraged to obtain the pac |
 
 ---
 

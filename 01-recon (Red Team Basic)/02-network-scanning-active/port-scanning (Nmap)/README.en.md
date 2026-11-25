@@ -1,6 +1,6 @@
 > **English** | [Italiano](README.md)
 
-# Active Scanning: Port Scanning Phase
+# Active scanning: port scanning phase
 
 Objective: Identification of active services, port filtering and in-depth analysis of exposed configurations on the target. Tools: Masscan, Nmap
 
@@ -8,7 +8,7 @@ This directory documents two distinct and complementary approaches to port scann
 
 ---
 
-## Directory Structure
+## Directory structure
 
 1. High-Speed Scanning (Masscan)
 

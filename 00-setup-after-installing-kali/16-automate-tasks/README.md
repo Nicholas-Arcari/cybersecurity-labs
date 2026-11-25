@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 16 - Automatizza il Backup dei Log
+# 16 - Automatizza il backup dei log
 
 > - **Fase:** System Setup - Log Management & Forensic Readiness
 > - **Priorita:** Alta - i log sono prove forensi irripetibili

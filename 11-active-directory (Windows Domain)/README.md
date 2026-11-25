@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# 11 - Active Directory (Windows Domain)
+# 11 - Active Directory (Windows domain)
 
 > - **Fase:** Exploitation e Post-Exploitation del dominio Windows - dal primo accesso autenticato al Domain Admin
 > - **Visibilita:** Variabile - alcune tecniche sono rumorose (Kerberoasting, NTLM relay), altre quasi silenti (DCSync, abuso di ACL con credenziali legittime)
@@ -36,14 +36,14 @@ Il modulo e volutamente orientato anche alla difesa: AD e terreno comune di red 
 
 ## Struttura della cartella
 
-| Sottocartella | Tema | Stato |
+| sottocartella | tema | stato |
 | :--- | :--- | :--- |
-| `01-enumeration/` | Enumerazione del dominio: BloodHound, LDAP/RPC/SMB, kerbrute (user enum + spraying) | Completa (IT) |
-| `02-kerberos-attacks/` | Attacchi a Kerberos: Kerberoasting, AS-REP Roasting, Golden/Silver Ticket e le varianti stealth Diamond/Sapphire | Completa |
-| `03-adcs/` | Abuso di AD CS: enumerazione ESC, ESC1 (template SAN), ESC8 (NTLM relay) | Completa |
-| `04-delegation-acl/` | Abuso di deleghe Kerberos (RBCD, unconstrained/constrained) e di ACL/DACL | Completa |
-| `05-credential-dumping/` | Dump credenziali di dominio: DCSync, Shadow Credentials, NTDS.dit | Completa |
-| `06-domain-privesc-cve/` | Escalation di dominio via CVE: noPac (CVE-2021-42278/42287) | Completa |
+| `01-enumeration/` | enumerazione del dominio: bloodhound, ldap/rpc/smb, kerbrute (user enum + spraying) | completa (it) |
+| `02-kerberos-attacks/` | attacchi a kerberos: kerberoasting, as-rep roasting, golden/silver ticket e le varianti stealth diamond/sapphire | completa |
+| `03-adcs/` | abuso di ad cs: enumerazione esc, esc1 (template san), esc8 (ntlm relay) | completa |
+| `04-delegation-acl/` | abuso di deleghe kerberos (rbcd, unconstrained/constrained) e di acl/dacl | completa |
+| `05-credential-dumping/` | dump credenziali di dominio: dcsync, shadow credentials, ntds.dit | completa |
+| `06-domain-privesc-cve/` | escalation di dominio via cve: nopac (CVE-2021-42278/42287) | completa |
 
 Il modulo e bilingue (IT + EN) e comprende 18 pagine tecniche piu gli scaffold. Resta, per ogni tecnica,
 l'assegnazione dei Finding ID reali (`AD-NNN`) all'esecuzione in un laboratorio AD (es. GOAD o macchine HTB).
@@ -56,69 +56,69 @@ l'assegnazione dei Finding ID reali (`AD-NNN`) all'esecuzione in un laboratorio 
 4. **Dominio completo** (`05-credential-dumping/`): con privilegi di replica, DCSync estrae tutti gli hash, incluso quello di `krbtgt`.
 5. **Persistenza**: il Golden Ticket (da krbtgt) e la persistenza di dominio per eccellenza, trattata al confine con il modulo 07.
 
-## Registro Finding
+## Registro finding
 
 > Modulo in metodologia: nessun Finding ID e ancora assegnato. Verranno attribuiti (sequenza `AD-001`+) all'esecuzione in laboratorio reale. La colonna "Severity tipica" indica la gravita attesa della tecnica in un contesto reale.
 
-| Tecnica | Sottocartella | Severity tipica | Finding ID |
+| tecnica | sottocartella | severity tipica | finding id |
 | :--- | :--- | :---: | :---: |
-| BloodHound (mappatura percorsi) | `01-enumeration/bloodhound/` | `Informativo` | da assegnare in lab |
-| Enumerazione LDAP/RPC/SMB | `01-enumeration/domain-enumeration/` | `Basso` | da assegnare in lab |
-| Kerbrute (user enum + spraying) | `01-enumeration/kerbrute-userenum/` | `Variabile (Basso / Alto)` | da assegnare in lab |
-| Kerberoasting | `02-kerberos-attacks/kerberoasting/` | `Alto` | da assegnare in lab |
-| AS-REP Roasting | `02-kerberos-attacks/as-rep-roasting/` | `Alto` | da assegnare in lab |
-| Golden Ticket | `02-kerberos-attacks/golden-ticket/` | `Critico` | da assegnare in lab |
-| Silver Ticket | `02-kerberos-attacks/silver-ticket/` | `Alto` | da assegnare in lab |
-| Diamond Ticket (variante stealth) | `02-kerberos-attacks/diamond-ticket/` | `Critico` | da assegnare in lab |
-| Sapphire Ticket (PAC autentico S4U2self) | `02-kerberos-attacks/sapphire-ticket/` | `Critico` | da assegnare in lab |
-| AD CS enumeration (ESC) | `03-adcs/esc-enumeration/` | `Informativo` | da assegnare in lab |
-| AD CS ESC1 (template SAN arbitrario) | `03-adcs/esc1-template-abuse/` | `Critico` | da assegnare in lab |
-| AD CS ESC8 (NTLM relay to Web Enrollment) | `03-adcs/esc8-relay-adcs/` | `Critico` | da assegnare in lab |
-| RBCD abuse | `04-delegation-acl/rbcd/` | `Critico` | da assegnare in lab |
-| Unconstrained/Constrained Delegation | `04-delegation-acl/delegation-unconstrained-constrained/` | `Critico` | da assegnare in lab |
-| ACL/DACL abuse | `04-delegation-acl/acl-abuse/` | `Alto` (fino a `Critico`) | da assegnare in lab |
-| DCSync | `05-credential-dumping/dcsync/` | `Critico` | da assegnare in lab |
-| Shadow Credentials | `05-credential-dumping/shadow-credentials/` | `Alto` | da assegnare in lab |
-| NTDS.dit dump | `05-credential-dumping/secretsdump-ntds/` | `Critico` | da assegnare in lab |
-| noPac (CVE-2021-42278/42287) | `06-domain-privesc-cve/nopac/` | `Critico` | da assegnare in lab |
+| bloodhound (mappatura percorsi) | `01-enumeration/bloodhound/` | `Informativo` | da assegnare in lab |
+| enumerazione ldap/rpc/smb | `01-enumeration/domain-enumeration/` | `Basso` | da assegnare in lab |
+| kerbrute (user enum + spraying) | `01-enumeration/kerbrute-userenum/` | `Variabile (Basso / Alto)` | da assegnare in lab |
+| kerberoasting | `02-kerberos-attacks/kerberoasting/` | `Alto` | da assegnare in lab |
+| as-rep roasting | `02-kerberos-attacks/as-rep-roasting/` | `Alto` | da assegnare in lab |
+| golden ticket | `02-kerberos-attacks/golden-ticket/` | `Critico` | da assegnare in lab |
+| silver ticket | `02-kerberos-attacks/silver-ticket/` | `Alto` | da assegnare in lab |
+| diamond ticket (variante stealth) | `02-kerberos-attacks/diamond-ticket/` | `Critico` | da assegnare in lab |
+| sapphire ticket (pac autentico s4u2self) | `02-kerberos-attacks/sapphire-ticket/` | `Critico` | da assegnare in lab |
+| ad cs enumeration (esc) | `03-adcs/esc-enumeration/` | `Informativo` | da assegnare in lab |
+| ad cs esc1 (template san arbitrario) | `03-adcs/esc1-template-abuse/` | `Critico` | da assegnare in lab |
+| ad cs esc8 (ntlm relay to web enrollment) | `03-adcs/esc8-relay-adcs/` | `Critico` | da assegnare in lab |
+| rbcd abuse | `04-delegation-acl/rbcd/` | `Critico` | da assegnare in lab |
+| unconstrained/constrained delegation | `04-delegation-acl/delegation-unconstrained-constrained/` | `Critico` | da assegnare in lab |
+| acl/dacl abuse | `04-delegation-acl/acl-abuse/` | `Alto` (fino a `Critico`) | da assegnare in lab |
+| dcsync | `05-credential-dumping/dcsync/` | `Critico` | da assegnare in lab |
+| shadow credentials | `05-credential-dumping/shadow-credentials/` | `Alto` | da assegnare in lab |
+| ntds.dit dump | `05-credential-dumping/secretsdump-ntds/` | `Critico` | da assegnare in lab |
+| nopac (CVE-2021-42278/42287) | `06-domain-privesc-cve/nopac/` | `Critico` | da assegnare in lab |
 
 ## Mappatura MITRE ATT&CK (aggregata)
 
-| Tattica | Tecnica | ID MITRE | Tecnica correlata |
+| tattica | tecnica | id mitre | tecnica correlata |
 | :--- | :--- | :--- | :--- |
-| Discovery | Account Discovery: Domain Account | `T1087.002` | Enumerazione (BloodHound, LDAP, kerbrute) |
-| Discovery | Permission Groups Discovery: Domain Groups | `T1069.002` | Enumerazione gruppi |
-| Discovery | Domain Trust Discovery | `T1482` | BloodHound |
-| Discovery | Password Policy Discovery | `T1201` | Enumerazione pre-spraying |
-| Credential Access | Brute Force: Password Spraying | `T1110.003` | Kerbrute spraying |
-| Credential Access | Steal or Forge Kerberos Tickets: Kerberoasting | `T1558.003` | Kerberoasting |
-| Credential Access | Steal or Forge Kerberos Tickets: AS-REP Roasting | `T1558.004` | AS-REP Roasting |
-| Credential Access | Steal or Forge Kerberos Tickets: Golden Ticket | `T1558.001` | Golden Ticket / Diamond Ticket / Sapphire Ticket |
-| Credential Access | Steal or Forge Kerberos Tickets: Silver Ticket | `T1558.002` | Silver Ticket |
-| Credential Access | Steal or Forge Authentication Certificates | `T1649` | AD CS ESC1 / ESC8 / Shadow Credentials |
-| Credential Access | Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay | `T1557.001` | AD CS ESC8 |
-| Credential Access | Forced Authentication | `T1187` | ESC8 / unconstrained delegation (coercizione) |
-| Credential Access | OS Credential Dumping: DCSync | `T1003.006` | DCSync / ACL abuse (WriteDACL) / noPac |
-| Credential Access | OS Credential Dumping: NTDS | `T1003.003` | NTDS.dit dump |
-| Persistence | Account Manipulation | `T1098` | RBCD / ACL abuse / Shadow Credentials / Diamond / Sapphire |
-| Persistence | Create Account: Domain Account | `T1136.002` | noPac (creazione computer account) |
-| Privilege Escalation | Exploitation for Privilege Escalation | `T1068` | noPac (CVE-2021-42278 + 42287) |
-| Privilege Escalation | Domain or Tenant Policy Modification | `T1484` | ACL abuse (DACL dominio) |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Ticket | `T1550.003` | Delegation abuse / ticket forgiati |
-| Lateral Movement | Use Alternate Authentication Material: Pass the Hash | `T1550.002` | DCSync / NTDS (follow-on) |
+| discovery | account discovery: domain account | `T1087.002` | enumerazione (bloodhound, ldap, kerbrute) |
+| discovery | permission groups discovery: domain groups | `T1069.002` | enumerazione gruppi |
+| discovery | domain trust discovery | `T1482` | bloodhound |
+| discovery | password policy discovery | `T1201` | enumerazione pre-spraying |
+| credential access | brute force: password spraying | `T1110.003` | kerbrute spraying |
+| credential access | steal or forge kerberos tickets: kerberoasting | `T1558.003` | kerberoasting |
+| credential access | steal or forge kerberos tickets: as-rep roasting | `T1558.004` | as-rep roasting |
+| credential access | steal or forge kerberos tickets: golden ticket | `T1558.001` | golden ticket / diamond ticket / sapphire ticket |
+| credential access | steal or forge kerberos tickets: silver ticket | `T1558.002` | silver ticket |
+| credential access | steal or forge authentication certificates | `T1649` | ad cs esc1 / esc8 / shadow credentials |
+| credential access | adversary-in-the-middle: llmnr/nbt-ns poisoning and smb relay | `T1557.001` | ad cs esc8 |
+| credential access | forced authentication | `T1187` | esc8 / unconstrained delegation (coercizione) |
+| credential access | os credential dumping: dcsync | `T1003.006` | dcsync / acl abuse (writedacl) / nopac |
+| credential access | os credential dumping: ntds | `T1003.003` | ntds.dit dump |
+| persistence | account manipulation | `T1098` | rbcd / acl abuse / shadow credentials / diamond / sapphire |
+| persistence | create account: domain account | `T1136.002` | nopac (creazione computer account) |
+| privilege escalation | exploitation for privilege escalation | `T1068` | nopac (CVE-2021-42278 + 42287) |
+| privilege escalation | domain or tenant policy modification | `T1484` | acl abuse (dacl dominio) |
+| lateral movement | use alternate authentication material: pass the ticket | `T1550.003` | delegation abuse / ticket forgiati |
+| lateral movement | use alternate authentication material: pass the hash | `T1550.002` | dcsync / ntds (follow-on) |
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `BloodHound` / `SharpHound` | Graph enumeration | CLI/GUI - Attivo | Mappa dei percorsi di attacco nel dominio (ACL, sessioni, deleghe) |
-| `NetExec` (`nxc`) | Swiss-army AD/SMB | CLI - Attivo | Enumerazione e azione di massa su SMB/LDAP/WinRM; successore di CrackMapExec |
-| `Impacket` (suite) | Python toolkit | CLI - Attivo | GetUserSPNs, secretsdump, ntlmrelayx, ticketer e altri |
-| `Rubeus` | .NET Kerberos tool | CLI - Attivo | Kerberoasting, AS-REP, manipolazione ticket da host Windows |
-| `Certipy` | AD CS toolkit | CLI - Attivo | Enumerazione e abuso di AD CS (ESC1-ESC16) |
-| `ldapsearch` / `windapsearch` | LDAP client | CLI - Attivo | Enumerazione LDAP del dominio |
-| `kerbrute` | Kerberos pre-auth | CLI - Attivo | User enumeration e password spraying via Kerberos |
-| `hashcat` | GPU cracking | CLI - Offline | Cracking di hash Kerberos (modi 13100/18200) e NTLM (1000) |
+| `BloodHound` / `SharpHound` | graph enumeration | cli/gui - attivo | mappa dei percorsi di attacco nel dominio (acl, sessioni, deleghe) |
+| `NetExec` (`nxc`) | swiss-army ad/smb | cli - attivo | enumerazione e azione di massa su smb/ldap/winrm; successore di crackmapexec |
+| `Impacket` (suite) | python toolkit | cli - attivo | getuserspns, secretsdump, ntlmrelayx, ticketer e altri |
+| `Rubeus` | .net kerberos tool | cli - attivo | kerberoasting, as-rep, manipolazione ticket da host windows |
+| `Certipy` | ad cs toolkit | cli - attivo | enumerazione e abuso di ad cs (esc1-esc16) |
+| `ldapsearch` / `windapsearch` | ldap client | cli - attivo | enumerazione ldap del dominio |
+| `kerbrute` | kerberos pre-auth | cli - attivo | user enumeration e password spraying via kerberos |
+| `hashcat` | gpu cracking | cli - offline | cracking di hash kerberos (modi 13100/18200) e ntlm (1000) |
 
 ## Collegamento ad altri moduli
 

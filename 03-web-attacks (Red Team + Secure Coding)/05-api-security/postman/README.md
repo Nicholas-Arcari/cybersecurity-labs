@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# API Broken Object Level Authorization (BOLA/IDOR)
+# API broken object level authorization (BOLA/IDOR)
 
 > - **Fase:** Web Attack - API Security (REST/IDOR)
 > - **Visibilita:** Bassa - richieste HTTP legittime verso endpoint autenticato, solo l'ID risorsa cambia
@@ -13,7 +13,7 @@
 
 ---
 
-## 1 Executive Summary
+## 1 Executive summary
 
 Durante l'attività di Security Assessment condotta sulle API dell'applicazione bancaria target, è stata individuata una vulnerabilità critica di tipo IDOR (Insecure Direct Object Reference), classificata nella OWASP API Top 10 come API1:2023 - Broken Object Level Authorization.
 
@@ -25,7 +25,7 @@ Impatto di Business: Violazione massiva della privacy (GDPR), perdita di dati fi
 
 ---
 
-## 2 Dettagli Tecnici della Vulnerabilità
+## 2 Dettagli tecnici della vulnerabilità
 Descrizione
 
 L'endpoint `/api/balance/<account_id>` accetta un parametro intero (`account_id`) nell'URL per identificare la risorsa da restituire.
@@ -50,7 +50,7 @@ L'attacco automatizzato ha permesso di esfiltrare i seguenti dati sensibili in p
 
 ---
 
-## 3 Root Cause Analysis (Codice Vulnerabile)
+## 3 Root cause analysis (codice vulnerabile)
 
 Analisi del codice sorgente (`vulnerable_bank.py`) che ha causato la falla.
 
@@ -69,7 +69,7 @@ def get_balance(account_id):
 
 ---
 
-## 4 Remediation (Secure Coding)
+## 4 Remediation (secure coding)
 
 Per correggere questa vulnerabilità, è necessario implementare un meccanismo di controllo degli accessi basato sull'identità dell'utente loggato (Session o JWT).
 
@@ -112,9 +112,9 @@ Si raccomanda il deploy immediato della patch proposta (Controllo di Ownership) 
 
 ---
 
-## Analisi a Basso Livello: IDOR/BOLA e Authorization Patterns
+## Analisi a basso livello: IDOR/BOLA e authorization patterns
 
-### Perche IDOR e la Vulnerabilita #1 nelle API (OWASP API Top 10:2023)
+### Perche IDOR e la vulnerabilita #1 nelle API (OWASP API top 10:2023)
 
 ```
 Architettura di una richiesta API con IDOR:
@@ -138,7 +138,7 @@ Server SICURO:
 5. Restituisce 403 Forbidden
 ```
 
-### Pattern di ID Predicibili vs UUID
+### Pattern di ID predicibili vs UUID
 
 ```
 ID Sequenziali (vulnerabili a enumeration):
@@ -158,7 +158,7 @@ puo comunque accedere ai dati senza authorization check.
 La vera fix e SEMPRE il controllo di ownership lato server.
 ```
 
-### Automazione del Fuzzing IDOR con Collection Runner
+### Automazione del fuzzing IDOR con collection runner
 
 ```
 Postman Collection Runner (o equivalente curl loop):
@@ -189,7 +189,7 @@ done
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'automazione con il Collection Runner (simulato via script) ha dimostrato la velocita con cui un attaccante puo esfiltrare tutti i dati: 8 account in meno di un secondo. In un'applicazione reale con migliaia di utenti, lo stesso script con `seq 1 100000` esfilerebbe l'intero database in pochi minuti, generando traffico indistinguibile da richieste legittime (stesso endpoint, stesso formato, stesso token valido).
 
@@ -201,11 +201,11 @@ Il codice vulnerabile (`accounts.get(account_id)` senza ownership check) e un pa
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Discovery | Account Discovery | `T1087` | Enumerazione degli ID account sull'endpoint `/api/balance/<id>` da 998 a 1005 per mappare tutti gli utenti presenti nel sistema (WEB-014) |
-| Collection | Data from Information Repositories | `T1213` | Accesso ai dati finanziari sensibili (saldo, nome) di Bob, Charlie/CEO e Dave/Admin senza alcuna autorizzazione tramite IDOR (WEB-014) |
-| Lateral Movement | Valid Accounts | `T1078` | Utilizzo del token di autenticazione di un utente ordinario per accedere ai dati di account con privilegi superiori (CEO, Admin) (WEB-014) |
+| discovery | account discovery | `T1087` | enumerazione degli id account sull'endpoint `/api/balance/<id>` da 998 a 1005 per mappare tutti gli utenti presenti nel sistema (WEB-014) |
+| collection | data from information repositories | `T1213` | accesso ai dati finanziari sensibili (saldo, nome) di bob, charlie/ceo e dave/admin senza alcuna autorizzazione tramite idor (WEB-014) |
+| lateral movement | valid accounts | `T1078` | utilizzo del token di autenticazione di un utente ordinario per accedere ai dati di account con privilegi superiori (ceo, admin) (WEB-014) |
 
 ---
 

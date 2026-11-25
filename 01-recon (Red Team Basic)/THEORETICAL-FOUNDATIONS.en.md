@@ -1,6 +1,6 @@
 > **English** | [Italiano](THEORETICAL-FOUNDATIONS.md)
 
-# Theoretical Foundations - Module 01: Reconnaissance
+# Theoretical foundations - module 01: reconnaissance
 
 > - **Level:** Academic analysis (theoretical complement to the operational READMEs of the module)
 > - **Purpose:** Provide the formal adversary model, the information-theoretic foundations and the quantitative analysis of reconnaissance, with reference to the primary literature.
@@ -14,7 +14,7 @@ Reconnaissance is commonly presented as a collection of techniques and tools (OS
 
 ---
 
-## 1. The Adversary Model
+## 1. The adversary model
 
 The reconnaissance adversary `A_rec` is defined as a specialization of the network attacker formalized by [Dolev & Yao 1983]. In the Dolev-Yao model the adversary controls the communication channel (can observe, intercept, delay and inject messages) but is computationally bounded: it cannot break the cryptographic primitives assumed secure. For the reconnaissance phase this model is restricted to two profiles distinct in capability and observability:
 
@@ -26,7 +26,7 @@ The formal objective of both profiles is not "to find vulnerabilities" but a mor
 
 ---
 
-## 2. Security Properties at Stake
+## 2. Security properties at stake
 
 Reconnaissance threatens the **confidentiality of infrastructural metadata**: not user data, but information about the structure of the system (which hosts exist, which services they expose, which technologies they use). Two frequently confused defensive properties must be distinguished:
 
@@ -38,7 +38,7 @@ The document argues, with [Manadhata & Wing 2011], that only the second property
 
 ---
 
-## 3. Theoretical Foundations
+## 3. Theoretical foundations
 
 ### 3.1 Formalization of the attack surface
 
@@ -66,7 +66,7 @@ Information once published cannot be un-published in an information-theoretic se
 
 ---
 
-## 4. Quantitative Analysis
+## 4. Quantitative analysis
 
 ### 4.1 The economics of scanning after ZMap
 
@@ -78,13 +78,13 @@ While port scanning is a probabilistic sampling (subject to packet loss, rate li
 
 ---
 
-## 5. Literature Review
+## 5. Literature review
 
 The adopted network attacker model derives from [Dolev & Yao 1983], whose foundational contribution was to abstract the adversary from specific implementations to a set of capabilities over the channel; their formalization remains the baseline of security protocols. The quantification of the attack surface rests on [Manadhata & Wing 2011], who first proposed a systematic and measurable metric, surpassing the earlier qualitative definitions. On the empirical plane, the pair of works by [Durumeric et al. 2013a] (ZMap) and [Durumeric et al. 2013b] (HTTPS ecosystem) redefined the understanding of Internet-scale reconnaissance, demonstrating both the feasibility of exhaustive scanning and the informational richness of deterministic channels such as CT. The information-theoretic framing appeals to [Shannon 1949]; the ineffectiveness of obscurity to the principle of [Kerckhoffs 1883]. The positioning of reconnaissance as the first stage of a sequence follows the Cyber Kill Chain of [Hutchins et al. 2011].
 
 ---
 
-## 6. Limitations and Open Problems
+## 6. Limitations and open problems
 
 1. **Non-preventability of passive reconnaissance.** Since `A_pass` operates exclusively on already-public information, no countermeasure exists that detects or prevents it: the defender can only reduce the information exposed a priori. This poses an insurmountable theoretical limit to defense against OSINT reconnaissance.
 
@@ -94,7 +94,7 @@ The adopted network attacker model derives from [Dolev & Yao 1983], whose founda
 
 ---
 
-## 7. Synthesis and Connection to Practice
+## 7. Synthesis and connection to practice
 
 The operational READMEs of module 01 (findings with prefixes `OSINT-`, `SCAN-`, `DNS-`, `INTEL-`) concretely instantiate the framework formalized here: passive OSINT corresponds to `A_pass`, active network scanning to `A_act`, enumeration via Certificate Transparency is the practical manifestation of the deterministic channel of section 4.2. The unifying lesson is that every reconnaissance finding reduces `H(X)` for the attacker and expands the empirical knowledge of the attack surface [Manadhata & Wing 2011]; the correct countermeasure, consistent with section 2, is not to conceal (obscurity, weak) but to reduce the surface and inject controlled noise (minimization + deception, strong). This directly links module 01 to the hardening countermeasures (module 08) and closes the loop between the offensive and defensive perspectives.
 

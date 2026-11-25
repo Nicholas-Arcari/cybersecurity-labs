@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-# Bluetooth & BLE Recon - Discovery ed Enumerazione GATT
+# Bluetooth & BLE recon - discovery ed enumerazione GATT
 
 > - **Fase:** Wireless Security - Reconnaissance (Bluetooth Classic & Bluetooth Low Energy)
 > - **Visibilita:** Bassa - lo scanning BLE e passivo (ascolto degli advertising packet); l'enumerazione dei servizi GATT richiede una connessione al device (Attiva ma poco appariscente, tipica del comportamento di un client legittimo)
@@ -13,7 +13,7 @@
 
 ---
 
-## Executive Summary
+## Executive summary
 
 Il Bluetooth e spesso il layer piu trascurato di un assessment, ma e diventato critico con la proliferazione dell'IoT: serrature smart, dispositivi medici, wearable, sistemi di building automation comunicano quasi tutti via Bluetooth Low Energy (BLE). A differenza dell'802.11, dove l'obiettivo e la rete, qui l'obiettivo e il singolo device e i servizi che espone.
 
@@ -33,7 +33,7 @@ recon/
 
 ---
 
-## Discovery dei Dispositivi
+## Discovery dei dispositivi
 
 **ID Finding:** `WIFI-006` | **Severity:** `Informativo` (mappatura superficie d'attacco BLE; diventa `Medio` se emergono caratteristiche scrivibili senza autenticazione)
 
@@ -68,7 +68,7 @@ sudo bettercap
  -67  │ 60:ab:d2:5f:33:44 │ Xiaomi         │ LE only     │      yes     │ Mi Band 6
 ```
 
-### Esecuzione - Enumerazione dei servizi GATT
+### Esecuzione - enumerazione dei servizi GATT
 
 ```Bash
 # Enumerazione completa dei servizi e caratteristiche del target
@@ -107,7 +107,7 @@ Characteristic value/descriptor: 00        <-- stato "unlocked=0", scrivibile se
 
 ---
 
-## Esperienza di Laboratorio
+## Esperienza di laboratorio
 
 L'ostacolo iniziale e stato hardware: l'adattatore Bluetooth integrato del laptop supportava la discovery ma non lo sniffing passivo del traffico tra due device gia accoppiati. Per la discovery e l'enumerazione GATT (connessione diretta al device) l'adattatore integrato e stato sufficiente; per lo sniffing del pairing tra app e device sarebbe stato necessario un nRF52840 o un Ubertooth One con firmware dedicato.
 
@@ -115,7 +115,7 @@ Il risultato piu interessante e emerso dall'enumerazione GATT del dispositivo di
 
 ---
 
-## Analisi Teorica: Il Modello GATT e i suoi Punti Deboli
+## Analisi teorica: il modello GATT e i suoi punti deboli
 
 Il BLE organizza i dati secondo il Generic Attribute Profile (GATT): il device (server GATT) espone Servizi, ciascuno contenente Caratteristiche, ciascuna con un valore e un set di proprieta (Read, Write, Notify, Indicate) e permessi di sicurezza. Il client (tipicamente l'app mobile) legge, scrive o si sottoscrive alle notifiche.
 
@@ -127,14 +127,14 @@ Le versioni BLE pre-4.2 usavano inoltre il metodo di pairing "Legacy" con la mod
 
 ## Tool di riferimento
 
-| Tool | Tipo | Tecnica/Accesso | Caso d'uso principale |
+| tool | tipo | tecnica/accesso | caso d'uso principale |
 | :--- | :--- | :--- | :--- |
-| `bluetoothctl` | BlueZ CLI | CLI | Discovery, pairing e gestione device via stack BlueZ |
-| `bettercap` | MITM framework | CLI | Modulo `ble.recon`/`ble.enum`: discovery ed enumerazione GATT (il riferimento BLE) |
-| `gatttool` | GATT client | CLI | Lettura/scrittura diretta di caratteristiche GATT (deprecato ma utile) |
-| `bluehydra` | BT discovery | CLI | Discovery continua Bluetooth Classic + BLE con database |
-| `hcitool` / `hciconfig` | BlueZ legacy | CLI | Gestione a basso livello dell'interfaccia HCI (legacy) |
-| `nRF Connect` | BLE explorer | GUI / Mobile | Esplorazione GATT interattiva (desktop e mobile, Nordic) |
+| `bluetoothctl` | bluez cli | cli | discovery, pairing e gestione device via stack bluez |
+| `bettercap` | mitm framework | cli | modulo `ble.recon`/`ble.enum`: discovery ed enumerazione gatt (il riferimento ble) |
+| `gatttool` | gatt client | cli | lettura/scrittura diretta di caratteristiche gatt (deprecato ma utile) |
+| `bluehydra` | bt discovery | cli | discovery continua bluetooth classic + ble con database |
+| `hcitool` / `hciconfig` | bluez legacy | cli | gestione a basso livello dell'interfaccia hci (legacy) |
+| `nRF Connect` | ble explorer | gui / mobile | esplorazione gatt interattiva (desktop e mobile, nordic) |
 
 > **Tool moderno consigliato:** `bettercap` e il riferimento moderno per il BLE recon (i moduli `ble.recon`, `ble.enum`, `ble.write` sostituiscono gatttool e hcitool, deprecati). Per lo sniffing del traffico e del pairing, un dongle `nRF52840` con firmware Sniffer o `Ubertooth One`. Il [Flipper Zero](https://github.com/Nicholas-Arcari/FlipperZero-guide) integra scanner BLE e alcune funzioni GATT in un form factor portatile per il recon fisico rapido.
 
@@ -142,11 +142,11 @@ Le versioni BLE pre-4.2 usavano inoltre il metodo di pairing "Legacy" con la mod
 
 ## Mappatura MITRE ATT&CK
 
-| Tattica | Tecnica | ID MITRE | Descrizione dell'Azione |
+| tattica | tecnica | id mitre | descrizione dell'azione |
 | :--- | :--- | :--- | :--- |
-| Reconnaissance | Active Scanning | `T1595` | Discovery dei device BLE tramite scanning degli advertising packet (WIFI-006) |
-| Reconnaissance | Gather Victim Host Information | `T1592` | Enumerazione dei servizi GATT, caratteristiche e informazioni del device (WIFI-006) |
-| Credential Access | Network Sniffing | `T1040` | Cattura passiva degli advertising packet e (con hardware dedicato) del traffico BLE |
+| reconnaissance | active scanning | `T1595` | discovery dei device ble tramite scanning degli advertising packet (WIFI-006) |
+| reconnaissance | gather victim host information | `T1592` | enumerazione dei servizi gatt, caratteristiche e informazioni del device (WIFI-006) |
+| credential access | network sniffing | `T1040` | cattura passiva degli advertising packet e (con hardware dedicato) del traffico ble |
 
 ---
 
