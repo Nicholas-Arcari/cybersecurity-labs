@@ -10,7 +10,7 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       # Em dash (U+2014) - vietato dagli standard di repo.
       # REPORT_STANDARDS.md/.en.md sono esclusi: documentano la regola e citano
