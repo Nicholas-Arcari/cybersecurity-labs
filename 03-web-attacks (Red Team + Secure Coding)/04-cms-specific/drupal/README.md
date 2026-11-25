@@ -91,8 +91,8 @@ Si raccomanda di applicare le seguenti azioni correttive con urgenza immediata:
     
     Aggiornare immediatamente il core di Drupal alle versioni sicure:
 
-    - Se 7.x: Aggiornare a 7.58 o superiore.
-    - Se 8.x: Aggiornare a 8.3.9, 8.4.6, 8.5.1 o superiori.
+  - Se 7.x: Aggiornare a 7.58 o superiore.
+  - Se 8.x: Aggiornare a 8.3.9, 8.4.6, 8.5.1 o superiori.
 
 - Web Application Firewall (WAF):
     
@@ -100,9 +100,9 @@ Si raccomanda di applicare le seguenti azioni correttive con urgenza immediata:
 
 - Hardening del Server:
 
-    - Disabilitare funzioni PHP pericolose nel file `php.ini` (es. `disable_functions = exec,passthru,shell_exec,system`).
-    - Disabilitare il modulo "PHP Filter" se non strettamente necessario.
-    - Rimuovere file non necessari come `CHANGELOG.txt` o `INSTALL.txt` dalla root del sito per complicare il fingerprinting.
+  - Disabilitare funzioni PHP pericolose nel file `php.ini` (es. `disable_functions = exec,passthru,shell_exec,system`).
+  - Disabilitare il modulo "PHP Filter" se non strettamente necessario.
+  - Rimuovere file non necessari come `CHANGELOG.txt` o `INSTALL.txt` dalla root del sito per complicare il fingerprinting.
 
 ---
 

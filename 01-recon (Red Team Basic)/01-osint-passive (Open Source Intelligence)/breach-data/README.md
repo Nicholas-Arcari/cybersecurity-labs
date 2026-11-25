@@ -45,7 +45,7 @@ pip3 install h8mail
 h8mail -t <TARGET_EMAIL>
 ```
 
-![](./img/Screenshot_2026-02-03_13_03_35.jpg)
+![](./img/Screenshot_2026-02-03_13_03_35.png)
 
 ```Bash
 deactivate                  # eseguire quando si è finito
@@ -70,14 +70,14 @@ Per la validazione dei risultati, è stata effettuata una ricerca manuale tramit
 |Digital footprint|Indica che l'utente esiste e opera online. Non implica necessariamente un rischio di sicurezza, ma fornisce informazioni per il Social Engineering|Profilo LinkedIn, Commit su GitHub, Recensioni Amazon|Google Dorks, Sherlock, TheHarvester|
 |Brench Data|Indica che i dati dell'utente sono stati RUBATI e resi pubblici illegalmente. Comporta un rischio critico immediato|Password presente in un dump di database (es. LinkedIn 2012 leak)|h8mail, HaveIBeenPwned, Intelligence X|
 
-2. Differenze Metodologiche
+1. Differenze Metodologiche
 
 La discrepanza tra i risultati ottenuti via web e via riga di comando (CLI) è dovuta al metodo di accesso ai dati:
 
 - Have I Been Pwned (Sito Web): È la fonte originale ("Source of Truth"). Interroga direttamente il database "Master" gestito dai manutentori. È sempre aggiornato e gratuito per la consultazione manuale.
 - h8mail (Tool CLI): Funziona come un "connettore" o aggregatore. Non possiede i dati, ma interroga servizi terzi tramite API.
-    - Limitazione: Per interrogare il database HIBP tramite script, è necessaria una Chiave API a pagamento.
-    - Fallback: In assenza di chiavi, il tool tenta di usare motori gratuiti (es. scylla.so), che possono essere offline o incompleti, portando a falsi negativi.
+  - Limitazione: Per interrogare il database HIBP tramite script, è necessaria una Chiave API a pagamento.
+  - Fallback: In assenza di chiavi, il tool tenta di usare motori gratuiti (es. scylla.so), che possono essere offline o incompleti, portando a falsi negativi.
 
 ---
 

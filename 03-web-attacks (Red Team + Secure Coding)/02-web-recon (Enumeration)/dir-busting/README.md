@@ -92,17 +92,17 @@ Le tecniche di Directory Busting non si limitano ai server web tradizionali, ma 
 
 Adattamenti necessari per l'ambiente Docker/API:
 
-1.  Wordlist API-Specifiche:
+1. Wordlist API-Specifiche:
 
     Le wordlist standard (`common.txt`) sono inefficaci contro le API, che usano percorsi strutturati (es. `/api/v1/user`).
 
     È necessario utilizzare liste dedicate come `api-endpoints.txt` (dalla raccolta SecLists) per individuare endpoint critici come `/health`, `/metrics`, `/swagger.json` o `/graphql`.
 
-2.  Networking (VM vs Host):
+2. Networking (VM vs Host):
 
     Se Kali Linux gira su una Virtual Machine e il container Docker gira sull'Host (Windows/Mac), puntare a `localhost` dalla VM non funzionerà. È necessario utilizzare l'indirizzo IP della macchina host nella rete locale (es. `gobuster dir -u http://192.168.X.X:<PORTA> ...`).
 
-3.  Autenticazione (JWT Headers):
+3. Autenticazione (JWT Headers):
 
     Molte API restituiscono `401 Unauthorized` se non si presenta un token valido. Strumenti come Gobuster e Feroxbuster permettono di iniettare header di autenticazione per testare le aree riservate:
 
@@ -245,6 +245,7 @@ Il pattern di traffico del dir-busting e caratteristico:
 - Richieste a path che non esistono nella sitemap dell'applicazione
 
 **Regola WAF (ModSecurity):**
+
 ```
 # Rate limiting: max 100 richieste 404 in 60 secondi dallo stesso IP
 SecRule IP:404_COUNT "@gt 100" "phase:5,deny,status:429,id:100001,msg:'Dir busting detected'"
@@ -254,6 +255,7 @@ SecRule IP:404_COUNT "@gt 100" "phase:5,deny,status:429,id:100001,msg:'Dir busti
 
 - **Rimuovere directory VCS:** `rm -rf .git/ .svn/ CVS/` dal webroot prima del deploy (o escluderle nel Dockerfile)
 - **Bloccare l'accesso a file sensibili** nel web server:
+
   ```nginx
   # Nginx: bloccare accesso a directory e file sensibili
   location ~ /\.(git|svn|env|htaccess|htpasswd) {
@@ -264,6 +266,7 @@ SecRule IP:404_COUNT "@gt 100" "phase:5,deny,status:429,id:100001,msg:'Dir busti
       deny all;
   }
   ```
+
 - **Custom 404 consistente:** una pagina 404 custom che restituisce lo stesso contenuto per ogni path inesistente rende il dir-busting meno efficace (ma non impossibile - l'attaccante puo filtrare per dimensione della risposta)
 - **Disabilitare directory listing:** `autoindex off;` (Nginx) / `Options -Indexes` (Apache)
 

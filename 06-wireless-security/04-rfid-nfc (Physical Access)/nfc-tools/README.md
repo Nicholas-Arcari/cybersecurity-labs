@@ -61,7 +61,7 @@ Il SAK `08` e la stringa "MIFARE Classic 1K" identificano un tag basato su Crypt
 
 ### Esecuzione - Recupero delle chiavi con mfoc
 
-### Contesto operativo
+### Contesto operativo (recupero chiavi)
 
 MIFARE Classic 1K organizza la memoria in 16 settori, ciascuno protetto da due chiavi (A e B). mfoc (MIFARE Offline Cracker) sfrutta una debolezza di Crypto-1: se anche una sola chiave di un settore e nota (tipicamente una chiave di default che l'installatore non ha mai cambiato), l'attacco "nested" recupera tutte le altre chiavi sfruttando la debolezza del generatore di numeri pseudo-casuali del tag.
 

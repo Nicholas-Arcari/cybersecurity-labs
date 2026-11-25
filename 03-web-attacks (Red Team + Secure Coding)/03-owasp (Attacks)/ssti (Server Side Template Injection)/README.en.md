@@ -106,7 +106,7 @@ person = request.args.get('name', 'Hacker')
 return render_template_string("<h1>Ciao, {{ person }}!</h1>", person=person)
 ```
 
-2. Verification Test Results
+1. Verification Test Results
 
 The previously successful attack vectors were repeated.
 

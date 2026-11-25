@@ -85,7 +85,7 @@ sfp_github, Raw Data from Public Repos, "API_KEY=AKIA..."  <-- correlazione a se
 
 > [Segnaposto screenshot: catturare il grafo di correlazione di SpiderFoot (tab "Graph") e la vista "Browse" con il conteggio per tipo di dato durante l'esecuzione del lab, salvandolo in `./img/`.]
 
-![Grafo di correlazione SpiderFoot](img/spiderfoot-graph-PLACEHOLDER.jpg)
+<!-- screenshot placeholder: Grafo di correlazione SpiderFoot (img/spiderfoot-graph-PLACEHOLDER.jpg) -->
 
 ### Esperienza di Laboratorio
 

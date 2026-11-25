@@ -12,10 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Em dash (U+2014) - vietato dagli standard di repo
+      # Em dash (U+2014) - vietato dagli standard di repo.
+      # REPORT_STANDARDS.md/.en.md sono esclusi: documentano la regola e citano
+      # intenzionalmente il carattere vietato negli esempi "SBAGLIATO" e nella checklist.
       - name: Check for em dashes
         run: |
-          if grep -rP "\xe2\x80\x94" --include="*.md" . ; then
+          if grep -rP "\xe2\x80\x94" --include="*.md" --exclude="REPORT_STANDARDS.md" --exclude="REPORT_STANDARDS.en.md" . ; then
             echo "::error::Em dash (U+2014) trovato. Usare il trattino semplice (-) al suo posto."
             exit 1
           fi
@@ -24,7 +26,7 @@ jobs:
       # Finding ID format + uniqueness check
       - name: Validate Finding IDs (format, uniqueness, sequentiality)
         run: |
-          VALID_PREFIXES="OSINT|SCAN|DNS|INTEL|VULN|WEB|EXPLOIT|SE|WIFI|POST|DEF|FOR|CLOUD"
+          VALID_PREFIXES="OSINT|SCAN|DNS|INTEL|VULN|WEB|EXPLOIT|SE|WIFI|POST|DEF|FOR|CLOUD|AD"
 
           # 1. Format check: all IDs in registry must be PREFIX-NNN
           INVALID=$(grep -rPn "Finding ID.*\`[A-Z]+-[0-9]+\`" --include="*.md" . | grep -vP "($VALID_PREFIXES)-[0-9]{3}" || true)

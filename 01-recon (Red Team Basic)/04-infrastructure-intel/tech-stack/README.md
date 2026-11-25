@@ -37,6 +37,7 @@ Per un attaccante, questa fase è cruciale per selezionare gli exploit corretti 
 `WhatWeb` è uno scanner di nuova generazione che identifica le tecnologie web. È stato lanciato contro il dominio target per ottenere un profilo rapido.
 
 Comando:
+
 ```Bash
 whatweb -v tesla.com
 ```

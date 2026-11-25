@@ -1,6 +1,6 @@
 > [English](README.en.md) | **Italiano**
 
-### Description :
+### Description
 
 ***Ultimate phishing tool in python. Includes popular websites like facebook, twitter, instagram, github, reddit, gmail and many others.***
 
@@ -8,48 +8,59 @@
 
 ##### Install dependencies (git, python, php ssh)
 
- - For Debian (Ubuntu, Kali-Linux, Parrot)
+- For Debian (Ubuntu, Kali-Linux, Parrot)
+
    ```
      sudo apt install git python3 python3-pip php openssh-client -y
      ```
- - For Arch (Manjaro)
+
+- For Arch (Manjaro)
+
      ```
    sudo pacman -S git python3 python-pip php openssh --noconfirm
      ```
- - For Redhat(Fedora)
+
+- For Redhat(Fedora)
+
    ```
    sudo dnf install git python3 php openssh -y
    ```
- - For Termux
+
+- For Termux
+
    ```
    pkg install git python3 python-pip php openssh -y
    ```
 
 ##### Clone this repository
+
   ```Bash
   git clone https://github.com/Nicholas-Arcari/cybersecurity-labs.git
 ```
 
 ##### Enter the directory
+
   ```Bash
   cd PyPhisher
 ```
 
 ##### Install all modules
+
   ```Bash
   pip3 install -r files/requirements.txt --break-system-packages
 ```
 
 ##### Run the tool
+
 ```Bash
 python3 pyphisher.py
 ```
 
 ### Pip
 
- - `pip3 install pyphisher` [For Termux]
- - `sudo pip3 install pyphisher  --break-system-packages` [For Linux]
- - `pyphisher`
+- `pip3 install pyphisher` [For Termux]
+- `sudo pip3 install pyphisher  --break-system-packages` [For Linux]
+- `pyphisher`
 
 
 ### Support
@@ -115,45 +126,45 @@ options:
   --noupdate            Skip update checking [Default : False]
 ```
 
-### Features:
+### Features
 
- - Multi platform (Supports most linux)
- - Easy to use
- - Possible error diagnoser
- - 77 Website templates
- - Concurrent 4 tunneling (Cloudflared, Loclx and LocalHostRun, Serveo)
- - Upto 8 links for phishing
- - OTP Support
- - Argument support
- - Credentials mailing
- - Built-in masking of URL
- - Custom masking of URL
- - URL Shadowing
- - Redirection URL settings
- - Portable file (Can be run from any directory)
- - Get IP Address and many other details along with login credentials
+- Multi platform (Supports most linux)
+- Easy to use
+- Possible error diagnoser
+- 77 Website templates
+- Concurrent 4 tunneling (Cloudflared, Loclx and LocalHostRun, Serveo)
+- Upto 8 links for phishing
+- OTP Support
+- Argument support
+- Credentials mailing
+- Built-in masking of URL
+- Custom masking of URL
+- URL Shadowing
+- Redirection URL settings
+- Portable file (Can be run from any directory)
+- Get IP Address and many other details along with login credentials
 
 
 ### Requirements
 
- - `Python(3)`
-   - `requests`
-   - `rich`
-   - `beautifulsoup4`
- - `PHP`
- - `SSH`
- - 900MB storage
+- `Python(3)`
+  - `requests`
+  - `rich`
+  - `beautifulsoup4`
+- `PHP`
+- `SSH`
+- 900MB storage
  
 If not found, php and python modoules will be installed on first run
 
 #### Tested on
 
- - `Termux`
- - `Ubuntu`
- - `Kali-Linux`
- - `Arch`
- - `Fedora`
- - `Manjaro`
+- `Termux`
+- `Ubuntu`
+- `Kali-Linux`
+- `Arch`
+- `Fedora`
+- `Manjaro`
 
 ## Usage
 
@@ -169,43 +180,43 @@ If not found, php and python modoules will be installed on first run
 
 
 ## Whats new in 1.8?
- - *Mailing*
-   - Now you can send credentials to any email. You just need a gmail and app password to use this feature. Edit the data in `files/email.json`
- - *Custom Preview*
-   - Now you can set a custom social media preview of your link. Enter a website url when asked in `shadow url`. Your link will have same appearence as that website in whatsapp/messenger/telegram etc. Note this only works with Cloudflared urls
- - *OTP Support*
-   - 20 templates will show an option to enable otp pages
- - *Saved*
-   - An option to view all saved credentials just from PyPhisher. This credentials won't get deleted in PyPhisher update
+- *Mailing*
+  - Now you can send credentials to any email. You just need a gmail and app password to use this feature. Edit the data in `files/email.json`
+- *Custom Preview*
+  - Now you can set a custom social media preview of your link. Enter a website url when asked in `shadow url`. Your link will have same appearence as that website in whatsapp/messenger/telegram etc. Note this only works with Cloudflared urls
+- *OTP Support*
+  - 20 templates will show an option to enable otp pages
+- *Saved*
+  - An option to view all saved credentials just from PyPhisher. This credentials won't get deleted in PyPhisher update
 
 ## Whats new in 1.9?
- - *Loclx*
-   - Introducing a new port forwarding/tunneling service named localxpose or loclx. It is quite slower but still usable
- - *Docker image*
-   - A docker image is published which can be pulled and run
- - *PIP*
-   - This project is now also available in PIP
+- *Loclx*
+  - Introducing a new port forwarding/tunneling service named localxpose or loclx. It is quite slower but still usable
+- *Docker image*
+  - A docker image is published which can be pulled and run
+- *PIP*
+  - This project is now also available in PIP
 
 ## Whats new in 2.0?
- - *LocalHostRun*
-   - Introducing a new port forwarding/tunneling service named localhost.run. It works over ssh without binaries
- - *Redirection url*
-   - Users can decide where the victim will be redirected after data is captured
+- *LocalHostRun*
+  - Introducing a new port forwarding/tunneling service named localhost.run. It works over ssh without binaries
+- *Redirection url*
+  - Users can decide where the victim will be redirected after data is captured
 
 ## Solution of common issues
- - Some secured browsers like Firefox can warn for '@' prefixed links. You should use pure links or custom link to avoid it.
- - Termux from play store in not supported. Download termux from fdroid or github
- - VPN or proxy prevents tunneling and even proper internet access. Turn them off you have issues.
- - Some android requires hotspot to start Cloudflared and Loclx. If you face 'tunneling failed' in android, most probably your hotspot is turned off. Turn it on and keep it on untill you close PyPhisher.
- - If you want mailing credentials then you need to use app password. Visit [here](https://myaccount.google.com/u/0/apppasswords) and generate an app password, put that in `files/email.json`. You may need to enable 2FA before it.
+- Some secured browsers like Firefox can warn for '@' prefixed links. You should use pure links or custom link to avoid it.
+- Termux from play store in not supported. Download termux from fdroid or github
+- VPN or proxy prevents tunneling and even proper internet access. Turn them off you have issues.
+- Some android requires hotspot to start Cloudflared and Loclx. If you face 'tunneling failed' in android, most probably your hotspot is turned off. Turn it on and keep it on untill you close PyPhisher.
+- If you want mailing credentials then you need to use app password. Visit [here](https://myaccount.google.com/u/0/apppasswords) and generate an app password, put that in `files/email.json`. You may need to enable 2FA before it.
  
 ## [!] Disclaimer
 ***This tool is developed for educational purposes. Here it demonstrates how phishing works. If anybody wants to gain unauthorized access to someones social media, he/she may try out this at his/her own risk. You have your own responsibilities and you are liable to any damage or violation of laws by this tool. The author is not responsible for any misuse of PyPhisher!***
 
-## Credits:
+## Credits
 Some base codes and templates are from [htr-tech](https://github.com/htr-tech/zphisher), otp templates are from [ignitech](https://github.com/ignitech/AdvPhishing) and url masking is inspired from [jaykali](https://github.com/jaykali/maskphish)
 
-## All Credits goes to KasRoudra you can find his profiles from below links :
+## All Credits goes to KasRoudra you can find his profiles from below links
 
 - [![Github](https://img.shields.io/badge/Github-KasRoudra-purple?style=for-the-badge&logo=github)](https://github.com/KasRoudra)
 

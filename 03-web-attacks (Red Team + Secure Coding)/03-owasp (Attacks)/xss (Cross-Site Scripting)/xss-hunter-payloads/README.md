@@ -189,9 +189,11 @@ Fase 5: Account Takeover dell'operatore
 ### Detection
 
 - **Content Security Policy:** l'header CSP e la difesa piu efficace contro il Blind XSS:
+
   ```
   Content-Security-Policy: default-src 'self'; img-src 'self' cdn.example.com; script-src 'self' 'nonce-abc123'
   ```
+
   Con questa policy, il tag `<img src="https://webhook.site/...">` viene bloccato perche `webhook.site` non e nella whitelist `img-src`
 - **Subresource Integrity (SRI):** impedisce il caricamento di script esterni non verificati
 - **Monitoring DNS/HTTP outbound:** alert su richieste verso domini noti di XSS testing (webhook.site, xss.hunter, burpcollaborator.net)

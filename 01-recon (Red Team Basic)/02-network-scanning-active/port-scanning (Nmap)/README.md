@@ -17,7 +17,7 @@ In questa sezione viene esplorato l'uso di scanner asincroni per la ricognizione
 - Attività: Confronto pratico tra Nmap e Masscan.
 - Key Finding: Analisi critica dei "Falsi Negativi" generati da scanner stateless (Masscan) in ambienti virtualizzati (NAT), dimostrando l'importanza della validazione incrociata.
 
-2. Deep Enumeration (Nmap Scripts)
+1. Deep Enumeration (Nmap Scripts)
 
 In questa sezione l'attività si sposta sull'enumerazione avanzata dei servizi utilizzando l'Nmap Scripting Engine (NSE).
 

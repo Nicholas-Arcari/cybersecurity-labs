@@ -85,7 +85,7 @@ grep "admin" tesla_assetfinder.txt
 From the combined results of both tools, a list of over 500+ unique subdomains was compiled. Below are some examples of "High Value Targets" identified that would require further investigation (Active Recon):
 
 | Detected Subdomain | Category | Bug Bounty Interest |
-|-----------------------|-----------|--------------------------|
+| ----------------------- | ----------- | -------------------------- |
 | toolbox.tesla.com | Internal Tool | High (Internal tool panels) |
 | sso.tesla.com | Authentication | Critical (Single Sign-On, phishing target) |
 | vpn.tesla.com | Network Access | High (Infrastructure entry point) |

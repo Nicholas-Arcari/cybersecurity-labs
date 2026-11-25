@@ -50,13 +50,13 @@ In questo scenario simuliamo il concetto base: se copio il cookie da un browser 
 
 Procedura:
 
-#### Browser A (Vittima): Effettua il login legittimo su `testphp.vulnweb.com`.
+#### Browser A (Vittima): Effettua il login legittimo su `testphp.vulnweb.com`
 
 Estrazione: Apre i DevTools (`F12` > Storage > Cookies) e copia il valore del cookie.
 
 Valore tipico: `login=test%2Ftest`
 
-#### Browser B (Attaccante): Apre la home page del sito (non autenticato).
+#### Browser B (Attaccante): Apre la home page del sito (non autenticato)
 
 Injection: Apre la Console Developer e digita:
 
@@ -156,13 +156,13 @@ L'attaccante utilizza tecniche di ARP Poisoning per ingannare il PC della vittim
 
 Procedura Lab:
 
-1.  Tool: `Ettercap` (per ARP Spoofing) e `Wireshark` (per l'analisi pacchetti).
+1. Tool: `Ettercap` (per ARP Spoofing) e `Wireshark` (per l'analisi pacchetti).
 
-2.  Targeting: La vittima (Windows 10) viene targettizzata affinché il suo traffico passi per l'interfaccia `eth0` di Kali.
+2. Targeting: La vittima (Windows 10) viene targettizzata affinché il suo traffico passi per l'interfaccia `eth0` di Kali.
 
-3.  Sniffing: Su Wireshark viene applicato il filtro `http.cookie`.
+3. Sniffing: Su Wireshark viene applicato il filtro `http.cookie`.
 
-4.  Cattura: Appena la vittima effettua il login, il cookie viene intercettato.
+4. Cattura: Appena la vittima effettua il login, il cookie viene intercettato.
 
 Evidenza:
 
@@ -188,15 +188,15 @@ Molti server web accettano il Session ID non solo via Cookie, ma anche via param
 
 La Kill Chain:
 
-1.  Setup: L'attaccante visita il sito e ottiene un ID di sessione valido (es. `PHPSESSID=12345`) senza fare login.
+1. Setup: L'attaccante visita il sito e ottiene un ID di sessione valido (es. `PHPSESSID=12345`) senza fare login.
 
-2.  La Trappola: L'attaccante invia alla vittima un link malevolo contenente quell'ID: `http://testphp.vulnweb.com/login.php?PHPSESSID=12345`
+2. La Trappola: L'attaccante invia alla vittima un link malevolo contenente quell'ID: `http://testphp.vulnweb.com/login.php?PHPSESSID=12345`
 
-3.  L'Accesso: La vittima clicca il link. Il server vede l'ID `12345` nell'URL e lo "fissa" per quella sessione.
+3. L'Accesso: La vittima clicca il link. Il server vede l'ID `12345` nell'URL e lo "fissa" per quella sessione.
 
-4.  Autenticazione: La vittima inserisce user e password. Il server promuove l'ID `12345` a "ID autenticato".
+4. Autenticazione: La vittima inserisce user e password. Il server promuove l'ID `12345` a "ID autenticato".
 
-5.  L'Intrusione: L'attaccante, che possedeva già il cookie `12345` nel suo browser, aggiorna la pagina e si ritrova loggato come la vittima.
+5. L'Intrusione: L'attaccante, che possedeva già il cookie `12345` nel suo browser, aggiorna la pagina e si ritrova loggato come la vittima.
 
 Mitigazione:
 

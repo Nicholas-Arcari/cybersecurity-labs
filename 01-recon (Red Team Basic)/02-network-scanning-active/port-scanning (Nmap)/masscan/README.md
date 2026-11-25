@@ -63,8 +63,8 @@ Analisi: Masscan ha completato la scansione senza rilevare la porta aperta (Fals
 Il test ha evidenziato una differenza sostanziale di comportamento dovuta all'architettura di rete del laboratorio (VirtualBox NAT Network).
 
 | Feature | Nmap | Masscan |
-|---------|------|---------|
-| Tecnologia | Sincrono / Stateful | Asincrono / Stateless|
+| --------- | ------ | --------- |
+| Tecnologia | Sincrono / Stateful | Asincrono / Stateless |
 | | Usa le `syscall` del Kernel Linux standard | Usa Raw Sockets e bypassa il Kernel (stack custom) |
 | Gestione NAT | Ottima. Il sistema operativo gestisce il tracciamento delle connessioni e il NAT traversal | Critica. I pacchetti di risposta (SYN-ACK) spesso non vengono instradati correttamente dall'interfaccia virtuale verso il processo Masscan |
 | Risultato | Porta rilevata (open) | Falso negativo (closed/filtered) |

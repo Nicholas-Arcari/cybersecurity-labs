@@ -106,7 +106,7 @@ person = request.args.get('name', 'Hacker')
 return render_template_string("<h1>Ciao, {{ person }}!</h1>", person=person)
 ```
 
-2. Risultati dei Test di Verifica
+1. Risultati dei Test di Verifica
 
 Sono stati ripetuti i vettori di attacco precedentemente andati a buon fine.
 

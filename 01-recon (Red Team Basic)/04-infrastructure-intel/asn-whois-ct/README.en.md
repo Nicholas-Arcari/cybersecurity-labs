@@ -78,7 +78,7 @@ Expected output (amass intel):
 
 > [Screenshot placeholder: capture the view of `bgp.he.net` (Hurricane Electric BGP Toolkit) for the target's ASN, which graphically shows all the announced prefixes and the peers.]
 
-![BGP Toolkit - ASN prefixes](img/asn-bgp-PLACEHOLDER.jpg)
+<!-- screenshot placeholder: BGP Toolkit - ASN prefixes (img/asn-bgp-PLACEHOLDER.jpg) -->
 
 ### Analysis of the Results
 

@@ -188,8 +188,8 @@ def resolve_system_debug(root, info, arg):
 
 Oltre alla RCE principale, sono state riscontrate le seguenti criticità accessorie che hanno facilitato l'attacco:
 
-| Vulnerabilità |Livello | Descrizione |
-|---------------|--------|-------------|
+| Vulnerabilità | Livello | Descrizione |
+| --------------- | -------- | ------------- |
 | Introspection Enabled | Medio | L'API permette di scaricare lo schema completo (`_ _schema`), rivelando funzioni nascoste come `systemDebug` |
 | Verbose Error Messages | Basso | Il server restituisce stack trace Python completi in caso di errore (Debug Mode attivo), aiutando l'attaccante a capire la tecnologia sottostante |
 | Cleartext Passwords | Critico | Le password nel database `dvga.db` sono salvate in chiaro, violando ogni standard di sicurezza (GDPR, ISO 27001). Avrebbero dovuto essere hashate (es. `bcrypt`) |

@@ -50,13 +50,13 @@ In this scenario we simulate the basic concept: if I copy the cookie from one br
 
 Procedure:
 
-#### Browser A (Victim): Performs legitimate login on `testphp.vulnweb.com`.
+#### Browser A (Victim): Performs legitimate login on `testphp.vulnweb.com`
 
 Extraction: Opens DevTools (`F12` > Storage > Cookies) and copies the cookie value.
 
 Typical value: `login=test%2Ftest`
 
-#### Browser B (Attacker): Opens the site homepage (unauthenticated).
+#### Browser B (Attacker): Opens the site homepage (unauthenticated)
 
 Injection: Opens the Developer Console and types:
 
@@ -156,13 +156,13 @@ The attacker uses ARP Poisoning techniques to deceive the victim's PC, making it
 
 Lab Procedure:
 
-1.  Tools: `Ettercap` (for ARP Spoofing) and `Wireshark` (for packet analysis).
+1. Tools: `Ettercap` (for ARP Spoofing) and `Wireshark` (for packet analysis).
 
-2.  Targeting: The victim (Windows 10) is targeted so that their traffic passes through Kali's `eth0` interface.
+2. Targeting: The victim (Windows 10) is targeted so that their traffic passes through Kali's `eth0` interface.
 
-3.  Sniffing: A `http.cookie` filter is applied on Wireshark.
+3. Sniffing: A `http.cookie` filter is applied on Wireshark.
 
-4.  Capture: As soon as the victim logs in, the cookie is intercepted.
+4. Capture: As soon as the victim logs in, the cookie is intercepted.
 
 Evidence:
 
@@ -188,15 +188,15 @@ Many web servers accept the Session ID not only via Cookie, but also via URL par
 
 The Kill Chain:
 
-1.  Setup: The attacker visits the site and obtains a valid session ID (e.g., `PHPSESSID=12345`) without logging in.
+1. Setup: The attacker visits the site and obtains a valid session ID (e.g., `PHPSESSID=12345`) without logging in.
 
-2.  The Trap: The attacker sends the victim a malicious link containing that ID: `http://testphp.vulnweb.com/login.php?PHPSESSID=12345`
+2. The Trap: The attacker sends the victim a malicious link containing that ID: `http://testphp.vulnweb.com/login.php?PHPSESSID=12345`
 
-3.  The Access: The victim clicks the link. The server sees the ID `12345` in the URL and "fixes" it for that session.
+3. The Access: The victim clicks the link. The server sees the ID `12345` in the URL and "fixes" it for that session.
 
-4.  Authentication: The victim enters username and password. The server promotes ID `12345` to "authenticated ID".
+4. Authentication: The victim enters username and password. The server promotes ID `12345` to "authenticated ID".
 
-5.  The Intrusion: The attacker, who already possessed cookie `12345` in their browser, refreshes the page and finds themselves logged in as the victim.
+5. The Intrusion: The attacker, who already possessed cookie `12345` in their browser, refreshes the page and finds themselves logged in as the victim.
 
 Mitigation:
 

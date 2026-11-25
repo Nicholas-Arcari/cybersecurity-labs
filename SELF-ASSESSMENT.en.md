@@ -42,52 +42,52 @@ and reproducible, see below). The internal rules adopted (cite only verified sou
 
 ### Theoretical layer (THEORETICAL-FOUNDATIONS + REFERENCES)
 
-4. **Derivations, not certified proofs.** The "proofs" (Bayes, entropy, birthday bound, Turing-
+1. **Derivations, not certified proofs.** The "proofs" (Bayes, entropy, birthday bound, Turing-
    completeness of ROP) are rigorous derivations but *not machine-checked*, and in some cases sketches.
    They do not substitute for the original proofs in the sources.
-5. **Risk of source misrepresentation.** The bibliography cites real works, but the annotations are the
+2. **Risk of source misrepresentation.** The bibliography cites real works, but the annotations are the
    *author's summaries*: a reviewer must verify each characterization against the primary source. The
    citation discipline reduces the risk of fabricated references, not that of imprecise interpretations.
-6. **The cross-cutting unifications are framings, not theorems.** Claims such as "the confused deputy
+3. **The cross-cutting unifications are framings, not theorems.** Claims such as "the confused deputy
    recurs from web to cloud" or "freshness is a unifying principle" are useful *pedagogical
    interpretations*, not proven formal results.
-7. **The theoretical quantitative part is mostly recapitulative.** The quantitative analysis of the
+4. **The theoretical quantitative part is mostly recapitulative.** The quantitative analysis of the
    foundations restates known results; the *own* quantitative contribution is confined to `EVALUATION/`.
 
 ### Empirical layer (EVALUATION)
 
-8. **Synthetic data - the biggest threat.** Both experiments run on modeled data, not on real traffic or
+1. **Synthetic data - the biggest threat.** Both experiments run on modeled data, not on real traffic or
    breached password corpora. The results demonstrate *methodology* and *structural effects* (the
    collapse of the PPV with the base rate; the entropy/guessing gap), not measurements of a specific
    real system. External validity is explicitly limited.
-9. **Parameter sensitivity not explored.** Exp B fixes Zipf `s=1.0`; real corpora vary (`s ~ 0.7-1.1`)
+2. **Parameter sensitivity not explored.** Exp B fixes Zipf `s=1.0`; real corpora vary (`s ~ 0.7-1.1`)
    and the specific numbers change with `s` (the qualitative gap is robust, but the sensitivity was not
    mapped with a sweep). Exp A hand-picks the benign/malicious distributions: the specific
    precision/recall values are artifacts of those choices (only the PPV collapse is robust).
-10. **No confidence intervals.** Exp A uses a single seed and a single resampling draw per base rate,
+3. **No confidence intervals.** Exp A uses a single seed and a single resampling draw per base rate,
     without multiple repetitions or variance estimation. A reviewer would ask for N repetitions and
     error bars.
 
 ### Formal layer (FORMAL-MODELS)
 
-11. **Heavy abstraction, built knowing the answer.** The model captures *that* KRACK is a state defect,
+ 1. **Heavy abstraction, built knowing the answer.** The model captures *that* KRACK is a state defect,
     but models only the KRACK-relevant state (Dolev-Yao, elided/bounded counter), not the full IEEE
     802.11 state machine. It does not *rediscover* KRACK from the raw spec: the abstraction is designed
     already knowing where to look.
-12. **Manual inductive strengthening (and a first buggy version).** The inductive invariant was found by
+ 2. **Manual inductive strengthening (and a first buggy version).** The inductive invariant was found by
     hand, and the first attempt was wrong (it misclassified the patched model); the flaw surfaced by
     *executing* the code. The soundness of the abstraction is argued informally, not certified.
-13. **The Tamarin model is not executed.** `wpa2_handshake.spthy` was not verified in this environment
+ 3. **The Tamarin model is not executed.** `wpa2_handshake.spthy` was not verified in this environment
     (Tamarin not installed); its correctness is unverified and is labeled as such.
-14. **Reconstruction, not new knowledge.** The verification confirms a known 2017 result. It is a
+ 4. **Reconstruction, not new knowledge.** The verification confirms a known 2017 result. It is a
     correct and instructive formal-verification exercise, not a discovery.
 
 ### Meta (cross-cutting)
 
-15. **Single author, single environment, no independent replication.**
-16. **Breadth at the expense of depth.** A research master's thesis goes *very* deep on a narrow problem;
+ 1. **Single author, single environment, no independent replication.**
+ 2. **Breadth at the expense of depth.** A research master's thesis goes *very* deep on a narrow problem;
     this repository is broad and applied. They are different profiles.
-17. **Self-assessment bias.** This very document is subject to the conflict of interest of the opening point.
+ 3. **Self-assessment bias.** This very document is subject to the conflict of interest of the opening point.
 
 ---
 

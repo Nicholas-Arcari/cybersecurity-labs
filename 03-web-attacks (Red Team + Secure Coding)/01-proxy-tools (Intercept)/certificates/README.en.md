@@ -23,9 +23,9 @@ The HTTPS protocol protects data confidentiality by encrypting them between clie
 
 To be able to read encrypted data, the Proxy must:
 
-1.  Present itself to the browser as if it were the target site (e.g., `google.com`).
+1. Present itself to the browser as if it were the target site (e.g., `google.com`).
 
-2.  Generate a fake SSL certificate "on the fly" for that domain.
+2. Generate a fake SSL certificate "on the fly" for that domain.
 
 For the browser to accept this fake certificate without displaying security errors (`SEC_ERROR_UNKNOWN_ISSUER`), it is necessary to install the Burp Certificate Authority (CA) in the browser's trusted certificates store (Trusted Root Store).
 
@@ -37,11 +37,11 @@ The PortSwigger root certificate installation was performed to enable Deep Packe
 
 Steps performed:
 
-1.  Download of the `cacert.der` certificate from `http://burp`.
+1. Download of the `cacert.der` certificate from `http://burp`.
 
-2.  Import into Firefox's Trust Store (`Authorities` tab).
+2. Import into Firefox's Trust Store (`Authorities` tab).
 
-3.  Enabling the flag: "Trust this CA to identify websites".
+3. Enabling the flag: "Trust this CA to identify websites".
 
 HTTPS Interception Verification:
 

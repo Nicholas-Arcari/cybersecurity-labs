@@ -453,6 +453,7 @@ Inline comments:     # comment
 ```
 
 **FORBIDDEN characters in diagrams** (cause issues on some viewers):
+
 ```
 - Unicode arrows:  -->, -->, <=>, =>
 - Unicode boxes:   +--+, |  |
@@ -554,11 +555,13 @@ The character `—` (U+2014, em dash) is **absolutely forbidden** throughout the
 - CORRECT: `This tool - used in Red Team - is very powerful`
 
 To check for em dash presence in a file:
+
 ```Bash
 grep -P "\xe2\x80\x94" file.md
 ```
 
 To replace all em dashes in a file:
+
 ```Bash
 python3 -c "
 content = open('file.md').read()
@@ -723,6 +726,7 @@ PORT     STATE SERVICE VERSION
 ```
 
 **Finding ID:** `WEB-005` | **Severity:** `Medium` | **CVSS v3.1:** 6.1
+
 ```
 
 ---
@@ -857,6 +861,7 @@ separated by `---`. It is a standalone block, not a subsection of the remediatio
 
 **Projected Kill Chain:**
 ```
+
 [current finding]
         |
         v
@@ -864,6 +869,7 @@ separated by `---`. It is a standalone block, not a subsection of the remediatio
         |
         v
 [next technique] -> [final objective: access, persistence, exfiltration, ransomware]
+
 ```
 
 **Potential impact:** [concrete consequence for the target organization: data loss,
@@ -911,6 +917,7 @@ NTLM hashes of all users who recently logged into the machine.
 **Projected Kill Chain:**
 
 ```
+
 VULN-004: C$ access (nick - local admin)
         |
         v
@@ -927,6 +934,7 @@ Persistence: Golden Ticket (10-year validity) + backdoor account creation
         |
         v
 Ransomware deployment on all hosts via GPO / PsExec
+
 ```
 
 **Potential impact:** total compromise of the Active Directory domain. In a real

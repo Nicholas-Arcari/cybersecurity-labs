@@ -97,7 +97,7 @@ Sfide Tecniche affrontate:
     
     Un errore comune è attaccare la porta esposta dal Frontend (es. `:5173` per Vite/React).
 
-    - Recon: Tramite `docker ps` e l'analisi dei tab Network del browser, è stato identificato che la logica di autenticazione risiedeva su un container separato (`<nome_container_backend>`) esposto sulla porta 80.
+  - Recon: Tramite `docker ps` e l'analisi dei tab Network del browser, è stato identificato che la logica di autenticazione risiedeva su un container separato (`<nome_container_backend>`) esposto sulla porta 80.
 
 - Monitoraggio Blue Team:
     

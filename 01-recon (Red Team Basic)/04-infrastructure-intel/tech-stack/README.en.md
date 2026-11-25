@@ -37,6 +37,7 @@ For an attacker, this phase is crucial to select the correct exploits (e.g., not
 `WhatWeb` is a next-generation scanner that identifies web technologies. It was launched against the target domain to obtain a quick profile.
 
 Command:
+
 ```Bash
 whatweb -v tesla.com
 ```

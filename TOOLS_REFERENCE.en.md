@@ -16,7 +16,6 @@
 - [System Exploitation](#system-exploitation)
 - [Password Cracking](#password-cracking)
 - [Binary Exploitation](#binary-exploitation)
-- [Defensive Tools](#defensive-tools)
 - [Targets and Lab Infrastructure](#targets-and-lab-infrastructure)
 - [Custom Scripts](#custom-scripts)
 

@@ -79,13 +79,13 @@ La vulnerabilità Reflected XSS deve essere corretta trattando tutto l'input ute
     
     Prima di riflettere qualsiasi dato utente nella pagina HTML, convertire i caratteri speciali nelle rispettive HTML Entities.
 
-    - `<` diventa `&lt;`
+  - `<` diventa `&lt;`
 
-    - `>` diventa `&gt;`
+  - `>` diventa `&gt;`
 
-    - `"` diventa `&quot;`
+  - `"` diventa `&quot;`
 
-    - `'` diventa `&#x27;`
+  - `'` diventa `&#x27;`
 
 Esempio PHP Sicuro:
 

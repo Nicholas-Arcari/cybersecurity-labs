@@ -189,7 +189,7 @@ def resolve_system_debug(root, info, arg):
 In addition to the main RCE, the following ancillary issues were identified that facilitated the attack:
 
 | Vulnerability | Level | Description |
-|---------------|--------|-------------|
+| --------------- | -------- | ------------- |
 | Introspection Enabled | Medium | The API allows downloading the complete schema (`_ _schema`), revealing hidden functions such as `systemDebug` |
 | Verbose Error Messages | Low | The server returns full Python stack traces on errors (Debug Mode active), helping the attacker understand the underlying technology |
 | Cleartext Passwords | Critical | Passwords in the `dvga.db` database are stored in cleartext, violating every security standard (GDPR, ISO 27001). They should have been hashed (e.g., `bcrypt`) |

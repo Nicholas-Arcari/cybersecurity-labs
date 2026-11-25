@@ -86,7 +86,7 @@ Expected output:
 
 > [Screenshot placeholder: capture the output of cloud_enum with the found buckets and the listing of the readable bucket (with the sensitive file names highlighted and any real content redacted).]
 
-![cloud_enum - exposed buckets](img/cloud-enum-PLACEHOLDER.jpg)
+<!-- screenshot placeholder: cloud_enum - exposed buckets (img/cloud-enum-PLACEHOLDER.jpg) -->
 
 ### Passive search on GrayHatWarfare
 

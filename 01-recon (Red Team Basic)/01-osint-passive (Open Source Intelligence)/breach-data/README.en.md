@@ -45,7 +45,7 @@ pip3 install h8mail
 h8mail -t <TARGET_EMAIL>
 ```
 
-![](./img/Screenshot_2026-02-03_13_03_35.jpg)
+![](./img/Screenshot_2026-02-03_13_03_35.png)
 
 ```Bash
 deactivate                  # run when finished
@@ -70,14 +70,14 @@ For result validation, a manual search was performed through the official HIBP w
 |Digital footprint|Indicates that the user exists and operates online. Does not necessarily imply a security risk, but provides information for Social Engineering|LinkedIn profile, GitHub commits, Amazon reviews|Google Dorks, Sherlock, TheHarvester|
 |Breach Data|Indicates that the user's data has been STOLEN and made illegally public. Carries an immediate critical risk|Password present in a database dump (e.g., LinkedIn 2012 leak)|h8mail, HaveIBeenPwned, Intelligence X|
 
-2. Methodological Differences
+1. Methodological Differences
 
 The discrepancy between results obtained via web and via command line (CLI) is due to the data access method:
 
 - Have I Been Pwned (Website): It is the original source ("Source of Truth"). It directly queries the "Master" database maintained by the maintainers. It is always up-to-date and free for manual consultation.
 - h8mail (CLI Tool): Works as a "connector" or aggregator. It does not own the data, but queries third-party services via API.
-    - Limitation: To query the HIBP database via script, a paid API Key is required.
-    - Fallback: Without keys, the tool attempts to use free engines (e.g., scylla.so), which may be offline or incomplete, leading to false negatives.
+  - Limitation: To query the HIBP database via script, a paid API Key is required.
+  - Fallback: Without keys, the tool attempts to use free engines (e.g., scylla.so), which may be offline or incomplete, leading to false negatives.
 
 ---
 

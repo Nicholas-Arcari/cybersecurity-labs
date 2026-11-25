@@ -79,13 +79,13 @@ The Reflected XSS vulnerability must be fixed by treating all user input as untr
     
     Before reflecting any user data in the HTML page, convert special characters to their respective HTML Entities.
 
-    - `<` becomes `&lt;`
+  - `<` becomes `&lt;`
 
-    - `>` becomes `&gt;`
+  - `>` becomes `&gt;`
 
-    - `"` becomes `&quot;`
+  - `"` becomes `&quot;`
 
-    - `'` becomes `&#x27;`
+  - `'` becomes `&#x27;`
 
 Secure PHP Example:
 

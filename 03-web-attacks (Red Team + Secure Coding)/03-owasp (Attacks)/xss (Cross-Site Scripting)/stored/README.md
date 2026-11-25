@@ -33,11 +33,11 @@ Il modulo di registrazione permette l'inserimento di dati anagrafici. È stato v
 
 Procedura di Exploitation:
 
-1.  L'attaccante accede alla pagina di registrazione (`/signup.php`).
+1. L'attaccante accede alla pagina di registrazione (`/signup.php`).
 
-2.  Compila il form inserendo il payload malevolo nel campo Address.
+2. Compila il form inserendo il payload malevolo nel campo Address.
 
-3.  Invia il form. Il server salva il payload nel database.
+3. Invia il form. Il server salva il payload nel database.
 
 Payload Utilizzato:
 
@@ -67,9 +67,9 @@ La mitigazione della Stored XSS richiede interventi rigorosi sia in ingresso che
     
     Ogni volta che i dati vengono prelevati dal database e inseriti in una pagina HTML, devono essere codificati.
 
-    - PHP: Utilizzare `htmlspecialchars($address, ENT_QUOTES, 'UTF-8')`.
+  - PHP: Utilizzare `htmlspecialchars($address, ENT_QUOTES, 'UTF-8')`.
 
-    - Questo trasforma `<script>` in `&lt;script&gt;`, che viene visualizzato come testo sicuro e non eseguito.
+  - Questo trasforma `<script>` in `&lt;script&gt;`, che viene visualizzato come testo sicuro e non eseguito.
 
 - Sanitization Libraries:
     
@@ -193,9 +193,11 @@ Fase 5: Post-Exploitation (come admin)
 
 - **WAF rules:** bloccare input contenenti pattern XSS noti (`<script`, `onerror=`, `onload=`, `javascript:`)
 - **Content Security Policy (CSP):** header che impedisce l'esecuzione di script inline:
+
   ```
   Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-random123'
   ```
+
   Con CSP attivo, anche se il payload XSS viene iniettato, il browser rifiuta di eseguirlo perche non ha il nonce corretto
 - **Monitoring:** alert su richieste outbound dal browser dei visitatori verso domini non nella whitelist (indicatore di cookie exfiltration)
 

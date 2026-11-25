@@ -56,7 +56,7 @@ target_ip = input("Inserisci un IP > ")
 subprocess.run(["ping", "-c", "1", target_ip]) 
 ```
 
-#### Proof of Concept (PoC):
+#### Proof of Concept (PoC)
 
 To confirm the actual exploitability of the vulnerability, the payload `8.8.8.8; cat /etc/passwd` was injected into the input requested by the script.
 

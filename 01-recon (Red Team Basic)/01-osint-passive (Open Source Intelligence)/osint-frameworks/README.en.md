@@ -85,7 +85,7 @@ sfp_github, Raw Data from Public Repos, "API_KEY=AKIA..."  <-- correlation to se
 
 > [Screenshot placeholder: capture SpiderFoot's correlation graph (the "Graph" tab) and the "Browse" view with the per-data-type count during the lab execution, saving it to `./img/`.]
 
-![SpiderFoot correlation graph](img/spiderfoot-graph-PLACEHOLDER.jpg)
+<!-- screenshot placeholder: SpiderFoot correlation graph (img/spiderfoot-graph-PLACEHOLDER.jpg) -->
 
 ### Lab Experience
 

@@ -33,6 +33,7 @@ If a subdomain (e.g., `dev.target.com`) is not registered in public DNS but is c
 Connection attempt to the target domain before local manipulation.
 
 Command:
+
 ```Bash
 ping -c 4 portale-segreto.corp
 ```

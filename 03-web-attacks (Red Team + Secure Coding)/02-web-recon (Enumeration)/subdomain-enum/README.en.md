@@ -69,11 +69,11 @@ To obtain a more in-depth mapping, OWASP Amass was used.
 
 Unlike Subfinder which is focused on speed, Amass performs Active and Correlated Enumeration:
 
-1.  DNS Brute-forcing: Attempts to guess subdomains not publicly listed using internal wordlists.
+1. DNS Brute-forcing: Attempts to guess subdomains not publicly listed using internal wordlists.
 
-2.  ASN Mapping: Identifies which "Autonomous Systems" (physical networks) the found IPs belong to, allowing discovery of network blocks forgotten by the company.
+2. ASN Mapping: Identifies which "Autonomous Systems" (physical networks) the found IPs belong to, allowing discovery of network blocks forgotten by the company.
 
-3.  Certificate Scraping: Analyzes active SSL certificates to extract alternative names (Subject Alternative Name).
+3. Certificate Scraping: Analyzes active SSL certificates to extract alternative names (Subject Alternative Name).
 
 ```Bash
 sudo apt install amass -y
@@ -122,11 +122,11 @@ The attack surface shifts from infrastructure to Source Code Disclosure.
 
 Since the code is hosted in a public repository:
 
-1.  Repository Mining: The attacker directly analyzes the GitHub repository looking for sensitive files (`.env`, `config.js`).
+1. Repository Mining: The attacker directly analyzes the GitHub repository looking for sensitive files (`.env`, `config.js`).
 
-2.  Commit History Analysis: Using tools like TruffleHog or GitLeaks, it is possible to recover credentials (API Keys, AWS Tokens) that have been deleted from current files but remain permanent in Git's commit history.
+2. Commit History Analysis: Using tools like TruffleHog or GitLeaks, it is possible to recover credentials (API Keys, AWS Tokens) that have been deleted from current files but remain permanent in Git's commit history.
 
-3.  Client-Side Logic: Since all logic is in the browser (JavaScript), any API keys used by the frontend are visible in plaintext to anyone who inspects the code (e.g., "Inspect Element").
+3. Client-Side Logic: Since all logic is in the browser (JavaScript), any API keys used by the frontend are visible in plaintext to anyone who inspects the code (e.g., "Inspect Element").
 
 ---
 

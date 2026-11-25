@@ -56,11 +56,11 @@ Analisi dei Findings:
 
 Dallo screenshot si evidenziano diverse problematiche di sicurezza:
 
-1.  Absence of Anti-CSRF Tokens (Medium): I form non hanno protezione contro il Cross-Site Request Forgery.
+1. Absence of Anti-CSRF Tokens (Medium): I form non hanno protezione contro il Cross-Site Request Forgery.
 
-2.  User Controllable HTML Element Attribute (Potential XSS): ZAP ha rilevato che l'input utente viene riflesso nella pagina senza sanitizzazione, potenziale vettore per attacchi XSS.
+2. User Controllable HTML Element Attribute (Potential XSS): ZAP ha rilevato che l'input utente viene riflesso nella pagina senza sanitizzazione, potenziale vettore per attacchi XSS.
 
-3.  Missing Security Headers: Mancano header come CSP (Content Security Policy) e Anti-Clickjacking.
+3. Missing Security Headers: Mancano header come CSP (Content Security Policy) e Anti-Clickjacking.
 
 #### Fase C: Verifica Manuale (Triage)
 

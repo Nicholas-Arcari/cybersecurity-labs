@@ -33,11 +33,11 @@ The registration module allows entry of personal data. It was verified that the 
 
 Exploitation Procedure:
 
-1.  The attacker accesses the registration page (`/signup.php`).
+1. The attacker accesses the registration page (`/signup.php`).
 
-2.  Fills in the form inserting the malicious payload in the Address field.
+2. Fills in the form inserting the malicious payload in the Address field.
 
-3.  Submits the form. The server saves the payload in the database.
+3. Submits the form. The server saves the payload in the database.
 
 Payload Used:
 
@@ -67,9 +67,9 @@ Stored XSS mitigation requires rigorous interventions both on input and output.
     
     Every time data is retrieved from the database and inserted into an HTML page, it must be encoded.
 
-    - PHP: Use `htmlspecialchars($address, ENT_QUOTES, 'UTF-8')`.
+  - PHP: Use `htmlspecialchars($address, ENT_QUOTES, 'UTF-8')`.
 
-    - This transforms `<script>` into `&lt;script&gt;`, which is displayed as safe text and not executed.
+  - This transforms `<script>` into `&lt;script&gt;`, which is displayed as safe text and not executed.
 
 - Sanitization Libraries:
     

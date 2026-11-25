@@ -96,7 +96,7 @@ Technical Challenges faced:
     
     A common mistake is attacking the port exposed by the Frontend (e.g., `:5173` for Vite/React).
 
-    - Recon: Through `docker ps` and browser Network tab analysis, it was identified that the authentication logic resided on a separate container (`<backend_container_name>`) exposed on port 80.
+  - Recon: Through `docker ps` and browser Network tab analysis, it was identified that the authentication logic resided on a separate container (`<backend_container_name>`) exposed on port 80.
 
 - Blue Team Monitoring:
     

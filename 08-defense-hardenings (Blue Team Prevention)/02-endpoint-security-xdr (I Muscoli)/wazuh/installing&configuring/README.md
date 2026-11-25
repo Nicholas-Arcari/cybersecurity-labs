@@ -160,7 +160,7 @@ NET START WazuhSvc
 
 Se il comando restituisce "Servizio richiesto già avviato" ma l'agente non appare nel Manager, il problema risiede quasi certamente nella connettività di rete (Firewall di Windows o iptables su Kali che bloccano la porta 1514).
 
-###  Installazione su Raspberry Pi (Linux ARM)
+### Installazione su Raspberry Pi (Linux ARM)
 I Raspberry Pi utilizzano architetture ARM (armhf per sistemi a 32-bit, aarch64 per sistemi a 64-bit). Il gestore pacchetti apt gestisce automaticamente l'architettura, ma attenzione alle versioni.
 
 Verifica Architettura:

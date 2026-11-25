@@ -34,6 +34,7 @@ sudo apt install obsidian   # or flatpak install md.obsidian.Obsidian
 ```
 
 Recommended vault structure:
+
 ```
 kali-config/
 +-- setup-checklist.md       # 20 steps: status (done/to do/notes)

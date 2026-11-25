@@ -160,18 +160,18 @@ $stmt->execute(['user' => $username]);
 $user = $stmt->fetch();
 ```
 
-2. Input Validation:
+1. Input Validation:
 
 Implement strict validation (Allow-list) on all inputs.
 
 - If the `artist` parameter must be a number, force the type to `Integer`.
 - Reject any input containing unexpected characters.
 
-3. Principle of Least Privilege:
+1. Principle of Least Privilege:
 
 The database user used by the web application should not have access to system tables (`information_schema`) or write permissions unless strictly necessary.
 
-4. WAF (Web Application Firewall):
+1. WAF (Web Application Firewall):
 
 As a defense-in-depth measure, implement a WAF to detect and block common SQL attack patterns (e.g., `UNION SELECT`, `OR 1=1`).
 

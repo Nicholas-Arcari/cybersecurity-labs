@@ -37,18 +37,18 @@ Why does a Red Teamer want to know these things?
 
 - CVE Mapping (The main reason):
 
-    - If WhatWeb tells me the site uses PHP 5.6.40, I go to Google and search: "PHP 5.6.40 vulnerabilities". I will discover it is old and full of holes.
-    - If it tells me WordPress 4.8, I search for exploits for that specific version. I don't waste time launching Joomla attacks if the site is WordPress.
+  - If WhatWeb tells me the site uses PHP 5.6.40, I go to Google and search: "PHP 5.6.40 vulnerabilities". I will discover it is old and full of holes.
+  - If it tells me WordPress 4.8, I search for exploits for that specific version. I don't waste time launching Joomla attacks if the site is WordPress.
 
 - Default Credentials:
 
-    - If I discover the server is Tomcat, I will try logging in with tomcat:s3cret.
-    - If it is Jenkins, I will try admin:password.
-    - Knowing the technology gives you the key to guessing the default password.
+  - If I discover the server is Tomcat, I will try logging in with tomcat:s3cret.
+  - If it is Jenkins, I will try admin:password.
+  - Knowing the technology gives you the key to guessing the default password.
 
 - WAF Detection:
 
-    - These tools often tell you if there is a WAF (Web Application Firewall) like Cloudflare or Imperva. If you know that, you know you need to use evasion techniques (or give up to avoid getting banned).
+  - These tools often tell you if there is a WAF (Web Application Firewall) like Cloudflare or Imperva. If you know that, you know you need to use evasion techniques (or give up to avoid getting banned).
         
 ---
 

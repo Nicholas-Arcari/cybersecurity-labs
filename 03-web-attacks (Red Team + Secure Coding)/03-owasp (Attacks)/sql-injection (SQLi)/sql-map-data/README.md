@@ -90,9 +90,9 @@ Il dump completo è stato salvato localmente nel percorso: `~/.local/share/sqlma
 L'analisi dei dati estratti evidenzia gravi violazioni delle best practice di sicurezza e normative internazionali.
 
 | Dato Estratto | Valore Esempio | Violazione / Rischio |
-|---------------|----------------|----------------------|
+| --------------- | ---------------- | ---------------------- |
 | Password | test | CRITICA. Le password sono salvate in chiaro (Cleartext). Mancanza totale di Hashing (es. bcrypt, Argon2) e Salting. Un attaccante può impersonare immediatamente qualsiasi utente. |
-| Credit Card (CC) | 1234-5678... |CRITICA (PCI-DSS). La memorizzazione del PAN (Primary Account Number) in chiaro è una violazione diretta dello standard PCI-DSS Requirement 3.4. |
+| Credit Card (CC) | 1234-5678... | CRITICA (PCI-DSS). La memorizzazione del PAN (Primary Account Number) in chiaro è una violazione diretta dello standard PCI-DSS Requirement 3.4. |
 | PII Data | Email, Phone, Address | ALTA (GDPR). Esposizione di dati personali che può portare a furto d'identità e sanzioni amministrative elevate. |
 
 ---
@@ -103,17 +103,17 @@ Per mettere in sicurezza l'infrastruttura, si raccomandano le seguenti azioni co
 
 - Codice Sicuro (Preventivo):
     
-    - Implementare Prepared Statements (Query Parametrizzate) in tutto il codice PHP per neutralizzare alla radice l'iniezione SQL.
+  - Implementare Prepared Statements (Query Parametrizzate) in tutto il codice PHP per neutralizzare alla radice l'iniezione SQL.
 
 - Data Protection (Correttivo):
 
-    - Password: Migrare immediatamente tutte le password utente su algoritmi di hashing forti (es. `bcrypt` o `Argon2id`). Mai salvare password in chiaro.
+  - Password: Migrare immediatamente tutte le password utente su algoritmi di hashing forti (es. `bcrypt` o `Argon2id`). Mai salvare password in chiaro.
 
-    - Carte di Credito: Non memorizzare mai i dati completi della carta di credito se non strettamente necessario. Se richiesto, utilizzare tokenizzazione tramite Payment Gateway o crittografia forte (AES-256) con gestione sicura delle chiavi.
+  - Carte di Credito: Non memorizzare mai i dati completi della carta di credito se non strettamente necessario. Se richiesto, utilizzare tokenizzazione tramite Payment Gateway o crittografia forte (AES-256) con gestione sicura delle chiavi.
 
 - Infrastruttura:
 
-    - Implementare un Web Application Firewall (WAF) (es. ModSecurity o servizi Cloudflare) per bloccare pattern di attacco SQLMap noti e richieste malevole.
+  - Implementare un Web Application Firewall (WAF) (es. ModSecurity o servizi Cloudflare) per bloccare pattern di attacco SQLMap noti e richieste malevole.
 
 ---
 

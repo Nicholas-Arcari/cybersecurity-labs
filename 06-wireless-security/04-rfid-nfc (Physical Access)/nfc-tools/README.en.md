@@ -61,7 +61,7 @@ The SAK `08` and the string "MIFARE Classic 1K" identify a tag based on Crypto-1
 
 ### Execution - Key recovery with mfoc
 
-### Operational Context
+### Operational Context (key recovery)
 
 MIFARE Classic 1K organizes the memory in 16 sectors, each protected by two keys (A and B). mfoc (MIFARE Offline Cracker) exploits a weakness of Crypto-1: if even a single key of a sector is known (typically a default key that the installer never changed), the "nested" attack recovers all the other keys by exploiting the weakness of the tag's pseudo-random number generator.
 

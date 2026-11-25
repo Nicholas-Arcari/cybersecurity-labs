@@ -92,17 +92,17 @@ Directory Busting techniques are not limited to traditional web servers, but are
 
 Necessary adaptations for Docker/API environments:
 
-1.  API-Specific Wordlists:
+1. API-Specific Wordlists:
 
     Standard wordlists (`common.txt`) are ineffective against APIs, which use structured paths (e.g., `/api/v1/user`).
 
     It is necessary to use dedicated lists such as `api-endpoints.txt` (from the SecLists collection) to find critical endpoints like `/health`, `/metrics`, `/swagger.json` or `/graphql`.
 
-2.  Networking (VM vs Host):
+2. Networking (VM vs Host):
 
     If Kali Linux runs on a Virtual Machine and the Docker container runs on the Host (Windows/Mac), pointing to `localhost` from the VM will not work. You need to use the host machine's IP address on the local network (e.g., `gobuster dir -u http://192.168.X.X:<PORT> ...`).
 
-3.  Authentication (JWT Headers):
+3. Authentication (JWT Headers):
 
     Many APIs return `401 Unauthorized` if a valid token is not presented. Tools like Gobuster and Feroxbuster allow injecting authentication headers to test restricted areas:
 

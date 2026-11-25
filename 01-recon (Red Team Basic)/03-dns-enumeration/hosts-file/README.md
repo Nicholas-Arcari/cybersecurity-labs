@@ -33,6 +33,7 @@ Se un sottodominio (es. `dev.target.com`) non è registrato nel DNS pubblico ma 
 Tentativo di connessione al dominio target prima della manipolazione locale.
 
 Comando:
+
 ```Bash
 ping -c 4 portale-segreto.corp
 ```

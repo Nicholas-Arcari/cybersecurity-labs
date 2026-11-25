@@ -161,8 +161,8 @@ In a real-world scenario, after identifying such a high criticality (VoIP and Da
 - Reporting: Sending a formal communication to the ISP's `abuse@` address or the company's technical contact, providing exposure details without ever attempting access (Exploitation).
 - Recommended Remediation:
 
-    - Immediately close ports 3389 (RDP), 21 (FTP) and 5060 (SIP) on the perimeter firewall.
-    - Implement access exclusively through VPN.
+  - Immediately close ports 3389 (RDP), 21 (FTP) and 5060 (SIP) on the perimeter firewall.
+  - Implement access exclusively through VPN.
 
 ---
 

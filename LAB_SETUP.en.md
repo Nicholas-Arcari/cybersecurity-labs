@@ -154,6 +154,7 @@ Host: 127.0.0.1:3389  -->  Guest: 10.0.2.3:3389  (RDP Windows)
 ```
 
 VirtualBox configuration:
+
 ```
 VM Settings > Network > Adapter 1 > Advanced > Port Forwarding > [+]
 ```

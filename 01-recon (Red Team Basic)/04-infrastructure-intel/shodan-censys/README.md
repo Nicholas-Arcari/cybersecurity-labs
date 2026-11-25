@@ -161,8 +161,8 @@ In uno scenario reale, dopo aver identificato una criticità così elevata (Espo
 - Segnalazione: Invio di una comunicazione formale all'indirizzo `abuse@` dell'ISP o al contatto tecnico dell'azienda, fornendo i dettagli dell'esposizione senza mai tentare l'accesso (Exploitation).
 - Remediation (Consigliata):
 
-    - Chiudere immediatamente le porte 3389 (RDP), 21 (FTP) e 5060 (SIP) sul firewall perimetrale.
-    - Implementare l'accesso esclusivamente tramite VPN.
+  - Chiudere immediatamente le porte 3389 (RDP), 21 (FTP) e 5060 (SIP) sul firewall perimetrale.
+  - Implementare l'accesso esclusivamente tramite VPN.
 
 ---
 

@@ -63,8 +63,8 @@ Analysis: Masscan completed the scan without detecting the open port (False Nega
 The test highlighted a substantial behavioral difference due to the lab's network architecture (VirtualBox NAT Network).
 
 | Feature | Nmap | Masscan |
-|---------|------|---------|
-| Technology | Synchronous / Stateful | Asynchronous / Stateless|
+| --------- | ------ | --------- |
+| Technology | Synchronous / Stateful | Asynchronous / Stateless |
 | | Uses standard Linux Kernel `syscalls` | Uses Raw Sockets and bypasses the Kernel (custom stack) |
 | NAT Handling | Excellent. The operating system manages connection tracking and NAT traversal | Critical. Response packets (SYN-ACK) are often not correctly routed from the virtual interface to the Masscan process |
 | Result | Port detected (open) | False negative (closed/filtered) |

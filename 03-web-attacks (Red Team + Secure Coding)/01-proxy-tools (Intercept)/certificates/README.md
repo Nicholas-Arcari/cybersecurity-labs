@@ -23,9 +23,9 @@ Il protocollo HTTPS protegge la riservatezza dei dati cifrandoli tra il client e
 
 Per poter leggere i dati cifrati, il Proxy deve:
 
-1.  Presentarsi al browser come se fosse il sito target (es. `google.com`).
+1. Presentarsi al browser come se fosse il sito target (es. `google.com`).
 
-2.  Generare un certificato SSL falso "al volo" per quel dominio.
+2. Generare un certificato SSL falso "al volo" per quel dominio.
 
 Affinché il browser accetti questo certificato falso senza mostrare errori di sicurezza (`SEC_ERROR_UNKNOWN_ISSUER`), è necessario installare la Certificate Authority (CA) di Burp nello store dei certificati affidabili del browser (Trusted Root Store).
 
@@ -37,11 +37,11 @@ Affinché il browser accetti questo certificato falso senza mostrare errori di s
 
 Passaggi eseguiti:
 
-1.  Download del certificato `cacert.der` da `http://burp`.
+1. Download del certificato `cacert.der` da `http://burp`.
 
-2.  Importazione nel Trust Store di Firefox (`Authorities` tab).
+2. Importazione nel Trust Store di Firefox (`Authorities` tab).
 
-3.  Abilitazione del flag: "Trust this CA to identify websites".
+3. Abilitazione del flag: "Trust this CA to identify websites".
 
 Verifica dell'Intercettazione HTTPS:
 

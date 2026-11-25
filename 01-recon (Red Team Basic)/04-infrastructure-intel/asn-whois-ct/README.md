@@ -78,7 +78,7 @@ Output atteso (amass intel):
 
 > [Segnaposto screenshot: catturare la vista di `bgp.he.net` (Hurricane Electric BGP Toolkit) per l'ASN del target, che mostra graficamente tutti i prefissi annunciati e i peer.]
 
-![BGP Toolkit - prefissi ASN](img/asn-bgp-PLACEHOLDER.jpg)
+<!-- screenshot placeholder: BGP Toolkit - prefissi ASN (img/asn-bgp-PLACEHOLDER.jpg) -->
 
 ### Analisi dei risultati
 

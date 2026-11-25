@@ -69,11 +69,11 @@ Per ottenere una mappatura più approfondita, è stato utilizzato OWASP Amass.
 
 A differenza di Subfinder che è focalizzato sulla velocità, Amass esegue una Enumerazione Attiva e correlata:
 
-1.  DNS Brute-forcing: Tenta di indovinare sottodomini non listati pubblicamente usando wordlist interne.
+1. DNS Brute-forcing: Tenta di indovinare sottodomini non listati pubblicamente usando wordlist interne.
 
-2.  ASN Mapping: Identifica a quali "Autonomous System" (reti fisiche) appartengono gli IP trovati, permettendo di scoprire blocchi di rete dimenticati dall'azienda.
+2. ASN Mapping: Identifica a quali "Autonomous System" (reti fisiche) appartengono gli IP trovati, permettendo di scoprire blocchi di rete dimenticati dall'azienda.
 
-3.  Certificate Scraping: Analizza i certificati SSL attivi per estrarre nomi alternativi (Subject Alternative Name).
+3. Certificate Scraping: Analizza i certificati SSL attivi per estrarre nomi alternativi (Subject Alternative Name).
 
 ```Bash
 sudo apt install amass -y
@@ -122,11 +122,11 @@ La superficie di attacco si sposta dall'infrastruttura al Codice Sorgente (Sourc
 
 Poiché il codice è ospitato in un repository pubblico:
 
-1.  Repository Mining: L'attaccante analizza direttamente il repository GitHub alla ricerca di file sensibili (`.env`, `config.js`).
+1. Repository Mining: L'attaccante analizza direttamente il repository GitHub alla ricerca di file sensibili (`.env`, `config.js`).
 
-2.  Commit History Analysis: Utilizzando strumenti come TruffleHog o GitLeaks, è possibile recuperare credenziali (API Keys, Token AWS) che sono state cancellate dai file attuali ma rimangono permanenti nella cronologia dei commit di Git.
+2. Commit History Analysis: Utilizzando strumenti come TruffleHog o GitLeaks, è possibile recuperare credenziali (API Keys, Token AWS) che sono state cancellate dai file attuali ma rimangono permanenti nella cronologia dei commit di Git.
 
-3.  Client-Side Logic: Poiché tutta la logica è nel browser (JavaScript), eventuali chiavi API utilizzate dal frontend sono visibili in chiaro a chiunque ispezioni il codice (es. "Inspect Element").
+3. Client-Side Logic: Poiché tutta la logica è nel browser (JavaScript), eventuali chiavi API utilizzate dal frontend sono visibili in chiaro a chiunque ispezioni il codice (es. "Inspect Element").
 
 ---
 

@@ -84,7 +84,7 @@ TargetCorp/deploy-scripts  -  .env.backup
 
 > [Screenshot placeholder: capture the GitHub search results on the target (with the secrets obscured/redacted before publication) and save it to `./img/`.]
 
-![GitHub Dorking results](img/github-dorking-PLACEHOLDER.jpg)
+<!-- screenshot placeholder: GitHub Dorking results (img/github-dorking-PLACEHOLDER.jpg) -->
 
 > **Critical ethical note:** a secret found must NEVER be tested to verify its validity by accessing the target's infrastructure without authorization. Validity is declared as "potentially active" in the report. In an authorized engagement, the test is explicitly agreed in the scope.
 

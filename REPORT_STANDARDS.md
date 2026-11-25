@@ -525,6 +525,7 @@ Commenti inline:      # commento
 ```
 
 **Caratteri VIETATI nei diagrammi** (causano problemi su alcuni visualizzatori):
+
 ```
 - Frecce unicode:  -->, -->, <=>, =>
 - Box unicode:     +--+, |  |
@@ -626,11 +627,13 @@ Il carattere `—` (U+2014, em dash) e **assolutamente vietato** in tutta la rep
 - CORRETTO: `Questo tool - usato nel Red Team - e molto potente`
 
 Per verificare la presenza di em dash in un file:
+
 ```Bash
 grep -P "\xe2\x80\x94" file.md
 ```
 
 Per sostituire tutti gli em dash in un file:
+
 ```Bash
 python3 -c "
 content = open('file.md').read()
@@ -795,6 +798,7 @@ PORT     STATE SERVICE VERSION
 ```
 
 **ID Finding:** `WEB-005` | **Severity:** `Medio` | **CVSS v3.1:** 6.1
+
 ```
 
 ---
@@ -928,6 +932,7 @@ separata da `---`. E un blocco autonomo, non una sottosezione della remediation.
 
 **Kill Chain proiettata:**
 ```
+
 [finding attuale]
         |
         v
@@ -935,6 +940,7 @@ separata da `---`. E un blocco autonomo, non una sottosezione della remediation.
         |
         v
 [tecnica successiva] -> [obiettivo finale: accesso, persistenza, esfiltrazione, ransomware]
+
 ```
 
 **Impatto potenziale:** [conseguenza concreta per l'organizzazione target: perdita di dati,
@@ -982,6 +988,7 @@ hash NTLM di tutti gli utenti che hanno effettuato login recente sulla macchina.
 **Kill Chain proiettata:**
 
 ```
+
 VULN-004: accesso C$ (nick - admin locale)
         |
         v
@@ -998,6 +1005,7 @@ Persistenza: Golden Ticket (validita 10 anni) + creazione backdoor account
         |
         v
 Ransomware deployment su tutti gli host via GPO / PsExec
+
 ```
 
 **Impatto potenziale:** compromissione totale del dominio Active Directory. In un contesto

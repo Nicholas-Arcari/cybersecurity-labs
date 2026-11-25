@@ -90,7 +90,7 @@ The complete dump was saved locally at: `~/.local/share/sqlmap/output/testphp.vu
 The extracted data analysis highlights severe violations of security best practices and international regulations.
 
 | Extracted Data | Example Value | Violation / Risk |
-|---------------|----------------|----------------------|
+| --------------- | ---------------- | ---------------------- |
 | Password | test | CRITICAL. Passwords are saved in plaintext (Cleartext). Total lack of Hashing (e.g., bcrypt, Argon2) and Salting. An attacker can immediately impersonate any user. |
 | Credit Card (CC) | 1234-5678... | CRITICAL (PCI-DSS). Storing the PAN (Primary Account Number) in plaintext is a direct violation of PCI-DSS Requirement 3.4. |
 | PII Data | Email, Phone, Address | HIGH (GDPR). Personal data exposure that can lead to identity theft and significant administrative penalties. |
@@ -103,17 +103,17 @@ To secure the infrastructure, the following immediate corrective actions are rec
 
 - Secure Code (Preventive):
     
-    - Implement Prepared Statements (Parameterized Queries) throughout all PHP code to neutralize SQL injection at its root.
+  - Implement Prepared Statements (Parameterized Queries) throughout all PHP code to neutralize SQL injection at its root.
 
 - Data Protection (Corrective):
 
-    - Passwords: Immediately migrate all user passwords to strong hashing algorithms (e.g., `bcrypt` or `Argon2id`). Never store passwords in plaintext.
+  - Passwords: Immediately migrate all user passwords to strong hashing algorithms (e.g., `bcrypt` or `Argon2id`). Never store passwords in plaintext.
 
-    - Credit Cards: Never store complete credit card data unless strictly necessary. If required, use tokenization through Payment Gateway or strong encryption (AES-256) with secure key management.
+  - Credit Cards: Never store complete credit card data unless strictly necessary. If required, use tokenization through Payment Gateway or strong encryption (AES-256) with secure key management.
 
 - Infrastructure:
 
-    - Implement a Web Application Firewall (WAF) (e.g., ModSecurity or Cloudflare services) to block known SQLMap attack patterns and malicious requests.
+  - Implement a Web Application Firewall (WAF) (e.g., ModSecurity or Cloudflare services) to block known SQLMap attack patterns and malicious requests.
 
 ---
 

@@ -86,7 +86,7 @@ Output atteso:
 
 > [Segnaposto screenshot: catturare l'output di cloud_enum con i bucket trovati e il listing del bucket leggibile (con i nomi file sensibili evidenziati e ogni contenuto reale redatto).]
 
-![cloud_enum - bucket esposti](img/cloud-enum-PLACEHOLDER.jpg)
+<!-- screenshot placeholder: cloud_enum - bucket esposti (img/cloud-enum-PLACEHOLDER.jpg) -->
 
 ### Ricerca passiva su GrayHatWarfare
 

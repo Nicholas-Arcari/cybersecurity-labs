@@ -84,7 +84,7 @@ TargetCorp/deploy-scripts  -  .env.backup
 
 > [Segnaposto screenshot: catturare i risultati della ricerca GitHub sul target (con i segreti oscurati/redatti prima della pubblicazione) e salvarlo in `./img/`.]
 
-![Risultati GitHub Dorking](img/github-dorking-PLACEHOLDER.jpg)
+<!-- screenshot placeholder: Risultati GitHub Dorking (img/github-dorking-PLACEHOLDER.jpg) -->
 
 > **Nota etica critica:** un segreto trovato NON va mai testato per verificarne la validita accedendo all'infrastruttura del target senza autorizzazione. La validita si dichiara come "potenzialmente attiva" nel report. In un engagement autorizzato, il test si concorda esplicitamente nello scope.
 
