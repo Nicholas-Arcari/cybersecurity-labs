@@ -1,0 +1,18 @@
+SCREENSHOT PoC - 17 - Unisciti alla community Kali Linux
+
+Questa cartella raccoglie gli screenshot proof-of-concept (PoC) di questo lab.
+Le immagini vanno catturate eseguendo davvero il lab: sono evidenza di
+esecuzione reale e non vanno mai fabbricate.
+
+COSA CATTURARE
+- (config) il terminale con il comando di setup eseguito e l'esito atteso.
+- Evidenzia (riquadro o freccia) la riga o il valore che dimostra il risultato.
+- Formato .jpg o .png. Nome file suggerito: 17-join-kali-community-poc.jpg
+
+COME COLLEGARE L'IMMAGINE NEL README (dopo averla salvata in questa cartella)
+Aggiungi questa riga nel README.md e nel README.en.md, nel punto della
+dimostrazione pratica:
+
+    ![17 - Unisciti alla community Kali Linux - PoC](img/17-join-kali-community-poc.jpg)
+
+Puoi eliminare questo file una volta inserito lo screenshot.
