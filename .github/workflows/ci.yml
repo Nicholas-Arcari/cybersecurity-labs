@@ -1,0 +1,74 @@
+name: CI - Quality Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Em dash (U+2014) - vietato dagli standard di repo
+      - name: Check for em dashes
+        run: |
+          if grep -rP "\xe2\x80\x94" --include="*.md" . ; then
+            echo "::error::Em dash (U+2014) trovato. Usare il trattino semplice (-) al suo posto."
+            exit 1
+          fi
+          echo "Nessun em dash trovato."
+
+      # Finding ID format + uniqueness check
+      - name: Validate Finding IDs (format, uniqueness, sequentiality)
+        run: |
+          VALID_PREFIXES="OSINT|SCAN|DNS|INTEL|VULN|WEB|EXPLOIT|SE|WIFI|POST|DEF|FOR|CLOUD"
+
+          # 1. Format check: all IDs in registry must be PREFIX-NNN
+          INVALID=$(grep -rPn "Finding ID.*\`[A-Z]+-[0-9]+\`" --include="*.md" . | grep -vP "($VALID_PREFIXES)-[0-9]{3}" || true)
+          if [ -n "$INVALID" ]; then
+            echo "::warning::Finding ID con prefisso non standard trovati:"
+            echo "$INVALID"
+          fi
+
+          # 2. Uniqueness check: no duplicate IDs in the main registry
+          REGISTRY_IDS=$(grep -oP "\[($VALID_PREFIXES)-\d{3}\]" README.md 2>/dev/null | tr -d '[]' | sort)
+          if [ -n "$REGISTRY_IDS" ]; then
+            DUPLICATES=$(echo "$REGISTRY_IDS" | uniq -d)
+            if [ -n "$DUPLICATES" ]; then
+              echo "::error::Finding ID duplicati nel registry:"
+              echo "$DUPLICATES"
+              exit 1
+            fi
+            TOTAL=$(echo "$REGISTRY_IDS" | sort -u | wc -l)
+            echo "Finding ID validation passed: $TOTAL unique IDs"
+          fi
+
+          # 3. IT/EN registry sync check
+          IT_IDS=$(grep -oP "\[($VALID_PREFIXES)-\d{3}\]" README.md 2>/dev/null | tr -d '[]' | sort -u)
+          EN_IDS=$(grep -oP "\[($VALID_PREFIXES)-\d{3}\]" README.en.md 2>/dev/null | tr -d '[]' | sort -u)
+          if [ "$IT_IDS" != "$EN_IDS" ]; then
+            echo "::warning::Finding registry mismatch tra README.md e README.en.md"
+            diff <(echo "$IT_IDS") <(echo "$EN_IDS") || true
+          fi
+
+      # Markdown lint
+      - name: Markdown lint
+        uses: DavidAnson/markdownlint-cli2-action@v19
+        with:
+          globs: "**/*.md"
+
+      # Link check (solo link interni, offline)
+      - name: Internal link check
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --offline
+            --no-progress
+            --exclude-path site
+            --exclude-path node_modules
+            --exclude-path .github
+            "**/*.md"
+          fail: true

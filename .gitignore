@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# MkDocs build output
+site/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.idea/
+.vscode/
+*.sublime-*
+
+# Security - never commit sensitive material
+*.hash
+*.pot
+*.hccapx
+*.cap
+*.pcap
+*.pcapng
+loot/
+exfil/
+.env
+.env.*
+credentials.json
+secrets.json
+*.pem
+*.key
+id_rsa*
+
+# Pytest
+.pytest_cache/
+
+# Temporary files
+*.tmp
+*.bak
+*.orig
+
+# Node (if using any JS tooling)
+node_modules/

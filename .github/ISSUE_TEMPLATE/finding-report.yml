@@ -1,0 +1,121 @@
+name: Finding Report
+description: Report a new security finding from a lab session
+title: "[FINDING] "
+labels: ["finding", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## New Finding Report
+        Use this template to document a new security finding from a lab session.
+        Refer to [REPORT_STANDARDS.md](../../REPORT_STANDARDS.md) for conventions.
+
+  - type: input
+    id: finding-id
+    attributes:
+      label: Finding ID
+      description: "Sequential ID (e.g., EXPLOIT-026, WEB-016). Check REPORT_STANDARDS.md for next available."
+      placeholder: "PREFIX-NNN"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+        - Informational
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module
+      options:
+        - 01-recon
+        - 02-vulnerability-assessment
+        - 03-web-attacks
+        - 04-system-exploitation
+        - 05-social-engineering
+        - 06-wireless-security
+        - 07-post-exploitation
+        - 08-defense-hardenings
+        - 09-digital-forensics
+        - 10-cloud-security
+    validations:
+      required: true
+
+  - type: input
+    id: mitre-id
+    attributes:
+      label: MITRE ATT&CK ID
+      description: "Technique ID from attack.mitre.org (e.g., T1190, T1059.004)"
+      placeholder: "T1XXX.XXX"
+    validations:
+      required: false
+
+  - type: input
+    id: cvss
+    attributes:
+      label: CVSS v3.1 Score
+      description: "Base score if applicable (e.g., 9.8, 7.5)"
+      placeholder: "0.0 - 10.0"
+    validations:
+      required: false
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: "What was found, why it matters, business impact"
+      placeholder: |
+        During [phase] on [target], it was possible to [action] by exploiting [vulnerability].
+        This allows an attacker to [impact].
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: "Commands and steps to reproduce the finding in the lab"
+      placeholder: |
+        1. Start the target VM (see LAB_SETUP.md)
+        2. Run: `command here`
+        3. Observe: [result]
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence / Output
+      description: "Tool output, screenshots, or proof-of-concept"
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: remediation
+    attributes:
+      label: Remediation
+      description: "How to fix the vulnerability"
+      placeholder: |
+        **Immediate:** [quick fix]
+        **Long-term:** [structural fix]
+    validations:
+      required: true
+
+  - type: input
+    id: tools
+    attributes:
+      label: Tools Used
+      description: "Comma-separated list of tools (e.g., Nmap, Metasploit, Burp Suite)"
+      placeholder: "Tool1, Tool2, Tool3"
+    validations:
+      required: false

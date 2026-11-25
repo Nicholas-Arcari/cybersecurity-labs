@@ -1,0 +1,96 @@
+# =============================================================================
+# Cybersecurity Labs - Web Application Targets
+# =============================================================================
+#
+# Questo file fornisce i target web containerizzati per i moduli:
+#   - 03-web-attacks: DVWA (SQLi, XSS, CSRF), DVGA (GraphQL), Juice Shop (OWASP Top 10)
+#   - 02-vulnerability-assessment: scanning dei servizi web esposti
+#
+# NOTA: i lab di System Exploitation (modulo 04), Post-Exploitation (modulo 07)
+# e Wireless (modulo 06) richiedono le VM VirtualBox documentate in LAB_SETUP.md.
+# Questo docker-compose copre SOLO i target web containerizzabili.
+#
+# Uso:
+#   docker compose up -d          # avvia tutti i target
+#   docker compose up dvwa -d     # avvia solo DVWA
+#   docker compose down            # ferma tutto
+#   docker compose down -v         # ferma e rimuove i volumi (reset dati)
+#
+# Dopo l'avvio:
+#   DVWA:       http://localhost:8080   (admin / password)
+#   DVGA:       http://localhost:5013/graphiql
+#   Juice Shop: http://localhost:3000
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # DVWA - Damn Vulnerable Web Application
+  # Target per: SQL Injection, XSS, Command Injection, File Upload, CSRF
+  # Modulo: 03-web-attacks/03-owasp
+  # ---------------------------------------------------------------------------
+  dvwa:
+    image: vulnerables/web-dvwa:latest
+    container_name: lab-dvwa
+    ports:
+      - "8080:80"
+    depends_on:
+      - dvwa-db
+    environment:
+      - DB_SERVER=dvwa-db
+    networks:
+      - lab-net
+    restart: unless-stopped
+
+  dvwa-db:
+    image: mariadb:10
+    container_name: lab-dvwa-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=dvwa
+      - MYSQL_DATABASE=dvwa
+      - MYSQL_USER=dvwa
+      - MYSQL_PASSWORD=p@ssw0rd
+    volumes:
+      - dvwa-data:/var/lib/mysql
+    networks:
+      - lab-net
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # DVGA - Damn Vulnerable GraphQL Application
+  # Target per: GraphQL Introspection, Query Injection, IDOR, Batching
+  # Modulo: 03-web-attacks/05-api-security/graphql
+  # ---------------------------------------------------------------------------
+  dvga:
+    image: dolevf/dvga:latest
+    container_name: lab-dvga
+    ports:
+      - "5013:5013"
+    environment:
+      - WEB_HOST=0.0.0.0
+    networks:
+      - lab-net
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # OWASP Juice Shop
+  # Target per: OWASP Top 10 completa, challenge-based (100+ vulnerabilita)
+  # Modulo: 03-web-attacks (target generico OWASP)
+  # ---------------------------------------------------------------------------
+  juice-shop:
+    image: bkimminich/juice-shop:latest
+    container_name: lab-juice-shop
+    ports:
+      - "3000:3000"
+    networks:
+      - lab-net
+    restart: unless-stopped
+
+volumes:
+  dvwa-data:
+
+networks:
+  lab-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24

@@ -1,0 +1,44 @@
+# Pre-commit hooks - Cybersecurity Labs
+# Install: pip install pre-commit && pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  # Standard hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-yaml
+        exclude: mkdocs.yml  # mkdocs.yml uses !!python/name tag
+      - id: check-json
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+  # Em dash check (U+2014) - vietato dagli standard di repo
+  - repo: local
+    hooks:
+      - id: no-em-dash
+        name: Check for em dashes (U+2014)
+        language: pygrep
+        entry: "\u2014"
+        types: [markdown]
+
+  # Finding ID format validation
+  - repo: local
+    hooks:
+      - id: finding-id-format
+        name: Validate Finding ID format
+        language: script
+        entry: scripts/check-finding-ids.sh
+        types: [markdown]
+        pass_filenames: false
+
+  # Markdown lint
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.14.0
+    hooks:
+      - id: markdownlint-cli2
+        args: ["--config", ".markdownlint.json"]

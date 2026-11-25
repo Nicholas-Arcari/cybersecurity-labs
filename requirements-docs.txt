@@ -1,0 +1,5 @@
+mkdocs-material>=9.5
+mkdocs-awesome-pages-plugin>=2.9
+mkdocs-exclude>=1.0
+cairosvg>=2.7
+pillow>=10.0
