@@ -45,6 +45,19 @@ Server pubblico --risposta grande--> Vittima (perche l'IP sorgente era falsifica
 La radice del problema e duplice: servizi UDP esposti che rispondono a chiunque, e reti che **non filtrano lo
 spoofing** in uscita (mancata adozione di BCP38/ingress filtering).
 
+## Fattori di amplificazione tipici
+
+Valori indicativi da ricerca pubblica (US-CERT TA14-017A); il fattore e il rapporto tra la dimensione della
+risposta e quella della richiesta.
+
+| servizio (udp) | porta | fattore di amplificazione indicativo |
+| :--- | :--- | :--- |
+| dns | 53 | ~x28-54 |
+| ntp (monlist) | 123 | ~x557 |
+| ssdp | 1900 | ~x31 |
+| cldap | 389 | ~x56-70 |
+| memcached | 11211 | ~x10000-51000 |
+
 ## Relazione con le botnet
 
 Il DDoS volumetrico moderno e alimentato da **botnet**: migliaia di dispositivi compromessi (spesso IoT con

@@ -25,6 +25,7 @@ This section documents the practical exploitation of the most relevant OWASP cat
 | A03:2021 - injection (extended family) | methodology (no lab) | `ldap-injection/`, `xpath-injection/`, `crlf-injection/`, `command-injection/` |
 | A05:2021 - security misconfiguration (xxe) | methodology (no lab) | `xxe (XML External Entity)/` |
 | A08:2021 - software & data integrity (deserialization) | methodology (no lab) | `deserialization (Insecure Deserialization)/` |
+| A10:2021 - server-side request forgery (ssrf) | methodology (no lab) | `ssrf (Server-Side Request Forgery)/` |
 
 The philosophy of this section is the **dual perspective**: every offensive technique is accompanied by root cause analysis and the secure fix pattern, because understanding the why of a vulnerability is equally important for an analyst as knowing how to exploit it.
 
@@ -58,6 +59,7 @@ The philosophy of this section is the **dual perspective**: every offensive tech
 +-- xpath-injection (XPath Injection)/   # XPath Injection: auth bypass, XML extraction - methodology
 +-- crlf-injection (CRLF Injection)/     # CRLF / HTTP response splitting, log injection - methodology
 +-- command-injection (OS Command Injection)/  # OS Command Injection: RCE - methodology
++-- ssrf (Server-Side Request Forgery)/  # SSRF: cloud metadata, internal services (A10:2021) - practical
 ```
 
 ---

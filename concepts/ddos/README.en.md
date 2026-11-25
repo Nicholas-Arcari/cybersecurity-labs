@@ -44,6 +44,19 @@ Public server --large response--> Victim (because the source IP was spoofed)
 The root of the problem is twofold: UDP services exposed that answer anyone, and networks that **do not filter
 spoofing** outbound (lack of BCP38/ingress filtering adoption).
 
+## Typical amplification factors
+
+Indicative values from public research (US-CERT TA14-017A); the factor is the ratio between the response size
+and the request size.
+
+| service (udp) | port | indicative amplification factor |
+| :--- | :--- | :--- |
+| dns | 53 | ~x28-54 |
+| ntp (monlist) | 123 | ~x557 |
+| ssdp | 1900 | ~x31 |
+| cldap | 389 | ~x56-70 |
+| memcached | 11211 | ~x10000-51000 |
+
 ## Relation to botnets
 
 Modern volumetric DDoS is powered by **botnets**: thousands of compromised devices (often IoT with weak

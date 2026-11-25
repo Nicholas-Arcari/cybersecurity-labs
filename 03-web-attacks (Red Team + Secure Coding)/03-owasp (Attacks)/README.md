@@ -25,6 +25,7 @@ Questa sezione documenta l'exploitation pratica delle categorie OWASP piu rileva
 | A03:2021 - injection (famiglia estesa) | metodologia (no lab) | `ldap-injection/`, `xpath-injection/`, `crlf-injection/`, `command-injection/` |
 | A05:2021 - security misconfiguration (xxe) | metodologia (no lab) | `xxe (XML External Entity)/` |
 | A08:2021 - software & data integrity (deserialization) | metodologia (no lab) | `deserialization (Insecure Deserialization)/` |
+| A10:2021 - server-side request forgery (ssrf) | metodologia (no lab) | `ssrf (Server-Side Request Forgery)/` |
 
 La filosofia di questa sezione e la **doppia prospettiva**: ogni tecnica offensiva e accompagnata dalla root cause analysis e dal pattern di fix sicuro, perche comprendere il perche di una vulnerabilita e altrettanto importante per un analista quanto saperla sfruttare.
 
@@ -58,6 +59,7 @@ La filosofia di questa sezione e la **doppia prospettiva**: ogni tecnica offensi
 +-- xpath-injection (XPath Injection)/   # XPath Injection: bypass auth, estrazione XML - metodologia
 +-- crlf-injection (CRLF Injection)/     # CRLF / HTTP response splitting, log injection - metodologia
 +-- command-injection (OS Command Injection)/  # OS Command Injection: RCE - metodologia
++-- ssrf (Server-Side Request Forgery)/  # SSRF: metadata cloud, servizi interni (A10:2021) - pratica
 ```
 
 ---
