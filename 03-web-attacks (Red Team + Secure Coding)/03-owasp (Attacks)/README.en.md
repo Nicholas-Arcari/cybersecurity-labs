@@ -26,6 +26,9 @@ This section documents the practical exploitation of the most relevant OWASP cat
 | A05:2021 - security misconfiguration (xxe) | methodology (no lab) | `xxe (XML External Entity)/` |
 | A08:2021 - software & data integrity (deserialization) | methodology (no lab) | `deserialization (Insecure Deserialization)/` |
 | A10:2021 - server-side request forgery (ssrf) | methodology (no lab) | `ssrf (Server-Side Request Forgery)/` |
+| A03:2021 - injection (nosql) | practical (lab) | `nosql-injection (NoSQL Injection)/` |
+| A01:2021 - broken access control (csrf, cswsh) | practical (lab) | `csrf (Cross-Site Request Forgery)/`, `websocket-hijacking (CSWSH)/` |
+| A05:2021 - security misconfiguration (cors, cache poisoning, clickjacking) | practical (lab) | `cors-misconfiguration (CORS)/`, `cache-poisoning (Web Cache Poisoning)/`, `clickjacking (UI Redress)/` |
 
 The philosophy of this section is the **dual perspective**: every offensive technique is accompanied by root cause analysis and the secure fix pattern, because understanding the why of a vulnerability is equally important for an analyst as knowing how to exploit it.
 
@@ -60,6 +63,12 @@ The philosophy of this section is the **dual perspective**: every offensive tech
 +-- crlf-injection (CRLF Injection)/     # CRLF / HTTP response splitting, log injection - methodology
 +-- command-injection (OS Command Injection)/  # OS Command Injection: RCE - methodology
 +-- ssrf (Server-Side Request Forgery)/  # SSRF: cloud metadata, internal services (A10:2021) - practical
++-- nosql-injection (NoSQL Injection)/  # NoSQL injection (MongoDB): type juggling, $where - practical
++-- cors-misconfiguration (CORS)/  # CORS: cross-origin data theft - practical
++-- csrf (Cross-Site Request Forgery)/  # CSRF: forged actions / account takeover - practical
++-- cache-poisoning (Web Cache Poisoning)/  # web cache poisoning: mass XSS/redirect - practical
++-- clickjacking (UI Redress)/  # clickjacking (UI redress) - practical
++-- websocket-hijacking (CSWSH)/  # cross-site WebSocket hijacking (CSWSH) - practical
 ```
 
 ---

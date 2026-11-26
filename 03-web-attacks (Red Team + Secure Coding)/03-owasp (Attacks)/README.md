@@ -26,6 +26,9 @@ Questa sezione documenta l'exploitation pratica delle categorie OWASP piu rileva
 | A05:2021 - security misconfiguration (xxe) | metodologia (no lab) | `xxe (XML External Entity)/` |
 | A08:2021 - software & data integrity (deserialization) | metodologia (no lab) | `deserialization (Insecure Deserialization)/` |
 | A10:2021 - server-side request forgery (ssrf) | metodologia (no lab) | `ssrf (Server-Side Request Forgery)/` |
+| A03:2021 - injection (nosql) | pratica (lab) | `nosql-injection (NoSQL Injection)/` |
+| A01:2021 - broken access control (csrf, cswsh) | pratica (lab) | `csrf (Cross-Site Request Forgery)/`, `websocket-hijacking (CSWSH)/` |
+| A05:2021 - security misconfiguration (cors, cache poisoning, clickjacking) | pratica (lab) | `cors-misconfiguration (CORS)/`, `cache-poisoning (Web Cache Poisoning)/`, `clickjacking (UI Redress)/` |
 
 La filosofia di questa sezione e la **doppia prospettiva**: ogni tecnica offensiva e accompagnata dalla root cause analysis e dal pattern di fix sicuro, perche comprendere il perche di una vulnerabilita e altrettanto importante per un analista quanto saperla sfruttare.
 
@@ -60,6 +63,12 @@ La filosofia di questa sezione e la **doppia prospettiva**: ogni tecnica offensi
 +-- crlf-injection (CRLF Injection)/     # CRLF / HTTP response splitting, log injection - metodologia
 +-- command-injection (OS Command Injection)/  # OS Command Injection: RCE - metodologia
 +-- ssrf (Server-Side Request Forgery)/  # SSRF: metadata cloud, servizi interni (A10:2021) - pratica
++-- nosql-injection (NoSQL Injection)/  # NoSQL injection (MongoDB): type juggling, $where - pratica
++-- cors-misconfiguration (CORS)/  # CORS: furto dati cross-origin - pratica
++-- csrf (Cross-Site Request Forgery)/  # CSRF: azioni forgiate / account takeover - pratica
++-- cache-poisoning (Web Cache Poisoning)/  # web cache poisoning: XSS/redirect di massa - pratica
++-- clickjacking (UI Redress)/  # clickjacking (UI redress) - pratica
++-- websocket-hijacking (CSWSH)/  # WebSocket hijacking cross-site (CSWSH) - pratica
 ```
 
 ---
