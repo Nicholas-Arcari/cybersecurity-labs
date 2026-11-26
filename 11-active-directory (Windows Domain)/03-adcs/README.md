@@ -21,10 +21,12 @@ fondamenti sono in [THEORETICAL-FOUNDATIONS](<../THEORETICAL-FOUNDATIONS.md>) (s
 | `esc8-relay-adcs/` | esc8: ntlm relay verso il web enrollment di ad cs | `Critico` | scritta |
 | `esc1-template-abuse/` | esc1: template che consente san arbitrario | `Critico` | scritta |
 | `esc-enumeration/` | enumerazione ad cs con certipy/certify | `Informativo` | scritta |
+| `certipy/` | riferimento operativo consolidato di certipy (find/req/auth/shadow/relay) | `Critico` | scritta |
 
 ## Flusso operativo consigliato
 
-1. Enumerare AD CS (CA, template, endpoint di enrollment) con Certipy.
+1. Enumerare AD CS (CA, template, endpoint di enrollment) con Certipy (riferimento comandi completo in
+   [certipy](<certipy/README.md>)).
 2. Classificare le misconfigurazioni trovate secondo la tassonomia ESC.
 3. Sfruttare lo scenario applicabile: ESC1 se esiste un account di dominio con accesso a template deboli;
    [ESC8](<esc8-relay-adcs/README.md>) se e presente l'endpoint HTTP di Web Enrollment e si puo coercere

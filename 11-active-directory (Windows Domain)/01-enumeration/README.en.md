@@ -21,13 +21,15 @@ lets you choose the lowest-cost, lowest-noise vector. The foundations are in
 | `bloodhound/` | collection and analysis of the domain graph (bloodhound/sharphound) | `Informational` | written |
 | `domain-enumeration/` | ldap/rpc/smb enumeration (ldapsearch, rpcclient, nxc, enum4linux-ng) | `Low` | written |
 | `kerbrute-userenum/` | user enumeration and password spraying via kerberos | `Variable (Low / High)` | written |
+| `powerview/` | targeted, scriptable domain enumeration from windows (powerview) | `Informational` | written |
 
 ## Recommended operational flow
 
 1. If you have no credentials: user enumeration via Kerberos (`kerbrute-userenum/`) to build a list of valid
    usernames, then targeted password spraying.
 2. With a domain account: BloodHound collection (`bloodhound/`) for the full map of attack paths, in parallel
-   with LDAP/RPC enumeration (`domain-enumeration/`) for the details.
+   with LDAP/RPC enumeration (`domain-enumeration/`) for the details and targeted PowerView queries
+   (`powerview/`) for specific questions (ACLs, SPNs, delegation, sessions).
 3. The enumeration output guides the choice of offensive technique in subfolders 02-05.
 
 ---

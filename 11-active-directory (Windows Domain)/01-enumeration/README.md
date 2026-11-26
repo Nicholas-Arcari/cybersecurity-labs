@@ -21,13 +21,15 @@ agire permette di scegliere il vettore a piu basso costo e minor rumore. I fonda
 | `bloodhound/` | raccolta e analisi del grafo del dominio (bloodhound/sharphound) | `Informativo` | scritta |
 | `domain-enumeration/` | enumerazione ldap/rpc/smb (ldapsearch, rpcclient, nxc, enum4linux-ng) | `Basso` | scritta |
 | `kerbrute-userenum/` | user enumeration e password spraying via kerberos | `Variabile (Basso / Alto)` | scritta |
+| `powerview/` | enumerazione mirata e scriptabile del dominio da windows (powerview) | `Informativo` | scritta |
 
 ## Flusso operativo consigliato
 
 1. Se non si hanno credenziali: user enumeration via Kerberos (`kerbrute-userenum/`) per costruire una lista
    di username validi, poi password spraying mirato.
 2. Con un account di dominio: raccolta BloodHound (`bloodhound/`) per la mappa completa dei percorsi di
-   attacco, in parallelo a enumerazione LDAP/RPC (`domain-enumeration/`) per i dettagli.
+   attacco, in parallelo a enumerazione LDAP/RPC (`domain-enumeration/`) per i dettagli e a query mirate con
+   PowerView (`powerview/`) per domande puntuali (ACL, SPN, deleghe, sessioni).
 3. L'output dell'enumerazione guida la scelta della tecnica offensiva nelle sotto-aree 02-05.
 
 ---

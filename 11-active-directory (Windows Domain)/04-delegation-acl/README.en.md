@@ -25,6 +25,7 @@ The foundations (delegation and the authorization model) are in
 | `rbcd/` | resource-based constrained delegation abuse | `Critical` | written |
 | `delegation-unconstrained-constrained/` | unconstrained and constrained delegation abuse | `Critical` | written |
 | `acl-abuse/` | acl/dacl abuse (genericall, writedacl, writeowner, ...) | `High` (up to `Critical`) | written |
+| `bloodyad/` | execution of acl/delegation-abuse primitives via ldap writes (bloodyad) | `High` (up to `Critical`) | written |
 
 ## Recommended operational flow
 
@@ -33,7 +34,8 @@ The foundations (delegation and the authorization model) are in
    existing delegation ([unconstrained/constrained](<delegation-unconstrained-constrained/README.en.md>)), or
    abusing the ACL right ([acl-abuse](<acl-abuse/README.en.md>)).
 3. The outcome is typically the impersonation of a privileged account or granting oneself rights (e.g.,
-   DCSync), leading to subfolder 05.
+   DCSync), leading to subfolder 05. The primitives are conveniently executed from Linux over LDAP with
+   [bloodyAD](<bloodyad/README.en.md>) (password reset, add member, RBCD, shadow credentials, DCSync rights).
 
 ---
 

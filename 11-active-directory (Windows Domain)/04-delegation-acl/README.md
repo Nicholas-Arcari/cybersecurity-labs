@@ -25,6 +25,7 @@ I fondamenti (deleghe e modello di autorizzazione) sono in
 | `rbcd/` | resource-based constrained delegation abuse | `Critico` | scritta |
 | `delegation-unconstrained-constrained/` | unconstrained e constrained delegation abuse | `Critico` | scritta |
 | `acl-abuse/` | abuso di acl/dacl (genericall, writedacl, writeowner, ...) | `Alto` (fino a `Critico`) | scritta |
+| `bloodyad/` | esecuzione delle primitive di acl/delega abuse via scritture ldap (bloodyad) | `Alto` (fino a `Critico`) | scritta |
 
 ## Flusso operativo consigliato
 
@@ -33,7 +34,8 @@ I fondamenti (deleghe e modello di autorizzazione) sono in
    esistente ([unconstrained/constrained](<delegation-unconstrained-constrained/README.md>)), o abuso del
    diritto di ACL ([acl-abuse](<acl-abuse/README.md>)).
 3. L'esito e tipicamente l'impersonazione di un account privilegiato o la concessione a se stessi di diritti
-   (es. DCSync), che porta alla sotto-area 05.
+   (es. DCSync), che porta alla sotto-area 05. Le primitive si eseguono comodamente da Linux via LDAP con
+   [bloodyAD](<bloodyad/README.md>) (reset password, add member, RBCD, shadow credentials, DCSync rights).
 
 ---
 
