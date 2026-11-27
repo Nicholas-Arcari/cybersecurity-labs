@@ -84,7 +84,7 @@ Il posizionamento nel percorso difensivo: il SIEM riceve gli alert dagli strumen
 | id | descrizione | severity | sottocartella |
 | :--- | :--- | :---: | :--- |
 | `DEF-001` | elk stack: centralizzazione dei log e detection (brute force ssh) | `Alto` | `elk-stack/` |
-| `DEF-002` | splunk: correlazione multi-sorgente via spl (kill chain scan -> accesso) | `Alto` | `splunk/` |
+| `DEF-002` | splunk: correlazione multi-sorgente via spl (kill chain scan - accesso) | `Alto` | `splunk/` |
 
 ---
 

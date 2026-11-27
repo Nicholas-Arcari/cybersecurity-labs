@@ -103,9 +103,9 @@ Questi tre meccanismi, implementati come record TXT nel DNS, costituiscono la di
 
 | record | funzione | verifica con dig |
 | :--- | :--- | :--- |
-| **spf** (rfc 7208) | dichiara quali ip sono autorizzati a inviare email per il dominio | `dig TXT dominio.it +short` -> `"v=spf1 include:_spf.google.com ~all"` |
+| **spf** (rfc 7208) | dichiara quali ip sono autorizzati a inviare email per il dominio | `dig TXT dominio.it +short` - `"v=spf1 include:_spf.google.com ~all"` |
 | **dkim** (rfc 6376) | firma crittografica (rsa/ed25519) nel header dell'email verificabile tramite chiave pubblica nel dns | `dig TXT selector._domainkey.dominio.it` |
-| **dmarc** (rfc 7489) | policy che istruisce il server ricevente su come trattare email che falliscono spf/dkim | `dig TXT _dmarc.dominio.it` -> `"v=DMARC1; p=reject; rua=mailto:..."` |
+| **dmarc** (rfc 7489) | policy che istruisce il server ricevente su come trattare email che falliscono spf/dkim | `dig TXT _dmarc.dominio.it` - `"v=DMARC1; p=reject; rua=mailto:..."` |
 
 **Valore per il Red Team:** un dominio con SPF in modalita `~all` (SoftFail) o senza DMARC consente l'invio di email spoofate che superano i filtri di molti provider. L'harvesting delle email combinato con l'analisi dei record DNS permette di valutare la fattibilita di campagne di spear phishing con email che appaiono provenire dal dominio target.
 

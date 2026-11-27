@@ -84,7 +84,7 @@ The positioning in the defensive path: the SIEM receives the alerts from the too
 | id | description | severity | subfolder |
 | :--- | :--- | :---: | :--- |
 | `DEF-001` | elk stack: log centralization and detection (ssh brute force) | `High` | `elk-stack/` |
-| `DEF-002` | splunk: multi-source correlation via spl (scan -> access kill chain) | `High` | `splunk/` |
+| `DEF-002` | splunk: multi-source correlation via spl (scan - access kill chain) | `High` | `splunk/` |
 
 ---
 

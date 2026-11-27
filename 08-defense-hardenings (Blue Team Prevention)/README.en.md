@@ -114,7 +114,7 @@ In a defensive module, the **Finding** (`DEF-NNN`) does not represent a vulnerab
 | id | description | severity | subfolder |
 | :--- | :--- | :---: | :--- |
 | `DEF-001` | elk stack: log centralization and detection (ssh brute force) | `High` | `01-siem/elk-stack/` |
-| `DEF-002` | splunk: multi-source correlation via spl (scan -> access kill chain) | `High` | `01-siem/splunk/` |
+| `DEF-002` | splunk: multi-source correlation via spl (scan - access kill chain) | `High` | `01-siem/splunk/` |
 | `DEF-003` | wazuh fim: detection of persistence, tampering and rootkits | `High` | `02-xdr/wazuh/threat-detection.../` |
 | `DEF-004` | wazuh active response: automatic containment (ip block) on alert | `High` | `02-xdr/wazuh/threat-detection.../` |
 | `DEF-005` | canary tokens: digital tripwires for early breach detection | `Medium` | `03-deception/honeypots/canary-tokens/` |

@@ -154,7 +154,7 @@ Il documento `postman/README.md` documenta:
 | defense evasion | use alternate authentication material | `T1550` | utilizzo del token jwt falsificato con ruolo admin per accedere a funzionalita privilegiate (WEB-012) |
 | lateral movement | valid accounts: cloud accounts | `T1078.003` | impersonazione dell'account admin tramite token jwt forgiato (WEB-012) |
 | reconnaissance | active scanning: wordlist scanning | `T1595.003` | graphql introspection per mappare tutte le query disponibili, incluse quelle non documentate (WEB-013) |
-| execution | command and scripting interpreter: unix shell | `T1059.004` | command injection tramite parametro `arg` della query `systemDebug` -> rce con `; id` (WEB-013) |
+| execution | command and scripting interpreter: unix shell | `T1059.004` | command injection tramite parametro `arg` della query `systemDebug` - rce con `; id` (WEB-013) |
 | collection | data from information repositories | `T1213` | esfiltrazione di credenziali admin da `config.py` e dump del database sqlite tramite rce (WEB-013) |
 | discovery | account discovery | `T1087` | enumerazione degli id account sull'endpoint `/api/balance/<id>` per mappare tutti gli utenti (WEB-014) |
 | collection | data from information repositories | `T1213` | accesso ai dati finanziari di utenti non autorizzati tramite idor/bola (WEB-014) |
