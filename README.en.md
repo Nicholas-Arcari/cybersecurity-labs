@@ -367,6 +367,8 @@ Covers the most common vector of internal penetration tests: the abuse of legiti
 | [OSINT-002](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/email-harvesting/README.en.md>) | email harvesting on personal domain | Informational | osint-passive/email-harvesting |
 | [OSINT-003](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/google-dorks/README.en.md>) | google dorking - exposed documents and login pages | variable | osint-passive/google-dorks |
 | [OSINT-004](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/user-enumeration/README.en.md>) | user enumeration on social networks | Low | osint-passive/user-enumeration |
+| [OSINT-005](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/osint-frameworks/README.en.md>) | automated osint correlation via multi-source frameworks (spiderfoot, recon-ng, maltego) | variable | osint-passive/osint-frameworks |
+| [OSINT-006](<01-recon (Red Team Basic)/01-osint-passive (Open Source Intelligence)/code-secret-leakage/README.en.md>) | secrets exposed in public repositories (git history) | high/critical | osint-passive/code-secret-leakage |
 | [SCAN-001](<01-recon (Red Team Basic)/02-network-scanning-active/live-host-discovery/README.en.md>) | live host discovery - subnet mapping | Informational | network-scanning/live-host-discovery |
 | [SCAN-002](<01-recon (Red Team Basic)/02-network-scanning-active/port-scanning (Nmap)/masscan/README.en.md>) | massive port scan - exposed surface | Informational | port-scanning/masscan |
 | [SCAN-003](<01-recon (Red Team Basic)/02-network-scanning-active/port-scanning (Nmap)/nmap-scripts/README.en.md>) | smb signing not required (via nmap nse) | High | port-scanning/nmap-scripts |
@@ -377,6 +379,8 @@ Covers the most common vector of internal penetration tests: the abuse of legiti
 | [INTEL-002](<01-recon (Red Team Basic)/04-infrastructure-intel/shodan-censys/README.en.md>) | exposed software versions via shodan | Medium | infrastructure-intel/shodan-censys |
 | [INTEL-003](<01-recon (Red Team Basic)/04-infrastructure-intel/shodan-censys/README.en.md>) | infrastructure banner grabbing | Low | infrastructure-intel/shodan-censys |
 | [INTEL-004](<01-recon (Red Team Basic)/04-infrastructure-intel/tech-stack/README.en.md>) | tech stack fingerprinting | Informational | infrastructure-intel/tech-stack |
+| [INTEL-005](<01-recon (Red Team Basic)/04-infrastructure-intel/asn-whois-ct/README.en.md>) | perimeter mapped via asn/whois and certificate transparency | variable | infrastructure-intel/asn-whois-ct |
+| [INTEL-006](<01-recon (Red Team Basic)/04-infrastructure-intel/cloud-asset-discovery/README.en.md>) | exposed cloud storage (s3/blob bucket) with anonymous read | medium/critical | infrastructure-intel/cloud-asset-discovery |
 | [VULN-001](<02-vulnerability-assessment/01-general-scanners (Infrastructure)/nessus/README.en.md>) | smb signing not required (nessus credentialed) | High | general-scanners/nessus |
 | [VULN-002](<02-vulnerability-assessment/01-general-scanners (Infrastructure)/nessus/README.en.md>) | windows 10 22h2 end of life | Medium | general-scanners/nessus |
 | [VULN-003](<02-vulnerability-assessment/02-protocol-specific-audit/smb-net-bios/README.en.md>) | netbios name/service disclosure | Low | protocol-audit/smb-net-bios |
@@ -425,6 +429,8 @@ Covers the most common vector of internal penetration tests: the abuse of legiti
 | [EXPLOIT-025](<04-system-exploitation/05-password-cracking/john-the-ripper/README.en.md>) | linux hash cracking via unshadowing + rockyou dictionary | High | password-cracking/john |
 
 **Total documented findings: 60 | Critical: 15 | High: 23 | Medium: 11 | Low: 3 | Informational: 8**
+
+> **Note:** findings `OSINT-005`, `OSINT-006`, `INTEL-005`, `INTEL-006` (and the subsequent ones marked as such in the modules under expansion) document **reproducible methodologies** with commands, example output and remediation, but are awaiting execution in the lab: the real results and screenshots go in the prepared placeholders. They are not counted in the total of 60 evidence-based findings reported above.
 
 ---
 
