@@ -26,16 +26,30 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install system dependencies
+        # cairocffi (social cards plugin) loads libcairo at runtime
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libcairo2
+
       - name: Install dependencies
         run: pip install -r requirements-docs.txt
 
+      # MkDocs >= 1.6 aborts when docs_dir contains mkdocs.yml or when site_dir
+      # is nested inside docs_dir. The repo root IS the documentation, so the
+      # build uses a copy of the config staged outside the checkout: docs_dir
+      # points at the checkout, site_dir lives in the runner temp dir.
+      # sed (not a YAML parser) keeps the !!python/name tags intact.
       - name: Build MkDocs site
-        run: mkdocs build
+        working-directory: ${{ runner.temp }}
+        run: |
+          sed -e "s#^docs_dir:.*#docs_dir: $GITHUB_WORKSPACE#" \
+              -e "s#^site_dir:.*#site_dir: $RUNNER_TEMP/site#" \
+              "$GITHUB_WORKSPACE/mkdocs.yml" > mkdocs.ci.yml
+          mkdocs build -f mkdocs.ci.yml
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: ${{ runner.temp }}/site
 
   deploy:
     needs: build

@@ -6,6 +6,10 @@ site_url: https://nicholas-arcari.github.io/cybersecurity-labs/
 repo_url: https://github.com/Nicholas-Arcari/cybersecurity-labs
 repo_name: Nicholas-Arcari/cybersecurity-labs
 
+# The repo root is the documentation. MkDocs >= 1.6 refuses to build with this
+# file inside docs_dir, so .github/workflows/deploy-docs.yml builds from a copy
+# staged outside the checkout, rewriting docs_dir/site_dir. A plain
+# `mkdocs build` from the repo root fails by design: replicate that step locally.
 docs_dir: .
 site_dir: site
 
